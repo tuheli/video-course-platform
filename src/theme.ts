@@ -1,7 +1,7 @@
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { ThemeOptions, alpha } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
-import { PaletteMode } from '@mui/material';
+import { PaletteMode, colors } from '@mui/material';
 
 declare module '@mui/material/styles/createPalette' {
   interface ColorRange {
@@ -207,6 +207,20 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
   return {
     ...getDesignTokens(mode),
     components: {
+      MuiAppBar: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor: 'white',
+          }),
+        },
+      },
+      MuiMenu: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            // backgroundColor: 'white',
+          }),
+        },
+      },
       MuiAccordion: {
         defaultProps: {
           elevation: 0,
@@ -301,6 +315,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             '&:focus': {
               // boxShadow: 'none',
             },
+            '&:hover': {},
           },
         },
       },
@@ -318,6 +333,10 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             '&:active': {
               // transform: 'scale(0.98)',
               boxShadow: 'none',
+              backgroundColor: 'none',
+            },
+            '&:hover': {
+              backgroundColor: 'none',
             },
             ...(ownerState.size === 'small' && {
               maxHeight: '32px',
@@ -344,10 +363,12 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
               },
             }),
             ...(ownerState.variant === 'text' && {
-              color: brand[500],
+              color: gray[900],
+              background: 'white',
+              fontWeight: 400,
               '&:hover': {
-                backgroundColor: alpha(brand[300], 0.3),
-                borderColor: brand[200],
+                backgroundColor: 'white',
+                color: secondary[400],
               },
             }),
             ...(theme.palette.mode === 'dark' && {
@@ -361,10 +382,10 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
                 },
               }),
               ...(ownerState.variant === 'text' && {
-                color: brand[300],
+                // color: brand[300],
                 '&:hover': {
-                  backgroundColor: alpha(brand[600], 0.3),
-                  borderColor: brand[700],
+                  // backgroundColor: alpha(brand[600], 0.3),
+                  // borderColor: brand[700],
                 },
               }),
             }),
@@ -490,9 +511,9 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiMenuItem: {
         styleOverrides: {
           root: ({ theme }) => ({
-            borderRadius: '99px',
-            color: gray[500],
-            fontWeight: 500,
+            // borderRadius: '99px',
+            color: gray[900],
+            fontWeight: 300,
             ...(theme.palette.mode === 'dark' && {
               color: gray[300],
             }),
@@ -502,8 +523,9 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundImage: 'none',
-            backgroundColor: gray[100],
+            // backgroundImage: 'none',
+            // backgroundColor: gray[100],
+            backgroundColor: 'white',
             ...(theme.palette.mode === 'dark' && {
               backgroundColor: alpha(gray[900], 0.6),
             }),
