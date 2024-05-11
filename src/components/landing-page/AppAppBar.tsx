@@ -1,9 +1,6 @@
 import { AppBar, Box, Stack, Toolbar } from '@mui/material';
-import { RedeemOfferCallToAction } from './RedeemOfferCallToAction';
-
-const SmartBar = () => {
-  return <RedeemOfferCallToAction />;
-};
+import { SmartBar } from './SmartBar';
+import { CategoriesPopover } from './CategoriesPopover';
 
 const AppAppBar = () => {
   return (
@@ -22,7 +19,13 @@ const AppAppBar = () => {
             }}
           >
             {/** Left side items */}
-            <Stack>
+            <Stack
+              sx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 3,
+              }}
+            >
               <a href="/">
                 <Box
                   component="img"
@@ -33,6 +36,7 @@ const AppAppBar = () => {
                   }}
                 ></Box>
               </a>
+              <CategoriesPopover />
             </Stack>
             {/** Middle seach bar */}
           </Stack>
