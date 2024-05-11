@@ -1,21 +1,12 @@
 import { Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { maxOfferDuration, secondPassed } from '../../features/offerSlice';
 
 export const SpecialOfferTimer = () => {
-  const offerDuration = 14400; // 4 hours
-  const [time, setTime] = useState(offerDuration);
-  const intervalRef = useRef(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTime((prev) => prev - 1);
-    }, 1000);
-    intervalRef.current = intervalId;
-
-    return () => {
-      clearInterval(intervalRef.current);
-    };
-  }, []);
+  const duration = useAppSelector((state) => state.offer.duration);
+  const dispatch = useAppDispatch();
+  const timerRef = useRef(0);
 
   const formatDuration = (durationSeconds: number) => {
     const date = new Date(0);
@@ -39,7 +30,23 @@ export const SpecialOfferTimer = () => {
     return `${hours}h ${minutes}m ${seconds}s`;
   };
 
-  const remainingTime = formatDuration(time);
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      dispatch(secondPassed());
+    }, 1000);
+
+    timerRef.current = timerId;
+
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const isDurationAcceptable = duration > 0 && duration <= maxOfferDuration;
+
+  const timeString = isDurationAcceptable
+    ? formatDuration(duration)
+    : '0h 0m 0s';
 
   return (
     <Typography
@@ -49,7 +56,7 @@ export const SpecialOfferTimer = () => {
         color: 'text.primary',
       }}
     >
-      {remainingTime}.
+      {timeString}
     </Typography>
   );
 };
