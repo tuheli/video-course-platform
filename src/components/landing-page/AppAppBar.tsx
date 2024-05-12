@@ -1,6 +1,6 @@
 import { AppBar, Box, Stack, Toolbar } from '@mui/material';
 import { SmartBar } from './SmartBar';
-import { CategoriesPopover } from './CategoriesPopover';
+import { CategoriesDropdown } from '../multi-level-dropdown/CategoriesDropdown';
 
 const AppAppBar = () => {
   return (
@@ -36,7 +36,7 @@ const AppAppBar = () => {
                   }}
                 ></Box>
               </a>
-              <CategoriesPopover />
+              <CategoriesDropdown />
             </Stack>
             {/** Middle seach bar */}
           </Stack>
