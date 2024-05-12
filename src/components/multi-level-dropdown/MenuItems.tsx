@@ -1,17 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
 import { type MenuItem } from './categoriesData';
+import { useRef, useState } from 'react';
 import { InnerMenuItemsList } from './StyledMenuItemsList';
 import { StyledMenuItemLink } from './StyledMenuItemLink';
 import { Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
+import { useHover } from './CategoriesDropdown';
 
 interface MenuItemProps {
   menuItem: MenuItem;
   depthLevel: number;
   closeMainDropdown: () => void;
 }
-
-const useHover = true;
 
 export const MenuItems = ({
   menuItem,
@@ -22,7 +21,15 @@ export const MenuItems = ({
   const itemRef = useRef<HTMLLIElement | null>(null);
 
   const onClickButton = () => {
-    closeMainDropdown();
+    if (useHover) {
+      closeMainDropdown();
+    }
+
+    if (menuItem.submenu) {
+      setIsDropdownOpen(true);
+    } else {
+      closeMainDropdown();
+    }
   };
 
   const onMouseEnter = () => {
@@ -34,28 +41,6 @@ export const MenuItems = ({
     if (!useHover) return;
     setIsDropdownOpen(false);
   };
-
-  useEffect(() => {
-    const clickAwayListener = (event: any) => {
-      if (
-        isDropdownOpen &&
-        itemRef.current &&
-        !itemRef.current.contains(event.target)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    if (useHover) return;
-
-    document.addEventListener('mousedown', clickAwayListener);
-    document.addEventListener('touchstart', clickAwayListener);
-
-    return () => {
-      document.removeEventListener('mousedown', clickAwayListener);
-      document.removeEventListener('touchstart', clickAwayListener);
-    };
-  }, [isDropdownOpen]);
 
   return (
     <li ref={itemRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>

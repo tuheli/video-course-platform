@@ -1,11 +1,10 @@
 import { styled } from '@mui/system';
 import { ReactNode } from 'react';
-import { mainDropdownOpenerHeight } from './CategoriesDropdown';
 import { Box } from '@mui/material';
 
 // NOTE: Border affects the size of elements. In order to keep the position accurate we take the borders into account while positioning.
 
-// NOTE: The positioning is not perfect. Uneven depth lists dont have left border which will cause too much left positioning.
+// NOTE: The positioning is not perfect. Every second list doesnt have a left border which will cause too much left positioning.
 
 interface InnerMenuItemsListProps {
   children: ReactNode;
@@ -14,6 +13,7 @@ interface InnerMenuItemsListProps {
 
 const listWidth = 240;
 const transparentPaddingTop = 10;
+export const mainDropdownOpenerHeight = 62;
 
 const StyledMenuItemsList = styled('ul')({
   backgroundColor: 'white',
