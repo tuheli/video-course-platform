@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { SpecialOfferTimer } from './SpecialOfferTimer';
-import { useAppDispatch } from '../../app/hooks';
-import { redeemed } from '../../features/offerSlice';
+import { useAppDispatch } from '../../../app/hooks';
+import { redeemed } from '../../../features/offerSlice';
 
 export const RedeemOfferCallToAction = () => {
   const dispatch = useAppDispatch();
@@ -52,7 +52,6 @@ export const RedeemOfferCallToAction = () => {
             | Courses from €14.99. Click button to see savings.
           </Typography>
         </Stack>
-
         <Typography
           variant="h6"
           component="span"
@@ -62,7 +61,7 @@ export const RedeemOfferCallToAction = () => {
         </Typography>
       </Stack>
       {/** Button on right side */}
-      <Button variant="contained" onClick={onClickRedeem}>
+      <Button variant="contained" color="secondary" onClick={onClickRedeem}>
         Click to redeem
       </Button>
     </Stack>

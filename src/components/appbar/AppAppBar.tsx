@@ -1,7 +1,9 @@
-import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
-import { SmartBar } from './SmartBar';
-import { CategoriesDropdown } from '../multi-level-dropdown/CategoriesDropdown';
-import { SearchBar } from '../searchbar/SearchBar';
+import { AppBar, Box, Stack, Toolbar } from '@mui/material';
+import { SmartBar } from './smartbar/SmartBar';
+import { CategoriesDropdown } from '../dropdowns/dropdown-multi-level/CategoriesDropdown';
+import { SearchBar } from './searchbar/SearchBar';
+import { BusinessDropdownButton } from '../dropdowns/dropdown-button/BusinessDropdownButton';
+import { TeachDropdownButton } from '../dropdowns/dropdown-button/TeachDropdownButton';
 
 const AppAppBar = () => {
   return (
@@ -62,7 +64,15 @@ const AppAppBar = () => {
             {/** Middle seach bar */}
             <SearchBar />
             {/** Right side items */}
-            <Stack></Stack>
+            <Stack
+              sx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <BusinessDropdownButton />
+              <TeachDropdownButton />
+            </Stack>
           </Stack>
         </Toolbar>
       </Stack>

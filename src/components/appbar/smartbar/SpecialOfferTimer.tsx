@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { maxOfferDuration, secondPassed } from '../../features/offerSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { maxOfferDuration, secondPassed } from '../../../features/offerSlice';
 
 export const SpecialOfferTimer = () => {
   const duration = useAppSelector((state) => state.offer.duration);
