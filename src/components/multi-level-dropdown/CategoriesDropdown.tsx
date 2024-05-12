@@ -46,7 +46,7 @@ export const CategoriesDropdown = () => {
       onMouseLeave={onMouseLeaveDropdown}
       sx={{
         position: 'relative',
-        display: 'flex',
+        display: 'inline-flex',
         alignItems: 'center',
         height: mainDropdownOpenerHeight,
       }}
@@ -55,7 +55,14 @@ export const CategoriesDropdown = () => {
         onMouseEnter={onMouseEnterCategories}
         onClick={onClickCategories}
       >
-        <Typography variant="body2">Categories</Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
+          Categories
+        </Typography>
       </StyledMenuItemLink>
       {isDropdownOpen && (
         <OuterMenuItemsList>

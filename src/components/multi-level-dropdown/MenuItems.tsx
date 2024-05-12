@@ -58,6 +58,7 @@ export const MenuItems = ({
               variant="body2"
               sx={{
                 flexGrow: 1,
+                color: 'text.secondary',
               }}
             >
               {menuItem.title}
@@ -65,7 +66,7 @@ export const MenuItems = ({
             <ChevronRight
               fontSize="small"
               sx={{
-                color: 'black',
+                color: 'text.secondary',
               }}
             />
           </StyledMenuItemLink>
@@ -86,7 +87,14 @@ export const MenuItems = ({
         </>
       ) : (
         <StyledMenuItemLink onClick={onClickMenuItem}>
-          <Typography variant="body2">{menuItem.title}</Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            {menuItem.title}
+          </Typography>
         </StyledMenuItemLink>
       )}
     </li>

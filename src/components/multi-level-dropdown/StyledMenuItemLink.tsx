@@ -6,7 +6,6 @@ export const StyledMenuItemLink = styled('a')({
   alignItems: 'center',
   padding: '8px 16px',
   textDecoration: 'none',
-  color: 'black',
   '&:hover': {
     color: secondary[500],
     cursor: 'pointer',
