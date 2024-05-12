@@ -1,25 +1,23 @@
 import { type MenuItem } from './categoriesData';
-import { useRef, useState } from 'react';
-import { InnerMenuItemsList } from './StyledMenuItemsList';
-import { StyledMenuItemLink } from './StyledMenuItemLink';
+import { useContext, useRef, useState } from 'react';
+import { InnerMenuItemsList } from '../styled/InnerMenuItemsList';
+import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
-import { useHover } from './CategoriesDropdown';
-import { useClickAwayListener } from '../../hooks/useClickAwayListener';
+import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
+import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
+import { useHover } from '../MainDropdownOpener';
 
 interface MenuItemProps {
   menuItem: MenuItem;
   depthLevel: number;
-  closeMainDropdown: () => void;
 }
 
-export const MenuItems = ({
-  menuItem,
-  depthLevel,
-  closeMainDropdown,
-}: MenuItemProps) => {
+export const MenuItems = ({ menuItem, depthLevel }: MenuItemProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isHoveringLastDepthLink, setIsHoveringLastDepthLink] = useState(false);
   const itemRef = useRef<HTMLLIElement | null>(null);
+  const closeMainDropdown = useContext(CloseMainDropdownContext);
 
   const onClickMenuItem = () => {
     if (useHover) {
@@ -47,6 +45,14 @@ export const MenuItems = ({
     setIsDropdownOpen(false);
   };
 
+  const onMouseEnterLastDepthLink = () => {
+    setIsHoveringLastDepthLink(true);
+  };
+
+  const onMouseLeaveLastDepthLink = () => {
+    setIsHoveringLastDepthLink(false);
+  };
+
   useClickAwayListener(itemRef, isDropdownOpen, useHover, onClickAway);
 
   return (
@@ -58,7 +64,10 @@ export const MenuItems = ({
               variant="body2"
               sx={{
                 flexGrow: 1,
-                color: 'text.secondary',
+                color: isDropdownOpen ? 'secondary.main' : 'text.secondary',
+                '&:hover': {
+                  color: 'secondary.main',
+                },
               }}
             >
               {menuItem.title}
@@ -78,7 +87,6 @@ export const MenuItems = ({
                     key={index}
                     menuItem={submenu}
                     depthLevel={depthLevel + 1}
-                    closeMainDropdown={closeMainDropdown}
                   />
                 );
               })}
@@ -86,11 +94,20 @@ export const MenuItems = ({
           )}
         </>
       ) : (
-        <StyledMenuItemLink onClick={onClickMenuItem}>
+        <StyledMenuItemLink
+          onClick={onClickMenuItem}
+          onMouseEnter={onMouseEnterLastDepthLink}
+          onMouseLeave={onMouseLeaveLastDepthLink}
+        >
           <Typography
             variant="body2"
             sx={{
-              color: 'text.secondary',
+              color: isHoveringLastDepthLink
+                ? 'secondary.main'
+                : 'text.secondary',
+              '&:hover': {
+                color: 'secondary.main',
+              },
             }}
           >
             {menuItem.title}

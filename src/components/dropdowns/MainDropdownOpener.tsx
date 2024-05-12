@@ -1,21 +1,25 @@
 import { useRef, useState } from 'react';
-import { categoriesData } from './categoriesData';
-import { MenuItems } from './MenuItems';
-import {
-  OuterMenuItemsList,
-  mainDropdownOpenerHeight,
-} from './StyledMenuItemsList';
 import { Box, Typography } from '@mui/material';
-import './fadeAnimation.css';
-import { StyledMenuItemLink } from './StyledMenuItemLink';
+import { StyledMenuItemLink } from './styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../hooks/useClickAwayListener';
+import { CloseMainDropdownContext } from '../../contexts/CloseMainDropdownContext';
+import { mainDropdownOpenerHeight } from './styled/common';
+import './fadeAnimation.css';
+
+interface MainDropdownOpenerProps {
+  text: string;
+  children: React.ReactNode;
+}
 
 // NOTE: In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close.
 
 // Alternatively use mouse clicks or hover to open dropdown menus.
-export const useHover = false;
+export const useHover = true;
 
-export const CategoriesDropdown = () => {
+export const MainDropdownOpener = ({
+  text,
+  children,
+}: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,25 +62,19 @@ export const CategoriesDropdown = () => {
         <Typography
           variant="body2"
           sx={{
-            color: 'text.secondary',
+            color: isDropdownOpen ? 'secondary.main' : 'text.secondary',
+            '&:hover': {
+              color: 'secondary.main',
+            },
           }}
         >
-          Categories
+          {text}
         </Typography>
       </StyledMenuItemLink>
       {isDropdownOpen && (
-        <OuterMenuItemsList>
-          {categoriesData.map((menuItem, index) => {
-            return (
-              <MenuItems
-                key={index}
-                menuItem={menuItem}
-                depthLevel={1}
-                closeMainDropdown={closeMainDropdown}
-              />
-            );
-          })}
-        </OuterMenuItemsList>
+        <CloseMainDropdownContext.Provider value={closeMainDropdown}>
+          {children}
+        </CloseMainDropdownContext.Provider>
       )}
     </Box>
   );
