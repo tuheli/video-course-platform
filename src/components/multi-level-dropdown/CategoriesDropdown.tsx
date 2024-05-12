@@ -12,6 +12,7 @@ import { useClickAwayListener } from '../../hooks/useClickAwayListener';
 
 // NOTE: In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close.
 
+// Alternatively use mouse clicks or hover to open dropdown menus.
 export const useHover = false;
 
 export const CategoriesDropdown = () => {
