@@ -142,7 +142,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     },
     text: {
       primary: gray[900],
-      secondary: gray[600],
+      secondary: gray[500],
       ...(mode === 'dark' && { primary: '#fff', secondary: gray[400] }),
     },
     action: {
@@ -396,6 +396,20 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
                   // borderColor: brand[700],
                 },
               }),
+            }),
+          }),
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            '&:hover': {
+              background: 'none',
+            },
+            ...(theme.palette.mode === 'dark' && {
+              '&:hover': {
+                background: 'none',
+              },
             }),
           }),
         },
