@@ -1,7 +1,7 @@
 import type {} from '@mui/material/themeCssVarsAugmentation';
 import { ThemeOptions, alpha } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
-import { PaletteMode, colors } from '@mui/material';
+import { grey, red } from '@mui/material/colors';
+import { PaletteMode } from '@mui/material';
 
 declare module '@mui/material/styles/createPalette' {
   interface ColorRange {
@@ -339,7 +339,6 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             textTransform: 'none',
             fontWeight: 'bold',
             '&:active': {
-              // transform: 'scale(0.98)',
               boxShadow: 'none',
               backgroundColor: 'none',
             },
@@ -353,11 +352,20 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
               height: '40px',
             }),
             ...(ownerState.variant === 'contained' &&
-              ownerState.color === 'primary' && {
+              ownerState.color === 'secondary' && {
                 color: 'white',
                 background: secondary[300],
                 '&:hover': {
                   background: secondary[600],
+                  boxShadow: 'none',
+                },
+              }),
+            ...(ownerState.variant === 'contained' &&
+              ownerState.color === 'primary' && {
+                color: 'white',
+                background: grey[900],
+                '&:hover': {
+                  background: grey[800],
                   boxShadow: 'none',
                 },
               }),
