@@ -1,6 +1,7 @@
-import { AppBar, Box, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
 import { SmartBar } from './SmartBar';
 import { CategoriesDropdown } from '../multi-level-dropdown/CategoriesDropdown';
+import { SearchBar } from '../searchbar/SearchBar';
 
 const AppAppBar = () => {
   return (
@@ -17,11 +18,19 @@ const AppAppBar = () => {
         }}
       >
         <SmartBar />
-        <Toolbar>
-          {/** Outer stack */}
+        <Toolbar
+          sx={{
+            bgcolor: 'green',
+          }}
+        >
+          {/** Stack to control gaps between left mid and right sections */}
           <Stack
             sx={{
+              bgcolor: 'white',
+              flexGrow: 1,
               flexDirection: 'row',
+              alignItems: 'center',
+              gap: 3,
             }}
           >
             {/** Left side items */}
@@ -32,7 +41,13 @@ const AppAppBar = () => {
                 gap: 3,
               }}
             >
-              <a href="/">
+              <a
+                href="/"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
                 <Box
                   component="img"
                   src="/logoipsum-317.svg"
@@ -45,9 +60,10 @@ const AppAppBar = () => {
               <CategoriesDropdown />
             </Stack>
             {/** Middle seach bar */}
+            <SearchBar />
+            {/** Right side items */}
+            <Stack></Stack>
           </Stack>
-          {/** Right side items */}
-          <Stack></Stack>
         </Toolbar>
       </Stack>
     </AppBar>
