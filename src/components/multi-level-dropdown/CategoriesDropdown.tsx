@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { categoriesData } from './categoriesData';
 import { MenuItems } from './MenuItems';
+import { OuterMenuItemsList } from './StyledMenuItemsList';
+import { Box, Typography } from '@mui/material';
 import './fadeAnimation.css';
+import { StyledMenuItemLink } from './StyledMenuItemLink';
 
-export const listWidth = 240;
-export const listHeight = 240;
-export const listItemHeight = 26;
-export const paddingTop = 10;
-const topOffset = 46;
+// NOTE: In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close.
+
+export const mainDropdownOpenerHeight = 62;
 
 export const CategoriesDropdown = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -26,46 +27,33 @@ export const CategoriesDropdown = () => {
   };
 
   return (
-    <div
+    <Box
       ref={divRef}
       onMouseLeave={onMouseLeaveDropdown}
-      style={{
+      sx={{
         position: 'relative',
-        backgroundColor: 'red',
         display: 'flex',
         alignItems: 'center',
-        height: 50,
+        height: mainDropdownOpenerHeight,
       }}
     >
-      <button onMouseEnter={onMouseEnterCategories}>Categories</button>
+      <StyledMenuItemLink onMouseEnter={onMouseEnterCategories}>
+        <Typography variant="body2">Categories</Typography>
+      </StyledMenuItemLink>
       {isDropdownOpen && (
-        <ul
-          style={{
-            listStyleType: 'none',
-            position: 'absolute',
-            top: topOffset,
-            left: 0,
-            padding: 0,
-            paddingTop: paddingTop,
-            margin: 0,
-            width: listWidth,
-            height: listHeight,
-            backgroundColor: 'lightblue',
-            animation: 'fadeIn 0.2s',
-            outline: '1px solid black',
-          }}
-        >
+        <OuterMenuItemsList>
           {categoriesData.map((menuItem, index) => {
             return (
               <MenuItems
                 key={index}
                 menuItem={menuItem}
+                depthLevel={1}
                 closeMainDropdown={closeMainDropdown}
               />
             );
           })}
-        </ul>
+        </OuterMenuItemsList>
       )}
-    </div>
+    </Box>
   );
 };

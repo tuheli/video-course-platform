@@ -1,17 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { type MenuItem } from './categoriesData';
-import { listHeight, listWidth, paddingTop } from './CategoriesDropdown';
+import { InnerMenuItemsList } from './StyledMenuItemsList';
+import { StyledMenuItemLink } from './StyledMenuItemLink';
+import { Typography } from '@mui/material';
+import { ChevronRight } from '@mui/icons-material';
 
 interface MenuItemProps {
   menuItem: MenuItem;
+  depthLevel: number;
   closeMainDropdown: () => void;
 }
 
 const useHover = true;
-const paddingLeft = 4;
-const paddingRight = 4;
 
-export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
+export const MenuItems = ({
+  menuItem,
+  depthLevel,
+  closeMainDropdown,
+}: MenuItemProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const itemRef = useRef<HTMLLIElement | null>(null);
 
@@ -55,67 +61,41 @@ export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
     <li ref={itemRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {menuItem.submenu ? (
         <>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft,
-              paddingRight,
-            }}
-          >
-            <button
-              type="button"
-              onClick={onClickButton}
-              style={{
-                backgroundColor: isDropdownOpen ? 'khaki' : '',
+          <StyledMenuItemLink onClick={onClickButton}>
+            <Typography
+              variant="body2"
+              sx={{
+                flexGrow: 1,
               }}
             >
               {menuItem.title}
-            </button>
-            <div
-              style={{
-                flexGrow: 1,
+            </Typography>
+            <ChevronRight
+              fontSize="small"
+              sx={{
+                color: 'black',
               }}
             />
-            <div>{`>`}</div>
-          </div>
+          </StyledMenuItemLink>
           {isDropdownOpen && (
-            <ul
-              style={{
-                listStyleType: 'none',
-                position: 'absolute',
-                top: 0,
-                left: listWidth,
-                padding: 0,
-                paddingTop: paddingTop,
-                margin: 0,
-                height: listHeight,
-                width: listWidth,
-                backgroundColor: 'lightblue',
-                outline: '1px solid black',
-              }}
-            >
+            <InnerMenuItemsList depthLevel={depthLevel}>
               {menuItem.submenu.map((submenu, index) => {
                 return (
                   <MenuItems
                     key={index}
                     menuItem={submenu}
+                    depthLevel={depthLevel + 1}
                     closeMainDropdown={closeMainDropdown}
                   />
                 );
               })}
-            </ul>
+            </InnerMenuItemsList>
           )}
         </>
       ) : (
-        <div
-          style={{
-            paddingLeft,
-            paddingRight,
-          }}
-        >
-          <button onClick={onClickButton}>{menuItem.title}</button>
-        </div>
+        <StyledMenuItemLink onClick={onClickButton}>
+          <Typography variant="body2">{menuItem.title}</Typography>
+        </StyledMenuItemLink>
       )}
     </li>
   );
