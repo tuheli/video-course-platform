@@ -214,6 +214,14 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
           }),
         },
       },
+      MuiToolbar: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor: 'white',
+            boxShadow: '0px 3px 5px 0px rgba(0,0,0,0.4)',
+          }),
+        },
+      },
       MuiMenu: {
         styleOverrides: {
           root: ({ theme }) => ({
