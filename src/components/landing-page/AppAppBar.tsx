@@ -1,10 +1,16 @@
-import { AppBar, Box, Stack, Toolbar } from '@mui/material';
+import { AppBar, Box, MenuItem, Stack, Toolbar } from '@mui/material';
 import { SmartBar } from './SmartBar';
 import { CategoriesDropdown } from '../multi-level-dropdown/CategoriesDropdown';
 
 const AppAppBar = () => {
   return (
-    <AppBar>
+    <AppBar
+      sx={{
+        boxShadow: 0,
+        bgcolor: 'transparent',
+        backgroundImage: 'none',
+      }}
+    >
       <Stack
         sx={{
           flexDirection: 'column',
