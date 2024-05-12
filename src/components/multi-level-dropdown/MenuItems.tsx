@@ -8,6 +8,8 @@ interface MenuItemProps {
 }
 
 const useHover = true;
+const paddingLeft = 4;
+const paddingRight = 4;
 
 export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -57,8 +59,8 @@ export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              paddingLeft: 4,
-              paddingRight: 4,
+              paddingLeft,
+              paddingRight,
             }}
           >
             <button
@@ -90,6 +92,7 @@ export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
                 height: listHeight,
                 width: listWidth,
                 backgroundColor: 'lightblue',
+                outline: '1px solid black',
               }}
             >
               {menuItem.submenu.map((submenu, index) => {
@@ -105,7 +108,14 @@ export const MenuItems = ({ menuItem, closeMainDropdown }: MenuItemProps) => {
           )}
         </>
       ) : (
-        <button onClick={onClickButton}>{menuItem.title}</button>
+        <div
+          style={{
+            paddingLeft,
+            paddingRight,
+          }}
+        >
+          <button onClick={onClickButton}>{menuItem.title}</button>
+        </div>
       )}
     </li>
   );

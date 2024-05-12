@@ -52,6 +52,7 @@ export const CategoriesDropdown = () => {
             height: listHeight,
             backgroundColor: 'lightblue',
             animation: 'fadeIn 0.2s',
+            outline: '1px solid black',
           }}
         >
           {categoriesData.map((menuItem, index) => {
