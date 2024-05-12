@@ -21,7 +21,7 @@ export const MenuItems = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const itemRef = useRef<HTMLLIElement | null>(null);
 
-  const onClickButton = () => {
+  const onClickMenuItem = () => {
     if (useHover) {
       closeMainDropdown();
     }
@@ -53,7 +53,7 @@ export const MenuItems = ({
     <li ref={itemRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {menuItem.submenu ? (
         <>
-          <StyledMenuItemLink onClick={onClickButton}>
+          <StyledMenuItemLink onClick={onClickMenuItem}>
             <Typography
               variant="body2"
               sx={{
@@ -85,7 +85,7 @@ export const MenuItems = ({
           )}
         </>
       ) : (
-        <StyledMenuItemLink onClick={onClickButton}>
+        <StyledMenuItemLink onClick={onClickMenuItem}>
           <Typography variant="body2">{menuItem.title}</Typography>
         </StyledMenuItemLink>
       )}
