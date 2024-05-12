@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-// NOTE: When the user clicks away from the dropdown, the dropdown will close. Important to use this when not using hover mode to be able to change the currently open dropdown.
+// NOTE: When the user clicks away from multilevel dropdown (including a different submenu opening item), potentially open submenu should close. Otherwise the newly clicked submenu might not open.
 
 export const useClickAwayListener = (
   divRef: React.RefObject<HTMLElement>,
