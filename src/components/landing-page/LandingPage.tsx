@@ -1,4 +1,4 @@
-import AppAppBar from "./AppAppBar";
+import AppAppBar from '../appbar/AppAppBar';
 
 const LandingPage = () => {
   return <AppAppBar />;
