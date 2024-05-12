@@ -5,6 +5,7 @@ import { StyledMenuItemLink } from './StyledMenuItemLink';
 import { Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { useHover } from './CategoriesDropdown';
+import { useClickAwayListener } from '../../hooks/useClickAwayListener';
 
 interface MenuItemProps {
   menuItem: MenuItem;
@@ -41,6 +42,12 @@ export const MenuItems = ({
     if (!useHover) return;
     setIsDropdownOpen(false);
   };
+
+  const onClickAway = () => {
+    setIsDropdownOpen(false);
+  };
+
+  useClickAwayListener(itemRef, isDropdownOpen, useHover, onClickAway);
 
   return (
     <li ref={itemRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
