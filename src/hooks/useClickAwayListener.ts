@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+// NOTE: When the user clicks away from the dropdown, the dropdown will close. Important to use this when not using hover mode to be able to change the currently open dropdown.
+
 export const useClickAwayListener = (
   divRef: React.RefObject<HTMLElement>,
   isDropdownOpen: boolean,
