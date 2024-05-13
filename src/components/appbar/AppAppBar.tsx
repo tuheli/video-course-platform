@@ -5,6 +5,9 @@ import { SearchBar } from './searchbar/SearchBar';
 import { BusinessDropdown } from '../dropdowns/dropdown-singe-item/BusinessDropdown';
 import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
 import { CartDropdown } from '../dropdowns/dropdown-singe-item/CartDropdown';
+import { LoginButton } from './LoginButton';
+import { SignUpButton } from './SignUpButton';
+import { SelectLanguageButton } from './SelectLanguageButton';
 
 const AppAppBar = () => {
   return (
@@ -21,11 +24,7 @@ const AppAppBar = () => {
         }}
       >
         <SmartBar />
-        <Toolbar
-          sx={{
-            bgcolor: 'green',
-          }}
-        >
+        <Toolbar>
           {/** Stack to control gaps between left mid and right sections */}
           <Stack
             sx={{
@@ -65,6 +64,7 @@ const AppAppBar = () => {
             {/** Middle seach bar */}
             <SearchBar />
             {/** Right side items */}
+
             <Stack
               sx={{
                 flexDirection: 'row',
@@ -74,6 +74,17 @@ const AppAppBar = () => {
               <BusinessDropdown />
               <TeachDropdown />
               <CartDropdown />
+            </Stack>
+            <Stack
+              sx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <LoginButton />
+              <SignUpButton />
+              <SelectLanguageButton />
             </Stack>
           </Stack>
         </Toolbar>
