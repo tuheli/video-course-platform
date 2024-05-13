@@ -8,7 +8,7 @@ import LandingPage from './components/landing-page/LandingPage';
 // NOTE: Import css baseline up top to prevent mui error that somethimes occurs.
 
 const App = () => {
-  const [themeMode, setThemeMode] = useState<PaletteMode>('light');
+  const [themeMode] = useState<PaletteMode>('light');
   const theme = createTheme(getTheme(themeMode));
 
   return (
