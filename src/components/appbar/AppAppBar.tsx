@@ -2,8 +2,9 @@ import { AppBar, Box, Stack, Toolbar } from '@mui/material';
 import { SmartBar } from './smartbar/SmartBar';
 import { CategoriesDropdown } from '../dropdowns/dropdown-multi-level/CategoriesDropdown';
 import { SearchBar } from './searchbar/SearchBar';
-import { BusinessDropdownButton } from '../dropdowns/dropdown-button/BusinessDropdownButton';
-import { TeachDropdownButton } from '../dropdowns/dropdown-button/TeachDropdownButton';
+import { BusinessDropdown } from '../dropdowns/dropdown-singe-item/BusinessDropdown';
+import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
+import { CartDropdown } from '../dropdowns/dropdown-singe-item/CartDropdown';
 
 const AppAppBar = () => {
   return (
@@ -70,8 +71,9 @@ const AppAppBar = () => {
                 alignItems: 'center',
               }}
             >
-              <BusinessDropdownButton />
-              <TeachDropdownButton />
+              <BusinessDropdown />
+              <TeachDropdown />
+              <CartDropdown />
             </Stack>
           </Stack>
         </Toolbar>
