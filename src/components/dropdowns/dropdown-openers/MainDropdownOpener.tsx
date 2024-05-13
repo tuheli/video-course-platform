@@ -1,23 +1,26 @@
 import { useRef, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { StyledMenuItemLink } from './styled/StyledMenuItemLink';
-import { useClickAwayListener } from '../../hooks/useClickAwayListener';
-import { CloseMainDropdownContext } from '../../contexts/CloseMainDropdownContext';
-import { mainDropdownOpenerHeight } from './styled/common';
-import './fadeAnimation.css';
+import { Box, SvgIconTypeMap, TypographyTypeMap } from '@mui/material';
+import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
+import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
+import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
+import { mainDropdownOpenerHeight } from '../styled/common';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+
+type RenderComponentType = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> &
+  OverridableComponent<TypographyTypeMap<{}, 'span'>>;
 
 interface MainDropdownOpenerProps {
-  text: string;
+  RenderComponent: RenderComponentType;
   children: React.ReactNode;
 }
 
-// NOTE: In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close.
+// NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
 
 // Alternatively use mouse clicks or hover to open dropdown menus.
 export const useHover = true;
 
 export const MainDropdownOpener = ({
-  text,
+  RenderComponent,
   children,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -59,17 +62,11 @@ export const MainDropdownOpener = ({
         onMouseEnter={onMouseEnterCategories}
         onClick={onClickCategories}
       >
-        <Typography
-          variant="body2"
+        <RenderComponent
           sx={{
-            color: isDropdownOpen ? 'secondary.main' : 'text.secondary',
-            '&:hover': {
-              color: 'secondary.main',
-            },
+            color: isDropdownOpen ? 'secondary.main' : 'text.primary',
           }}
-        >
-          {text}
-        </Typography>
+        />
       </StyledMenuItemLink>
       {isDropdownOpen && (
         <CloseMainDropdownContext.Provider value={closeMainDropdown}>

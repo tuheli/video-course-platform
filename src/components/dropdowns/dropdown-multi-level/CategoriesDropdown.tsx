@@ -1,16 +1,16 @@
 import { categoriesData } from './categoriesData';
 import { MenuItems } from './MenuItems';
-import { MainDropdownOpener } from '../MainDropdownOpener';
 import { OuterMenuItemsList } from '../styled/OuterMenuItemsList';
+import { TextDropdownOpener } from '../dropdown-openers/TextDropdownOpener';
 
 export const CategoriesDropdown = () => {
   return (
-    <MainDropdownOpener text="Categories">
+    <TextDropdownOpener text="Categories">
       <OuterMenuItemsList>
         {categoriesData.map((menuItem, index) => {
           return <MenuItems key={index} menuItem={menuItem} depthLevel={1} />;
         })}
       </OuterMenuItemsList>
-    </MainDropdownOpener>
+    </TextDropdownOpener>
   );
 };
