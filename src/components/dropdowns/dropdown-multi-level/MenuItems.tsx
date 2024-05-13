@@ -6,7 +6,7 @@ import { Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
-import { useHover } from '../MainDropdownOpener';
+import { useHover } from '../dropdown-openers/MainDropdownOpener';
 
 interface MenuItemProps {
   menuItem: MenuItem;

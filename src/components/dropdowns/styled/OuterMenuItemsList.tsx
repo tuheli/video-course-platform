@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { StyledTransparencyBox } from './StyledTransparencyBox';
 import { listWidth, StyledMenuItemsList } from './StyledMenuItemsList';
+import '../animations/fadeAnimation.css';
 
 export const OuterMenuItemsList = ({ children }: { children: ReactNode }) => {
   return (

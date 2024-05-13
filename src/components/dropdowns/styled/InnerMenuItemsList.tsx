@@ -1,10 +1,15 @@
 import { StyledTransparencyBox } from './StyledTransparencyBox';
-import { containerBorderWidth, transparentPaddingTop } from './common';
+import {
+  containerBorderColor,
+  containerBorderStyle,
+  containerBorderWidth,
+  transparentPaddingTop,
+} from './common';
 import { listWidth, StyledMenuItemsList } from './StyledMenuItemsList';
 
 // NOTE: Border affects the size of elements. In order to keep the position accurate we take the borders into account while positioning.
 
-// NOTE: The positioning is not perfect. Every second list doesnt have a left border which will cause too much left positioning.
+// NOTE: The positioning is not perfect. Every second list doesnt have a left border which will cause too much left positioning. However it is not noticeable with 3 levels of depth.
 
 interface InnerMenuItemsListProps {
   children: React.ReactNode;
@@ -25,7 +30,9 @@ export const InnerMenuItemsList = ({
       <StyledMenuItemsList
         sx={{
           borderLeft:
-            depthLevel % 2 === 0 ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
+            depthLevel % 2 === 0
+              ? `${containerBorderWidth} ${containerBorderStyle} ${containerBorderColor}`
+              : 'none',
         }}
       >
         {children}
