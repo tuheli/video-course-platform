@@ -52,11 +52,7 @@ export const SearchBar = () => {
           cursor: isButtonEnabled ? 'pointer' : 'not-allowed',
         }}
       >
-        <SearchIcon
-          sx={{
-            color: 'text.secondary',
-          }}
-        />
+        <SearchIcon />
       </IconButton>
       <form
         onSubmit={onSubmitSearchForm}
