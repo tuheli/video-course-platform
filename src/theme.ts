@@ -1,4 +1,3 @@
-import type {} from '@mui/material/themeCssVarsAugmentation';
 import { ThemeOptions, alpha } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import { PaletteMode } from '@mui/material';
@@ -339,6 +338,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             textTransform: 'none',
             fontWeight: 'bold',
             '&:active': {
+              transform: 'none',
               boxShadow: 'none',
               backgroundColor: 'none',
             },
@@ -370,12 +370,12 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
                 },
               }),
             ...(ownerState.variant === 'outlined' && {
-              backgroundColor: alpha(brand[300], 0.1),
-              borderColor: brand[300],
-              color: brand[500],
+              backgroundColor: 'white',
+              borderColor: grey[900],
+              color: grey[900],
               '&:hover': {
-                backgroundColor: alpha(brand[300], 0.3),
-                borderColor: brand[200],
+                backgroundColor: gray[300],
+                borderColor: gray[900],
               },
             }),
             ...(ownerState.variant === 'text' && {
@@ -411,8 +411,10 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiIconButton: {
         styleOverrides: {
           root: ({ theme }) => ({
+            background: 'white',
+            color: 'text.secondary',
             '&:hover': {
-              background: 'none',
+              background: 'white',
             },
             ...(theme.palette.mode === 'dark' && {
               '&:hover': {
