@@ -137,6 +137,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     background: {
       default: '#fff',
       paper: gray[50],
+      secondary: 'rgb(247, 249, 250)',
       ...(mode === 'dark' && { default: gray[900], paper: gray[800] }),
     },
     text: {
@@ -222,9 +223,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
         },
       },
       MuiContainer: {
-        defaultProps: {
-          disableGutters: true,
-        },
+        defaultProps: {},
         styleOverrides: {
           root: {},
         },
