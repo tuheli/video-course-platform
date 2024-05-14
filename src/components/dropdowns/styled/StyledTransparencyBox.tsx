@@ -16,4 +16,5 @@ export const StyledTransparencyBox = styled(Box)({
   padding: 0,
   paddingTop: transparentPaddingTop,
   top: mainDropdownOpenerHeight,
+  zIndex: 1,
 });

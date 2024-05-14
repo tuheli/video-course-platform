@@ -18,5 +18,6 @@ export const StyledMenuItemsList = styled('ul')({
   width: listWidth,
   padding: 0,
   margin: 0,
+  zIndex: 1,
 });
 export { listWidth };
