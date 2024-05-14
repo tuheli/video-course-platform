@@ -221,6 +221,14 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
           }),
         },
       },
+      MuiContainer: {
+        defaultProps: {
+          disableGutters: true,
+        },
+        styleOverrides: {
+          root: {},
+        },
+      },
       MuiMenu: {
         styleOverrides: {
           root: ({ theme }) => ({
@@ -558,6 +566,8 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             // backgroundImage: 'none',
             // backgroundColor: gray[100],
             backgroundColor: 'white',
+            // boxShadow: 'none',
+            borderRadius: 0,
             ...(theme.palette.mode === 'dark' && {
               backgroundColor: alpha(gray[900], 0.6),
             }),
