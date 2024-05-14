@@ -8,6 +8,7 @@ import { CartDropdown } from '../dropdowns/dropdown-singe-item/CartDropdown';
 import { LoginButton } from './LoginButton';
 import { SignUpButton } from './SignUpButton';
 import { SelectLanguageButton } from './SelectLanguageButton';
+import { CompanyLogo } from './CompanyLogo';
 
 const AppAppBar = () => {
   return (
@@ -44,28 +45,12 @@ const AppAppBar = () => {
                 gap: 3,
               }}
             >
-              <a
-                href="/"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Box
-                  component="img"
-                  src="/logoipsum-317.svg"
-                  sx={{
-                    maxHeight: '1.3rem',
-                    cursor: 'pointer',
-                  }}
-                ></Box>
-              </a>
+              <CompanyLogo />
               <CategoriesDropdown />
             </Stack>
             {/** Middle seach bar */}
             <SearchBar />
             {/** Right side items */}
-
             <Stack
               sx={{
                 flexDirection: 'row',
