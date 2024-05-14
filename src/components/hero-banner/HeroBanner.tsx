@@ -9,7 +9,10 @@ export const HeroBanner = () => {
           display: 'block',
         }}
       >
-        <source srcSet="/hero-banner-wide.jpg" media="(min-width: 1px)" />
+        <source
+          srcSet="/hero-banners/hero-banner-wide.jpg"
+          media="(min-width: 1px)"
+        />
         <img
           src=""
           alt="Banner"
