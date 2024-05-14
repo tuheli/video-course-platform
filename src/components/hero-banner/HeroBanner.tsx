@@ -2,7 +2,7 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 
 export const HeroBanner = () => {
   return (
-    <Container>
+    <Container disableGutters>
       <picture
         style={{
           position: 'relative',
