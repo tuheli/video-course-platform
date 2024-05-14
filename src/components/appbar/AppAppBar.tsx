@@ -1,4 +1,4 @@
-import { AppBar, Box, Stack, Toolbar } from '@mui/material';
+import { AppBar, Stack, Toolbar } from '@mui/material';
 import { SmartBar } from './smartbar/SmartBar';
 import { CategoriesDropdown } from '../dropdowns/dropdown-multi-level/CategoriesDropdown';
 import { SearchBar } from './searchbar/SearchBar';
