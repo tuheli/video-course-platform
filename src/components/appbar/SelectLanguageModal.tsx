@@ -27,8 +27,6 @@ export const SelectLanguageModal = ({
 
   return (
     <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
       open={isOpen}
       onClose={onClose}
       closeAfterTransition
