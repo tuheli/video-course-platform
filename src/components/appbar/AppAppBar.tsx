@@ -13,9 +13,10 @@ const AppAppBar = () => {
   return (
     <AppBar
       sx={{
-        boxShadow: 0,
+        position: 'static',
         bgcolor: 'transparent',
         backgroundImage: 'none',
+        boxShadow: 0,
       }}
     >
       <Stack
