@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice, isRejected } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const maxOfferDuration = 14_400; // 4h
 const localStorageName = 'special-offer';
@@ -90,7 +90,7 @@ const slice = createSlice({
   name: 'offer',
   initialState,
   reducers: {
-    redeemed: (state, action: PayloadAction<void>) => {
+    redeemed: (state) => {
       const newState = {
         ...state,
         isRedeemed: true,
@@ -98,7 +98,7 @@ const slice = createSlice({
       saveToLocalStorage(newState);
       return newState;
     },
-    rejected: (state, action: PayloadAction<void>) => {
+    rejected: (state) => {
       const newState = {
         ...state,
         isRejected: true,
@@ -106,7 +106,7 @@ const slice = createSlice({
       saveToLocalStorage(newState);
       return newState;
     },
-    secondPassed: (state, action: PayloadAction<void>) => {
+    secondPassed: (state) => {
       const newState = {
         ...state,
         duration: state.duration - 1,
