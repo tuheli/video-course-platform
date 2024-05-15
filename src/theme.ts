@@ -136,8 +136,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
     divider: mode === 'dark' ? alpha(gray[600], 0.3) : alpha(gray[300], 0.5),
     background: {
       default: '#fff',
-      paper: gray[50],
-      secondary: 'rgb(247, 249, 250)',
+      paper: 'rgb(247, 249, 250)',
+      secondary: 'rgb(236, 235, 152)',
       ...(mode === 'dark' && { default: gray[900], paper: gray[800] }),
     },
     text: {
@@ -211,6 +211,8 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
         styleOverrides: {
           root: ({ theme }) => ({
             backgroundColor: 'white',
+            padding: 0,
+            border: 'none',
           }),
         },
       },
@@ -329,7 +331,9 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             '&:focus': {
               // boxShadow: 'none',
             },
-            '&:hover': {},
+            '&:hover': {
+              color: 'text.primary',
+            },
           },
         },
       },
@@ -351,6 +355,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
             },
             '&:hover': {
               backgroundColor: 'none',
+              color: 'text.primary',
             },
             ...(ownerState.size === 'small' && {
               maxHeight: '32px',
@@ -562,11 +567,12 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => ({
-            // backgroundImage: 'none',
-            // backgroundColor: gray[100],
             backgroundColor: 'white',
-            // boxShadow: 'none',
-            borderRadius: 0,
+            boxShadow: 'none',
+            borderRadius: 1,
+            border: '1px solid',
+            borderColor: gray[300],
+            padding: 8,
             ...(theme.palette.mode === 'dark' && {
               backgroundColor: alpha(gray[900], 0.6),
             }),
