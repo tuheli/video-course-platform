@@ -5,7 +5,7 @@ import { TrustedByCompaniesLogos } from '../trusted-by-companies-logos/TrustedBy
 import { BroadCoursesSelection } from '../broad-courses-selection/BroadCoursesSelection';
 
 const LandingPage = () => {
-  return <BroadCoursesSelection />;
+  // return <BroadCoursesSelection />;
 
   return (
     <>
@@ -18,6 +18,7 @@ const LandingPage = () => {
       >
         <TrustedByCompaniesLogos />
       </Box>
+      <BroadCoursesSelection />
     </>
   );
 };
