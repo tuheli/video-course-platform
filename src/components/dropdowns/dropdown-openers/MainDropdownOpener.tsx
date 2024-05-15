@@ -20,7 +20,9 @@ interface MainDropdownOpenerProps {
 
 // NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
 
-// Alternatively use mouse clicks or hover to open dropdown menus.
+// NOTE: This component is for large screens with mouse hover.
+
+// Alternatively use mouse clicks or hover to open dropdown menus. Setting this to false is actually not useful since the both functionalities hover and click are needed. Hover opens menus and clicking will trigger navigation.
 export const useHover = true;
 
 // TODO: Remove the default height and update appbar dropdowns to input the needed heights.
