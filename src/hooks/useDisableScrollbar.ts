@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 
 // NOTE: The padding amount is not pixel perfect and can cause a very minor visual bug (like 1 pixel too much padding to the document body). But its not really noticeable and only happens with specific resolutions.
 
+// This hook was initially made for selectlanguagemodal but it should be used with other modals / dialogs which have material ui's disable scroll lock behaviour to fix padding issues. Instead of mui's scroll lock use this hook and disable mui's scroll lock.
+
 const getScrollBarWidth = () => {
   var inner = document.createElement('p');
   inner.style.width = '100%';
