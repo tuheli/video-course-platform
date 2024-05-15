@@ -1,17 +1,21 @@
-import { useRef, useState } from 'react';
-import { Box, SvgIconTypeMap, TypographyTypeMap } from '@mui/material';
+import { ComponentType, useRef, useState } from 'react';
+import { Box, SxProps } from '@mui/material';
 import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
-import { mainDropdownOpenerHeight } from '../styled/common';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { mainDropdownOpenerHeight as appBarDropdownOpenerHeight } from '../styled/common';
 
-type RenderComponentType = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> &
-  OverridableComponent<TypographyTypeMap<{}, 'span'>>;
+interface ComponentProps {
+  sx?: SxProps;
+  isDropdownOpen?: boolean;
+}
+
+type RenderComponentType = ComponentType<ComponentProps>;
 
 interface MainDropdownOpenerProps {
   RenderComponent: RenderComponentType;
   children: React.ReactNode;
+  height?: string | number;
 }
 
 // NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
@@ -19,9 +23,12 @@ interface MainDropdownOpenerProps {
 // Alternatively use mouse clicks or hover to open dropdown menus.
 export const useHover = true;
 
+// TODO: Remove the default height and update appbar dropdowns to input the needed heights.
+
 export const MainDropdownOpener = ({
   RenderComponent,
   children,
+  height = appBarDropdownOpenerHeight,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -55,7 +62,7 @@ export const MainDropdownOpener = ({
         position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
-        height: mainDropdownOpenerHeight,
+        height: height,
       }}
     >
       <StyledMenuItemLink
@@ -63,6 +70,7 @@ export const MainDropdownOpener = ({
         onClick={onClickCategories}
       >
         <RenderComponent
+          isDropdownOpen={isDropdownOpen}
           sx={{
             color: isDropdownOpen ? 'secondary.main' : 'text.primary',
           }}
