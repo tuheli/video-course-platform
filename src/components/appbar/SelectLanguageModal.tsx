@@ -1,7 +1,6 @@
 import {
   Backdrop,
   Box,
-  Fade,
   IconButton,
   Modal,
   Stack,
@@ -10,6 +9,9 @@ import {
 import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
 import { languages } from './languageData';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDisableScrollbar } from '../../hooks/useDisableScrollbar';
+
+// NOTE: I removed fade animation wrapper to prevent seeing a change in document padding when modal is still fading away but scrollbar becomes visible and extra document body padding is removed.
 
 interface SelectLanguageModalProps {
   isOpen: boolean;
@@ -25,6 +27,8 @@ export const SelectLanguageModal = ({
     onClose();
   };
 
+  useDisableScrollbar(isOpen);
+
   return (
     <Modal
       open={isOpen}
@@ -33,11 +37,12 @@ export const SelectLanguageModal = ({
       slots={{ backdrop: Backdrop }}
       slotProps={{
         backdrop: {
-          timeout: 500,
+          timeout: 300,
         },
       }}
+      disableScrollLock
     >
-      <Fade in={isOpen}>
+      <>
         <Box
           sx={{
             position: 'absolute',
@@ -83,7 +88,7 @@ export const SelectLanguageModal = ({
             onClickItem={onClickLanguage}
           />
         </Box>
-      </Fade>
+      </>
     </Modal>
   );
 };
