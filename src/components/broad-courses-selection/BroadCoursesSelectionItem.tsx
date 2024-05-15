@@ -8,10 +8,12 @@ import { NormalPrice } from './NormalPrice';
 
 interface BroadCoursesSelectionItemProps {
   courseItem: CourseItem;
+  isHovered: boolean | undefined;
 }
 
 export const BroadCoursesSelectionItem = ({
   courseItem,
+  isHovered,
 }: BroadCoursesSelectionItemProps) => {
   const formattedRatingCount = significantDigitFormatter.format(
     courseItem.ratingCount
@@ -30,8 +32,9 @@ export const BroadCoursesSelectionItem = ({
         style={{
           objectFit: 'contain',
           width: '100%',
-          height: 'auto',
-          border: '1px solid #e0e0e0',
+          height: '100%',
+          filter: isHovered ? 'brightness(0.7)' : 'brightness(1)',
+          transition: 'filter 0.2s ease-in-out',
         }}
       />
       <Stack
@@ -93,6 +96,26 @@ export const BroadCoursesSelectionItem = ({
         ) : (
           <NormalPrice price={courseItem.priceEur} />
         )}
+        <Box
+          sx={{
+            height: 28,
+            mt: 1,
+          }}
+        >
+          {courseItem.isBestseller && (
+            <Typography
+              sx={{
+                display: 'inline-block',
+                backgroundColor: 'background.secondary',
+                fontSize: 11,
+                fontWeight: 600,
+                p: 0.5,
+              }}
+            >
+              Bestseller
+            </Typography>
+          )}
+        </Box>
       </Stack>
     </Box>
   );
