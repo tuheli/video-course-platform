@@ -5,6 +5,7 @@ import { StarRating } from './StarRating';
 import { DiscountedPrice } from './DiscountedPrice';
 import { significantDigitFormatter } from './numberFormatters';
 import { NormalPrice } from './NormalPrice';
+import { courseCardWidth } from './common';
 
 interface BroadCoursesSelectionItemProps {
   courseItem: CourseItem;
@@ -23,7 +24,8 @@ export const BroadCoursesSelectionItem = ({
   return (
     <Box
       sx={{
-        width: 200,
+        width: courseCardWidth,
+        bgcolor: 'green',
       }}
     >
       <img
