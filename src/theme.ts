@@ -564,6 +564,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
           }),
         },
       },
+      // NOTE: App bar inherits paper.
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => ({
