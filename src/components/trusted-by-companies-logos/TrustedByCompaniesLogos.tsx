@@ -7,7 +7,7 @@ export const TrustedByCompaniesLogos = () => {
   return (
     <Box
       sx={{
-        bgcolor: 'background.secondary',
+        bgcolor: 'background.paper',
         py: 8,
       }}
     >
