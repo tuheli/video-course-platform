@@ -11,9 +11,7 @@ import { BroadCoursesSelectionItem } from './BroadCoursesSelectionItem';
 import { CourseTopicHeading } from './CourseTopicHeading';
 import { useState } from 'react';
 import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
-import '../dropdowns/animations/fadeAnimation.css';
-
-// NOTE: Margin top is for developing. Remove it later.
+import { CourseCardPopupContent } from './CourseCardPopupContent';
 
 export const BroadCoursesSelection = () => {
   const [selectedTopicName, setSelectedTopicName] = useState('Python');
@@ -33,7 +31,7 @@ export const BroadCoursesSelection = () => {
   return (
     <Container
       sx={{
-        mt: 16,
+        my: 30,
       }}
     >
       <Stack
@@ -120,24 +118,7 @@ export const BroadCoursesSelection = () => {
                       })
                     }
                   >
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        zIndex: 1,
-                        backgroundColor: 'rgba(0,0,0)',
-                        color: 'white',
-                        animation: 'fadeIn 0.2s',
-                      }}
-                    >
-                      HELLO WORLD HELLO WORLDHELLO WORLDHELLO WORLDHELLO
-                      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-                      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-                      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-                      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-                      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLD
-                    </Box>
+                    <CourseCardPopupContent />
                   </MainDropdownOpener>
                 );
               })}
