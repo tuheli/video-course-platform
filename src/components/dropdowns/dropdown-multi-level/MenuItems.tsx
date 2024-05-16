@@ -59,7 +59,12 @@ export const MenuItems = ({ menuItem, depthLevel }: MenuItemProps) => {
     <li ref={itemRef} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {menuItem.submenu ? (
         <>
-          <StyledMenuItemLink onClick={onClickMenuItem}>
+          <StyledMenuItemLink
+            onClick={onClickMenuItem}
+            sx={{
+              padding: '8px 16px',
+            }}
+          >
             <Typography
               variant="body2"
               sx={{
@@ -98,6 +103,9 @@ export const MenuItems = ({ menuItem, depthLevel }: MenuItemProps) => {
           onClick={onClickMenuItem}
           onMouseEnter={onMouseEnterLastDepthLink}
           onMouseLeave={onMouseLeaveLastDepthLink}
+          sx={{
+            padding: '8px 16px',
+          }}
         >
           <Typography
             variant="body2"
