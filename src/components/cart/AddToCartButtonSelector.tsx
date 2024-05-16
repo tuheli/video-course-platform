@@ -9,9 +9,7 @@ interface CartManagerProps {
 
 export const AddToCartButtonSelector = ({ item }: CartManagerProps) => {
   const isItemInCart = useAppSelector((state) =>
-    state.cart.items.some(
-      (cartItem) => cartItem.purchasableItemId === item.purchasableItemId
-    )
+    state.cart.items.some((cartItem) => cartItem.id === item.id)
   );
 
   return (

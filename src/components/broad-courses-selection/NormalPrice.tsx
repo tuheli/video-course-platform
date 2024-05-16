@@ -12,6 +12,7 @@ export const NormalPrice = ({ price }: NormalPriceProps) => {
   return (
     <Typography
       sx={{
+        color: 'text.primary',
         fontSize: coursePriceFontSize,
         fontWeight: 600,
       }}

@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { useContext } from 'react';
-import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
-import { StyledLink } from '../styled/StyledLink';
+import { CloseMainDropdownContext } from '../../contexts/CloseMainDropdownContext';
+import { StyledLink } from '../dropdowns/styled/StyledLink';
 
 export const EmptyCart = () => {
   const closeMainDropdown = useContext(CloseMainDropdownContext);
@@ -11,7 +11,12 @@ export const EmptyCart = () => {
   };
 
   return (
-    <>
+    <Stack
+      sx={{
+        gap: 1,
+        alignItems: 'center',
+      }}
+    >
       <Typography
         variant="body2"
         sx={{
@@ -32,6 +37,6 @@ export const EmptyCart = () => {
           Keep shopping
         </Typography>
       </StyledLink>
-    </>
+    </Stack>
   );
 };

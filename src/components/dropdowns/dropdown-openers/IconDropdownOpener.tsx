@@ -28,6 +28,7 @@ export const IconDropdownOpener = ({
       sx={{
         padding: 2,
       }}
+      forceOpen={false}
     >
       {children}
     </MainDropdownOpener>

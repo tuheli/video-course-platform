@@ -20,6 +20,7 @@ export const DiscountedPrice = ({ price, listPrice }: DiscountedPriceProps) => {
     >
       <Typography
         sx={{
+          color: 'text.primary',
           fontSize: coursePriceFontSize,
           fontWeight: 600,
           mt: 0.2,

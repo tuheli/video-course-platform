@@ -1,8 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { CourseItem } from '../components/broad-courses-selection/broadCoursesSelectionData';
 
-export interface AddableToCart {
-  purchasableItemId: string;
-}
+export type AddableToCart = CourseItem;
 
 interface InitialState {
   items: AddableToCart[];

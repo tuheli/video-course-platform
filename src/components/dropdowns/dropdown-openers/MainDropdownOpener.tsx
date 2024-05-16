@@ -12,9 +12,12 @@ interface ComponentProps {
 
 type RenderComponentType = ComponentType<ComponentProps>;
 
+// NOTE: Force open is only for developing purposes to keep a dropdown open.
+
 interface MainDropdownOpenerProps {
   RenderComponent: RenderComponentType;
   children: React.ReactNode;
+  forceOpen: boolean;
   height?: string | number;
   sx?: SxProps;
 }
@@ -33,6 +36,7 @@ export const MainDropdownOpener = ({
   children,
   height = appBarDropdownOpenerHeight,
   sx,
+  forceOpen = false,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -81,7 +85,7 @@ export const MainDropdownOpener = ({
           }}
         />
       </StyledMenuItemLink>
-      {isDropdownOpen && (
+      {(forceOpen || isDropdownOpen) && (
         <CloseMainDropdownContext.Provider value={closeMainDropdown}>
           {children}
         </CloseMainDropdownContext.Provider>

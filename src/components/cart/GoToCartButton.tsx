@@ -3,9 +3,13 @@ import { useClosePopover } from '../../hooks/useClosePopover';
 
 interface GoToCartButtonProps {
   fullWidth?: boolean;
+  color?: 'secondary' | 'primary';
 }
 
-export const GoToCartButton = ({ fullWidth = true }: GoToCartButtonProps) => {
+export const GoToCartButton = ({
+  fullWidth = true,
+  color = 'secondary',
+}: GoToCartButtonProps) => {
   const closePopover = useClosePopover();
 
   const onClickGoToCart = () => {
@@ -15,7 +19,7 @@ export const GoToCartButton = ({ fullWidth = true }: GoToCartButtonProps) => {
   return (
     <Button
       variant="contained"
-      color="secondary"
+      color={color}
       fullWidth={fullWidth}
       onClick={onClickGoToCart}
     >
