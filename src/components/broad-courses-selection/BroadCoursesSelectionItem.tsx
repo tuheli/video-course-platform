@@ -25,7 +25,6 @@ export const BroadCoursesSelectionItem = ({
     <Box
       sx={{
         width: courseCardWidth,
-        bgcolor: 'green',
       }}
     >
       <img

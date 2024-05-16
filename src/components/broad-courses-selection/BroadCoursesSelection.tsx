@@ -31,7 +31,8 @@ export const BroadCoursesSelection = () => {
   return (
     <Container
       sx={{
-        my: 30,
+        mt: 10,
+        mb: 30,
       }}
     >
       <Stack
