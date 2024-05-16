@@ -7,7 +7,7 @@ import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
 import { CartDropdown } from '../dropdowns/dropdown-singe-item/CartDropdown';
 import { LoginButton } from './LoginButton';
 import { SignUpButton } from './SignUpButton';
-import { SelectLanguageButton } from './SelectLanguageButton';
+import { SelectLanguageButton } from '../language-selection/SelectLanguageButton';
 import { CompanyLogo } from './CompanyLogo';
 
 const itemGap = 2;
