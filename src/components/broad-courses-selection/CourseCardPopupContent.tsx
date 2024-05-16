@@ -9,75 +9,41 @@ interface PositionOffset {
   right?: number;
 }
 
-interface Size {
+interface SpaceAround {
+  spaceLeft: number;
+  spaceRight: number;
+  spaceAbove: number;
+  spaceBelow: number;
+}
+
+interface RectangleSize {
   width: number;
   height: number;
 }
 
-type AnchorPosition = 'left' | 'right' | 'below' | 'above';
+type RenderPosition = 'left' | 'right' | 'below' | 'above';
+
+const popupCardSize = { width: 200, height: 300 };
 
 const getAnchorPosition = (
-  parentRef: React.RefObject<HTMLDivElement>,
-  childSize: Size
-): AnchorPosition => {
-  const parentRect = parentRef.current?.getBoundingClientRect();
-  const parentWidth = parentRect?.width || 0;
-  const parentHeight = parentRect?.height || 0;
+  popupSize: RectangleSize,
+  parentSpaceAround: SpaceAround
+): Omit<RenderPosition, 'above'> => {
+  const fitsRight = parentSpaceAround.spaceRight >= popupSize.width;
+  const fitsLeft = parentSpaceAround.spaceLeft >= popupSize.width;
 
-  const childWidth = childSize.width;
-  const childHeight = childSize.height;
-
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
-
-  const parentTop = parentRect?.top || 0;
-  const parentLeft = parentRect?.left || 0;
-
-  const parentBottom = parentTop + parentHeight;
-  const parentRight = parentLeft + parentWidth;
-
-  const spaceAbove = parentTop;
-  const spaceBelow = windowHeight - parentBottom;
-  const spaceLeft = parentLeft;
-  const spaceRight = windowWidth - parentRight;
-
-  const canFitAbove = spaceAbove > childHeight / 2;
-  const canFitBelow = spaceBelow > childHeight / 2;
-  const canFitLeft = spaceLeft > childWidth / 2;
-  const canFitRight = spaceRight > childWidth / 2;
-
-  if (canFitRight && canFitAbove && canFitBelow) {
-    return 'right';
-  }
-
-  if (canFitLeft && canFitAbove && canFitBelow) {
-    return 'left';
-  }
-
-  if (canFitBelow && canFitLeft && canFitRight) {
-    return 'below';
-  }
-
-  if (canFitAbove && canFitLeft && canFitRight) {
-    return 'above';
-  }
-
-  // Child is too big to fit properly
+  if (fitsRight) return 'right';
+  if (fitsLeft) return 'left';
   return 'below';
 };
 
 const getOffset = (
-  parent: HTMLElement,
-  childRef: React.RefObject<HTMLDivElement>,
-  anchor: AnchorPosition
+  parentSize: RectangleSize,
+  childSize: RectangleSize,
+  anchor: Omit<RenderPosition, 'above'>
 ) => {
-  const parentHeight = parent.clientHeight || 0;
-  const childHeight = childRef.current?.clientHeight || 0;
-  const centeredTop = (parentHeight - childHeight) / 2;
-
-  const parentWidth = parent.clientWidth || 0;
-  const childWidth = childRef.current?.clientWidth || 0;
-  const centeredLeft = (parentWidth - childWidth) / 2;
+  const centeredTop = (parentSize.height - childSize.height) / 2;
+  const centeredLeft = (parentSize.width - childSize.width) / 2;
 
   switch (anchor) {
     case 'left':
@@ -85,62 +51,79 @@ const getOffset = (
         top: centeredTop,
         bottom: undefined,
         left: undefined,
-        right: parent.clientWidth,
+        right: parentSize.width,
       };
     case 'right':
       return {
         top: centeredTop,
-        left: parent.clientWidth,
+        left: parentSize.width,
         bottom: undefined,
         right: undefined,
       };
     case 'below':
       return {
-        top: parent.clientHeight,
+        top: parentSize.height,
         left: centeredLeft,
         bottom: undefined,
         right: undefined,
       };
-    case 'above':
-      return {
-        top: childHeight * -1,
-        left: centeredLeft,
-        bottom: undefined,
-        right: undefined,
-      };
+
     default:
       return {
-        top: centeredTop,
+        top: parentSize.height,
         left: centeredLeft,
-        bottom: 0,
-        right: 0,
+        bottom: undefined,
+        right: undefined,
       };
   }
+};
+
+const getSpaceAroundElement = (element: HTMLElement): SpaceAround => {
+  const rect = element.getBoundingClientRect();
+  return {
+    spaceLeft: rect.left,
+    spaceRight: window.innerWidth - rect.right,
+    spaceAbove: rect.top,
+    spaceBelow: window.innerHeight - rect.bottom,
+  };
 };
 
 export const CourseCardPopupContent = () => {
   const [positionOffset, setPositionOffset] = useState<PositionOffset | null>(
     null
   );
-  const ref = useRef<HTMLDivElement | null>(null);
-  const size = { width: 300, height: 300 };
+  const divRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-    if (!ref.current.parentElement) return;
+    if (!divRef.current) return;
+    if (!divRef.current.parentElement) return;
 
-    const anchor = getAnchorPosition(ref, {
-      width: size.width,
-      height: size.height,
-    });
+    const parentElement = divRef.current.parentElement;
 
-    const offset = getOffset(ref.current.parentElement, ref, anchor);
+    const popupSize = {
+      width: popupCardSize.width,
+      height: popupCardSize.height,
+    };
+
+    const parentSpaceAround = getSpaceAroundElement(parentElement);
+
+    const anchor = getAnchorPosition(popupSize, parentSpaceAround);
+
+    const parentSize: RectangleSize = {
+      width: parentElement.clientWidth,
+      height: parentElement.clientHeight,
+    };
+
+    const offset = getOffset(parentSize, popupSize, anchor);
+
     setPositionOffset(offset);
   }, []);
 
+  // NOTE: The position calculation uses clientwidth and clientheight so dont add margin or borders to the divref element. Padding is ok.
+
   return (
     <Box
-      ref={ref}
+      ref={divRef}
       sx={{
         position: 'absolute',
         zIndex: 1,
@@ -148,18 +131,13 @@ export const CourseCardPopupContent = () => {
         bottom: positionOffset?.bottom,
         left: positionOffset?.left,
         right: positionOffset?.right,
-        width: size.width,
-        height: size.height,
+        width: popupCardSize.width,
+        height: popupCardSize.height,
         backgroundColor: 'rgba(0,0,0, 0.25)',
         color: 'white',
         animation: 'fadeIn 0.2s',
+        bgcolor: 'rgba(0,0,0,0.25)',
       }}
-    >
-      HELLO WORLD HELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-      WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO WORLDHELLO
-      WORLDHELLO WORLDHELLO WORLDHELLO
-    </Box>
+    ></Box>
   );
 };
