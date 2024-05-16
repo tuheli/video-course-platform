@@ -35,7 +35,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
     items: [
       {
         title: 'The Complete Python Bootcamp From Zero to Hero in Python',
-        thumbnailUrl: '/course-images/course-image-1.jpg',
+        thumbnailUrl: '/course-images/python-course-image-1.jpg',
         creatorNames: ['Jose Portilla'],
         rating: 3.2,
         ratingCount: 1234,
@@ -58,7 +58,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
       {
         title:
           'Python for Data Science and Machine Learning Bootcamp Long Text to Test Overflowing Title',
-        thumbnailUrl: '/course-images/course-image-1.jpg',
+        thumbnailUrl: '/course-images/python-course-image-2.jpg',
         creatorNames: [
           'Jose Portilla',
           'John Doe',
@@ -86,7 +86,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
       },
       {
         title: 'Complete Python Bootcamp: Go from zero to hero in Python 3',
-        thumbnailUrl: '/course-images/course-image-1.jpg',
+        thumbnailUrl: '/course-images/python-course-image-3.jpg',
         creatorNames: ['Jose Portilla'],
         rating: 5,
         ratingCount: 123456,
@@ -116,7 +116,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
     items: [
       {
         title: 'Microsoft Excel - Excel from Beginner to Advanced',
-        thumbnailUrl: '/course-images/course-image-1.jpg',
+        thumbnailUrl: '/course-images/excel-course-image-1.jpg',
         creatorNames: ['Kyle Pew'],
         rating: 4.7,
         ratingCount: 1234567,
@@ -138,7 +138,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
       },
       {
         title: 'Microsoft Excel - Advanced Excel Formulas & Functions',
-        thumbnailUrl: '/course-images/course-image-1.jpg',
+        thumbnailUrl: '/course-images/excel-course-image-2.jpg',
         creatorNames: ['Kyle Pew'],
         rating: 4.2,
         ratingCount: 12345,
