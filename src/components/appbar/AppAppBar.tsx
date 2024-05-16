@@ -10,6 +10,8 @@ import { SignUpButton } from './SignUpButton';
 import { SelectLanguageButton } from './SelectLanguageButton';
 import { CompanyLogo } from './CompanyLogo';
 
+const itemGap = 2;
+
 const AppAppBar = () => {
   return (
     <AppBar
@@ -34,7 +36,7 @@ const AppAppBar = () => {
               flexGrow: 1,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 2,
+              gap: itemGap,
             }}
           >
             {/** Left side items */}
@@ -42,7 +44,7 @@ const AppAppBar = () => {
               sx={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: 2,
+                gap: itemGap,
               }}
             >
               <CompanyLogo />
@@ -55,7 +57,7 @@ const AppAppBar = () => {
               sx={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: 2,
+                gap: itemGap,
               }}
             >
               <BusinessDropdown />
@@ -66,7 +68,7 @@ const AppAppBar = () => {
               sx={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: 2,
+                gap: itemGap,
               }}
             >
               <LoginButton />
