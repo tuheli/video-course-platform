@@ -4,11 +4,11 @@ import { RedeemOfferCallToAction } from './RedeemOfferCallToAction';
 // Smart bar switches which call to action to show on top of app bar
 
 export const SmartBar = () => {
-  const isRedeemed = useAppSelector((state) => state.offer.isRedeemed);
+  const isRedeemed = useAppSelector((state) => state.specialOffer.isRedeemed);
+  const isRejected = useAppSelector((state) => state.specialOffer.isRejected);
+  const isExpired = useAppSelector((state) => state.specialOffer.isExpired);
 
-  if (isRedeemed) {
-    return null;
-  }
+  const showSpecialOffer = !isRedeemed && !isRejected && !isExpired;
 
-  return <RedeemOfferCallToAction />;
+  return <>{showSpecialOffer && <RedeemOfferCallToAction />}</>;
 };

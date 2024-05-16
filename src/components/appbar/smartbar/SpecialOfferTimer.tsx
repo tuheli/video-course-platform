@@ -1,12 +1,23 @@
 import { Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { maxOfferDuration, secondPassed } from '../../../features/offerSlice';
+import {
+  offerExpired,
+  maxOfferDuration,
+  secondPassed,
+} from '../../../features/specialOfferSlice';
 
 export const SpecialOfferTimer = () => {
-  const duration = useAppSelector((state) => state.offer.duration);
+  const duration = useAppSelector((state) => state.specialOffer.duration);
   const dispatch = useAppDispatch();
   const timerRef = useRef(0);
+
+  const isDurationAcceptable =
+    !isNaN(duration) && duration >= 0 && duration <= maxOfferDuration;
+
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+  };
 
   const formatDuration = (durationSeconds: number) => {
     const date = new Date(0);
@@ -42,7 +53,13 @@ export const SpecialOfferTimer = () => {
     };
   }, []);
 
-  const isDurationAcceptable = duration > 0 && duration <= maxOfferDuration;
+  useEffect(() => {
+    // Offer expired or the duration is malformed
+    if (!isDurationAcceptable) {
+      dispatch(offerExpired());
+      stopTimer();
+    }
+  }, [isDurationAcceptable]);
 
   const timeString = isDurationAcceptable
     ? formatDuration(duration)

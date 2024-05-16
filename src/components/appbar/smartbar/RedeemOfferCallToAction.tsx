@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { SpecialOfferTimer } from './SpecialOfferTimer';
 import { useAppDispatch } from '../../../app/hooks';
-import { redeemed } from '../../../features/offerSlice';
+import { redeemed } from '../../../features/specialOfferSlice';
 
 export const RedeemOfferCallToAction = () => {
   const dispatch = useAppDispatch();

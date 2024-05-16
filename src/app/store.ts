@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import offerSlice from '../features/offerSlice';
+import specialOfferSlice from '../features/specialOfferSlice';
 
 export const store = configureStore({
   reducer: {
-    offer: offerSlice,
+    specialOffer: specialOfferSlice,
   },
 });
 
