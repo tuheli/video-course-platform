@@ -16,7 +16,7 @@ export const CompanyLogo = () => {
           maxHeight: '1.3rem',
           cursor: 'pointer',
         }}
-      ></Box>
+      />
     </a>
   );
 };
