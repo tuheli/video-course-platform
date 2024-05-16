@@ -25,7 +25,7 @@ type RenderPosition = 'left' | 'right' | 'below' | 'above';
 
 const popupCardSize = { width: 200, height: 300 };
 
-const getAnchorPosition = (
+const getRenderPosition = (
   popupSize: RectangleSize,
   parentSpaceAround: SpaceAround
 ): Omit<RenderPosition, 'above'> => {
@@ -40,12 +40,12 @@ const getAnchorPosition = (
 const getOffset = (
   parentSize: RectangleSize,
   childSize: RectangleSize,
-  anchor: Omit<RenderPosition, 'above'>
+  renderPosition: Omit<RenderPosition, 'above'>
 ) => {
   const centeredTop = (parentSize.height - childSize.height) / 2;
   const centeredLeft = (parentSize.width - childSize.width) / 2;
 
-  switch (anchor) {
+  switch (renderPosition) {
     case 'left':
       return {
         top: centeredTop,
@@ -106,15 +106,14 @@ export const CourseCardPopupContent = () => {
     };
 
     const parentSpaceAround = getSpaceAroundElement(parentElement);
-
-    const anchor = getAnchorPosition(popupSize, parentSpaceAround);
+    const renderPosition = getRenderPosition(popupSize, parentSpaceAround);
 
     const parentSize: RectangleSize = {
       width: parentElement.clientWidth,
       height: parentElement.clientHeight,
     };
 
-    const offset = getOffset(parentSize, popupSize, anchor);
+    const offset = getOffset(parentSize, popupSize, renderPosition);
 
     setPositionOffset(offset);
   }, []);
