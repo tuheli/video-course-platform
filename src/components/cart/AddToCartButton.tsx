@@ -5,9 +5,13 @@ import { AddableToCart, itemAddedToCart } from '../../features/cartSlice';
 
 export interface AddToCartButtonProps {
   item: AddableToCart;
+  fullWidth?: boolean;
 }
 
-export const AddToCartButton = ({ item }: AddToCartButtonProps) => {
+export const AddToCartButton = ({
+  item,
+  fullWidth = true,
+}: AddToCartButtonProps) => {
   const dispatch = useAppDispatch();
   const closePopover = useClosePopover();
 
@@ -17,7 +21,12 @@ export const AddToCartButton = ({ item }: AddToCartButtonProps) => {
   };
 
   return (
-    <Button variant="contained" color="secondary" onClick={onClickAddToCart}>
+    <Button
+      variant="contained"
+      color="secondary"
+      fullWidth={fullWidth}
+      onClick={onClickAddToCart}
+    >
       Add to cart
     </Button>
   );
