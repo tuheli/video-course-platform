@@ -143,6 +143,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
     text: {
       primary: gray[900],
       secondary: gray[500],
+      green: green[600],
       ...(mode === 'dark' && { primary: '#fff', secondary: gray[400] }),
     },
     action: {
