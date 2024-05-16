@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AddableToCart } from './cartSlice';
 
-export interface AddableToFavorites extends AddableToCart {}
+export type AddableToFavorites = AddableToCart;
 
 interface InitialState {
   items: AddableToFavorites[];
