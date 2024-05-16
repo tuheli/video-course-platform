@@ -1,14 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AddableToCart } from './cartSlice';
 
-interface AddableToFavorites extends AddableToCart {}
+export interface AddableToFavorites extends AddableToCart {}
 
 interface InitialState {
-  favorites: AddableToFavorites[];
+  items: AddableToFavorites[];
 }
 
 const initialState: InitialState = {
-  favorites: [],
+  items: [],
 };
 
 const slice = createSlice({
@@ -17,7 +17,7 @@ const slice = createSlice({
   reducers: {
     favoriteAdded: (state, action: PayloadAction<AddableToFavorites>) => {
       const newFavorite = action.payload;
-      state.favorites.push(newFavorite);
+      state.items.push(newFavorite);
     },
   },
 });
