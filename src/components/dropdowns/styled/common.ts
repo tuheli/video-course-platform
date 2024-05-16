@@ -1,4 +1,4 @@
-export const transparentPaddingTop = 10;
+export const transparentPaddingTop = 4;
 export const containerBorderColor = 'rgba(0, 0, 0, 0.1)';
 export const containerBorderWidth = 1;
 export const containerBorderStyle = 'solid';
