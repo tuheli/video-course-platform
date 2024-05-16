@@ -16,6 +16,7 @@ interface MainDropdownOpenerProps {
   RenderComponent: RenderComponentType;
   children: React.ReactNode;
   height?: string | number;
+  sx?: SxProps;
 }
 
 // NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
@@ -31,6 +32,7 @@ export const MainDropdownOpener = ({
   RenderComponent,
   children,
   height = appBarDropdownOpenerHeight,
+  sx,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -61,6 +63,7 @@ export const MainDropdownOpener = ({
       ref={divRef}
       onMouseLeave={onMouseLeaveDropdown}
       sx={{
+        ...sx,
         position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
