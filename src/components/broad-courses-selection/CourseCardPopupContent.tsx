@@ -1,12 +1,14 @@
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
 import '../dropdowns/animations/fadeAnimation.css';
+import { Box, Paper, Stack, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { CourseItem } from './broadCoursesSelectionData';
 import { dateLocale } from './common';
 import { BestSeller } from './BestSeller';
 import { DotSeparatedSpan } from './DotSeparatedSpan';
 import CheckIcon from '@mui/icons-material/Check';
-import { AddToCartButton } from './AddToCartButton';
+import { CartManager } from '../cart/CartManager';
+import { AddableToCart } from '../../features/cartSlice';
+import { AddToFavoritesSelector } from '../favorites/AddToFavoritesSelector';
 
 interface PositionOffset {
   top?: number;
@@ -116,6 +118,10 @@ export const CourseCardPopupContent = ({
 
   const lastUpdatedDateString = formatLastUpdatedDate(courseItem.lastUpdated);
 
+  const courseAsAddableToCart: AddableToCart = {
+    purchasableItemId: courseItem.purchasableItemId,
+  };
+
   useEffect(() => {
     if (!divRef.current) return;
     if (!divRef.current.parentElement) return;
@@ -201,9 +207,10 @@ export const CourseCardPopupContent = ({
             </DotSeparatedSpan>
           </Box>
           <Stack
-            style={{
+            sx={{
               flexDirection: 'column',
-              gap: 2,
+              gap: 0.8,
+              mt: 0.5,
             }}
           >
             {courseItem.bulletPoints.map((text, index) => (
@@ -219,7 +226,22 @@ export const CourseCardPopupContent = ({
               </Stack>
             ))}
           </Stack>
-          <AddToCartButton item={courseItem} />
+          <Stack
+            sx={{
+              flexDirection: 'row',
+            }}
+          >
+            {/* Increased z index because favorites buttons have scaling animations which might overlap add to cart buttons */}
+            <Box
+              sx={{
+                flexGrow: 1,
+                zIndex: 1,
+              }}
+            >
+              <CartManager item={courseAsAddableToCart} />
+            </Box>
+            <AddToFavoritesSelector item={courseAsAddableToCart} />
+          </Stack>
         </Stack>
       </Paper>
     </Box>
