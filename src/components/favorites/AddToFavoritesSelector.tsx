@@ -17,9 +17,7 @@ export const AddToFavoritesSelector = ({
   item,
 }: AddToFavoritesSelectorProps) => {
   const isInItemInFavorites = useAppSelector((state) =>
-    state.favorites.items.some(
-      (favorite) => favorite.purchasableItemId === item.purchasableItemId
-    )
+    state.favorites.items.some((favorite) => favorite.id === item.id)
   );
 
   if (!isUserLoggedIn) {
