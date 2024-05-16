@@ -6,7 +6,7 @@ import { dateLocale } from './common';
 import { BestSeller } from './BestSeller';
 import { DotSeparatedSpan } from './DotSeparatedSpan';
 import CheckIcon from '@mui/icons-material/Check';
-import { CartManager } from '../cart/CartManager';
+import { AddToCartButtonSelector } from '../cart/AddToCartButtonSelector';
 import { AddableToCart } from '../../features/cartSlice';
 import { AddToFavoritesSelector } from '../favorites/AddToFavoritesSelector';
 
@@ -238,7 +238,7 @@ export const CourseCardPopupContent = ({
                 zIndex: 1,
               }}
             >
-              <CartManager item={courseAsAddableToCart} />
+              <AddToCartButtonSelector item={courseAsAddableToCart} />
             </Box>
             <AddToFavoritesSelector item={courseAsAddableToCart} />
           </Stack>
