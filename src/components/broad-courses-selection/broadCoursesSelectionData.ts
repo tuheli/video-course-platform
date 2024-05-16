@@ -1,4 +1,4 @@
-import { AddableToCart } from './AddToCartButton';
+import { AddableToCart } from '../../features/cartSlice';
 
 type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
 
