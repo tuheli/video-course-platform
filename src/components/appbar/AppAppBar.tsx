@@ -34,7 +34,7 @@ const AppAppBar = () => {
               flexGrow: 1,
               flexDirection: 'row',
               alignItems: 'center',
-              gap: 3,
+              gap: 2,
             }}
           >
             {/** Left side items */}
@@ -42,7 +42,7 @@ const AppAppBar = () => {
               sx={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: 3,
+                gap: 2,
               }}
             >
               <CompanyLogo />
@@ -55,6 +55,7 @@ const AppAppBar = () => {
               sx={{
                 flexDirection: 'row',
                 alignItems: 'center',
+                gap: 2,
               }}
             >
               <BusinessDropdown />
