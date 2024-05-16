@@ -1,8 +1,7 @@
-import { AddableToCart } from '../../features/cartSlice';
-
 type DifficultyLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
 
-export interface CourseItem extends AddableToCart {
+export interface CourseItem {
+  id: string;
   title: string;
   thumbnailUrl: string;
   creatorNames: string[];
@@ -11,7 +10,7 @@ export interface CourseItem extends AddableToCart {
   listPrice: number;
   priceEur: number;
   isBestseller: boolean;
-  lastUpdated: Date;
+  lastUpdated: string;
   lengthHours: number;
   difficultyLevel: DifficultyLevel;
   hasSubtitles: boolean;
@@ -34,6 +33,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
       'Take one of Lorem’s range of Python courses and learn how to code using this incredibly useful language. Its simple syntax and readability makes Python perfect for Flask, Django, data science, and machine learning. You’ll learn how to build everything from games to sites to apps. Choose from a range of courses that will appeal to beginners and experts alike.',
     items: [
       {
+        id: 'python-course-1',
         title: 'The Complete Python Bootcamp From Zero to Hero in Python',
         thumbnailUrl: '/course-images/python-course-image-1.jpg',
         creatorNames: ['Jose Portilla'],
@@ -42,7 +42,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         listPrice: 89.99,
         priceEur: 9.99,
         isBestseller: false,
-        lastUpdated: new Date(),
+        lastUpdated: new Date().toDateString(),
         lengthHours: 10,
         difficultyLevel: 'Beginner',
         hasSubtitles: true,
@@ -53,9 +53,9 @@ export const broadCoursesSelectionData: CourseTopic[] = [
           'A practical programming course for office workers, academics, and administrators who want to improve their productivity.',
           'You will be able to use Python for your own work problems or personal projects.',
         ],
-        purchasableItemId: 'python-bootcamp-1',
       },
       {
+        id: 'python-course-2',
         title:
           'Python for Data Science and Machine Learning Bootcamp Long Text to Test Overflowing Title',
         thumbnailUrl: '/course-images/python-course-image-2.jpg',
@@ -71,7 +71,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         listPrice: 199.99,
         priceEur: 9.99,
         isBestseller: true,
-        lastUpdated: new Date('2023-11-01'),
+        lastUpdated: new Date('2023-11-01').toDateString(),
         lengthHours: 20,
         difficultyLevel: 'Intermediate',
         hasSubtitles: false,
@@ -82,9 +82,9 @@ export const broadCoursesSelectionData: CourseTopic[] = [
           'Use Spark for Big Data Analysis',
           'Implement Machine Learning Algorithms',
         ],
-        purchasableItemId: 'python-bootcamp-2',
       },
       {
+        id: 'python-course-3',
         title: 'Complete Python Bootcamp: Go from zero to hero in Python 3',
         thumbnailUrl: '/course-images/python-course-image-3.jpg',
         creatorNames: ['Jose Portilla'],
@@ -93,7 +93,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         listPrice: 199.99,
         priceEur: 199.99,
         isBestseller: false,
-        lastUpdated: new Date('2023-11-05'),
+        lastUpdated: new Date('2023-11-05').toDateString(),
         lengthHours: 30.5,
         difficultyLevel: 'All Levels',
         hasSubtitles: true,
@@ -104,7 +104,6 @@ export const broadCoursesSelectionData: CourseTopic[] = [
           'You will learn automation, game, app and web development, data science and machine learning all using Python.',
           'You will be able to program in Python professionally',
         ],
-        purchasableItemId: 'python-bootcamp-3',
       },
     ],
   },
@@ -115,6 +114,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
       'Take a Microsoft Excel course from Lorem, and learn how to use this industry-standard software. Real-world experts will show you the basics like how to organize data into sheets, rows and columns, and advanced techniques like creating complex dynamic formulas. Both small businesses and large companies use Excel to store, analyze, and visualize data.',
     items: [
       {
+        id: 'excel-course-1',
         title: 'Microsoft Excel - Excel from Beginner to Advanced',
         thumbnailUrl: '/course-images/excel-course-image-1.jpg',
         creatorNames: ['Kyle Pew'],
@@ -123,7 +123,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         listPrice: 199.99,
         priceEur: 9.99,
         isBestseller: true,
-        lastUpdated: new Date('2022-05-01'),
+        lastUpdated: new Date('2022-05-01').toDateString(),
         lengthHours: 10,
         difficultyLevel: 'Intermediate',
         hasSubtitles: true,
@@ -134,9 +134,9 @@ export const broadCoursesSelectionData: CourseTopic[] = [
           'Build a solid understanding on the Basics of Microsoft Excel',
           'Learn the most common Excel functions used in the Office',
         ],
-        purchasableItemId: 'excel-course-1',
       },
       {
+        id: 'excel-course-2',
         title: 'Microsoft Excel - Advanced Excel Formulas & Functions',
         thumbnailUrl: '/course-images/excel-course-image-2.jpg',
         creatorNames: ['Kyle Pew'],
@@ -145,7 +145,7 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         listPrice: 149.99,
         priceEur: 149.99,
         isBestseller: false,
-        lastUpdated: new Date('2024-12-30'),
+        lastUpdated: new Date('2024-12-30').toDateString(),
         lengthHours: 20,
         difficultyLevel: 'Advanced',
         hasSubtitles: false,
@@ -156,7 +156,6 @@ export const broadCoursesSelectionData: CourseTopic[] = [
           "Learn to use Excel's powerful data analysis tools",
           'Learn to use Excel for data analysis and visualization',
         ],
-        purchasableItemId: 'excel-course-2',
       },
     ],
   },

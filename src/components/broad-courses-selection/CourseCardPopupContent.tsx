@@ -7,7 +7,6 @@ import { BestSeller } from './BestSeller';
 import { DotSeparatedSpan } from './DotSeparatedSpan';
 import CheckIcon from '@mui/icons-material/Check';
 import { AddToCartButtonSelector } from '../cart/AddToCartButtonSelector';
-import { AddableToCart } from '../../features/cartSlice';
 import { AddToFavoritesSelector } from '../favorites/AddToFavoritesSelector';
 
 interface PositionOffset {
@@ -116,11 +115,9 @@ export const CourseCardPopupContent = ({
   );
   const divRef = useRef<HTMLDivElement | null>(null);
 
-  const lastUpdatedDateString = formatLastUpdatedDate(courseItem.lastUpdated);
-
-  const courseAsAddableToCart: AddableToCart = {
-    purchasableItemId: courseItem.purchasableItemId,
-  };
+  const lastUpdatedDateString = formatLastUpdatedDate(
+    new Date(courseItem.lastUpdated)
+  );
 
   useEffect(() => {
     if (!divRef.current) return;
@@ -236,11 +233,12 @@ export const CourseCardPopupContent = ({
               sx={{
                 flexGrow: 1,
                 zIndex: 1,
+                mt: 0.5,
               }}
             >
-              <AddToCartButtonSelector item={courseAsAddableToCart} />
+              <AddToCartButtonSelector item={courseItem} />
             </Box>
-            <AddToFavoritesSelector item={courseAsAddableToCart} />
+            <AddToFavoritesSelector item={courseItem} />
           </Stack>
         </Stack>
       </Paper>
