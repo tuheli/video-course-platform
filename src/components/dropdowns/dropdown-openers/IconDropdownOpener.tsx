@@ -25,6 +25,9 @@ export const IconDropdownOpener = ({
       RenderComponent={({ sx }: { sx?: SxProps<Theme> | undefined }) =>
         RenderComponent({ Icon, sx })
       }
+      sx={{
+        padding: 2,
+      }}
     >
       {children}
     </MainDropdownOpener>
