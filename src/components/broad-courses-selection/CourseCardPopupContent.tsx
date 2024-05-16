@@ -1,6 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import '../dropdowns/animations/fadeAnimation.css';
+import { CourseItem } from './broadCoursesSelectionData';
+import { dateLocale } from './common';
+import { BestSeller } from './BestSeller';
+import { DotSeparatedSpan } from './DotSeparatedSpan';
+import CheckIcon from '@mui/icons-material/Check';
+import { AddToCartButton } from './AddToCartButton';
 
 interface PositionOffset {
   top?: number;
@@ -21,9 +27,15 @@ interface RectangleSize {
   height: number;
 }
 
+interface CourseCardPopupContentProps {
+  courseItem: CourseItem;
+}
+
 type RenderPosition = 'left' | 'right' | 'below' | 'above';
 
-const popupCardSize = { width: 200, height: 300 };
+// Height adjusts to content but width is fixed
+const popupWidth = 300;
+const defaultGap = 0.5;
 
 const getRenderPosition = (
   popupSize: RectangleSize,
@@ -88,11 +100,21 @@ const getSpaceAroundElement = (element: HTMLElement): SpaceAround => {
   };
 };
 
-export const CourseCardPopupContent = () => {
+const formatLastUpdatedDate = (date: Date) => {
+  const month = date.toLocaleString(dateLocale, { month: 'long' });
+  const year = date.getFullYear();
+  return `${month} ${year}`;
+};
+
+export const CourseCardPopupContent = ({
+  courseItem,
+}: CourseCardPopupContentProps) => {
   const [positionOffset, setPositionOffset] = useState<PositionOffset | null>(
     null
   );
   const divRef = useRef<HTMLDivElement | null>(null);
+
+  const lastUpdatedDateString = formatLastUpdatedDate(courseItem.lastUpdated);
 
   useEffect(() => {
     if (!divRef.current) return;
@@ -101,8 +123,8 @@ export const CourseCardPopupContent = () => {
     const parentElement = divRef.current.parentElement;
 
     const popupSize = {
-      width: popupCardSize.width,
-      height: popupCardSize.height,
+      width: popupWidth,
+      height: divRef.current.clientHeight,
     };
 
     const parentSpaceAround = getSpaceAroundElement(parentElement);
@@ -130,13 +152,76 @@ export const CourseCardPopupContent = () => {
         bottom: positionOffset?.bottom,
         left: positionOffset?.left,
         right: positionOffset?.right,
-        width: popupCardSize.width,
-        height: popupCardSize.height,
-        backgroundColor: 'rgba(0,0,0, 0.25)',
-        color: 'white',
+        width: popupWidth,
         animation: 'fadeIn 0.2s',
-        bgcolor: 'rgba(0,0,0,0.25)',
       }}
-    ></Box>
+    >
+      <Paper>
+        <Stack
+          sx={{
+            flexDirection: 'column',
+            gap: defaultGap,
+          }}
+        >
+          <Typography variant="h6">{courseItem.title}</Typography>
+          <Stack
+            sx={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: defaultGap,
+            }}
+          >
+            {courseItem.isBestseller && <BestSeller />}
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.green',
+              }}
+            >
+              Updated {''}
+              <Typography
+                component="span"
+                variant="caption"
+                sx={{
+                  color: 'text.green',
+                  fontWeight: 500,
+                }}
+              >
+                {lastUpdatedDateString}
+              </Typography>
+            </Typography>
+          </Stack>
+          <Box>
+            <DotSeparatedSpan>{courseItem.lengthHours} hours</DotSeparatedSpan>
+            <DotSeparatedSpan useDotSeparator={courseItem.hasSubtitles}>
+              {courseItem.difficultyLevel}
+            </DotSeparatedSpan>
+            <DotSeparatedSpan useDotSeparator={false}>
+              {courseItem.hasSubtitles && 'Subtitles'}
+            </DotSeparatedSpan>
+          </Box>
+          <Stack
+            style={{
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
+            {courseItem.bulletPoints.map((text, index) => (
+              <Stack
+                key={index}
+                sx={{
+                  flexDirection: 'row',
+                  gap: 2,
+                }}
+              >
+                <CheckIcon />
+                <Typography variant="body2">{text}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+          <AddToCartButton item={courseItem} />
+        </Stack>
+      </Paper>
+    </Box>
   );
 };

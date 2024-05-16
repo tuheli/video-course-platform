@@ -6,6 +6,7 @@ import { DiscountedPrice } from './DiscountedPrice';
 import { significantDigitFormatter } from './numberFormatters';
 import { NormalPrice } from './NormalPrice';
 import { courseCardWidth } from './common';
+import { BestSeller } from './BestSeller';
 
 interface BroadCoursesSelectionItemProps {
   courseItem: CourseItem;
@@ -27,15 +28,17 @@ export const BroadCoursesSelectionItem = ({
         width: courseCardWidth,
       }}
     >
-      <img
+      <Box
+        component="img"
         src={courseItem.thumbnailUrl}
         alt="Course image"
-        style={{
+        sx={{
           objectFit: 'contain',
           width: '100%',
           height: '100%',
           filter: isHovered ? 'brightness(0.7)' : 'brightness(1)',
           transition: 'filter 0.2s ease-in-out',
+          border: (theme) => `1px solid ${theme.palette.divider}`,
         }}
       />
       <Stack
@@ -103,19 +106,7 @@ export const BroadCoursesSelectionItem = ({
             mt: 1,
           }}
         >
-          {courseItem.isBestseller && (
-            <Typography
-              sx={{
-                display: 'inline-block',
-                backgroundColor: 'background.secondary',
-                fontSize: 11,
-                fontWeight: 600,
-                p: 0.5,
-              }}
-            >
-              Bestseller
-            </Typography>
-          )}
+          {courseItem.isBestseller && <BestSeller />}
         </Box>
       </Stack>
     </Box>

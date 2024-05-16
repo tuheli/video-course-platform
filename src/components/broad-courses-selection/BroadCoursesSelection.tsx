@@ -119,7 +119,7 @@ export const BroadCoursesSelection = () => {
                       })
                     }
                   >
-                    <CourseCardPopupContent />
+                    <CourseCardPopupContent courseItem={courseItem} />
                   </MainDropdownOpener>
                 );
               })}
