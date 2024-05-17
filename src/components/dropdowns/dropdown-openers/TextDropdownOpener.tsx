@@ -38,6 +38,7 @@ export const TextDropdownOpener = ({
         RenderComponent({ text, sx })
       }
       forceOpen={false}
+      usePortal={false}
     >
       {children}
     </MainDropdownOpener>

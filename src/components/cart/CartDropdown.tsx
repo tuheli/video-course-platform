@@ -70,7 +70,11 @@ export const CartDropdown = () => {
   };
 
   return (
-    <MainDropdownOpener RenderComponent={RenderThing} forceOpen={false}>
+    <MainDropdownOpener
+      RenderComponent={RenderThing}
+      forceOpen={false}
+      usePortal={false}
+    >
       <StyledTransparencyBox
         sx={{
           bottom: 0,

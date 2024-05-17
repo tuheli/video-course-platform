@@ -4,6 +4,7 @@ import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
 import { mainDropdownOpenerHeight as appBarDropdownOpenerHeight } from '../styled/common';
+import { PortaledItem } from '../../scroll-to-view-list/PortaledItem';
 
 interface ComponentProps {
   sx?: SxProps;
@@ -18,6 +19,7 @@ interface MainDropdownOpenerProps {
   RenderComponent: RenderComponentType;
   children: React.ReactNode;
   forceOpen: boolean;
+  usePortal: boolean;
   height?: string | number;
   sx?: SxProps;
 }
@@ -37,6 +39,7 @@ export const MainDropdownOpener = ({
   height = appBarDropdownOpenerHeight,
   sx,
   forceOpen = false,
+  usePortal = false,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -67,6 +70,17 @@ export const MainDropdownOpener = ({
 
   useClickAwayListener(divRef, isDropdownOpen, useHover, closeMainDropdown);
 
+  const getChildrenToRender = () => {
+    if (forceOpen || isDropdownOpen) {
+      if (usePortal) {
+        return (
+          <PortaledItem anchorElement={divRef.current}>{children}</PortaledItem>
+        );
+      }
+      return children;
+    }
+  };
+
   return (
     <Box
       ref={divRef}
@@ -86,7 +100,7 @@ export const MainDropdownOpener = ({
         >
           <RenderComponent />
         </StyledMenuItemLink>
-        {(forceOpen || isDropdownOpen) && children}
+        {getChildrenToRender()}
       </CloseDropdownContext.Provider>
     </Box>
   );

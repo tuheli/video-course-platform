@@ -6,8 +6,9 @@ import { useContext } from 'react';
 import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
 import { CourseCardPopupContent } from './CourseCardPopupContent';
 import { SelectedCourseTopicContext } from '../../contexts/SelectedCourseTopicContext';
+import { ScrollToViewList } from '../scroll-to-view-list/ScrollToViewList';
 
-export const CoursesCarousel = () => {
+export const CoursesSlider = () => {
   const { topic } = useContext(SelectedCourseTopicContext);
 
   const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
@@ -15,6 +16,11 @@ export const CoursesCarousel = () => {
   const onClickExplore = () => {};
 
   if (!topicToShow) return null;
+
+  const courseItems = topicToShow.items
+    .concat(topicToShow.items)
+    .concat(topicToShow.items)
+    .concat(topicToShow.items);
 
   return (
     <Paper
@@ -38,30 +44,40 @@ export const CoursesCarousel = () => {
             Explore {topicToShow.name}
           </Button>
         </Box>
-        {/** Carousel of course cards (currently a stack) */}
         <Stack
           sx={{
             flexDirection: 'row',
-            gap: 2,
           }}
         >
-          {topicToShow.items.map((courseItem, index) => {
-            return (
-              <MainDropdownOpener
-                key={index}
-                height="content"
-                RenderComponent={({ isDropdownOpen }) =>
-                  BroadCoursesSelectionItem({
-                    courseItem,
-                    isHovered: isDropdownOpen,
-                  })
-                }
-                forceOpen={false}
-              >
-                <CourseCardPopupContent courseItem={courseItem} />
-              </MainDropdownOpener>
-            );
-          })}
+          <ScrollToViewList
+            itemCount={courseItems.length}
+            itemQuerySelector="a > div > img"
+          >
+            {courseItems.map((courseItem, index) => {
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    scrollSnapAlign: 'start',
+                  }}
+                >
+                  <MainDropdownOpener
+                    height="content"
+                    RenderComponent={({ isDropdownOpen }) =>
+                      BroadCoursesSelectionItem({
+                        courseItem,
+                        isHovered: isDropdownOpen,
+                      })
+                    }
+                    forceOpen={false}
+                    usePortal={true}
+                  >
+                    <CourseCardPopupContent courseItem={courseItem} />
+                  </MainDropdownOpener>
+                </Box>
+              );
+            })}
+          </ScrollToViewList>
         </Stack>
       </Stack>
     </Paper>
