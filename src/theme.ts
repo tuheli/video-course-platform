@@ -421,12 +421,19 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       },
       MuiIconButton: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: ({ theme, ownerState }) => ({
             background: 'white',
             color: 'text.secondary',
             '&:hover': {
               background: 'white',
             },
+            ...(ownerState.color === 'primary' && {
+              color: 'white',
+              background: grey[800],
+              '&:hover': {
+                background: grey[700],
+              },
+            }),
             ...(theme.palette.mode === 'dark' && {
               '&:hover': {
                 background: 'none',
