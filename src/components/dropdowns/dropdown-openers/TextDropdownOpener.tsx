@@ -1,5 +1,6 @@
 import { SxProps, Theme, Typography } from '@mui/material';
 import { MainDropdownOpener } from './MainDropdownOpener';
+import { useDropdownContext } from '../../../hooks/useDropdownContext';
 
 interface TextComponentProps {
   text: string;
@@ -12,8 +13,16 @@ interface TextDropdownOpenerProps {
 }
 
 const RenderComponent = ({ text, sx }: TextComponentProps) => {
+  const { isDropdownOpen } = useDropdownContext();
+
   return (
-    <Typography variant="body2" sx={sx}>
+    <Typography
+      variant="body2"
+      sx={{
+        ...sx,
+        color: isDropdownOpen ? 'secondary.main' : 'text.primary',
+      }}
+    >
       {text}
     </Typography>
   );
@@ -28,6 +37,7 @@ export const TextDropdownOpener = ({
       RenderComponent={({ sx }: { sx?: SxProps<Theme> | undefined }) =>
         RenderComponent({ text, sx })
       }
+      forceOpen={false}
     >
       {children}
     </MainDropdownOpener>

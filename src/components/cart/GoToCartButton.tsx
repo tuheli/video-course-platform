@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { useClosePopover } from '../../hooks/useClosePopover';
+import { useDropdownContext } from '../../hooks/useDropdownContext';
 
 interface GoToCartButtonProps {
   fullWidth?: boolean;
@@ -10,10 +10,10 @@ export const GoToCartButton = ({
   fullWidth = true,
   color = 'secondary',
 }: GoToCartButtonProps) => {
-  const closePopover = useClosePopover();
+  const { closeMainDropdown } = useDropdownContext();
 
   const onClickGoToCart = () => {
-    closePopover();
+    closeMainDropdown();
   };
 
   return (

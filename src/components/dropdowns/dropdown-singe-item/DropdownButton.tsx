@@ -1,6 +1,5 @@
 import { Button } from '@mui/material';
-import { useContext } from 'react';
-import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
+import { useDropdownContext } from '../../../hooks/useDropdownContext';
 
 interface DropdownButtonButtonProps {
   text: string;
@@ -11,7 +10,7 @@ export const DropdownButton = ({
   text,
   onClick,
 }: DropdownButtonButtonProps) => {
-  const closeMainDropdown = useContext(CloseMainDropdownContext);
+  const { closeMainDropdown } = useDropdownContext();
 
   const onClickWithClose = () => {
     onClick && onClick();

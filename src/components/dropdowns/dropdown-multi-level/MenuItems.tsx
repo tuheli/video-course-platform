@@ -1,12 +1,12 @@
 import { type MenuItem } from './categoriesData';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { InnerMenuItemsList } from '../styled/InnerMenuItemsList';
 import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { Typography } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
-import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
 import { useHover } from '../dropdown-openers/MainDropdownOpener';
+import { useDropdownContext } from '../../../hooks/useDropdownContext';
 
 interface MenuItemProps {
   menuItem: MenuItem;
@@ -17,7 +17,7 @@ export const MenuItems = ({ menuItem, depthLevel }: MenuItemProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isHoveringLastDepthLink, setIsHoveringLastDepthLink] = useState(false);
   const itemRef = useRef<HTMLLIElement | null>(null);
-  const closeMainDropdown = useContext(CloseMainDropdownContext);
+  const { closeMainDropdown } = useDropdownContext();
 
   const onClickMenuItem = () => {
     if (useHover) {

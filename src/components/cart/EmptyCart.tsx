@@ -1,10 +1,9 @@
 import { Stack, Typography } from '@mui/material';
-import { useContext } from 'react';
-import { CloseMainDropdownContext } from '../../contexts/CloseMainDropdownContext';
 import { StyledLink } from '../dropdowns/styled/StyledLink';
+import { useDropdownContext } from '../../hooks/useDropdownContext';
 
 export const EmptyCart = () => {
-  const closeMainDropdown = useContext(CloseMainDropdownContext);
+  const { closeMainDropdown } = useDropdownContext();
 
   const onClickKeepShopping = () => {
     closeMainDropdown();

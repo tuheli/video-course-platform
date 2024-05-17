@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
-import { useClosePopover } from '../../hooks/useClosePopover';
 import { useAppDispatch } from '../../app/hooks';
 import { AddableToCart, itemAddedToCart } from '../../features/cartSlice';
+import { useDropdownContext } from '../../hooks/useDropdownContext';
 
 export interface AddToCartButtonProps {
   item: AddableToCart;
@@ -13,11 +13,11 @@ export const AddToCartButton = ({
   fullWidth = true,
 }: AddToCartButtonProps) => {
   const dispatch = useAppDispatch();
-  const closePopover = useClosePopover();
+  const { closeMainDropdown } = useDropdownContext();
 
   const onClickAddToCart = () => {
     dispatch(itemAddedToCart(item));
-    closePopover();
+    closeMainDropdown();
   };
 
   return (

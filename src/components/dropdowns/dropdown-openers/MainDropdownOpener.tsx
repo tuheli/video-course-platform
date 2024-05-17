@@ -2,7 +2,7 @@ import { ComponentType, useRef, useState } from 'react';
 import { Box, SxProps } from '@mui/material';
 import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
-import { CloseMainDropdownContext } from '../../../contexts/CloseMainDropdownContext';
+import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
 import { mainDropdownOpenerHeight as appBarDropdownOpenerHeight } from '../styled/common';
 
 interface ComponentProps {
@@ -60,6 +60,11 @@ export const MainDropdownOpener = ({
     setIsDropdownOpen(false);
   };
 
+  const contextValue = {
+    isDropdownOpen,
+    closeMainDropdown,
+  };
+
   useClickAwayListener(divRef, isDropdownOpen, useHover, closeMainDropdown);
 
   return (
@@ -74,22 +79,15 @@ export const MainDropdownOpener = ({
         height: height,
       }}
     >
-      <StyledMenuItemLink
-        onMouseEnter={onMouseEnterCategories}
-        onClick={onClickCategories}
-      >
-        <RenderComponent
-          isDropdownOpen={isDropdownOpen}
-          sx={{
-            color: isDropdownOpen ? 'secondary.main' : 'text.primary',
-          }}
-        />
-      </StyledMenuItemLink>
-      {(forceOpen || isDropdownOpen) && (
-        <CloseMainDropdownContext.Provider value={closeMainDropdown}>
-          {children}
-        </CloseMainDropdownContext.Provider>
-      )}
+      <CloseDropdownContext.Provider value={contextValue}>
+        <StyledMenuItemLink
+          onMouseEnter={onMouseEnterCategories}
+          onClick={onClickCategories}
+        >
+          <RenderComponent />
+        </StyledMenuItemLink>
+        {(forceOpen || isDropdownOpen) && children}
+      </CloseDropdownContext.Provider>
     </Box>
   );
 };
