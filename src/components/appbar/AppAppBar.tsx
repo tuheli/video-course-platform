@@ -4,7 +4,7 @@ import { CategoriesDropdown } from '../dropdowns/dropdown-multi-level/Categories
 import { SearchBar } from './searchbar/SearchBar';
 import { BusinessDropdown } from '../dropdowns/dropdown-singe-item/BusinessDropdown';
 import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
-import { CartDropdown } from '../dropdowns/dropdown-singe-item/CartDropdown';
+import { CartDropdown } from '../cart/CartDropdown';
 import { LoginButton } from './LoginButton';
 import { SignUpButton } from './SignUpButton';
 import { SelectLanguageButton } from '../language-selection/SelectLanguageButton';
