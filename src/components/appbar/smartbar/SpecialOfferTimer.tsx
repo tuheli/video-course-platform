@@ -7,6 +7,28 @@ import {
   secondPassed,
 } from '../../../features/specialOfferSlice';
 
+const formatDuration = (durationSeconds: number) => {
+  const date = new Date(0);
+  date.setSeconds(durationSeconds);
+
+  const isoString = date.toISOString();
+
+  // Cast to num to remove trailing zeroes
+  const hours = Number(isoString.substring(11, 13));
+  const minutes = Number(isoString.substring(14, 16));
+  const seconds = Number(isoString.substring(17, 19));
+
+  if (hours === 0 && minutes === 0) {
+    return `${seconds}s`;
+  }
+
+  if (hours === 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+};
+
 export const SpecialOfferTimer = () => {
   const duration = useAppSelector((state) => state.specialOffer.duration);
   const dispatch = useAppDispatch();
@@ -19,28 +41,6 @@ export const SpecialOfferTimer = () => {
     clearInterval(timerRef.current);
   };
 
-  const formatDuration = (durationSeconds: number) => {
-    const date = new Date(0);
-    date.setSeconds(durationSeconds);
-
-    const isoString = date.toISOString();
-
-    // Cast to num to remove trailing zeroes
-    const hours = Number(isoString.substring(11, 13));
-    const minutes = Number(isoString.substring(14, 16));
-    const seconds = Number(isoString.substring(17, 19));
-
-    if (hours === 0 && minutes === 0) {
-      return `${seconds}s`;
-    }
-
-    if (hours === 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-
-    return `${hours}h ${minutes}m ${seconds}s`;
-  };
-
   useEffect(() => {
     const timerId = setInterval(() => {
       dispatch(secondPassed());
@@ -51,7 +51,7 @@ export const SpecialOfferTimer = () => {
     return () => {
       clearInterval(timerRef.current);
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     // Offer expired or the duration is malformed
@@ -59,7 +59,7 @@ export const SpecialOfferTimer = () => {
       dispatch(offerExpired());
       stopTimer();
     }
-  }, [isDurationAcceptable]);
+  }, [isDurationAcceptable, dispatch]);
 
   const timeString = isDurationAcceptable
     ? formatDuration(duration)
