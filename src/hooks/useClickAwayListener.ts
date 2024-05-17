@@ -9,7 +9,9 @@ export const useClickAwayListener = (
   onClickAway: () => void
 ) => {
   useEffect(() => {
-    const clickAwayListener = (event: any) => {
+    const clickAwayListener = (event: MouseEvent | TouchEvent) => {
+      if (!event.target || !(event.target instanceof Node)) return;
+
       if (
         isDropdownOpen &&
         divRef.current &&

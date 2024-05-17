@@ -1,11 +1,12 @@
+import { StyledMenuItemsList } from './StyledMenuItemsList';
 import { StyledTransparencyBox } from './StyledTransparencyBox';
 import {
   containerBorderColor,
   containerBorderStyle,
   containerBorderWidth,
+  listWidth,
   transparentPaddingTop,
 } from './common';
-import { listWidth, StyledMenuItemsList } from './StyledMenuItemsList';
 
 // NOTE: Border affects the size of elements. In order to keep the position accurate we take the borders into account while positioning.
 

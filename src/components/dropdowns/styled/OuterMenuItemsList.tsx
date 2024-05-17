@@ -1,7 +1,8 @@
+import '../animations/fadeAnimation.css';
 import { ReactNode } from 'react';
 import { StyledTransparencyBox } from './StyledTransparencyBox';
-import { listWidth, StyledMenuItemsList } from './StyledMenuItemsList';
-import '../animations/fadeAnimation.css';
+import { StyledMenuItemsList } from './StyledMenuItemsList';
+import { listWidth } from './common';
 
 export const OuterMenuItemsList = ({ children }: { children: ReactNode }) => {
   return (

@@ -210,7 +210,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
     components: {
       MuiAppBar: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: () => ({
             backgroundColor: 'white',
             padding: 0,
             border: 'none',
@@ -219,7 +219,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       },
       MuiToolbar: {
         styleOverrides: {
-          root: ({ theme }) => ({
+          root: () => ({
             backgroundColor: 'white',
             boxShadow: '0px 3px 5px 0px rgba(0,0,0,0.4)',
           }),
@@ -233,9 +233,7 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       },
       MuiMenu: {
         styleOverrides: {
-          root: ({ theme }) => ({
-            // backgroundColor: 'white',
-          }),
+          root: () => ({}),
         },
       },
       MuiAccordion: {

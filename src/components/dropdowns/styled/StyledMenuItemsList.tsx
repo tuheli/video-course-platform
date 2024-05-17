@@ -20,4 +20,3 @@ export const StyledMenuItemsList = styled('ul')({
   margin: 0,
   zIndex: 1,
 });
-export { listWidth };

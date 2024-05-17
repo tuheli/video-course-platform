@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 // This hook was initially made for selectlanguagemodal but it should be used with other modals / dialogs which have material ui's disable scroll lock behaviour to fix padding issues. Instead of mui's scroll lock use this hook and disable mui's scroll lock.
 
 const getScrollBarWidth = () => {
-  var inner = document.createElement('p');
+  const inner = document.createElement('p');
   inner.style.width = '100%';
   inner.style.height = '200px';
 
-  var outer = document.createElement('div');
+  const outer = document.createElement('div');
   outer.style.position = 'absolute';
   outer.style.top = '0px';
   outer.style.left = '0px';
@@ -20,9 +20,9 @@ const getScrollBarWidth = () => {
   outer.appendChild(inner);
 
   document.body.appendChild(outer);
-  var w1 = inner.offsetWidth;
+  const w1 = inner.offsetWidth;
   outer.style.overflow = 'scroll';
-  var w2 = inner.offsetWidth;
+  let w2 = inner.offsetWidth;
   if (w1 == w2) w2 = outer.clientWidth;
 
   document.body.removeChild(outer);
