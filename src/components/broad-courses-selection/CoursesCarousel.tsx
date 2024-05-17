@@ -56,6 +56,7 @@ export const CoursesCarousel = () => {
                     isHovered: isDropdownOpen,
                   })
                 }
+                forceOpen={false}
               >
                 <CourseCardPopupContent courseItem={courseItem} />
               </MainDropdownOpener>
