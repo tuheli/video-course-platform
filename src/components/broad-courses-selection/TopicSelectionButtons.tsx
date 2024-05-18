@@ -1,10 +1,9 @@
 import { Button, Stack } from '@mui/material';
 import { broadCoursesSelectionData } from './broadCoursesSelectionData';
-import { useContext } from 'react';
-import { SelectedCourseTopicContext } from '../../contexts/SelectedCourseTopicContext';
+import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
 
 export const TopicSelectionButtons = () => {
-  const { topic, changeTopic } = useContext(SelectedCourseTopicContext);
+  const { topic, changeTopic } = useSelectedCourseTopicContext();
 
   const onClickTopic = (topic: string) => {
     changeTopic(topic);
