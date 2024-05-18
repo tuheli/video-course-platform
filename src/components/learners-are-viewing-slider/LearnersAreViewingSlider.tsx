@@ -11,7 +11,7 @@ export const LearnersAreViewingSlider = () => {
           gap: 2,
         }}
       >
-        <Typography variant="h6">Learners are viewing</Typography>
+        <Typography variant="h5">Learners are viewing</Typography>
         <SelectedCourseTopicContext.Provider
           value={{ topic: 'Python', changeTopic: () => null }}
         >
