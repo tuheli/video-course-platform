@@ -25,6 +25,12 @@ interface CourseTopic {
   items: CourseItem[];
 }
 
+export interface CourseCategory {
+  name: string;
+  topicNames: string[];
+  imageUrl: string;
+}
+
 export const broadCoursesSelectionData: CourseTopic[] = [
   {
     name: 'Python',
@@ -158,5 +164,18 @@ export const broadCoursesSelectionData: CourseTopic[] = [
         ],
       },
     ],
+  },
+];
+
+export const courseCategories: CourseCategory[] = [
+  {
+    name: 'Development',
+    topicNames: ['Python', 'Excel'],
+    imageUrl: '/course-category-images/category-development.jpg',
+  },
+  {
+    name: 'Business',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-business.jpg',
   },
 ];
