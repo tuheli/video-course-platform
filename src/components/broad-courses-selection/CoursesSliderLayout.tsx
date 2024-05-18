@@ -1,26 +1,17 @@
 import { Box, Button, Paper, Stack } from '@mui/material';
 import { broadCoursesSelectionData } from './broadCoursesSelectionData';
-import { BroadCoursesSelectionItem } from './BroadCoursesSelectionItem';
 import { CourseTopicHeading } from './CourseTopicHeading';
-import { useContext } from 'react';
-import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
-import { CourseCardPopupContent } from './CourseCardPopupContent';
-import { SelectedCourseTopicContext } from '../../contexts/SelectedCourseTopicContext';
-import { ScrollToViewList } from '../scroll-to-view-list/ScrollToViewList';
+import { CoursesSliderOnly } from './CoursesSliderOnly';
+import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
 
-export const CoursesSlider = () => {
-  const { topic } = useContext(SelectedCourseTopicContext);
+export const CoursesSliderLayout = () => {
+  const { topic } = useSelectedCourseTopicContext();
 
   const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
 
   const onClickExplore = () => {};
 
   if (!topicToShow) return null;
-
-  const courseItems = topicToShow.items
-    .concat(topicToShow.items)
-    .concat(topicToShow.items)
-    .concat(topicToShow.items);
 
   return (
     <Paper
@@ -49,9 +40,11 @@ export const CoursesSlider = () => {
             flexDirection: 'row',
           }}
         >
-          <ScrollToViewList
+          <CoursesSliderOnly />
+          {/* <ScrollToViewList
             itemCount={courseItems.length}
             itemQuerySelector="a > div > img"
+            showCount={5}
           >
             {courseItems.map((courseItem, index) => {
               return (
@@ -77,7 +70,7 @@ export const CoursesSlider = () => {
                 </Box>
               );
             })}
-          </ScrollToViewList>
+          </ScrollToViewList> */}
         </Stack>
       </Stack>
     </Paper>
