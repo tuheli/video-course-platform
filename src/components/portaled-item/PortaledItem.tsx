@@ -84,15 +84,6 @@ export const PortaledItem = ({
         height: ref.current.offsetHeight,
       };
 
-      console.log('my size from offset properties', mySize);
-
-      const myRectSize = ref.current.getBoundingClientRect();
-
-      console.log('my size from rect client', {
-        width: myRectSize.width,
-        height: myRectSize.height,
-      });
-
       const spaceAroundAnchorElement = getSpaceAroundElement(anchorElement);
 
       const bestPosition = getFittingPosition(mySize, spaceAroundAnchorElement);
