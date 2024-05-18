@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { useRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { ArrowRight } from './ArrowRight';
 import { ArrowLeft } from './ArrowLeft';
 
@@ -8,6 +8,10 @@ interface ScrollToViewListProps {
   itemQuerySelector: string;
   showCount: number;
   children?: React.ReactNode[];
+}
+
+export interface SliderForwardedRef {
+  resetScroll: () => void;
 }
 
 export interface ArrowProps {
@@ -24,86 +28,107 @@ export const arrowHorizontalOffset = 20;
 
 // NOTE: The child items must have scroll align start set, and the items must have specific dom structure for the scrollToIndex to find the correct node.
 
-export const ScrollToViewList = ({
-  children,
-  itemCount,
-  itemQuerySelector,
-  showCount,
-}: ScrollToViewListProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const listRef = useRef<HTMLDivElement | null>(null);
+// NOTE: If the list items change, the resetScroll should also be called.
 
-  const lastAllowedIndex = itemCount - showCount;
-  const showLeftArrow = currentIndex > 0;
-  const showRightArrow = currentIndex !== lastAllowedIndex;
+export const ScrollToViewList = forwardRef<
+  SliderForwardedRef,
+  ScrollToViewListProps
+>(
+  (
+    {
+      children,
+      itemCount,
+      itemQuerySelector,
+      showCount,
+    }: ScrollToViewListProps,
+    ref
+  ) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const listRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollNextItemsToView = () => {
-    let newIndex = currentIndex + showCount;
+    const lastAllowedIndex = itemCount - showCount;
+    const showLeftArrow = currentIndex > 0;
+    const showRightArrow = currentIndex !== lastAllowedIndex;
 
-    if (newIndex > lastAllowedIndex) {
-      newIndex = lastAllowedIndex;
-    }
+    const scrollNextItemsToView = () => {
+      let newIndex = currentIndex + showCount;
 
-    setCurrentIndex(newIndex);
-    scrollToIndex(newIndex);
-  };
+      if (newIndex > lastAllowedIndex) {
+        newIndex = lastAllowedIndex;
+      }
 
-  const scrollPreviousItemsToView = () => {
-    let newIndex = currentIndex - showCount;
-    if (newIndex < 0) {
-      newIndex = 0;
-    }
+      setCurrentIndex(newIndex);
+      scrollToIndex(newIndex);
+    };
 
-    setCurrentIndex(newIndex);
-    scrollToIndex(newIndex);
-  };
+    const scrollPreviousItemsToView = () => {
+      let newIndex = currentIndex - showCount;
+      if (newIndex < 0) {
+        newIndex = 0;
+      }
 
-  const scrollToIndex = (index: number) => {
-    const listNode = listRef.current;
-    if (!listNode) return;
+      setCurrentIndex(newIndex);
+      scrollToIndex(newIndex);
+    };
 
-    const childNodes = listNode.querySelectorAll(itemQuerySelector);
-    if (!childNodes || childNodes.length === 0) return;
+    const scrollToIndex = (index: number, instant = false) => {
+      const listNode = listRef.current;
+      if (!listNode) return;
 
-    const scrollToNode = childNodes[index];
+      const childNodes = listNode.querySelectorAll(itemQuerySelector);
+      if (!childNodes || childNodes.length === 0) return;
 
-    scrollToNode.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start',
+      const scrollToNode = childNodes[index];
+
+      scrollToNode.scrollIntoView({
+        behavior: instant ? 'instant' : 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    };
+
+    const resetScroll = () => {
+      setCurrentIndex(0);
+      scrollToIndex(0, true);
+    };
+
+    useImperativeHandle(ref, () => {
+      return {
+        resetScroll,
+      };
     });
-  };
 
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        position: 'relative',
-      }}
-    >
-      <Stack
-        ref={listRef}
+    return (
+      <Box
         sx={{
-          flexDirection: 'row',
-          overflow: 'hidden',
-          scrollSnapType: 'x mandatory',
-          gap: `${settings.gapSize}px`,
+          width: '100%',
+          position: 'relative',
         }}
       >
-        {children}
-      </Stack>
-      {showRightArrow && (
-        <ArrowRight
-          onClick={scrollNextItemsToView}
-          sx={{ right: -arrowHorizontalOffset, top: '40%' }}
-        />
-      )}
-      {showLeftArrow && (
-        <ArrowLeft
-          onClick={scrollPreviousItemsToView}
-          sx={{ left: -arrowHorizontalOffset, top: '40%' }}
-        />
-      )}
-    </Box>
-  );
-};
+        <Stack
+          ref={listRef}
+          sx={{
+            flexDirection: 'row',
+            overflow: 'hidden',
+            scrollSnapType: 'x mandatory',
+            gap: `${settings.gapSize}px`,
+          }}
+        >
+          {children}
+        </Stack>
+        {showRightArrow && (
+          <ArrowRight
+            onClick={scrollNextItemsToView}
+            sx={{ right: -arrowHorizontalOffset, top: '40%' }}
+          />
+        )}
+        {showLeftArrow && (
+          <ArrowLeft
+            onClick={scrollPreviousItemsToView}
+            sx={{ left: -arrowHorizontalOffset, top: '40%' }}
+          />
+        )}
+      </Box>
+    );
+  }
+);
