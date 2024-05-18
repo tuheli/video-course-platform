@@ -1,12 +1,22 @@
 import { Box, Container, Stack, Typography } from '@mui/material';
+import { useState } from 'react';
 
 export const HeroBanner = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const onImageLoaded = () => {
+    setIsLoaded(true);
+  };
+
   return (
-    <Container disableGutters>
+    <Container disableGutters sx={{}}>
       <picture
         style={{
           position: 'relative',
           display: 'block',
+          minHeight: 370,
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 1s ease-in-out',
         }}
       >
         <source
@@ -21,6 +31,7 @@ export const HeroBanner = () => {
             width: '100%',
             height: 'auto',
           }}
+          onLoad={onImageLoaded}
         />
         <Box
           sx={{
