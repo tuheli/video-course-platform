@@ -3,25 +3,38 @@ import { broadCoursesSelectionData } from './broadCoursesSelectionData';
 import { BroadCoursesSelectionItem } from './BroadCoursesSelectionItem';
 import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
 import { CourseCardPopupContent } from './CourseCardPopupContent';
-import { ScrollToViewList } from '../scroll-to-view-list/ScrollToViewList';
+import {
+  ScrollToViewList,
+  SliderForwardedRef,
+} from '../scroll-to-view-list/ScrollToViewList';
 import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
+import { useEffect, useRef } from 'react';
 
 // NOTE: Note that the current topic is gotten via context
 
 export const CoursesSliderOnly = () => {
+  const sliderRef = useRef<SliderForwardedRef>(null);
+  const isFirstRender = useRef(true);
   const { topic } = useSelectedCourseTopicContext();
-
   const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
-
-  if (!topicToShow) return null;
-
-  const courseItems = topicToShow.items
+  const courseItems = topicToShow?.items
     .concat(topicToShow.items)
     .concat(topicToShow.items)
     .concat(topicToShow.items);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else if (sliderRef.current) {
+      sliderRef.current.resetScroll();
+    }
+  }, [topicToShow]);
+
+  if (!courseItems) return null;
+
   return (
     <ScrollToViewList
+      ref={sliderRef}
       itemCount={courseItems.length}
       itemQuerySelector="a > div > img"
       showCount={5}
