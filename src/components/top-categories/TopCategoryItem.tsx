@@ -37,7 +37,14 @@ export const TopCategoryItem = ({ category }: TopCategoryItemProps) => {
             }}
           />
         </Box>
-        <Typography variant="h6">{category.name}</Typography>
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 600,
+          }}
+        >
+          {category.name}
+        </Typography>
       </Stack>
     </StyledLink>
   );
