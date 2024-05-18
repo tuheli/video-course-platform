@@ -169,13 +169,43 @@ export const broadCoursesSelectionData: CourseTopic[] = [
 
 export const courseCategories: CourseCategory[] = [
   {
+    name: 'Design',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-design.jpg',
+  },
+  {
     name: 'Development',
     topicNames: ['Python', 'Excel'],
     imageUrl: '/course-category-images/category-development.jpg',
   },
   {
+    name: 'Marketing',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-marketing.jpg',
+  },
+  {
+    name: 'IT and Software',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-it-and-software.jpg',
+  },
+  {
+    name: 'Personal Development',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-personal-development.jpg',
+  },
+  {
     name: 'Business',
     topicNames: [],
     imageUrl: '/course-category-images/category-business.jpg',
+  },
+  {
+    name: 'Photography',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-photography.jpg',
+  },
+  {
+    name: 'Music',
+    topicNames: [],
+    imageUrl: '/course-category-images/category-music.jpg',
   },
 ];

@@ -5,7 +5,7 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
 export const TopCategories = () => {
   const data = courseCategories;
-  const categories = data.concat(data).concat(data).concat(data);
+  const categories = data;
 
   return (
     <Container>
