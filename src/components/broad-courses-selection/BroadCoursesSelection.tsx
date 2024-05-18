@@ -4,11 +4,7 @@ import { RenderingCourseTopicContextProvider } from './RenderingCourseTopicConte
 
 export const BroadCoursesSelection = () => {
   return (
-    <Container
-      sx={{
-        mt: 10,
-      }}
-    >
+    <Container>
       <Heading />
       <RenderingCourseTopicContextProvider />
     </Container>
