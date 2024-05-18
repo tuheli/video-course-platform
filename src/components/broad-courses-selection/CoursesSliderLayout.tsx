@@ -6,7 +6,6 @@ import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopi
 
 export const CoursesSliderLayout = () => {
   const { topic } = useSelectedCourseTopicContext();
-
   const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
 
   const onClickExplore = () => {};
@@ -19,7 +18,6 @@ export const CoursesSliderLayout = () => {
         padding: 3,
       }}
     >
-      {/** Outer stack */}
       <Stack
         sx={{
           flexdirection: 'column',
@@ -41,36 +39,6 @@ export const CoursesSliderLayout = () => {
           }}
         >
           <CoursesSliderOnly />
-          {/* <ScrollToViewList
-            itemCount={courseItems.length}
-            itemQuerySelector="a > div > img"
-            showCount={5}
-          >
-            {courseItems.map((courseItem, index) => {
-              return (
-                <Box
-                  key={index}
-                  sx={{
-                    scrollSnapAlign: 'start',
-                  }}
-                >
-                  <MainDropdownOpener
-                    height="content"
-                    RenderComponent={({ isDropdownOpen }) =>
-                      BroadCoursesSelectionItem({
-                        courseItem,
-                        isHovered: isDropdownOpen,
-                      })
-                    }
-                    forceOpen={false}
-                    usePortal={true}
-                  >
-                    <CourseCardPopupContent courseItem={courseItem} />
-                  </MainDropdownOpener>
-                </Box>
-              );
-            })}
-          </ScrollToViewList> */}
         </Stack>
       </Stack>
     </Paper>
