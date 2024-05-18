@@ -1,56 +1,24 @@
-import { Box, IconButton, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useRef, useState } from 'react';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { ArrowRight } from './ArrowRight';
+import { ArrowLeft } from './ArrowLeft';
 
 interface ScrollToViewListProps {
   itemCount: number;
   itemQuerySelector: string;
+  showCount: number;
   children?: React.ReactNode[];
 }
 
-interface ArrowProps {
-  onClick: () => void;
+export interface ArrowProps {
+  onClick?: () => void;
 }
 
 const settings = {
-  showCount: 5,
   gapSize: 10,
 };
 
-const arrowHorizontalOffset = 20;
-
-const ArrowRight = ({ onClick }: ArrowProps) => {
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        top: '20%',
-        right: -arrowHorizontalOffset,
-      }}
-    >
-      <IconButton color="primary" onClick={onClick}>
-        <ArrowForwardIosIcon fontSize="small" />
-      </IconButton>
-    </Box>
-  );
-};
-
-const ArrowLeft = ({ onClick }: ArrowProps) => {
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        top: '20%',
-        left: -arrowHorizontalOffset,
-      }}
-    >
-      <IconButton color="primary" onClick={onClick}>
-        <ArrowBackIosNewIcon fontSize="small" />
-      </IconButton>
-    </Box>
-  );
-};
+export const arrowHorizontalOffset = 20;
 
 // TODO: The logic for placing items inside the list should behave like flex space around or between. Then the items would be also automatically sized correctly. Current solution is quite rigid since the items have fixed width. Or just use react slick.
 
@@ -60,11 +28,11 @@ export const ScrollToViewList = ({
   children,
   itemCount,
   itemQuerySelector,
+  showCount,
 }: ScrollToViewListProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const showCount = settings.showCount;
   const lastAllowedIndex = itemCount - showCount;
   const showLeftArrow = currentIndex > 0;
   const showRightArrow = currentIndex !== lastAllowedIndex;
@@ -124,8 +92,18 @@ export const ScrollToViewList = ({
       >
         {children}
       </Stack>
-      {showRightArrow && <ArrowRight onClick={scrollNextItemsToView} />}
-      {showLeftArrow && <ArrowLeft onClick={scrollPreviousItemsToView} />}
+      {showRightArrow && (
+        <ArrowRight
+          onClick={scrollNextItemsToView}
+          sx={{ right: -arrowHorizontalOffset, top: '40%' }}
+        />
+      )}
+      {showLeftArrow && (
+        <ArrowLeft
+          onClick={scrollPreviousItemsToView}
+          sx={{ left: -arrowHorizontalOffset, top: '40%' }}
+        />
+      )}
     </Box>
   );
 };
