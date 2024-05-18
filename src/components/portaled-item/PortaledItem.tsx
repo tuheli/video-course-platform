@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { PortaledItemContext } from '../../contexts/PortaledItemContext';
 
 interface SpaceAround {
   spaceLeft: number;
@@ -9,7 +10,7 @@ interface SpaceAround {
   spaceBelow: number;
 }
 
-type RenderPosition = 'left' | 'right' | 'below' | 'above';
+export type RenderPosition = 'left' | 'right' | 'below';
 
 interface PortaledItemProps {
   anchorElement: HTMLElement | null;
@@ -20,7 +21,7 @@ const getFittingPosition = (
   portalSize: { width: number; height: number },
   parentSpaceAround: SpaceAround,
   errorMargin = 20
-): Omit<RenderPosition, 'above'> => {
+): RenderPosition => {
   const fitsRight =
     parentSpaceAround.spaceRight - errorMargin >= portalSize.width;
   const fitsLeft =
@@ -41,14 +42,37 @@ const getSpaceAroundElement = (element: HTMLElement): SpaceAround => {
   };
 };
 
+const getFlexDirectionForDirectionTriangle = (
+  renderPosition: RenderPosition
+) => {
+  switch (renderPosition) {
+    case 'right':
+      return 'row';
+    case 'left':
+      return 'row';
+    case 'below':
+      return 'column';
+    default:
+      return undefined;
+  }
+};
+
 export const PortaledItem = ({
   anchorElement,
   children,
 }: PortaledItemProps) => {
   const [position, setPosition] = useState<
-    { top: number; left: number } | undefined
+    | {
+        top: number;
+        left: number;
+        renderPosition: RenderPosition;
+      }
+    | undefined
   >();
   const ref = useRef<HTMLDivElement | null>(null);
+  const contextValue = {
+    renderPosition: position?.renderPosition,
+  };
 
   useLayoutEffect(() => {
     const calculatePosition = () => {
@@ -59,6 +83,15 @@ export const PortaledItem = ({
         width: ref.current.offsetWidth,
         height: ref.current.offsetHeight,
       };
+
+      console.log('my size from offset properties', mySize);
+
+      const myRectSize = ref.current.getBoundingClientRect();
+
+      console.log('my size from rect client', {
+        width: myRectSize.width,
+        height: myRectSize.height,
+      });
 
       const spaceAroundAnchorElement = getSpaceAroundElement(anchorElement);
 
@@ -86,6 +119,7 @@ export const PortaledItem = ({
       setPosition({
         top: anchorRect.top + window.scrollY + topOffset,
         left: anchorRect.left + window.scrollX + leftOffset,
+        renderPosition: bestPosition,
       });
     };
 
@@ -106,9 +140,15 @@ export const PortaledItem = ({
         position: 'absolute',
         top: position?.top,
         left: position?.left,
+        display: 'flex',
+        flexDirection: position
+          ? getFlexDirectionForDirectionTriangle(position.renderPosition)
+          : undefined,
       }}
     >
-      {children}
+      <PortaledItemContext.Provider value={contextValue}>
+        {children}
+      </PortaledItemContext.Provider>
     </Box>,
     document.body
   );

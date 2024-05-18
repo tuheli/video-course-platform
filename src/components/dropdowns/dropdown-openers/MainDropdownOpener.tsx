@@ -4,7 +4,7 @@ import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
 import { mainDropdownOpenerHeight as appBarDropdownOpenerHeight } from '../styled/common';
-import { PortaledItem } from '../../scroll-to-view-list/PortaledItem';
+import { PortaledItem } from '../../portaled-item/PortaledItem';
 
 interface ComponentProps {
   sx?: SxProps;

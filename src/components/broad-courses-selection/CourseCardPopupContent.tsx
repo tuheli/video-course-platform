@@ -7,6 +7,10 @@ import { DotSeparatedSpan } from './DotSeparatedSpan';
 import CheckIcon from '@mui/icons-material/Check';
 import { AddToCartButtonSelector } from '../cart/AddToCartButtonSelector';
 import { AddToFavoritesSelector } from '../favorites/AddToFavoritesSelector';
+import { RightPointingTriangle } from '../direction-triangles/RightPointingTriangle';
+import { usePortaledItemContext } from '../../hooks/usePortaledItemContext';
+import { LeftPointingTriangle } from '../direction-triangles/LeftPointingTriangle';
+import { UpPointingTriangle } from '../direction-triangles/UpPointingTriangle';
 
 interface CourseCardPopupContentProps {
   courseItem: CourseItem;
@@ -28,6 +32,7 @@ export const CourseCardPopupContent = ({
   const lastUpdatedDateString = formatLastUpdatedDate(
     new Date(courseItem.lastUpdated)
   );
+  const { renderPosition } = usePortaledItemContext();
 
   return (
     <Box
@@ -37,89 +42,100 @@ export const CourseCardPopupContent = ({
         animation: 'fadeIn 0.2s',
       }}
     >
-      <Paper>
-        <Stack
-          sx={{
-            flexDirection: 'column',
-            gap: defaultGap,
-          }}
-        >
-          <Typography variant="h6">{courseItem.title}</Typography>
-          <Stack
-            sx={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: defaultGap,
-            }}
-          >
-            {courseItem.isBestseller && <BestSeller />}
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.green',
-              }}
-            >
-              Updated {''}
-              <Typography
-                component="span"
-                variant="caption"
-                sx={{
-                  color: 'text.green',
-                  fontWeight: 500,
-                }}
-              >
-                {lastUpdatedDateString}
-              </Typography>
-            </Typography>
-          </Stack>
-          <Box>
-            <DotSeparatedSpan>{courseItem.lengthHours} hours</DotSeparatedSpan>
-            <DotSeparatedSpan useDotSeparator={courseItem.hasSubtitles}>
-              {courseItem.difficultyLevel}
-            </DotSeparatedSpan>
-            <DotSeparatedSpan useDotSeparator={false}>
-              {courseItem.hasSubtitles && 'Subtitles'}
-            </DotSeparatedSpan>
-          </Box>
+      <Stack
+        sx={{
+          flexDirection: renderPosition === 'below' ? 'column' : 'row',
+        }}
+      >
+        {renderPosition === 'below' && <UpPointingTriangle />}
+        {renderPosition === 'right' && <LeftPointingTriangle />}
+        <Paper>
           <Stack
             sx={{
               flexDirection: 'column',
-              gap: 0.8,
-              mt: 0.5,
+              gap: defaultGap,
             }}
           >
-            {courseItem.bulletPoints.map((text, index) => (
-              <Stack
-                key={index}
+            <Typography variant="h6">{courseItem.title}</Typography>
+            <Stack
+              sx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: defaultGap,
+              }}
+            >
+              {courseItem.isBestseller && <BestSeller />}
+              <Typography
+                variant="caption"
                 sx={{
-                  flexDirection: 'row',
-                  gap: 2,
+                  color: 'text.green',
                 }}
               >
-                <CheckIcon />
-                <Typography variant="body2">{text}</Typography>
-              </Stack>
-            ))}
-          </Stack>
-          <Stack
-            sx={{
-              flexDirection: 'row',
-            }}
-          >
-            {/* Increased z index because favorites buttons have scaling animations which might overlap add to cart buttons */}
-            <Box
+                Updated {''}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  sx={{
+                    color: 'text.green',
+                    fontWeight: 500,
+                  }}
+                >
+                  {lastUpdatedDateString}
+                </Typography>
+              </Typography>
+            </Stack>
+            <Box>
+              <DotSeparatedSpan>
+                {courseItem.lengthHours} hours
+              </DotSeparatedSpan>
+              <DotSeparatedSpan useDotSeparator={courseItem.hasSubtitles}>
+                {courseItem.difficultyLevel}
+              </DotSeparatedSpan>
+              <DotSeparatedSpan useDotSeparator={false}>
+                {courseItem.hasSubtitles && 'Subtitles'}
+              </DotSeparatedSpan>
+            </Box>
+            <Stack
               sx={{
-                flexGrow: 1,
-                zIndex: 1,
+                flexDirection: 'column',
+                gap: 0.8,
                 mt: 0.5,
               }}
             >
-              <AddToCartButtonSelector item={courseItem} />
-            </Box>
-            <AddToFavoritesSelector item={courseItem} />
+              {courseItem.bulletPoints.map((text, index) => (
+                <Stack
+                  key={index}
+                  sx={{
+                    flexDirection: 'row',
+                    gap: 2,
+                  }}
+                >
+                  <CheckIcon />
+                  <Typography variant="body2">{text}</Typography>
+                </Stack>
+              ))}
+            </Stack>
+            <Stack
+              sx={{
+                flexDirection: 'row',
+              }}
+            >
+              {/* Increased z index because favorites buttons have scaling animations which might overlap add to cart buttons */}
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  zIndex: 1,
+                  mt: 0.5,
+                }}
+              >
+                <AddToCartButtonSelector item={courseItem} />
+              </Box>
+              <AddToFavoritesSelector item={courseItem} />
+            </Stack>
           </Stack>
-        </Stack>
-      </Paper>
+        </Paper>
+        {renderPosition === 'left' && <RightPointingTriangle />}
+      </Stack>
     </Box>
   );
 };
