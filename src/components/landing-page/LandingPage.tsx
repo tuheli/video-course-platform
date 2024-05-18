@@ -5,6 +5,7 @@ import { TrustedByCompaniesLogos } from '../trusted-by-companies-logos/TrustedBy
 import { BroadCoursesSelection } from '../broad-courses-selection/BroadCoursesSelection';
 import { LearnerPositiveReviews } from '../learner-positive-reviews/LearnerPositiveReviews';
 import { LearnersAreViewingSlider } from '../learners-are-viewing-slider/LearnersAreViewingSlider';
+import { TopCategories } from '../top-categories/TopCategories';
 
 const LandingPage = () => {
   return (
@@ -21,6 +22,7 @@ const LandingPage = () => {
       <Box
         sx={{
           py: 4,
+          minHeight: 690,
         }}
       >
         <BroadCoursesSelection />
@@ -39,6 +41,13 @@ const LandingPage = () => {
         }}
       >
         <LearnersAreViewingSlider />
+      </Box>
+      <Box
+        sx={{
+          py: 4,
+        }}
+      >
+        <TopCategories />
       </Box>
     </>
   );
