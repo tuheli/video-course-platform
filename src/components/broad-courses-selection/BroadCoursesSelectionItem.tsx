@@ -3,10 +3,10 @@ import { Box, Stack, Typography } from '@mui/material';
 import { LineClampedTypography } from './LineClampedTypography';
 import { StarRating } from './StarRating';
 import { DiscountedPrice } from './DiscountedPrice';
-import { significantDigitFormatter } from './numberFormatters';
 import { NormalPrice } from './NormalPrice';
 import { courseCardWidth } from './common';
 import { BestSeller } from './BestSeller';
+import { format } from '../../utils/numberFormatters';
 
 interface BroadCoursesSelectionItemProps {
   courseItem: Course;
@@ -17,9 +17,6 @@ export const BroadCoursesSelectionItem = ({
   courseItem,
   isHovered,
 }: BroadCoursesSelectionItemProps) => {
-  const formattedRatingCount = significantDigitFormatter.format(
-    courseItem.ratingCount
-  );
   const isDiscounted = courseItem.priceEur < courseItem.listPrice;
 
   return (
@@ -89,7 +86,7 @@ export const BroadCoursesSelectionItem = ({
               color: 'text.secondary',
             }}
           >
-            ({formattedRatingCount})
+            ({format(courseItem.ratingCount)})
           </Typography>
         </Stack>
         {isDiscounted ? (
