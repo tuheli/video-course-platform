@@ -6,6 +6,7 @@ import { BroadCoursesSelection } from '../broad-courses-selection/BroadCoursesSe
 import { LearnerPositiveReviews } from '../learner-positive-reviews/LearnerPositiveReviews';
 import { LearnersAreViewingSlider } from '../learners-are-viewing-slider/LearnersAreViewingSlider';
 import { TopCategories } from '../top-categories/TopCategories';
+import { FeaturedTopicsByCategory } from '../featured-topics-by-category/FeaturedTopicsByCategory';
 
 const LandingPage = () => {
   return (
@@ -48,6 +49,14 @@ const LandingPage = () => {
         }}
       >
         <TopCategories />
+      </Box>
+      <Box
+        sx={{
+          py: 4,
+          bgcolor: 'background.paper',
+        }}
+      >
+        <FeaturedTopicsByCategory />
       </Box>
     </>
   );
