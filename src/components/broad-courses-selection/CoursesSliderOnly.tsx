@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { broadCoursesSelectionData } from './broadCoursesSelectionData';
 import { BroadCoursesSelectionItem } from './BroadCoursesSelectionItem';
 import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
 import { CourseCardPopupContent } from './CourseCardPopupContent';
@@ -9,6 +8,7 @@ import {
 } from '../scroll-to-view-list/ScrollToViewList';
 import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
 import { useEffect, useRef } from 'react';
+import { getTopic } from '../../../data/courseData';
 
 // NOTE: Note that the current topic is gotten via context
 
@@ -16,11 +16,13 @@ export const CoursesSliderOnly = () => {
   const sliderRef = useRef<SliderForwardedRef>(null);
   const isFirstRender = useRef(true);
   const { topic } = useSelectedCourseTopicContext();
-  const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
-  const courseItems = topicToShow?.items
-    .concat(topicToShow.items)
-    .concat(topicToShow.items)
-    .concat(topicToShow.items);
+
+  const topicToShow = getTopic(topic);
+
+  const courseItems = topicToShow?.courses
+    .concat(topicToShow.courses)
+    .concat(topicToShow.courses)
+    .concat(topicToShow.courses);
 
   useEffect(() => {
     if (isFirstRender.current) {

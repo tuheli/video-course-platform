@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { CourseCategory } from '../broad-courses-selection/broadCoursesSelectionData';
 import { StyledLink } from '../learner-positive-reviews/StyledLink';
+import { CourseCategory } from '../../../data/courseData';
 
 interface TopCategoryItemProps {
   category: CourseCategory;

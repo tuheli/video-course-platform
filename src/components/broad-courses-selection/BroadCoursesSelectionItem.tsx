@@ -1,4 +1,4 @@
-import { type CourseItem } from './broadCoursesSelectionData';
+import { type Course } from '../../../data/courseData';
 import { Box, Stack, Typography } from '@mui/material';
 import { LineClampedTypography } from './LineClampedTypography';
 import { StarRating } from './StarRating';
@@ -9,7 +9,7 @@ import { courseCardWidth } from './common';
 import { BestSeller } from './BestSeller';
 
 interface BroadCoursesSelectionItemProps {
-  courseItem: CourseItem;
+  courseItem: Course;
   isHovered: boolean | undefined;
 }
 
@@ -55,7 +55,7 @@ export const BroadCoursesSelectionItem = ({
             fontSize: 14,
           }}
         >
-          {courseItem.title}
+          {courseItem.name}
         </LineClampedTypography>
         <LineClampedTypography
           maxLines={1}

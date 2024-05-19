@@ -1,6 +1,6 @@
 import { Button, Stack } from '@mui/material';
-import { broadCoursesSelectionData } from './broadCoursesSelectionData';
 import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
+import { getTopicsWithCourses } from '../../../data/courseData';
 
 export const TopicSelectionButtons = () => {
   const { topic, changeTopic } = useSelectedCourseTopicContext();
@@ -9,6 +9,9 @@ export const TopicSelectionButtons = () => {
     changeTopic(topic);
   };
 
+  const maxTopics = 5;
+  const topicsData = getTopicsWithCourses(maxTopics);
+
   return (
     <Stack
       sx={{
@@ -16,7 +19,7 @@ export const TopicSelectionButtons = () => {
         gap: 2,
       }}
     >
-      {broadCoursesSelectionData.map(({ name }, index) => {
+      {topicsData.map(({ name }, index) => {
         return (
           <Button
             key={index}

@@ -1,18 +1,12 @@
 import { Container, Stack, Typography } from '@mui/material';
 import {
   CourseCategory,
-  courseCategories,
-} from '../broad-courses-selection/broadCoursesSelectionData';
+  getFeaturedCategories,
+  getFeaturedTopics,
+} from '../../../data/courseData';
 
 export const FeaturedTopicsByCategory = () => {
-  const data = courseCategories;
-  const featuredCategories = data.filter(
-    ({ name }) =>
-      name === 'Development' ||
-      name === 'Business' ||
-      name === 'IT and Software' ||
-      name === 'Design'
-  );
+  const featuredCategories = getFeaturedCategories();
 
   return (
     <Container>
@@ -43,7 +37,7 @@ interface TopicsByCategoryStackProps {
 }
 
 const TopicsByCategoryStack = ({ category }: TopicsByCategoryStackProps) => {
-  const featuredTopics = category.topicNames.slice(0, 3);
+  const featuredTopics = getFeaturedTopics(category.name);
 
   return (
     <Stack
@@ -59,10 +53,10 @@ const TopicsByCategoryStack = ({ category }: TopicsByCategoryStackProps) => {
           gap: 2,
         }}
       >
-        {featuredTopics.map((topic, index) => {
+        {featuredTopics.map(({ name }, index) => {
           return (
             <Stack key={index}>
-              <Typography>{topic}</Typography>
+              <Typography>{name}</Typography>
               <Typography>Learnercount</Typography>
             </Stack>
           );

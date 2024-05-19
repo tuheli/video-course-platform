@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
-import { languages } from './languageData';
+import { languages } from '../../../data/languageData';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDisableScrollbar } from '../../hooks/useDisableScrollbar';
 

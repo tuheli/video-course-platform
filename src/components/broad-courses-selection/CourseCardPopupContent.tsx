@@ -1,6 +1,6 @@
 import '../dropdowns/animations/fadeAnimation.css';
 import { Box, Paper, Stack, Typography } from '@mui/material';
-import { CourseItem } from './broadCoursesSelectionData';
+import { Course } from '../../../data/courseData';
 import { dateLocale } from './common';
 import { BestSeller } from './BestSeller';
 import { DotSeparatedSpan } from './DotSeparatedSpan';
@@ -13,7 +13,7 @@ import { LeftPointingTriangle } from '../direction-triangles/LeftPointingTriangl
 import { UpPointingTriangle } from '../direction-triangles/UpPointingTriangle';
 
 interface CourseCardPopupContentProps {
-  courseItem: CourseItem;
+  courseItem: Course;
 }
 
 // Height adjusts to content but width is fixed
@@ -56,7 +56,7 @@ export const CourseCardPopupContent = ({
               gap: defaultGap,
             }}
           >
-            <Typography variant="h6">{courseItem.title}</Typography>
+            <Typography variant="h6">{courseItem.name}</Typography>
             <Stack
               sx={{
                 flexDirection: 'row',

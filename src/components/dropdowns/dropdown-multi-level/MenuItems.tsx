@@ -1,4 +1,4 @@
-import { type MenuItem } from './categoriesData';
+import { type MenuItem } from '../../../../data/menuItemsData';
 import { useRef, useState } from 'react';
 import { InnerMenuItemsList } from '../styled/InnerMenuItemsList';
 import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';

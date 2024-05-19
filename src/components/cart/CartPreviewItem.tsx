@@ -44,7 +44,7 @@ export const CartPreviewItem = ({ courseItem }: CartPreviewItemProps) => {
             lineHeight: 1.2,
           }}
         >
-          {courseItem.title}
+          {courseItem.name}
         </LineClampedTypography>
         <LineClampedTypography
           maxLines={1}

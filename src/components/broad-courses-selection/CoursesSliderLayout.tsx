@@ -1,14 +1,15 @@
 import { Box, Button, Paper, Stack } from '@mui/material';
-import { broadCoursesSelectionData } from './broadCoursesSelectionData';
 import { CourseTopicHeading } from './CourseTopicHeading';
 import { CoursesSliderOnly } from './CoursesSliderOnly';
 import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
+import { getTopic } from '../../../data/courseData';
 
 export const CoursesSliderLayout = () => {
   const { topic } = useSelectedCourseTopicContext();
-  const topicToShow = broadCoursesSelectionData.find((p) => p.name === topic);
 
   const onClickExplore = () => {};
+
+  const topicToShow = getTopic(topic);
 
   if (!topicToShow) return null;
 

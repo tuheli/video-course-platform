@@ -1,11 +1,10 @@
 import { Container, Stack, Typography } from '@mui/material';
-import { courseCategories } from '../broad-courses-selection/broadCoursesSelectionData';
 import { TopCategoryItem } from './TopCategoryItem';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { getCategories } from '../../../data/courseData';
 
 export const TopCategories = () => {
-  const data = courseCategories;
-  const categories = data;
+  const categories = getCategories();
 
   return (
     <Container>

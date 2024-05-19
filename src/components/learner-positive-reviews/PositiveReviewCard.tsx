@@ -1,5 +1,5 @@
 import { Avatar, Box, Divider, Paper, Stack, Typography } from '@mui/material';
-import { LearnerPositiveReview } from './learnerPositiveReviewsData';
+import { LearnerPositiveReview } from '../../../data/reviewsData';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { StyledLink } from './StyledLink';
 import { useState } from 'react';
