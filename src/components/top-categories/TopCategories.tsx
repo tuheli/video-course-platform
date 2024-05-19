@@ -18,7 +18,7 @@ export const TopCategories = () => {
         <Grid2 container spacing={2}>
           {categories.map((category, index) => {
             return (
-              <Grid2 key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
+              <Grid2 key={index} xs={3}>
                 <TopCategoryItem category={category} />
               </Grid2>
             );
