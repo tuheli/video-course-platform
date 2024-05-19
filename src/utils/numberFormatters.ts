@@ -6,6 +6,6 @@ export const currencyFormatter = new Intl.NumberFormat(locale, {
   currency: currency,
 });
 
-export const significantDigitFormatter = new Intl.NumberFormat(locale, {
-  maximumSignificantDigits: 3,
-});
+export const format = (value: number) => {
+  return value.toLocaleString(locale);
+};
