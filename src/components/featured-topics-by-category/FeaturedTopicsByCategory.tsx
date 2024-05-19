@@ -1,67 +1,41 @@
-import { Container, Stack, Typography } from '@mui/material';
-import {
-  CourseCategory,
-  getFeaturedCategories,
-  getFeaturedTopics,
-} from '../../../data/courseData';
+import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { getFeaturedCategories } from '../../../data/courseData';
+import { TopicsByCategoryStack } from './TopicsByCategoryStack';
 
 export const FeaturedTopicsByCategory = () => {
   const featuredCategories = getFeaturedCategories();
+
+  const onClickExploreMore = () => {};
 
   return (
     <Container>
       <Stack
         sx={{
           flexDirection: 'column',
-          gap: 2,
+          gap: 4,
         }}
       >
-        <Typography variant="h5">Featured Topics By Category</Typography>
+        <Typography variant="h5">Featured topics by category</Typography>
         <Stack
           sx={{
             flexDirection: 'row',
-            gap: 2,
+            gap: 4,
           }}
         >
           {featuredCategories.map((category, index) => {
             return <TopicsByCategoryStack key={index} category={category} />;
           })}
         </Stack>
+        <Box>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={onClickExploreMore}
+          >
+            Explore more topics
+          </Button>
+        </Box>
       </Stack>
     </Container>
-  );
-};
-
-interface TopicsByCategoryStackProps {
-  category: CourseCategory;
-}
-
-const TopicsByCategoryStack = ({ category }: TopicsByCategoryStackProps) => {
-  const featuredTopics = getFeaturedTopics(category.name);
-
-  return (
-    <Stack
-      sx={{
-        flexDirection: 'column',
-        gap: 2,
-      }}
-    >
-      <Typography variant="h6">{category.name}</Typography>
-      <Stack
-        sx={{
-          flexDirection: 'column',
-          gap: 2,
-        }}
-      >
-        {featuredTopics.map(({ name }, index) => {
-          return (
-            <Stack key={index}>
-              <Typography>{name}</Typography>
-              <Typography>Learnercount</Typography>
-            </Stack>
-          );
-        })}
-      </Stack>
-    </Stack>
   );
 };
