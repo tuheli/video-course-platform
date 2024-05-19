@@ -16,6 +16,7 @@ export interface Course {
   hasSubtitles: boolean;
   description: string;
   bulletPoints: [string, string, string];
+  learerCount: number;
 }
 
 interface CourseTopic {
@@ -38,6 +39,16 @@ interface CourseSubcategory {
   url: string;
   topics: CourseTopic[];
 }
+
+const getRandomInt = (min: number, max: number) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getRandomLearnerCount = () => {
+  return getRandomInt(584, 213879);
+};
 
 export const getTopic = (topicName: string) => {
   for (const category of courseData) {
@@ -171,6 +182,7 @@ const courseData: CourseCategory[] = [
                   'Learn how to use the Pen Tool like a pro',
                   'Create icons, logos, and more',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'adobe-illustrator-course-2',
@@ -193,6 +205,7 @@ const courseData: CourseCategory[] = [
                   'Use the power of Adobe Illustrator to design professional artwork',
                   'Create advanced special effects',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -224,6 +237,7 @@ const courseData: CourseCategory[] = [
                   'Learn how to use the Pen Tool like a pro',
                   'Create icons, logos, and more',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'adobe-photoshop-course-2',
@@ -246,6 +260,7 @@ const courseData: CourseCategory[] = [
                   'Use the power of Adobe Illustrator to design professional artwork',
                   'Create advanced special effects',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -283,6 +298,7 @@ const courseData: CourseCategory[] = [
                   'A huge project that will teach you everything you need to know to get started with HTML5 and CSS3',
                   'The proven 7 real-world steps from complete scratch to a fully functional and optimized website',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'html-course-2',
@@ -305,6 +321,7 @@ const courseData: CourseCategory[] = [
                   'Build responsive websites with HTML5 and CSS3',
                   'Understand the latest web technologies',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -363,6 +380,7 @@ const courseData: CourseCategory[] = [
                   'A practical programming course for office workers, academics, and administrators who want to improve their productivity.',
                   'You will be able to use Python for your own work problems or personal projects.',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'python-course-2',
@@ -391,6 +409,7 @@ const courseData: CourseCategory[] = [
                   'Use Spark for Big Data Analysis',
                   'Implement Machine Learning Algorithms',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'python-course-3',
@@ -413,6 +432,7 @@ const courseData: CourseCategory[] = [
                   'You will learn automation, game, app and web development, data science and machine learning all using Python.',
                   'You will be able to program in Python professionally',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -444,6 +464,7 @@ const courseData: CourseCategory[] = [
                   'Build a solid understanding on the Basics of Microsoft Excel',
                   'Learn the most common Excel functions used in the Office',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'excel-course-2',
@@ -466,6 +487,7 @@ const courseData: CourseCategory[] = [
                   "Learn to use Excel's powerful data analysis tools",
                   'Learn to use Excel for data analysis and visualization',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -481,7 +503,54 @@ const courseData: CourseCategory[] = [
             heading: 'Master React with these courses',
             description:
               'Learn React with these courses from Lorem. You’ll learn how to build web applications, mobile apps, and games. Whether you’re a beginner or an expert, these courses will help you take your development skills to the next level.',
-            courses: [],
+            courses: [
+              {
+                id: 'react-course-1',
+                name: 'Modern React with Redux [2021 Update]',
+                thumbnailUrl: '/course-images/react-course-image-1.jpg',
+                creatorNames: ['Stephen Grider'],
+                rating: 4.7,
+                ratingCount: 1234567,
+                listPrice: 199.99,
+                priceEur: 9.99,
+                isBestseller: true,
+                lastUpdated: new Date('2022-05-01').toDateString(),
+                lengthHours: 10,
+                difficultyLevel: 'Intermediate',
+                hasSubtitles: true,
+                description:
+                  'Master React v16.6.3 and Redux with React Router, Webpack, and Create-React-App. Includes Hooks!',
+                bulletPoints: [
+                  'Build amazing single page applications with React JS and Redux',
+                  'Master fundamental concepts behind structuring Redux applications',
+                  'Realize the power of building composable components',
+                ],
+                learerCount: getRandomLearnerCount(),
+              },
+              {
+                id: 'react-course-2',
+                name: 'React - The Complete Guide (incl Hooks, React Router, Redux)',
+                thumbnailUrl: '/course-images/react-course-image-2.jpg',
+                creatorNames: ['Maximilian Schwarzmüller'],
+                rating: 4.2,
+                ratingCount: 12345,
+                listPrice: 149.99,
+                priceEur: 149.99,
+                isBestseller: false,
+                lastUpdated: new Date('2024-12-30').toDateString(),
+                lengthHours: 20,
+                difficultyLevel: 'Advanced',
+                hasSubtitles: false,
+                description:
+                  'Dive in and learn React.js from scratch! Learn Reactjs, Hooks, Redux, React Routing, Animations, Next.js and way more!',
+                bulletPoints: [
+                  'Build powerful, fast, user-friendly and reactive web apps',
+                  'Provide amazing user experiences by leveraging the power of JavaScript with ease',
+                  'Apply for high-paid jobs or work as a freelancer in one the most-demanded sectors you can find in web dev right now',
+                ],
+                learerCount: getRandomLearnerCount(),
+              },
+            ],
           },
         ],
       },
@@ -525,6 +594,7 @@ const courseData: CourseCategory[] = [
                   'Create highly optimized and high quality paid ads on all Social Media platforms.',
                   'Learn Instagram Marketing A-Z and how to monetize the social platform.',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'social-media-marketing-course-2',
@@ -548,6 +618,7 @@ const courseData: CourseCategory[] = [
                   'Build a social media strategy',
                   'Use social media for all business activities',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -595,6 +666,7 @@ const courseData: CourseCategory[] = [
                   'Master all the exam required knowledge and subject areas',
                   'Be fully prepared for the AWS Certified Solutions Architect Associate exam',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'aws-certification-course-2',
@@ -618,6 +690,7 @@ const courseData: CourseCategory[] = [
                   'Become confident in creating basic Python and PHP code to manipulate AWS environments',
                   'Become intimately familiar with the AWS platform from a developer perspective.',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -663,6 +736,7 @@ const courseData: CourseCategory[] = [
                   'Increase your productivity',
                   'Set goals and achieve them',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'personal-productivity-course-2',
@@ -686,6 +760,7 @@ const courseData: CourseCategory[] = [
                   'Increase your productivity',
                   'Set goals and achieve them',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -730,6 +805,7 @@ const courseData: CourseCategory[] = [
                   'Understand and analyze a balance sheet (even if you have no experience with balance sheets).',
                   'Understand and analyze a cash flow statement (even if you have no experience with cash flow statements).',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'accounting-course-2',
@@ -752,6 +828,7 @@ const courseData: CourseCategory[] = [
                   'Understand the accounting equation and the five categories involved.',
                   'Understand the double-entry accounting system.',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -796,6 +873,7 @@ const courseData: CourseCategory[] = [
                   'Organize images with Lightroom Classic CC',
                   'Create images with Lightroom Classic CC',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'adobe-lightroom-course-2',
@@ -818,6 +896,7 @@ const courseData: CourseCategory[] = [
                   'Organize images in Lightroom',
                   'Create images in Lightroom',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
@@ -862,6 +941,7 @@ const courseData: CourseCategory[] = [
                   'Learn how to read music',
                   'Improve your guitar technique',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
               {
                 id: 'guitar-course-2',
@@ -884,6 +964,7 @@ const courseData: CourseCategory[] = [
                   'Learn how to read music',
                   'Improve your guitar technique',
                 ],
+                learerCount: getRandomLearnerCount(),
               },
             ],
           },
