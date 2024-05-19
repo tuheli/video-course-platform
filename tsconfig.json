@@ -20,6 +20,12 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "data/courseData.ts",
+    "data/reviewsData.ts",
+    "data/menuItemsData.ts",
+    "data/languageData.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
