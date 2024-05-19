@@ -26,6 +26,8 @@ export const arrowHorizontalOffset = 20;
 
 // TODO: The logic for placing items inside the list should behave like flex space around or between. Then the items would be also automatically sized correctly. Current solution is quite rigid since the items have fixed width. Or just use react slick.
 
+// FIX: Dont use scroll into view. Instead should use scrollTo. The scroll into view stops if user scrolls window at the same time.
+
 // NOTE: The child items must have scroll align start set, and the items must have specific dom structure for the scrollToIndex to find the correct node.
 
 // NOTE: If the list items change, the resetScroll should also be called.
