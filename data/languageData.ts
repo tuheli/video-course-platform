@@ -1,4 +1,4 @@
-import { ColumOrderedGridItem } from '../column-ordered-grid/ColumnOrderedGrid';
+import { ColumOrderedGridItem } from '../src/components/column-ordered-grid/ColumnOrderedGrid';
 
 export const languages: ColumOrderedGridItem[] = [
   { key: 'en', text: 'English' },
