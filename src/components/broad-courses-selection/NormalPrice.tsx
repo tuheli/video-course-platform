@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { currencyFormatter } from './numberFormatters';
+import { currencyFormatter } from '../../utils/numberFormatters';
 import { coursePriceFontSize } from './common';
 
 interface NormalPriceProps {
