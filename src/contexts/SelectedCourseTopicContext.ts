@@ -6,7 +6,7 @@ interface SelectedCourseTopicContextType {
 }
 
 const defaultValue = {
-  topic: 'Python',
+  topic: 'Adobe Illustrator',
   changeTopic: () => {},
 };
 

@@ -7,7 +7,7 @@ import { CoursesSliderLayout } from './CoursesSliderLayout';
 // NOTE: Courses carousel needs to be wrapped in a box with min height to prevent visual bug when changing topics. Without min height atleast the carousel height the screen height adjusts quickly top and back down and whole screen is repainted. This happened when scrollbar existed and current scroll position was low enough.
 
 export const RenderingCourseTopicContextProvider = () => {
-  const [topic, setTopic] = useState('Python');
+  const [topic, setTopic] = useState('Adobe Illustrator');
   const minCoursesCarouselHeight = 1;
 
   const changeTopic = (topic: string) => {
