@@ -20,6 +20,7 @@ export const CustomerStories = () => {
         <Slider
           {...{
             infinite: true,
+            touchMove: false,
             speed: 500,
             slidesToShow: 1,
             slidesToScroll: 1,
