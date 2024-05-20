@@ -1,30 +1,38 @@
-import { useState } from 'react';
-import { IconButton } from '@mui/material';
-import { SelectLanguageModal } from './SelectLanguageModal';
-import LanguageIcon from '@mui/icons-material/Language';
+import { Box } from '@mui/material';
+import { useAppDispatch } from '../../app/hooks';
+import { changedLanguage } from '../../features/languageSlice';
+import { Language } from '../../../data/languageData';
 
-export const SelectLanguageButton = () => {
-  const [open, setOpen] = useState(false);
+interface LanguageRenderComponentProps {
+  language: Language;
+  closeModal: () => void;
+}
 
-  const openModal = () => setOpen(true);
-  const closeModal = () => setOpen(false);
+export const SelectLanguageButton = ({
+  language,
+  closeModal,
+}: LanguageRenderComponentProps) => {
+  const dispatch = useAppDispatch();
 
-  const onClick = () => {
-    openModal();
+  const onClickLanguage = () => {
+    dispatch(changedLanguage(language));
+    closeModal();
   };
 
   return (
-    <>
-      <IconButton
+    <a onClick={onClickLanguage}>
+      <Box
         sx={{
-          borderRadius: 0,
-          color: 'text.primary',
+          width: 140,
+          py: 1,
+          cursor: 'pointer',
+          '&:hover': {
+            color: 'secondary.main',
+          },
         }}
-        onClick={onClick}
       >
-        <LanguageIcon />
-      </IconButton>
-      <SelectLanguageModal isOpen={open} onClose={closeModal} />
-    </>
+        {language.text}
+      </Box>
+    </a>
   );
 };
