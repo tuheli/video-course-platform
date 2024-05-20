@@ -25,8 +25,6 @@ export const getReviews = () => {
     })
     .filter((review) => review !== null) as LearnerPositiveReview[];
 
-  console.log(data);
-
   return data;
 };
 
