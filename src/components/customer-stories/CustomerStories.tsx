@@ -12,7 +12,7 @@ export const CustomerStories = () => {
     <Container>
       <Box
         sx={{
-          maxWidth: 720,
+          maxWidth: 700,
           position: 'relative',
           margin: 'auto',
         }}
