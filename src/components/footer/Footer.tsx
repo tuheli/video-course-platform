@@ -3,6 +3,8 @@ import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
 import { getFooterLinks } from '../../../data/footerLinks';
 import { FooterLink } from './FooterLink';
 import { FooterSelectLanguageButton } from './FooterSelectLanguageButton';
+import { CompanyLogo } from '../appbar/CompanyLogo';
+import { Copyright } from './Copyright';
 
 export const Footer = () => {
   const footerLinks = getFooterLinks();
@@ -36,6 +38,18 @@ export const Footer = () => {
             }}
           >
             <FooterSelectLanguageButton />
+          </Box>
+        </Stack>
+        <Stack
+          sx={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            py: 8,
+          }}
+        >
+          <CompanyLogo isWhite={true} />
+          <Box>
+            <Copyright />
           </Box>
         </Stack>
       </Stack>
