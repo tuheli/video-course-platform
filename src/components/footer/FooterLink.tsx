@@ -10,7 +10,7 @@ export const FooterLink = ({ text }: FooterLinkProps) => {
     <EmptyStyledLink
       href="/"
       sx={{
-        color: 'white',
+        color: (theme) => theme.palette.primary.contrastText,
         textDecoration: 'none',
         '&:hover': {
           cursor: 'pointer',
