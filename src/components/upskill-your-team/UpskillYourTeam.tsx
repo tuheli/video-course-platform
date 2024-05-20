@@ -3,7 +3,7 @@ import { CompanyLogo } from '../appbar/CompanyLogo';
 import { StyledList } from './StyledList';
 import { StyledListItem } from './StyledListItem';
 
-const itemWidth = 320;
+const itemWidth = 360;
 
 export const UpskillYourTeam = () => {
   const onClickGetLoremBusiness = () => {};
