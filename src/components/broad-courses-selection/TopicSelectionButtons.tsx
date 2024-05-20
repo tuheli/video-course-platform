@@ -1,15 +1,18 @@
-import { Button, Stack } from '@mui/material';
-import { useSelectedCourseTopicContext } from '../../hooks/useSelectedCourseTopicContext';
+import { Stack } from '@mui/material';
 import { getTopicsWithCourses } from '../../../data/courseData';
+import { SelectTopicButton } from './SelectTopicButton';
 
-export const TopicSelectionButtons = () => {
-  const { topic, changeTopic } = useSelectedCourseTopicContext();
+interface TopicSelectionButtonsProps {
+  currentTopic: string;
+  maxTopics: number;
+  setTopicName: (name: string) => void;
+}
 
-  const onClickTopic = (topic: string) => {
-    changeTopic(topic);
-  };
-
-  const maxTopics = 5;
+export const TopicSelectionButtons = ({
+  currentTopic,
+  maxTopics,
+  setTopicName,
+}: TopicSelectionButtonsProps) => {
   const topicsData = getTopicsWithCourses(maxTopics);
 
   return (
@@ -21,21 +24,12 @@ export const TopicSelectionButtons = () => {
     >
       {topicsData.map(({ name }, index) => {
         return (
-          <Button
+          <SelectTopicButton
             key={index}
-            variant="text"
-            onClick={() => onClickTopic(name)}
-            sx={{
-              color: name === topic ? 'text.primary' : 'text.secondary',
-              fontSize: 15,
-              fontWeight: 600,
-              '&:hover': {
-                color: 'text.primary',
-              },
-            }}
-          >
-            {name}
-          </Button>
+            name={name}
+            currentTopic={currentTopic}
+            setTopicName={setTopicName}
+          />
         );
       })}
     </Stack>

@@ -4,7 +4,6 @@ import { LineClampedTypography } from './LineClampedTypography';
 import { StarRating } from './StarRating';
 import { DiscountedPrice } from './DiscountedPrice';
 import { NormalPrice } from './NormalPrice';
-import { courseCardWidth } from './common';
 import { BestSeller } from './BestSeller';
 import { format } from '../../utils/numberFormatters';
 
@@ -22,7 +21,7 @@ export const BroadCoursesSelectionItem = ({
   return (
     <Box
       sx={{
-        width: courseCardWidth,
+        minHeight: 260,
       }}
     >
       <Box
@@ -99,7 +98,6 @@ export const BroadCoursesSelectionItem = ({
         )}
         <Box
           sx={{
-            height: 28,
             mt: 1,
           }}
         >
