@@ -1,6 +1,21 @@
-interface Language {
-  key: string;
+export interface Language {
   text: string;
+  code: string;
+}
+
+enum KnownLanguages {
+  English = 'en',
+  Spanish = 'es',
+  French = 'fr',
+  German = 'de',
+  Italian = 'it',
+  Portuguese = 'pt',
+  Dutch = 'nl',
+  Russian = 'ru',
+  Chinese = 'zh',
+  Japanese = 'ja',
+  Korean = 'ko',
+  Arabic = 'ar',
 }
 
 export const getLanguages = () => {
@@ -8,16 +23,16 @@ export const getLanguages = () => {
 };
 
 const languages: Language[] = [
-  { key: 'en', text: 'English' },
-  { key: 'es', text: 'Spanish' },
-  { key: 'fr', text: 'French' },
-  { key: 'de', text: 'German' },
-  { key: 'it', text: 'Italian' },
-  { key: 'pt', text: 'Portuguese' },
-  { key: 'nl', text: 'Dutch' },
-  { key: 'ru', text: 'Russian' },
-  { key: 'zh', text: 'Chinese' },
-  { key: 'ja', text: 'Japanese' },
-  { key: 'ko', text: 'Korean' },
-  { key: 'ar', text: 'Arabic' },
+  { text: 'English', code: KnownLanguages.English },
+  { text: 'Spanish', code: KnownLanguages.Spanish },
+  { text: 'French', code: KnownLanguages.French },
+  { text: 'German', code: KnownLanguages.German },
+  { text: 'Italian', code: KnownLanguages.Italian },
+  { text: 'Portuguese', code: KnownLanguages.Portuguese },
+  { text: 'Dutch', code: KnownLanguages.Dutch },
+  { text: 'Russian', code: KnownLanguages.Russian },
+  { text: 'Chinese', code: KnownLanguages.Chinese },
+  { text: 'Japanese', code: KnownLanguages.Japanese },
+  { text: 'Korean', code: KnownLanguages.Korean },
+  { text: 'Arabic', code: KnownLanguages.Arabic },
 ];
