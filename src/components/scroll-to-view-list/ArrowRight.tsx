@@ -15,13 +15,6 @@ export const ArrowRight = ({
   isSliderInfinite,
   onClick,
 }: RightArrowProps) => {
-  console.log(
-    'ArrowRight rendered, currentslide',
-    currentSlide,
-    'slidecount',
-    slideCount
-  );
-
   const isVisible =
     !isSliderInfinite &&
     currentSlide !== undefined &&
