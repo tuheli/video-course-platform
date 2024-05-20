@@ -10,9 +10,9 @@ import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDisableScrollbar } from '../../hooks/useDisableScrollbar';
 import { getLanguages } from '../../../data/languageData';
-import { LanguageRenderComponent } from './LanguageRenderComponent';
+import { SelectLanguageButton } from './SelectLanguageButton';
 
-// NOTE: I removed fade animation wrapper to prevent seeing a change in document padding when modal is still fading away but scrollbar becomes visible and extra document body padding is removed.
+// NOTE: Dont use mui Fade animation wrapper component with this modal. This component uses custom hook to disable scrollbar and set padding while modal is open. Otherwise the Fade animations and scrollbar enable/disable hook effects would need to be happening in sync.
 
 interface SelectLanguageModalProps {
   isOpen: boolean;
@@ -23,14 +23,11 @@ export const SelectLanguageModal = ({
   isOpen,
   onClose,
 }: SelectLanguageModalProps) => {
-  // When used add item: ColumOrderedGridItem as an argument to use the items data in this function. I removed it to silence unused argument warning.
-  const closeModal = () => {
-    onClose();
-  };
-
   const languages = getLanguages();
-  const languageComponents = languages.map(({ text }) => ({
-    RenderComponent: () => <LanguageRenderComponent language={text} />,
+  const languageComponents = languages.map((language) => ({
+    RenderComponent: () => (
+      <SelectLanguageButton language={language} closeModal={onClose} />
+    ),
   }));
 
   useDisableScrollbar(isOpen);
@@ -86,11 +83,7 @@ export const SelectLanguageModal = ({
               />
             </IconButton>
           </Stack>
-          <ColumnOrderedGrid
-            items={languageComponents}
-            stackHeight={4}
-            onClickItem={closeModal}
-          />
+          <ColumnOrderedGrid items={languageComponents} stackHeight={4} />
         </Box>
       </>
     </Modal>
