@@ -31,56 +31,63 @@ export const BroadSelectionOfCourses = () => {
 
   return (
     <Container>
-      <Typography variant="h4">Broad Selection of Courses</Typography>
-      <Paper
+      <Stack
         sx={{
-          padding: 3,
-          minHeight,
+          flexDirection: 'column',
+          gap: 2,
         }}
       >
-        <Stack
+        <Typography variant="h4">Broad Selection of Courses</Typography>
+        <Paper
           sx={{
-            flexdirection: 'column',
-            gap: 2,
+            padding: 3,
+            minHeight,
           }}
         >
-          <Box
+          <Stack
             sx={{
-              padding: 1,
+              flexdirection: 'column',
+              gap: 2,
             }}
           >
-            <CourseTopicHeading
-              heading={topic.heading}
-              description={topic.description}
+            <Box
+              sx={{
+                padding: 1,
+              }}
+            >
+              <CourseTopicHeading
+                heading={topic.heading}
+                description={topic.description}
+              />
+            </Box>
+            <Box
+              sx={{
+                padding: 1,
+              }}
+            >
+              <Button variant="outlined" onClick={onClickExplore}>
+                Explore {topic.name}
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                padding: 1,
+              }}
+            >
+              <TopicSelectionButtons
+                currentTopic={currentTopicName}
+                maxTopics={5}
+                setTopicName={onClickTopic}
+              />
+            </Box>
+            <CoursesSlider
+              ref={sliderRef}
+              topic={topic}
+              isSliderInfinite={false}
             />
-          </Box>
-          <Box
-            sx={{
-              padding: 1,
-            }}
-          >
-            <Button variant="outlined" onClick={onClickExplore}>
-              Explore {topic.name}
-            </Button>
-          </Box>
-          <Box
-            sx={{
-              padding: 1,
-            }}
-          >
-            <TopicSelectionButtons
-              currentTopic={currentTopicName}
-              maxTopics={5}
-              setTopicName={onClickTopic}
-            />
-          </Box>
-          <CoursesSlider
-            ref={sliderRef}
-            topic={topic}
-            isSliderInfinite={false}
-          />
-        </Stack>
-      </Paper>
+          </Stack>
+        </Paper>
+      </Stack>
     </Container>
   );
 };
