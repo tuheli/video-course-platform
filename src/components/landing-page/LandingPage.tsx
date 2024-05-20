@@ -62,7 +62,7 @@ const LandingPage = () => {
       </Box>
       <Box
         sx={{
-          py: 8,
+          py: 4,
         }}
       >
         <UpskillYourTeam />
