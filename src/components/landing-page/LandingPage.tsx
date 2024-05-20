@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import AppAppBar from '../appbar/AppAppBar';
 import { HeroBanner } from '../hero-banner/HeroBanner';
 import { TrustedByCompaniesLogos } from '../trusted-by-companies-logos/TrustedByCompaniesLogos';
-import { BroadCoursesSelection } from '../broad-courses-selection/BroadCoursesSelection';
 import { LearnerPositiveReviews } from '../learner-positive-reviews/LearnerPositiveReviews';
 import { LearnersAreViewingSlider } from '../learners-are-viewing-slider/LearnersAreViewingSlider';
 import { TopCategories } from '../top-categories/TopCategories';
@@ -11,6 +10,7 @@ import { UpskillYourTeam } from '../upskill-your-team/UpskillYourTeam';
 import { CustomerStories } from '../customer-stories/CustomerStories';
 import { BecomeAnInstructor } from '../become-an-instructor/BecomeAnInstructor';
 import { Footer } from '../footer/Footer';
+import { BroadSelectionOfCourses } from '../broad-courses-selection/BroadSelectionOfCourses';
 
 const LandingPage = () => {
   return (
@@ -30,7 +30,7 @@ const LandingPage = () => {
           minHeight: 690,
         }}
       >
-        <BroadCoursesSelection />
+        <BroadSelectionOfCourses />
       </Box>
       <Box
         sx={{
