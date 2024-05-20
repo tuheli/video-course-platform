@@ -1,4 +1,4 @@
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import Slider from 'react-slick';
 import { PositiveReviewCard } from './PositiveReviewCard';
 import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
@@ -11,44 +11,36 @@ export const LearnerPositiveReviews = () => {
   const reviews = getReviews();
 
   return (
-    <Box
-      sx={{
-        bgcolor: 'background.paper',
-      }}
-    >
-      <Container sx={{}}>
-        <Stack
-          sx={{
-            flexDirection: 'column',
-            gap: 2,
+    <Container>
+      <Stack
+        sx={{
+          flexDirection: 'column',
+          gap: 2,
+        }}
+      >
+        <Typography variant="h5">
+          How learners like you are achieving their goals
+        </Typography>
+        <Slider
+          {...{
+            className: 'slick-slider-padder',
+            infinite: false,
+            touchMove: false,
+            variableWidth: false,
+            speed: 500,
+            slidesToShow: 3.5,
+            slidesToScroll: 1.5,
+            nextArrow: <ArrowRight slidesToShow={4} isSliderInfinite={false} />,
+            prevArrow: <ArrowLeft isSliderInfinite={false} />,
           }}
         >
-          <Typography variant="h5">
-            How learners like you are achieving their goals
-          </Typography>
-          <Slider
-            {...{
-              dots: false,
-              infinite: true,
-              variableWidth: true,
-              touchMove: false,
-              slidesToShow: 3,
-              slidesToScroll: 1,
-              nextArrow: <ArrowRight sx={{ right: -18, top: '40%' }} />,
-              prevArrow: <ArrowLeft sx={{ left: -18, top: '40%' }} />,
-            }}
-          >
-            {reviews.map((positiveReview, index) => {
-              return (
-                <PositiveReviewCard
-                  key={index}
-                  positiveReview={positiveReview}
-                />
-              );
-            })}
-          </Slider>
-        </Stack>
-      </Container>
-    </Box>
+          {reviews.map((positiveReview, index) => {
+            return (
+              <PositiveReviewCard key={index} positiveReview={positiveReview} />
+            );
+          })}
+        </Slider>
+      </Stack>
+    </Container>
   );
 };
