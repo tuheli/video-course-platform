@@ -12,8 +12,7 @@ interface PositiveReviewCardProps {
 }
 
 const iconSize = 28;
-const minHeight = 300;
-const maxWidth = 340;
+const minHeight = 310;
 
 const columGap = 2;
 const rowGap = 0.5;
@@ -36,9 +35,7 @@ export const PositiveReviewCard = ({
   return (
     <Paper
       sx={{
-        marginRight: 2,
         padding: 2,
-        maxWidth,
         minHeight,
       }}
     >
@@ -53,7 +50,7 @@ export const PositiveReviewCard = ({
         <Typography
           variant="body2"
           sx={{
-            minHeight: 80,
+            minHeight: 120,
           }}
         >
           {positiveReview.reviewText}
