@@ -9,6 +9,7 @@ import { TopCategories } from '../top-categories/TopCategories';
 import { FeaturedTopicsByCategory } from '../featured-topics-by-category/FeaturedTopicsByCategory';
 import { UpskillYourTeam } from '../upskill-your-team/UpskillYourTeam';
 import { CustomerStories } from '../customer-stories/CustomerStories';
+import { BecomeAnInstructor } from '../become-an-instructor/BecomeAnInstructor';
 
 const LandingPage = () => {
   return (
@@ -74,6 +75,13 @@ const LandingPage = () => {
         }}
       >
         <CustomerStories />
+      </Box>
+      <Box
+        sx={{
+          py: 4,
+        }}
+      >
+        <BecomeAnInstructor />
       </Box>
     </>
   );
