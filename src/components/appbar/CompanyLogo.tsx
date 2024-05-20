@@ -1,6 +1,10 @@
 import { Box } from '@mui/material';
 
-export const CompanyLogo = () => {
+interface CompanyLogoProps {
+  isWhite?: boolean;
+}
+
+export const CompanyLogo = ({ isWhite }: CompanyLogoProps) => {
   return (
     <a
       href="/"
@@ -15,6 +19,8 @@ export const CompanyLogo = () => {
         sx={{
           maxHeight: '1.3rem',
           cursor: 'pointer',
+          filter: isWhite ? 'brightness(10)' : 'none',
+          WebkitFilter: isWhite ? 'brightness(10)' : 'none',
         }}
       />
     </a>
