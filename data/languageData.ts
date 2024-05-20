@@ -1,5 +1,3 @@
-import { ColumnOrderedGridItem } from '../src/components/column-ordered-grid/ColumnOrderedGrid';
-
 interface Language {
   key: string;
   text: string;
