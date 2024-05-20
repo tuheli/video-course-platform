@@ -38,12 +38,11 @@ export const LearnerPositiveReviews = () => {
               prevArrow: <ArrowLeft sx={{ left: -18, top: '40%' }} />,
             }}
           >
-            {reviews.map(({ courseName, review }, index) => {
+            {reviews.map((positiveReview, index) => {
               return (
                 <PositiveReviewCard
                   key={index}
-                  courseTitle={courseName}
-                  review={review}
+                  positiveReview={positiveReview}
                 />
               );
             })}

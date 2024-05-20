@@ -7,8 +7,7 @@ import { secondary } from '../../theme';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 
 interface PositiveReviewCardProps {
-  courseTitle: string;
-  review: LearnerPositiveReview;
+  positiveReview: LearnerPositiveReview;
 }
 
 const quoteSvgSize = 20;
@@ -20,8 +19,7 @@ const columGap = 2;
 const rowGap = 0.5;
 
 export const PositiveReviewCard = ({
-  courseTitle,
-  review,
+  positiveReview,
 }: PositiveReviewCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -67,7 +65,7 @@ export const PositiveReviewCard = ({
             minHeight: 80,
           }}
         >
-          {review.reviewText}
+          {positiveReview.reviewText}
         </Typography>
         <Stack
           sx={{
@@ -83,8 +81,8 @@ export const PositiveReviewCard = ({
                 fontSize: '0.75rem',
               }}
             >
-              {review.firstName[0]}
-              {review.lastNameLetter}
+              {positiveReview.firstName[0]}
+              {positiveReview.lastNameLetter}
             </Avatar>
           </Box>
           <Typography
@@ -93,7 +91,7 @@ export const PositiveReviewCard = ({
               fontSize: '0.75rem',
             }}
           >
-            {review.firstName} {review.lastNameLetter}
+            {positiveReview.firstName} {positiveReview.lastNameLetter}
           </Typography>
         </Stack>
         <Divider />
@@ -123,7 +121,7 @@ export const PositiveReviewCard = ({
                 color: isHovered ? secondary[900] : secondary[800],
               }}
             >
-              {courseTitle}
+              {positiveReview.courseName}
             </LineClampedTypography>
           </Stack>
         </StyledLink>

@@ -7,14 +7,8 @@ export interface ReviewData {
   reviewText: string;
 }
 
-interface LearnerPositiveReview {
+export interface LearnerPositiveReview extends ReviewData {
   courseName: string;
-  review: {
-    reviewedCourseId: string;
-    firstName: string;
-    lastNameLetter: string;
-    reviewText: string;
-  };
 }
 
 export const getReviews = () => {
@@ -25,11 +19,13 @@ export const getReviews = () => {
       if (!course) return null;
       const learnerReview: LearnerPositiveReview = {
         courseName: course.name,
-        review,
+        ...review,
       };
       return learnerReview;
     })
     .filter((review) => review !== null) as LearnerPositiveReview[];
+
+  console.log(data);
 
   return data;
 };
