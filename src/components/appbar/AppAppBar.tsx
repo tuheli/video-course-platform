@@ -7,7 +7,7 @@ import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
 import { CartDropdown } from '../cart/CartDropdown';
 import { LoginButton } from './LoginButton';
 import { SignUpButton } from './SignUpButton';
-import { SelectLanguageButton } from '../language-selection/SelectLanguageButton';
+import { OpenLanguageModalButton } from '../language-selection/OpenLanguageModalButton';
 import { CompanyLogo } from './CompanyLogo';
 
 const itemGap = 2;
@@ -73,7 +73,7 @@ const AppAppBar = () => {
             >
               <LoginButton />
               <SignUpButton />
-              <SelectLanguageButton />
+              <OpenLanguageModalButton />
             </Stack>
           </Stack>
         </Toolbar>
