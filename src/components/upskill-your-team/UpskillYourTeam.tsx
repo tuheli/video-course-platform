@@ -14,7 +14,7 @@ export const UpskillYourTeam = () => {
       <Stack
         sx={{
           flexDirection: 'row',
-          gap: 6,
+          gap: 10,
           justifyContent: 'center',
         }}
       >
