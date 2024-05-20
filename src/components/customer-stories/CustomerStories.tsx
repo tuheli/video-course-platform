@@ -8,6 +8,7 @@ import { ViewMoreCustomerStoriesLink } from './ViewMoreCustomerStoriesLink';
 
 export const CustomerStories = () => {
   const customerStories = getCustomerStories();
+  const slidesToShowCount = 1;
 
   return (
     <Container>
@@ -27,13 +28,15 @@ export const CustomerStories = () => {
         >
           <Slider
             {...{
-              infinite: true,
+              infinite: false,
               touchMove: false,
               speed: 500,
-              slidesToShow: 1,
+              slidesToShow: slidesToShowCount,
               slidesToScroll: 1,
               nextArrow: (
                 <ArrowRight
+                  isSliderInfinite={false}
+                  slidesToShow={slidesToShowCount}
                   sx={{
                     right: 0,
                     top: '50%',
@@ -43,6 +46,7 @@ export const CustomerStories = () => {
               ),
               prevArrow: (
                 <ArrowLeft
+                  isSliderInfinite={false}
                   sx={{
                     left: 0,
                     top: '50%',
