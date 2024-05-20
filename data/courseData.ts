@@ -19,7 +19,7 @@ export interface Course {
   learerCount: number;
 }
 
-interface CourseTopic {
+export interface CourseTopic {
   name: string;
   url: string;
   heading: string;
@@ -176,7 +176,7 @@ const courseData: CourseCategory[] = [
                 difficultyLevel: 'Intermediate',
                 hasSubtitles: true,
                 description:
-                  'Master Adobe Illustrator CC with this in-depth training for all levels.',
+                  'Master Adobe Illustrator CC with this in-depth training for all levels. ',
                 bulletPoints: [
                   'Design your own graphics, without any experience',
                   'Learn how to use the Pen Tool like a pro',
@@ -214,7 +214,7 @@ const courseData: CourseCategory[] = [
             url: '/adobe-photoshop',
             heading: 'Master Adobe Photoshop with these courses',
             description:
-              'Learn Adobe Photoshop with these courses from Lorem. You’ll learn how to retouch photos, design websites, create digital art, and more. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
+              'Learn Adobe Photoshop with these courses from Lorem. You’ll learn how to retouch photos, design websites, create digital art, and more. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
             courses: [
               {
                 id: 'adobe-photoshop-course-1',
@@ -275,7 +275,7 @@ const courseData: CourseCategory[] = [
             url: '/html',
             heading: 'Master HTML with these courses',
             description:
-              'Learn HTML with these courses from Lorem. You’ll learn how to create websites, web applications, and mobile apps. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
+              'Learn HTML with these courses from Lorem. You’ll learn how to create websites, web applications, and mobile apps. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
             courses: [
               {
                 id: 'html-course-1',
