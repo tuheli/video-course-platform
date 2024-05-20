@@ -52,7 +52,7 @@ export const CustomerStoryCard = ({
             alignItems: 'center',
             textAlign: 'center',
             gap: 2,
-            pt: 4,
+            pt: 2,
             flexGrow: 1,
           }}
         >
