@@ -55,7 +55,7 @@ export const gray = {
   600: '#757575',
   700: '#616161',
   800: '#424242',
-  900: '#212121',
+  900: '#2d2f31',
 };
 
 export const green = {
@@ -138,7 +138,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       default: '#fff',
       paper: 'rgb(247, 249, 250)',
       secondary: 'rgb(236, 235, 152)',
-      dark: gray[800],
+      dark: gray[900],
       ...(mode === 'dark' && { default: gray[900], paper: gray[800] }),
     },
     text: {
