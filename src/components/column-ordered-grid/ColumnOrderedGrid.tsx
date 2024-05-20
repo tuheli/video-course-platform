@@ -1,11 +1,15 @@
 import { Box, Stack } from '@mui/material';
+import { ComponentType } from 'react';
 
-export interface ColumOrderedGridItem {
-  key: string | number;
-  text: string | number;
+interface ComponentProps {
+  onClick?: () => void;
 }
 
-interface ColumnOrderedGridProps<T extends ColumOrderedGridItem> {
+export interface ColumnOrderedGridItem {
+  RenderComponent: ComponentType<ComponentProps>;
+}
+
+interface ColumnOrderedGridProps<T extends ColumnOrderedGridItem> {
   items: T[];
   stackHeight: number;
   onClickItem?: (item: T) => void;
@@ -43,7 +47,7 @@ function createStacks<T>(items: T[], stackHeight: number): T[][] {
   return groups.filter((group) => group.length > 0);
 }
 
-export const ColumnOrderedGrid = <T extends ColumOrderedGridItem>({
+export const ColumnOrderedGrid = <T extends ColumnOrderedGridItem>({
   items,
   stackHeight,
   onClickItem,
@@ -60,20 +64,9 @@ export const ColumnOrderedGrid = <T extends ColumOrderedGridItem>({
       {stacks.map((stack, index) => {
         return (
           <Stack key={index} flexDirection="column">
-            {stack.map((item) => (
-              <Box
-                key={item.key}
-                onClick={() => onClickItem?.(item)}
-                sx={{
-                  width: 140,
-                  py: 1,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    color: 'secondary.main',
-                  },
-                }}
-              >
-                {item.text}
+            {stack.map((item, index) => (
+              <Box key={index} onClick={() => onClickItem?.(item)}>
+                <item.RenderComponent />
               </Box>
             ))}
           </Stack>
