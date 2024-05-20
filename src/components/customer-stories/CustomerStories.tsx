@@ -1,56 +1,68 @@
-import { Box, Container } from '@mui/material';
+import { Box, Container, Stack } from '@mui/material';
 import { getCustomerStories } from '../../../data/customerStoriesData';
 import { CustomerStoryCard } from './CustomerStoryCard';
 import Slider from 'react-slick';
 import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
 import { ArrowLeft } from '../scroll-to-view-list/ArrowLeft';
+import { ViewMoreCustomerStoriesLink } from './ViewMoreCustomerStoriesLink';
 
 export const CustomerStories = () => {
   const customerStories = getCustomerStories();
 
   return (
     <Container>
-      <Box
+      <Stack
         sx={{
-          maxWidth: 700,
-          position: 'relative',
-          margin: 'auto',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2,
         }}
       >
-        <Slider
-          {...{
-            infinite: true,
-            touchMove: false,
-            speed: 500,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            nextArrow: (
-              <ArrowRight
-                sx={{
-                  right: 0,
-                  top: '50%',
-                  transform: 'translateY(-50%) translateX(50%)',
-                }}
-              />
-            ),
-            prevArrow: (
-              <ArrowLeft
-                sx={{
-                  left: 0,
-                  top: '50%',
-                  transform: 'translateY(-50%) translateX(-50%)',
-                }}
-              />
-            ),
+        <Box
+          sx={{
+            maxWidth: 700,
+            position: 'relative',
+            margin: 'auto',
           }}
         >
-          {customerStories.map((customerStory, index) => {
-            return (
-              <CustomerStoryCard key={index} customerStory={customerStory} />
-            );
-          })}
-        </Slider>
-      </Box>
+          <Slider
+            {...{
+              infinite: true,
+              touchMove: false,
+              speed: 500,
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              nextArrow: (
+                <ArrowRight
+                  sx={{
+                    right: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%) translateX(50%)',
+                  }}
+                />
+              ),
+              prevArrow: (
+                <ArrowLeft
+                  sx={{
+                    left: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%) translateX(-50%)',
+                  }}
+                />
+              ),
+            }}
+          >
+            {customerStories.map((customerStory, index) => {
+              return (
+                <CustomerStoryCard key={index} customerStory={customerStory} />
+              );
+            })}
+          </Slider>
+        </Box>
+        <Box>
+          <ViewMoreCustomerStoriesLink />
+        </Box>
+      </Stack>
     </Container>
   );
 };
