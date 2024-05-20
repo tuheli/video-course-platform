@@ -12,7 +12,7 @@ export interface ColumnOrderedGridItem {
 interface ColumnOrderedGridProps<T extends ColumnOrderedGridItem> {
   items: T[];
   stackHeight: number;
-  onClickItem?: (item: T) => void;
+  gap?: number;
 }
 
 function createStacks<T>(items: T[], stackHeight: number): T[][] {
@@ -50,7 +50,7 @@ function createStacks<T>(items: T[], stackHeight: number): T[][] {
 export const ColumnOrderedGrid = <T extends ColumnOrderedGridItem>({
   items,
   stackHeight,
-  onClickItem,
+  gap = 0,
 }: ColumnOrderedGridProps<T>) => {
   const stacks = createStacks(items, stackHeight);
 
@@ -59,13 +59,14 @@ export const ColumnOrderedGrid = <T extends ColumnOrderedGridItem>({
       flexDirection="row"
       sx={{
         justifyContent: 'center',
+        gap,
       }}
     >
       {stacks.map((stack, index) => {
         return (
           <Stack key={index} flexDirection="column">
             {stack.map((item, index) => (
-              <Box key={index} onClick={() => onClickItem?.(item)}>
+              <Box key={index}>
                 <item.RenderComponent />
               </Box>
             ))}
