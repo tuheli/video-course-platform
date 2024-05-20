@@ -19,11 +19,18 @@ export const FooterLink = ({ text }: FooterLinkProps) => {
     >
       <Box
         sx={{
-          py: 0.5,
-          width: 200,
+          py: 0.1,
+          width: 180,
         }}
       >
-        <Typography variant="body2">{text}</Typography>
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: 400,
+          }}
+        >
+          {text}
+        </Typography>
       </Box>
     </EmptyStyledLink>
   );
