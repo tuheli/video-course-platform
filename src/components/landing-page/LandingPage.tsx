@@ -8,6 +8,7 @@ import { LearnersAreViewingSlider } from '../learners-are-viewing-slider/Learner
 import { TopCategories } from '../top-categories/TopCategories';
 import { FeaturedTopicsByCategory } from '../featured-topics-by-category/FeaturedTopicsByCategory';
 import { UpskillYourTeam } from '../upskill-your-team/UpskillYourTeam';
+import { CustomerStories } from '../customer-stories/CustomerStories';
 
 const LandingPage = () => {
   return (
@@ -65,6 +66,14 @@ const LandingPage = () => {
         }}
       >
         <UpskillYourTeam />
+      </Box>
+      <Box
+        sx={{
+          py: 4,
+          bgcolor: 'background.paper',
+        }}
+      >
+        <CustomerStories />
       </Box>
     </>
   );
