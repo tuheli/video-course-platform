@@ -10,6 +10,7 @@ import { FeaturedTopicsByCategory } from '../featured-topics-by-category/Feature
 import { UpskillYourTeam } from '../upskill-your-team/UpskillYourTeam';
 import { CustomerStories } from '../customer-stories/CustomerStories';
 import { BecomeAnInstructor } from '../become-an-instructor/BecomeAnInstructor';
+import { Footer } from '../footer/Footer';
 
 const LandingPage = () => {
   return (
@@ -82,6 +83,14 @@ const LandingPage = () => {
         }}
       >
         <BecomeAnInstructor />
+      </Box>
+      <Box
+        sx={{
+          py: 4,
+          bgcolor: 'background.dark',
+        }}
+      >
+        <Footer />
       </Box>
     </>
   );
