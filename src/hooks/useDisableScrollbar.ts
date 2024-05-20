@@ -30,8 +30,14 @@ const getScrollBarWidth = () => {
   return w1 - w2;
 };
 
+const isScrollbarVisible = () => {
+  return document.body.scrollHeight > window.innerHeight;
+};
+
 export const useDisableScrollbar = (isDisabled: boolean) => {
   useEffect(() => {
+    if (!isScrollbarVisible()) return;
+
     if (isDisabled) {
       document.body.style.overflowY = 'hidden';
       const scrollBarWidth = getScrollBarWidth();
