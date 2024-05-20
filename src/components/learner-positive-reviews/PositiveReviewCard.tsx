@@ -5,12 +5,12 @@ import { StyledLink } from './StyledLink';
 import { useState } from 'react';
 import { secondary } from '../../theme';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
+import { QuoteImage } from './QuoteImage';
 
 interface PositiveReviewCardProps {
   positiveReview: LearnerPositiveReview;
 }
 
-const quoteSvgSize = 20;
 const iconSize = 28;
 const minHeight = 300;
 const maxWidth = 340;
@@ -49,16 +49,7 @@ export const PositiveReviewCard = ({
           alignItems: 'left',
         }}
       >
-        <Box>
-          <Box
-            component="img"
-            src="/learner-positive-reviews/quote.svg"
-            sx={{
-              width: quoteSvgSize,
-              height: quoteSvgSize,
-            }}
-          />
-        </Box>
+        <QuoteImage />
         <Typography
           variant="body2"
           sx={{
