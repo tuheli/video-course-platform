@@ -140,11 +140,13 @@ const getDesignTokens = (mode: PaletteMode) => ({
       paper: 'rgb(247, 249, 250)',
       secondary: 'rgb(236, 235, 152)',
       dark: gray[900],
+      tertiary: '#5624d0',
       ...(mode === 'dark' && { default: gray[900], paper: gray[800] }),
     },
     text: {
       primary: gray[900],
       secondary: gray[500],
+      contrast: gray[50],
       green: green[600],
       ...(mode === 'dark' && { primary: '#fff', secondary: gray[400] }),
     },
