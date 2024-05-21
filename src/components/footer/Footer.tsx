@@ -1,10 +1,16 @@
-import { Box, Container, Stack } from '@mui/material';
+import { Box, Divider, Stack } from '@mui/material';
 import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
 import { getFooterLinks } from '../../../data/footerLinks';
 import { FooterLink } from './FooterLink';
 import { FooterSelectLanguageButton } from './FooterSelectLanguageButton';
 import { CompanyLogo } from '../appbar/CompanyLogo';
 import { Copyright } from './Copyright';
+import { FooterTopExtension } from './FooterTopExtension';
+import { useLocation } from 'react-router-dom';
+
+// Logged in status affects if the top extension is shown
+
+const isLoggedIn = false;
 
 export const Footer = () => {
   const footerLinks = getFooterLinks();
@@ -12,47 +18,68 @@ export const Footer = () => {
     RenderComponent: () => <FooterLink text={text} />,
   }));
 
+  const location = useLocation();
+
+  const showTopExtension = !isLoggedIn && location.pathname !== '/';
+
   return (
-    <Container maxWidth={false}>
-      <Stack
-        sx={{
-          flexDirection: 'column',
-        }}
-      >
-        <Stack
-          sx={{
-            flexDirection: 'row',
-            gap: 2,
-          }}
-        >
-          <ColumnOrderedGrid
-            stackHeight={5}
-            items={footerLinkComponents}
-            gap={2}
-          />
+    <Stack
+      sx={{
+        flexDirection: 'column',
+        gap: 4,
+      }}
+    >
+      {showTopExtension && (
+        <>
           <Box
             sx={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'flex-end',
+              px: 4,
             }}
           >
-            <FooterSelectLanguageButton />
+            <FooterTopExtension />
           </Box>
-        </Stack>
-        <Stack
+          <Divider
+            sx={{
+              borderColor: 'grey.800',
+            }}
+          />
+        </>
+      )}
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          gap: 2,
+          px: 4,
+        }}
+      >
+        <ColumnOrderedGrid
+          stackHeight={5}
+          items={footerLinkComponents}
+          gap={2}
+        />
+        <Box
           sx={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            py: 8,
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
-          <CompanyLogo isWhite={true} />
-          <Box>
-            <Copyright />
-          </Box>
-        </Stack>
+          <FooterSelectLanguageButton />
+        </Box>
       </Stack>
-    </Container>
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          px: 4,
+          pt: 4,
+        }}
+      >
+        <CompanyLogo isWhite={true} />
+        <Box>
+          <Copyright />
+        </Box>
+      </Stack>
+    </Stack>
   );
 };
