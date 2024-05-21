@@ -1,10 +1,9 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const itemWidth = 360;
 
 export const BecomeAnInstructor = () => {
-  const onClickStartTeachingToday = () => {};
-
   return (
     <Container>
       <Stack
@@ -46,13 +45,11 @@ export const BecomeAnInstructor = () => {
             Udemy. We provide the tools and skills to teach what you love.
           </Typography>
           <Box>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onClickStartTeachingToday}
-            >
-              Start teaching today
-            </Button>
+            <Link to="/teaching">
+              <Button variant="contained" color="primary">
+                Start teaching today
+              </Button>
+            </Link>
           </Box>
         </Stack>
       </Stack>
