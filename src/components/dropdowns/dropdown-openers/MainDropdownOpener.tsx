@@ -1,15 +1,14 @@
 import { ComponentType, useRef, useState } from 'react';
 import { Box, SxProps } from '@mui/material';
-import { StyledMenuItemLink } from '../styled/StyledMenuItemLink';
 import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
-import { mainDropdownOpenerHeight as appBarDropdownOpenerHeight } from '../styled/common';
-import { PortaledItem } from '../../portaled-item/PortaledItem';
+import {
+  AnchorPoint,
+  PortaledItem,
+  RenderPosition,
+} from '../../portaled-item/PortaledItem';
 
-interface ComponentProps {
-  sx?: SxProps;
-  isDropdownOpen?: boolean;
-}
+interface ComponentProps {}
 
 type RenderComponentType = ComponentType<ComponentProps>;
 
@@ -20,8 +19,11 @@ interface MainDropdownOpenerProps {
   children: React.ReactNode;
   forceOpen: boolean;
   usePortal: boolean;
+  renderPosition?: RenderPosition;
+  anchorpoint?: AnchorPoint;
   height?: string | number;
   sx?: SxProps;
+  customOffset?: { top: number; left: number };
 }
 
 // NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
@@ -36,15 +38,17 @@ export const useHover = true;
 export const MainDropdownOpener = ({
   RenderComponent,
   children,
-  height = appBarDropdownOpenerHeight,
   sx,
+  renderPosition,
   forceOpen = false,
   usePortal = false,
+  anchorpoint,
+  customOffset,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
 
-  const onMouseEnterCategories = () => {
+  const onMouseEnter = () => {
     if (!useHover) return;
     setIsDropdownOpen(true);
   };
@@ -54,7 +58,7 @@ export const MainDropdownOpener = ({
     setIsDropdownOpen(false);
   };
 
-  const onClickCategories = () => {
+  const onClick = () => {
     if (useHover) return;
     setIsDropdownOpen(true);
   };
@@ -74,7 +78,14 @@ export const MainDropdownOpener = ({
     if (forceOpen || isDropdownOpen) {
       if (usePortal) {
         return (
-          <PortaledItem anchorElement={divRef.current}>{children}</PortaledItem>
+          <PortaledItem
+            anchorElement={divRef.current}
+            renderPosition={renderPosition}
+            anchorpoint={anchorpoint}
+            customOffset={customOffset}
+          >
+            {children}
+          </PortaledItem>
         );
       }
       return children;
@@ -87,19 +98,12 @@ export const MainDropdownOpener = ({
       onMouseLeave={onMouseLeaveDropdown}
       sx={{
         ...sx,
-        position: 'relative',
-        display: 'inline-flex',
-        alignItems: 'center',
-        height: height,
       }}
     >
       <CloseDropdownContext.Provider value={contextValue}>
-        <StyledMenuItemLink
-          onMouseEnter={onMouseEnterCategories}
-          onClick={onClickCategories}
-        >
+        <Box onMouseEnter={onMouseEnter}>
           <RenderComponent />
-        </StyledMenuItemLink>
+        </Box>
         {getChildrenToRender()}
       </CloseDropdownContext.Provider>
     </Box>

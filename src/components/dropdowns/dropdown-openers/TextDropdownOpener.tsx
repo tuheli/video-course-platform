@@ -10,6 +10,7 @@ interface TextComponentProps {
 interface TextDropdownOpenerProps {
   text: string;
   children: React.ReactNode;
+  linkTo: string;
 }
 
 const RenderComponent = ({ text, sx }: TextComponentProps) => {
@@ -31,6 +32,7 @@ const RenderComponent = ({ text, sx }: TextComponentProps) => {
 export const TextDropdownOpener = ({
   text,
   children,
+  linkTo,
 }: TextDropdownOpenerProps) => {
   return (
     <MainDropdownOpener
@@ -39,6 +41,7 @@ export const TextDropdownOpener = ({
       }
       forceOpen={false}
       usePortal={false}
+      linkTo={linkTo}
     >
       {children}
     </MainDropdownOpener>
