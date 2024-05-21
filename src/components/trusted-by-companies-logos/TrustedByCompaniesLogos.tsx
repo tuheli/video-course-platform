@@ -1,9 +1,11 @@
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import { trustedByCompanyLogos } from './trustedByCompanyLogosData';
 import { Box, Container, Stack, Typography } from '@mui/material';
 import { GreyscaleLogo } from './GreyscaleLogo';
+import { getTrustedCompanyLogos } from '../../../data/trustedCompaniesData';
 
 export const TrustedByCompaniesLogos = () => {
+  const trustedCompanyLogos = getTrustedCompanyLogos();
+
   return (
     <Box
       sx={{
@@ -35,9 +37,9 @@ export const TrustedByCompaniesLogos = () => {
               justifyContent: 'space-between',
             }}
           >
-            {trustedByCompanyLogos.map((company) => (
+            {trustedCompanyLogos.map((company) => (
               <Grid2 key={company.id}>
-                <GreyscaleLogo url={company.url} />
+                <GreyscaleLogo imageUrl={company.url} />
               </Grid2>
             ))}
           </Grid2>
