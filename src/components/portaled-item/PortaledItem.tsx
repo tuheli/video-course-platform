@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { PortaledItemContext } from '../../contexts/PortaledItemContext';
 
 interface SpaceAround {
   spaceLeft: number;
@@ -12,9 +11,24 @@ interface SpaceAround {
 
 export type RenderPosition = 'left' | 'right' | 'below';
 
+export type AnchorPoint = 'bottom-left' | 'top-right' | 'bottom-right-end';
+
 interface PortaledItemProps {
   anchorElement: HTMLElement | null;
+  renderPosition?: RenderPosition;
+  anchorpoint?: AnchorPoint;
   children?: React.ReactNode;
+  customOffset?: { top: number; left: number };
+}
+
+interface Placement {
+  top: number;
+  left: number;
+}
+
+interface ReactangleSize {
+  width: number;
+  height: number;
 }
 
 const getFittingPosition = (
@@ -57,22 +71,104 @@ const getFlexDirectionForDirectionTriangle = (
   }
 };
 
+const getTopRightPosition = (anchorElement: HTMLElement) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.top + window.scrollY - 1,
+    left: anchor.right + window.scrollX,
+  };
+
+  return position;
+};
+
+const getBottomLeftPosition = (anchorElement: HTMLElement) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.bottom + window.scrollY,
+    left: anchor.left + window.scrollX,
+  };
+
+  return position;
+};
+
+const getBottomRightPosition = (anchorElement: HTMLElement) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.bottom + window.scrollY,
+    left: anchor.right + window.scrollX,
+  };
+
+  return position;
+};
+
+const getBottomRightEndPosition = (
+  anchorElement: HTMLElement,
+  myWidth: number
+) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.bottom + window.scrollY,
+    left: anchor.right + window.scrollX - myWidth,
+  };
+
+  return position;
+};
+
+const getCenteredRightPosition = (
+  anchorElement: HTMLElement,
+  mySize: ReactangleSize
+) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.top + window.scrollY + (anchor.height - mySize.height) / 2,
+    left: anchor.right + window.scrollX,
+  };
+
+  return position;
+};
+
+const getCenteredLeftPosition = (
+  anchorElement: HTMLElement,
+  mySize: ReactangleSize
+) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.top + window.scrollY + (anchor.height - mySize.height) / 2,
+    left: anchor.left + window.scrollX - mySize.width,
+  };
+
+  return position;
+};
+
+const getCenteredBottomPosition = (
+  anchorElement: HTMLElement,
+  mySize: ReactangleSize
+) => {
+  const anchor = anchorElement.getBoundingClientRect();
+
+  const position = {
+    top: anchor.bottom + window.scrollY,
+    left: anchor.left + window.scrollX + (anchor.width - mySize.width) / 2,
+  };
+
+  return position;
+};
+
 export const PortaledItem = ({
   anchorElement,
+  renderPosition,
   children,
+  customOffset,
+  anchorpoint,
 }: PortaledItemProps) => {
-  const [position, setPosition] = useState<
-    | {
-        top: number;
-        left: number;
-        renderPosition: RenderPosition;
-      }
-    | undefined
-  >();
+  const [position, setPosition] = useState<Placement | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
-  const contextValue = {
-    renderPosition: position?.renderPosition,
-  };
 
   useLayoutEffect(() => {
     const calculatePosition = () => {
@@ -86,31 +182,35 @@ export const PortaledItem = ({
 
       const spaceAroundAnchorElement = getSpaceAroundElement(anchorElement);
 
-      const bestPosition = getFittingPosition(mySize, spaceAroundAnchorElement);
+      let position;
+      if (anchorpoint === 'bottom-left') {
+        position = getBottomLeftPosition(anchorElement);
+      } else if (anchorpoint === 'top-right') {
+        position = getTopRightPosition(anchorElement);
+      } else if (anchorpoint === 'bottom-right-end') {
+        position = getBottomRightEndPosition(anchorElement, mySize.width);
+      } else {
+        const bestPosition =
+          renderPosition !== undefined
+            ? renderPosition
+            : getFittingPosition(mySize, spaceAroundAnchorElement);
 
-      let leftOffset = 0;
-      let topOffset = 0;
-
-      switch (bestPosition) {
-        case 'left':
-          leftOffset -= mySize.width;
-          topOffset += (anchorElement.offsetHeight - mySize.height) / 2;
-          break;
-        case 'right':
-          leftOffset += anchorElement.offsetWidth;
-          topOffset += (anchorElement.offsetHeight - mySize.height) / 2;
-          break;
-        case 'below':
-          leftOffset += (anchorElement.offsetWidth - mySize.width) / 2;
-          topOffset += anchorElement.offsetHeight;
-          break;
+        switch (bestPosition) {
+          case 'left':
+            position = getCenteredLeftPosition(anchorElement, mySize);
+            break;
+          case 'right':
+            position = getCenteredRightPosition(anchorElement, mySize);
+            break;
+          case 'below':
+            position = getCenteredBottomPosition(anchorElement, mySize);
+            break;
+        }
       }
 
-      const anchorRect = anchorElement.getBoundingClientRect();
       setPosition({
-        top: anchorRect.top + window.scrollY + topOffset,
-        left: anchorRect.left + window.scrollX + leftOffset,
-        renderPosition: bestPosition,
+        top: position.top,
+        left: position.left,
       });
     };
 
@@ -124,22 +224,20 @@ export const PortaledItem = ({
     };
   }, [anchorElement]);
 
+  const customOffsetTop = customOffset?.top || 0;
+  const customOffsetLeft = customOffset?.left || 0;
+
   return createPortal(
     <Box
       ref={ref}
       sx={{
         position: 'absolute',
-        top: position?.top,
-        left: position?.left,
+        top: position && position?.top && position.top + customOffsetTop,
+        left: position && position?.left && position.left + customOffsetLeft,
         display: 'flex',
-        flexDirection: position
-          ? getFlexDirectionForDirectionTriangle(position.renderPosition)
-          : undefined,
       }}
     >
-      <PortaledItemContext.Provider value={contextValue}>
-        {children}
-      </PortaledItemContext.Provider>
+      {children}
     </Box>,
     document.body
   );
