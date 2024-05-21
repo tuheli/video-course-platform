@@ -58,11 +58,6 @@ export const MainDropdownOpener = ({
     setIsDropdownOpen(false);
   };
 
-  const onClick = () => {
-    if (useHover) return;
-    setIsDropdownOpen(true);
-  };
-
   const closeMainDropdown = () => {
     setIsDropdownOpen(false);
   };
