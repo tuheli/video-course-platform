@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../app/hooks';
 import { RedeemOfferCallToAction } from './RedeemOfferCallToAction';
 
@@ -8,7 +9,11 @@ export const SmartBar = () => {
   const isRejected = useAppSelector((state) => state.specialOffer.isRejected);
   const isExpired = useAppSelector((state) => state.specialOffer.isExpired);
 
-  const showSpecialOffer = !isRedeemed && !isRejected && !isExpired;
+  // Show offer only on landing page
+  const location = useLocation();
+
+  const showSpecialOffer =
+    !isRedeemed && !isRejected && !isExpired && location.pathname === '/';
 
   return <>{showSpecialOffer && <RedeemOfferCallToAction />}</>;
 };
