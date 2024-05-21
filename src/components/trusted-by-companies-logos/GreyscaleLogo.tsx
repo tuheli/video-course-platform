@@ -1,14 +1,19 @@
 interface GreyscaleLogoProps {
-  url: string;
+  imageUrl: string;
+  brightness?: number;
 }
-export const GreyscaleLogo = ({ url }: GreyscaleLogoProps) => {
+export const GreyscaleLogo = ({ imageUrl, brightness }: GreyscaleLogoProps) => {
   return (
     <img
-      src={url}
+      src={imageUrl}
       alt="Company logo"
       style={{
-        filter: 'grayscale(100%)',
-        WebkitFilter: 'grayscale(100%)',
+        filter: brightness
+          ? `grayscale(100%) brightness(${brightness})`
+          : 'grayscale(100%)',
+        WebkitFilter: brightness
+          ? `grayscale(100%) brightness(${brightness})`
+          : 'grayscale(100%)',
       }}
     />
   );
