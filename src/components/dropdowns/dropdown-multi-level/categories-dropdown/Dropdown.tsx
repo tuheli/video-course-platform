@@ -9,7 +9,6 @@ export const Dropdown = () => {
     <Box
       sx={{
         width: 240,
-        pt: 3,
         bgcolor: 'transparent',
         animation: 'fadeIn 0.2s',
       }}

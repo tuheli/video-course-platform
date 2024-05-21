@@ -12,7 +12,6 @@ export const Dropdown = () => {
     <Box
       sx={{
         bgcolor: 'transparent',
-        pt: 2,
       }}
     >
       {isCartEmpty && <EmptyCart />}

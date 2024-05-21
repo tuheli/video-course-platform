@@ -14,7 +14,6 @@ export const Opener = () => {
       sx={{
         display: 'flex',
         position: 'relative',
-        p: 1,
       }}
     >
       <ShoppingCartIcon

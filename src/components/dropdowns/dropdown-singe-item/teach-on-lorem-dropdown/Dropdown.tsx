@@ -13,7 +13,6 @@ export const Dropdown = () => {
   return (
     <Box
       sx={{
-        pt: 1,
         bgcolor: 'transparent',
       }}
     >
