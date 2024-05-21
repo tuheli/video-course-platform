@@ -9,7 +9,7 @@ export const HeroBanner = () => {
   };
 
   return (
-    <Container disableGutters sx={{}}>
+    <Container disableGutters>
       <picture
         style={{
           position: 'relative',
@@ -17,6 +17,7 @@ export const HeroBanner = () => {
           minHeight: 370,
           opacity: isLoaded ? 1 : 0,
           transition: 'opacity 1s ease-in-out',
+          zIndex: -1,
         }}
       >
         <source
