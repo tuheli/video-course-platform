@@ -54,6 +54,7 @@ export const CoursesSlider = forwardRef<
             isSliderInfinite={isSliderInfinite}
             sx={{
               top: '25%',
+              right: 8,
             }}
           />
         ),
@@ -62,6 +63,7 @@ export const CoursesSlider = forwardRef<
             isSliderInfinite={isSliderInfinite}
             sx={{
               top: '25%',
+              left: 8,
             }}
           />
         ),
