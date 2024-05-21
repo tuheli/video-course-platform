@@ -6,6 +6,7 @@ import { PaletteMode, createTheme } from '@mui/material';
 import LandingPage from './components/landing-page/LandingPage';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundPage } from './components/not-found-page/NotFoundPage';
+import { TeachWithUsPage } from './components/teach-with-us-page/TeachWithUsPage';
 
 // NOTE: Import css baseline up top to prevent mui error that somethimes occurs
 
@@ -24,6 +25,7 @@ const App = () => {
       <CssBaseline />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/teaching" element={<TeachWithUsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ThemeProvider>
