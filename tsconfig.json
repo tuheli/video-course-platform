@@ -25,7 +25,8 @@
     "data/courseData.ts",
     "data/reviewsData.ts",
     "data/menuItemsData.ts",
-    "data/languageData.ts"
+    "data/languageData.ts",
+    "data/trustedCompaniesData.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
