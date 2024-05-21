@@ -10,7 +10,6 @@ export const CartPreviewItems = () => {
       sx={{
         flexDirection: 'column',
         gap: 2,
-        px: 2,
       }}
     >
       {itemsInCart.map((courseItem, index) => {
