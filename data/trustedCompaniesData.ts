@@ -3,7 +3,11 @@ interface CompanyLogo {
   url: string;
 }
 
-export const trustedByCompanyLogos: CompanyLogo[] = [
+export const getTrustedCompanyLogos = () => {
+  return logoData;
+};
+
+const logoData: CompanyLogo[] = [
   {
     id: 1,
     url: '/trusted-by-companies-logos/logoipsum-245.svg',
