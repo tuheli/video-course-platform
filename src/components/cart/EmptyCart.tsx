@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 import { StyledLink } from '../dropdowns/styled/StyledLink';
 import { useDropdownContext } from '../../hooks/useDropdownContext';
 
@@ -10,32 +10,39 @@ export const EmptyCart = () => {
   };
 
   return (
-    <Stack
+    <Paper
       sx={{
-        gap: 1,
-        alignItems: 'center',
+        p: 2,
+        width: 200,
       }}
     >
-      <Typography
-        variant="body2"
+      <Stack
         sx={{
-          color: 'text.secondary',
-          textAlign: 'center',
+          gap: 1,
+          alignItems: 'center',
         }}
       >
-        Your cart is empty.
-      </Typography>
-      <StyledLink onClick={onClickKeepShopping}>
         <Typography
           variant="body2"
           sx={{
-            color: 'secondary.main',
-            fontWeight: 'bold',
+            color: 'text.secondary',
+            textAlign: 'center',
           }}
         >
-          Keep shopping
+          Your cart is empty.
         </Typography>
-      </StyledLink>
-    </Stack>
+        <StyledLink onClick={onClickKeepShopping}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'secondary.main',
+              fontWeight: 'bold',
+            }}
+          >
+            Keep shopping
+          </Typography>
+        </StyledLink>
+      </Stack>
+    </Paper>
   );
 };
