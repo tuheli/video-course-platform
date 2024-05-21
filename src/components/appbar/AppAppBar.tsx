@@ -29,7 +29,6 @@ const AppAppBar = () => {
       >
         <SmartBar />
         <Toolbar>
-          {/** Stack to control gaps between left mid and right sections */}
           <Stack
             sx={{
               bgcolor: 'white',
@@ -39,7 +38,6 @@ const AppAppBar = () => {
               gap: itemGap,
             }}
           >
-            {/** Left side items */}
             <Stack
               sx={{
                 flexDirection: 'row',
@@ -50,9 +48,7 @@ const AppAppBar = () => {
               <CompanyLogo />
               <CategoriesDropdown />
             </Stack>
-            {/** Middle seach bar */}
             <SearchBar />
-            {/** Right side items */}
             <Stack
               sx={{
                 flexDirection: 'row',
