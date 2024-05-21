@@ -4,6 +4,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import { PaletteMode, createTheme } from '@mui/material';
 import LandingPage from './components/landing-page/LandingPage';
+import { Route, Routes } from 'react-router-dom';
+import { NotFoundPage } from './components/not-found-page/NotFoundPage';
 
 // NOTE: Import css baseline up top to prevent mui error that somethimes occurs
 
@@ -20,7 +22,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <LandingPage />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </ThemeProvider>
   );
 };
