@@ -1,14 +1,14 @@
 import { AppBar, Stack, Toolbar } from '@mui/material';
 import { SmartBar } from './smartbar/SmartBar';
-import { CategoriesDropdown } from '../dropdowns/dropdown-multi-level/CategoriesDropdown';
+import { CategoriesDropdownOpener } from '../dropdowns/dropdown-multi-level/categories-dropdown/CategoriesDropdownOpener';
 import { SearchBar } from './searchbar/SearchBar';
-import { BusinessDropdown } from '../dropdowns/dropdown-singe-item/BusinessDropdown';
-import { TeachDropdown } from '../dropdowns/dropdown-singe-item/TeachDropdown';
-import { CartDropdown } from '../cart/CartDropdown';
+import { BusinessDropdown } from '../dropdowns/dropdown-singe-item/lorem-business-dropdown/BusinessDropdown';
+import { TeachDropdown } from '../dropdowns/dropdown-singe-item/teach-on-lorem-dropdown/TeachDropdown';
 import { LoginButton } from './LoginButton';
 import { SignUpButton } from './SignUpButton';
 import { OpenLanguageModalButton } from '../language-selection/OpenLanguageModalButton';
 import { CompanyLogo } from './CompanyLogo';
+import { CartDropdownOpener } from '../dropdowns/dropdown-singe-item/cart-dropdown/CartDropdownOpener';
 
 const itemGap = 2;
 
@@ -46,7 +46,7 @@ const AppAppBar = () => {
               }}
             >
               <CompanyLogo />
-              <CategoriesDropdown />
+              <CategoriesDropdownOpener />
             </Stack>
             <SearchBar />
             <Stack
@@ -58,7 +58,7 @@ const AppAppBar = () => {
             >
               <BusinessDropdown />
               <TeachDropdown />
-              <CartDropdown />
+              <CartDropdownOpener />
             </Stack>
             <Stack
               sx={{
