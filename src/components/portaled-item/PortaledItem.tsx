@@ -222,7 +222,7 @@ export const PortaledItem = ({
     return () => {
       window.removeEventListener('resize', calculatePosition);
     };
-  }, [anchorElement]);
+  }, [anchorElement, anchorpoint, renderPosition]);
 
   const customOffsetTop = customOffset?.top || 0;
   const customOffsetLeft = customOffset?.left || 0;
