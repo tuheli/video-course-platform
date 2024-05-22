@@ -82,6 +82,7 @@ export const CoursesSlider = forwardRef<
               }
               forceOpen={false}
               usePortal={true}
+              isMainDropdown={true}
             >
               <CourseCardPopupContent courseItem={courseItem} />
             </MainDropdownOpener>
