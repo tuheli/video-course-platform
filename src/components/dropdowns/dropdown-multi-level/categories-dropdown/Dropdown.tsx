@@ -10,7 +10,7 @@ export const Dropdown = () => {
       sx={{
         width: 240,
         bgcolor: 'transparent',
-        animation: 'fadeIn 0.2s',
+        // animation: 'fadeIn 0.2s',
       }}
     >
       <Paper
