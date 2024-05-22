@@ -1,21 +1,47 @@
 import { Box, Typography } from '@mui/material';
+import { useDropdownContext } from '../../../../../hooks/useDropdownContext';
+import { OpenerProps } from '../../../dropdown-openers/MainDropdownOpener';
+import { Link } from 'react-router-dom';
 
-export const Opener = ({ text }: { text: string }) => {
+interface SubOpenerProps extends OpenerProps {
+  text: string;
+  linkTo: string;
+}
+
+export const Opener = ({ isDropdownOpen, text, linkTo }: SubOpenerProps) => {
+  const { closeMainDropdown } = useDropdownContext();
+
+  const onClick = () => {
+    closeMainDropdown();
+  };
+
   return (
-    <Box
-      sx={{
-        height: 40,
-        display: 'flex',
-        alignItems: 'center',
+    <Link
+      to={linkTo}
+      style={{
+        textDecoration: 'none',
       }}
     >
-      <Typography
+      <Box
+        onClick={onClick}
         sx={{
-          width: '100%',
+          color: isDropdownOpen ? 'secondary.main' : 'text.primary',
+          height: 40,
+          display: 'flex',
+          alignItems: 'center',
+          '&:hover': {
+            cursor: 'pointer',
+          },
         }}
       >
-        {text}
-      </Typography>
-    </Box>
+        <Typography
+          sx={{
+            width: '100%',
+          }}
+        >
+          {text}
+        </Typography>
+      </Box>
+    </Link>
   );
 };

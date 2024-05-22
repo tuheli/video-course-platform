@@ -1,6 +1,5 @@
 import { ComponentType, useRef, useState } from 'react';
 import { Box, SxProps } from '@mui/material';
-import { useClickAwayListener } from '../../../hooks/useClickAwayListener';
 import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
 import {
   AnchorPoint,
@@ -8,9 +7,11 @@ import {
   RenderPosition,
 } from '../../portaled-item/PortaledItem';
 
-interface ComponentProps {}
+export interface OpenerProps {
+  isDropdownOpen: boolean;
+}
 
-type RenderComponentType = ComponentType<ComponentProps>;
+type RenderComponentType = ComponentType<OpenerProps>;
 
 // NOTE: Force open is only for developing purposes to keep a dropdown open.
 
@@ -24,16 +25,8 @@ interface MainDropdownOpenerProps {
   height?: string | number;
   sx?: SxProps;
   customOffset?: { top: number; left: number };
+  isMainDropdown?: boolean;
 }
-
-// NOTE: When modifying list sizes -> In order for the hover to work, the elements that are descendants of this dropdown must not have a gap between them so the mouse does not leave the dropdown and close..
-
-// NOTE: This component is for large screens with mouse hover.
-
-// Alternatively use mouse clicks or hover to open dropdown menus. Setting this to false is actually not useful since the both functionalities hover and click are needed. Hover opens menus and clicking will trigger navigation.
-export const useHover = true;
-
-// TODO: Remove the default height and update appbar dropdowns to input the needed heights.
 
 export const MainDropdownOpener = ({
   RenderComponent,
@@ -44,17 +37,16 @@ export const MainDropdownOpener = ({
   usePortal = false,
   anchorpoint,
   customOffset,
+  isMainDropdown,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
 
   const onMouseEnter = () => {
-    if (!useHover) return;
     setIsDropdownOpen(true);
   };
 
   const onMouseLeaveDropdown = () => {
-    if (!useHover) return;
     setIsDropdownOpen(false);
   };
 
@@ -66,8 +58,6 @@ export const MainDropdownOpener = ({
     isDropdownOpen,
     closeMainDropdown,
   };
-
-  useClickAwayListener(divRef, isDropdownOpen, useHover, closeMainDropdown);
 
   const getChildrenToRender = () => {
     if (forceOpen || isDropdownOpen) {
@@ -95,12 +85,22 @@ export const MainDropdownOpener = ({
         ...sx,
       }}
     >
-      <CloseDropdownContext.Provider value={contextValue}>
-        <Box onMouseEnter={onMouseEnter}>
-          <RenderComponent />
-        </Box>
-        {getChildrenToRender()}
-      </CloseDropdownContext.Provider>
+      {isMainDropdown && (
+        <CloseDropdownContext.Provider value={contextValue}>
+          <Box onMouseEnter={onMouseEnter}>
+            <RenderComponent isDropdownOpen={isDropdownOpen} />
+          </Box>
+          {getChildrenToRender()}
+        </CloseDropdownContext.Provider>
+      )}
+      {!isMainDropdown && (
+        <>
+          <Box onMouseEnter={onMouseEnter}>
+            <RenderComponent isDropdownOpen={isDropdownOpen} />
+          </Box>
+          {getChildrenToRender()}
+        </>
+      )}
     </Box>
   );
 };

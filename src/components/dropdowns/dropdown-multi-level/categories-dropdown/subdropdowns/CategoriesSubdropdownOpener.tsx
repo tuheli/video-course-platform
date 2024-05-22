@@ -19,7 +19,13 @@ export const CategoriesSubdropdownItem = ({
 
   return (
     <MainDropdownOpener
-      RenderComponent={() => <Opener text={menuItem.title} />}
+      RenderComponent={({ isDropdownOpen }) => (
+        <Opener
+          text={menuItem.title}
+          isDropdownOpen={isDropdownOpen}
+          linkTo={menuItem.url}
+        />
+      )}
       forceOpen={false}
       usePortal={true}
       renderPosition="right"

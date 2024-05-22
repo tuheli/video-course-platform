@@ -10,6 +10,7 @@ export const BusinessDropdown = () => {
       RenderComponent={Opener}
       forceOpen={false}
       usePortal={true}
+      isMainDropdown={true}
       renderPosition="below"
       anchorpoint="bottom-right-end"
     >

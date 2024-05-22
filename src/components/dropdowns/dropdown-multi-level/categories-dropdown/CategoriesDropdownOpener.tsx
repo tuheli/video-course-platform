@@ -12,21 +12,9 @@ export const CategoriesDropdownOpener = () => {
       RenderComponent={Opener}
       forceOpen={false}
       usePortal={true}
+      isMainDropdown={true}
       renderPosition="right"
       anchorpoint="bottom-left"
-    >
-      <Dropdown />
-    </MainDropdownOpener>
-  );
-};
-
-export const MenuItemsDropdown = () => {
-  return (
-    <MainDropdownOpener
-      RenderComponent={Opener}
-      forceOpen={true}
-      usePortal={true}
-      renderPosition="below"
     >
       <Dropdown />
     </MainDropdownOpener>

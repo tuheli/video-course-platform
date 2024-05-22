@@ -8,6 +8,7 @@ export const CartDropdownOpener = () => {
       RenderComponent={Opener}
       forceOpen={false}
       usePortal={true}
+      isMainDropdown={true}
       anchorpoint="bottom-right-end"
     >
       <Dropdown />
