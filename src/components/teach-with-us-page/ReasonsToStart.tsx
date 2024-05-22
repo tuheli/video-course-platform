@@ -1,4 +1,4 @@
-import { Container, Stack, Typography } from '@mui/material';
+import { Box, Container, Stack, Typography } from '@mui/material';
 import { ReasonToStart } from './ReasonToStart';
 
 export const ReasonsToStart = () => {
@@ -8,23 +8,26 @@ export const ReasonsToStart = () => {
         sx={{
           flexDirection: 'column',
           alignItems: 'center',
+          width: '100%',
           gap: 4,
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            lineHeight: 1.2,
-            fontWeight: 600,
-          }}
-        >
-          So many reasons to start
-        </Typography>
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{
+              lineHeight: 1.2,
+              fontWeight: 600,
+            }}
+          >
+            So many reasons to start
+          </Typography>
+        </Box>
         <Stack
           sx={{
             flexDirection: 'row',
-            width: '100%',
             justifyContent: 'space-between',
+            width: '100%',
           }}
         >
           <ReasonToStart

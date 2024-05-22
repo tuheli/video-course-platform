@@ -16,8 +16,8 @@ export const ReasonToStart = ({
       sx={{
         flexDirection: 'column',
         alignItems: 'center',
+        maxWidth: 300,
         gap: 2,
-        px: 6,
       }}
     >
       <Box

@@ -7,7 +7,7 @@ export const Statistics = () => {
       <Stack
         sx={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
         }}
       >
         <StatisticsItem count="62M" text="Students" />
