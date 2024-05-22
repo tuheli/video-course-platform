@@ -412,13 +412,6 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
                   borderColor: brand[700],
                 },
               }),
-              ...(ownerState.variant === 'text' && {
-                // color: brand[300],
-                '&:hover': {
-                  // backgroundColor: alpha(brand[600], 0.3),
-                  // borderColor: brand[700],
-                },
-              }),
             }),
           }),
         },
