@@ -28,7 +28,11 @@ const AppAppBar = () => {
         }}
       >
         <SmartBar />
-        <Toolbar>
+        <Toolbar
+          sx={{
+            zIndex: 1,
+          }}
+        >
           <Stack
             sx={{
               bgcolor: 'white',
