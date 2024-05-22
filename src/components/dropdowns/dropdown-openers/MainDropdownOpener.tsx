@@ -25,7 +25,7 @@ interface MainDropdownOpenerProps {
   height?: string | number;
   sx?: SxProps;
   customOffset?: { top: number; left: number };
-  isMainDropdown?: boolean;
+  isMainDropdown: boolean;
 }
 
 export const MainDropdownOpener = ({
