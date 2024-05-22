@@ -231,10 +231,11 @@ export const PortaledItem = ({
     <Box
       ref={ref}
       sx={{
+        display: 'flex',
         position: 'absolute',
+        zIndex: 2,
         top: position && position?.top && position.top + customOffsetTop,
         left: position && position?.left && position.left + customOffsetLeft,
-        display: 'flex',
       }}
     >
       {children}
