@@ -10,6 +10,7 @@ export const ReasonsToStart = () => {
           alignItems: 'center',
           width: '100%',
           gap: 4,
+          minHeight: 300,
         }}
       >
         <Box>
