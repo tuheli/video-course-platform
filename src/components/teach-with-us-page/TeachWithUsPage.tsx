@@ -3,6 +3,7 @@ import AppAppBar from '../appbar/AppAppBar';
 import { ReasonsToStart } from './ReasonsToStart';
 import { Statistics } from './Statistics';
 import { Banner } from './Banner';
+import { HowToBegin } from './HowToBegin';
 
 export const TeachWithUsPage = () => {
   return (
@@ -23,6 +24,13 @@ export const TeachWithUsPage = () => {
         }}
       >
         <Statistics />
+      </Box>
+      <Box
+        sx={{
+          py: 6,
+        }}
+      >
+        <HowToBegin />
       </Box>
     </>
   );
