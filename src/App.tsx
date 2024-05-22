@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import getTheme from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
@@ -15,10 +15,6 @@ import { TeachWithUsPage } from './components/teach-with-us-page/TeachWithUsPage
 const App = () => {
   const [themeMode] = useState<PaletteMode>('light');
   const theme = createTheme(getTheme(themeMode));
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>
