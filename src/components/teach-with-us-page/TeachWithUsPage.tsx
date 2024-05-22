@@ -4,6 +4,7 @@ import { ReasonsToStart } from './ReasonsToStart';
 import { Statistics } from './Statistics';
 import { Banner } from './Banner';
 import { HowToBegin } from './HowToBegin';
+import { CustomerStoriesBigImageVersion } from '../customer-stories/CustomerStoriesBigImageVersion';
 
 export const TeachWithUsPage = () => {
   return (
@@ -31,6 +32,19 @@ export const TeachWithUsPage = () => {
         }}
       >
         <HowToBegin />
+      </Box>
+      <Box
+        sx={{
+          py: 12,
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+          }}
+        >
+          <CustomerStoriesBigImageVersion />
+        </Box>
       </Box>
     </>
   );
