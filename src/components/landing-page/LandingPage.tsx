@@ -11,8 +11,11 @@ import { CustomerStories } from '../customer-stories/CustomerStories';
 import { BecomeAnInstructor } from '../become-an-instructor/BecomeAnInstructor';
 import { Footer } from '../footer/Footer';
 import { BroadSelectionOfCourses } from '../broad-courses-selection/BroadSelectionOfCourses';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
 
 const LandingPage = () => {
+  useScrollToTop();
+
   return (
     <>
       <AppAppBar />
