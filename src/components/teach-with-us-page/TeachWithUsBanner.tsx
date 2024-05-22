@@ -48,10 +48,10 @@ export const TeachWithUsBanner = () => {
         <Box
           sx={{
             position: 'absolute',
-            maxWidth: '25%',
+            maxWidth: '20%',
             bgcolor: 'transparent',
-            top: 100,
-            left: 150,
+            top: 150,
+            left: 260,
             p: 2,
             opacity: isLoaded ? 1 : 0,
             transition: 'opacity 1s ease-in-out',
@@ -64,7 +64,7 @@ export const TeachWithUsBanner = () => {
             }}
           >
             <Typography
-              variant="h4"
+              variant="h2"
               sx={{
                 lineHeight: 1.2,
                 fontWeight: 600,
@@ -72,7 +72,11 @@ export const TeachWithUsBanner = () => {
             >
               Come teach with us
             </Typography>
-            <Typography>
+            <Typography
+              sx={{
+                fontSize: 18,
+              }}
+            >
               Become an instructor and change lives — including your own
             </Typography>
             <Button
