@@ -152,11 +152,11 @@ const courseData: CourseCategory[] = [
     subcategories: [
       {
         name: 'Graphic Design',
-        url: '/graphic-design',
+        url: '/',
         topics: [
           {
             name: 'Adobe Illustrator',
-            url: '/adobe-illustrator',
+            url: '/',
             heading: 'Master Adobe Illustrator with these courses',
             description:
               'Learn Adobe Illustrator with these courses from Lorem. You’ll learn how to create logos, icons, sketches, typography, and complex illustrations for print, web, interactive, video, and mobile. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
@@ -211,7 +211,7 @@ const courseData: CourseCategory[] = [
           },
           {
             name: 'Adobe Photoshop',
-            url: '/adobe-photoshop',
+            url: '/',
             heading: 'Master Adobe Photoshop with these courses',
             description:
               'Learn Adobe Photoshop with these courses from Lorem. You’ll learn how to retouch photos, design websites, create digital art, and more. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
@@ -268,11 +268,11 @@ const courseData: CourseCategory[] = [
       },
       {
         name: 'Web Design',
-        url: '/web-design',
+        url: '/',
         topics: [
           {
             name: 'HTML',
-            url: '/html',
+            url: '/',
             heading: 'Master HTML with these courses',
             description:
               'Learn HTML with these courses from Lorem. You’ll learn how to create websites, web applications, and mobile apps. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
@@ -329,11 +329,11 @@ const courseData: CourseCategory[] = [
       },
       {
         name: 'User Experience',
-        url: '/user-experience',
+        url: '/',
         topics: [
           {
             name: 'User Interface Design',
-            url: '/user-interface-design',
+            url: '/',
             heading: 'Master user interface design with these courses',
             description:
               'Learn user interface design with these courses from Lorem. You’ll learn how to create wireframes, prototypes, and mockups. Whether you’re a beginner or an expert, these courses will help you take your design skills to the next level.',
@@ -499,7 +499,7 @@ const courseData: CourseCategory[] = [
         topics: [
           {
             name: 'React',
-            url: '/react',
+            url: '/',
             heading: 'Master React with these courses',
             description:
               'Learn React with these courses from Lorem. You’ll learn how to build web applications, mobile apps, and games. Whether you’re a beginner or an expert, these courses will help you take your development skills to the next level.',
