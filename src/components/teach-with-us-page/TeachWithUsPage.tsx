@@ -1,14 +1,14 @@
 import { Box } from '@mui/material';
 import AppAppBar from '../appbar/AppAppBar';
-import { TeachWithUsBanner } from './TeachWithUsBanner';
 import { ReasonsToStart } from './ReasonsToStart';
 import { Statistics } from './Statistics';
+import { Banner } from './Banner';
 
 export const TeachWithUsPage = () => {
   return (
     <>
       <AppAppBar />
-      <TeachWithUsBanner />
+      <Banner />
       <Box
         sx={{
           py: 6,
