@@ -9,10 +9,14 @@ import { SignUpButton } from './SignUpButton';
 import { OpenLanguageModalButton } from '../language-selection/OpenLanguageModalButton';
 import { CompanyLogo } from './CompanyLogo';
 import { CartDropdownOpener } from '../dropdowns/dropdown-singe-item/cart-dropdown/CartDropdownOpener';
+import { useLocation } from 'react-router-dom';
 
 const itemGap = 2;
 
 const AppAppBar = () => {
+  const location = useLocation();
+  const showTeachDropdown = location.pathname !== '/teaching';
+
   return (
     <AppBar
       sx={{
@@ -61,7 +65,7 @@ const AppAppBar = () => {
               }}
             >
               <BusinessDropdown />
-              <TeachDropdown />
+              {showTeachDropdown && <TeachDropdown />}
               <CartDropdownOpener />
             </Stack>
             <Stack
