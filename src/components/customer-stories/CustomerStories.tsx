@@ -1,5 +1,5 @@
 import { Box, Container, Stack } from '@mui/material';
-import { getCustomerStories } from '../../../data/customerStoriesData';
+import { getCustomerStoriesAvatarVersion } from '../../../data/customerStoriesData';
 import { CustomerStoryCard } from './CustomerStoryCard';
 import Slider from 'react-slick';
 import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
@@ -7,7 +7,7 @@ import { ArrowLeft } from '../scroll-to-view-list/ArrowLeft';
 import { ViewMoreCustomerStoriesLink } from './ViewMoreCustomerStoriesLink';
 
 export const CustomerStories = () => {
-  const customerStories = getCustomerStories();
+  const customerStories = getCustomerStoriesAvatarVersion();
   const slidesToShowCount = 1;
 
   return (
