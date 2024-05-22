@@ -20,8 +20,6 @@ export const getCustomerStoriesBigImageVersion = () => {
   const data = customerStoriesData.filter(
     (customerStory) => customerStory.isShowOnBigImageVersion
   );
-  console.log('data', data);
-
   return data;
 };
 
