@@ -34,7 +34,7 @@ export const brand = {
 
 export const secondary = {
   50: '#c0c4fc',
-  100: '#E040FB',
+  100: '#ede3efdd',
   200: '#D500F9',
   300: '#AA00FF',
   400: '#AB47BC',
@@ -87,6 +87,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
       }),
     },
     secondary: {
+      extralight: secondary[50],
       light: secondary[300],
       main: secondary[500],
       dark: secondary[800],
