@@ -1,14 +1,13 @@
 import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
-import { UserAvatar } from '../../../me/UserAvatar';
 import { useAppSelector } from '../../../../app/hooks';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import { Circle } from '@mui/icons-material';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { UserDetailsLink } from './UserDetailsLink';
+import { BusinessLink } from './BusinessLink';
+import { LinkItem } from './LinkItem';
 
-const avatarSize = 80;
-const menuItemPadding = 2;
-const menuItemHeight = 40;
+export const avatarSize = 80;
+export const menuItemPadding = 2;
+export const menuItemHeight = 40;
 
 export const Dropdown = () => {
   const me = useAppSelector((state) => state.me.user);
@@ -36,16 +35,19 @@ export const Dropdown = () => {
             flexDirection: 'column',
           }}
         >
-          <UserDetails fullName={me.fullName} email={me.credentials.email} />
+          <UserDetailsLink
+            fullName={me.fullName}
+            email={me.credentials.email}
+          />
           <Stack
             sx={{
               flexDirection: 'column',
             }}
           >
             <Divider sx={{ mb: 1 }} />
-            <MenuItemLink text="Student" to="/" />
+            <LinkItem text="Student" to="/" />
             <Divider sx={{ my: 1 }} />
-            <MenuItemLink text="Notifications" to="/">
+            <LinkItem text="Notifications" to="/">
               <Box
                 sx={{
                   position: 'relative',
@@ -72,204 +74,21 @@ export const Dropdown = () => {
                   2
                 </Typography>
               </Box>
-            </MenuItemLink>
+            </LinkItem>
             <Divider sx={{ my: 1 }} />
-            <MenuItemLink text="Account settings" to="/" />
-            <MenuItemLink text="Payout & tax settings" to="/" />
+            <LinkItem text="Account settings" to="/" />
+            <LinkItem text="Payout & tax settings" to="/" />
             <Divider sx={{ my: 1 }} />
-            <MenuItemLink text="Public profile" to="/" />
-            <MenuItemLink text="Edit profile" to="/" />
+            <LinkItem text="Public profile" to="/" />
+            <LinkItem text="Edit profile" to="/" />
             <Divider sx={{ my: 1 }} />
-            <MenuItemLink text="Help" to="/" />
-            <MenuItemLink text="Log out" to="/" />
+            <LinkItem text="Help" to="/" />
+            <LinkItem text="Log out" to="/" />
             <Divider sx={{ mt: 1 }} />
             <BusinessLink />
           </Stack>
         </Stack>
       </Paper>
     </Box>
-  );
-};
-
-interface MenuItemLinkProps {
-  text: string;
-  to: string;
-  children?: React.ReactNode;
-}
-
-const MenuItemLink = ({ text, to, children }: MenuItemLinkProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const onMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  return (
-    <Link
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      to={to}
-      style={{
-        textDecoration: 'none',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          padding: menuItemPadding,
-          height: menuItemHeight,
-        }}
-      >
-        <Typography
-          sx={{
-            width: '100%',
-            color: isHovered ? 'secondary.main' : 'text.primary',
-            '&:hover': {
-              color: 'secondary.main',
-            },
-          }}
-        >
-          {text}
-        </Typography>
-        {children}
-      </Box>
-    </Link>
-  );
-};
-
-const BusinessLink = () => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const onMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  return (
-    <Link
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      to="/"
-      style={{
-        textDecoration: 'none',
-      }}
-    >
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          padding: menuItemPadding,
-        }}
-      >
-        <Stack
-          sx={{
-            flexDirection: 'column',
-            width: '100%',
-            gap: 0.5,
-          }}
-        >
-          <Typography
-            sx={{
-              fontWeight: 600,
-              fontSize: 18,
-              color: isHovered ? 'secondary.main' : 'text.primary',
-              '&:hover': {
-                color: 'secondary.main',
-              },
-            }}
-          >
-            Lorem Business
-          </Typography>
-          <Typography
-            sx={{
-              color: 'text.primary',
-            }}
-          >
-            Bring learning to your company
-          </Typography>
-        </Stack>
-        <ExitToAppIcon
-          sx={{
-            color: 'text.primary',
-          }}
-        />
-      </Stack>
-    </Link>
-  );
-};
-
-interface UserDetailsProps {
-  fullName: string;
-  email: string;
-}
-
-const UserDetails = ({ fullName, email }: UserDetailsProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const onMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  return (
-    <Link
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      to="/"
-      style={{
-        textDecoration: 'none',
-      }}
-    >
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          gap: 2,
-          p: menuItemPadding,
-        }}
-      >
-        <UserAvatar
-          sx={{
-            width: avatarSize,
-            height: avatarSize,
-            fontSize: 32,
-            fontWeight: 600,
-          }}
-        />
-        <Stack
-          sx={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <Typography
-            sx={{
-              fontWeight: 600,
-              fontSize: 16,
-              color: isHovered ? 'secondary.main' : 'text.primary',
-            }}
-          >
-            {fullName}
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
-            {email}
-          </Typography>
-        </Stack>
-      </Stack>
-    </Link>
   );
 };
