@@ -7,20 +7,18 @@ import { CompanyLogo } from '../appbar/CompanyLogo';
 import { Copyright } from './Copyright';
 import { FooterTopExtension } from './FooterTopExtension';
 import { useLocation } from 'react-router-dom';
-
-// Logged in status affects if the top extension is shown
-
-const isLoggedIn = false;
+import { useAppSelector } from '../../app/hooks';
 
 export const Footer = () => {
+  const me = useAppSelector((state) => state.me.user);
+
   const footerLinks = getFooterLinks();
   const footerLinkComponents = footerLinks.map(({ text }) => ({
     RenderComponent: () => <FooterLink text={text} />,
   }));
 
   const location = useLocation();
-
-  const showTopExtension = !isLoggedIn && location.pathname !== '/';
+  const showTopExtension = !me && location.pathname !== '/';
 
   return (
     <Stack
