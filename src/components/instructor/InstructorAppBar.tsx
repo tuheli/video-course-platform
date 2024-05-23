@@ -15,14 +15,12 @@ export const InstructorAppBar = () => {
         sx={{
           zIndex: 1,
           boxShadow: 0,
-          bgcolor: 'green',
         }}
       >
         <Stack
           sx={{
             flexDirection: 'row',
             alignItems: 'center',
-            bgcolor: 'yellow',
             flexGrow: 1,
             gap: itemGap,
           }}

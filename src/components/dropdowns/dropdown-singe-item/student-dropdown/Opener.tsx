@@ -10,8 +10,6 @@ export const Opener = () => {
       to="/"
       style={{
         textDecoration: 'none',
-        backgroundColor: 'blue',
-        // display: 'flex',
         alignContent: 'center',
         alignItems: 'center',
       }}
@@ -21,7 +19,6 @@ export const Opener = () => {
         sx={{
           color: isDropdownOpen ? 'secondary.main' : 'text.primary',
           cursor: 'pointer',
-          bgcolor: 'black',
           alignSelf: 'center',
         }}
       >
