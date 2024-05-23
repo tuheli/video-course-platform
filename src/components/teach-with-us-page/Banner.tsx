@@ -1,5 +1,6 @@
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { useState } from 'react';
+import { OpenSignUpFormModalButton } from '../sign-up/OpenSignUpFormModalButton';
 
 export const Banner = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -7,9 +8,6 @@ export const Banner = () => {
   const onImageLoaded = () => {
     setIsLoaded(true);
   };
-
-  // NOTE: Open sign up modal
-  const onClickGetStarted = () => {};
 
   return (
     <Container disableGutters maxWidth={'xl'}>
@@ -67,14 +65,7 @@ export const Banner = () => {
                 mt: 2,
               }}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={onClickGetStarted}
-              >
-                Get started
-              </Button>
+              <OpenSignUpFormModalButton text="Get started" />
             </Box>
           </div>
         </div>
