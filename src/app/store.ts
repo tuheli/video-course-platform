@@ -3,6 +3,8 @@ import specialOfferSlice from '../features/specialOfferSlice';
 import cartSlice from '../features/cartSlice';
 import favoritesSlice from '../features/favoritesSlice';
 import languageSlice from '../features/languageSlice';
+import userSlice from '../features/usersSlice';
+import meSlice from '../features/meSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     cart: cartSlice,
     favorites: favoritesSlice,
     language: languageSlice,
+    users: userSlice,
+    me: meSlice,
   },
 });
 
