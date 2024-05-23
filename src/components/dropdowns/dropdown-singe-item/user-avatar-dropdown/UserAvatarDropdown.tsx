@@ -6,7 +6,7 @@ export const UserAvatarDropdown = () => {
   return (
     <MainDropdownOpener
       RenderComponent={Opener}
-      forceOpen={true}
+      forceOpen={false}
       usePortal={true}
       isMainDropdown={true}
       renderPosition="below"
