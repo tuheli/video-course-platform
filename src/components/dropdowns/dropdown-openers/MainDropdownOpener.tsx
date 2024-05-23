@@ -26,6 +26,7 @@ interface MainDropdownOpenerProps {
   sx?: SxProps;
   customOffset?: { top: number; left: number };
   isMainDropdown: boolean;
+  openerContainerSx?: SxProps;
 }
 
 export const MainDropdownOpener = ({
@@ -38,6 +39,7 @@ export const MainDropdownOpener = ({
   anchorpoint,
   customOffset,
   isMainDropdown,
+  openerContainerSx,
 }: MainDropdownOpenerProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -87,7 +89,12 @@ export const MainDropdownOpener = ({
     >
       {isMainDropdown && (
         <CloseDropdownContext.Provider value={contextValue}>
-          <Box onMouseEnter={onMouseEnter}>
+          <Box
+            onMouseEnter={onMouseEnter}
+            sx={{
+              ...openerContainerSx,
+            }}
+          >
             <RenderComponent isDropdownOpen={isDropdownOpen} />
           </Box>
           {getChildrenToRender()}
