@@ -1,7 +1,13 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const BecomeAnInstructorVariant = () => {
+  const navigate = useNavigate();
+
+  const onClickGetStarted = () => {
+    navigate('/signup');
+  };
+
   return (
     <Container>
       <Stack
@@ -37,11 +43,13 @@ export const BecomeAnInstructorVariant = () => {
             Join one of the world’s largest online learning marketplaces.
           </Typography>
           <Box>
-            <Link to="/">
-              <Button variant="contained" color="primary">
-                Get started
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onClickGetStarted}
+            >
+              Get started
+            </Button>
           </Box>
         </Stack>
       </Stack>
