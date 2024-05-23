@@ -11,13 +11,18 @@ import { CompanyLogo } from './CompanyLogo';
 import { CartDropdownOpener } from '../dropdowns/dropdown-singe-item/cart-dropdown/CartDropdownOpener';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
+import { TypographyLink } from '../instructor/TypographyLink';
+import { InstructorLink } from './InstructorLink';
 
 const itemGap = 2;
 
 const AppAppBar = () => {
   const me = useAppSelector((state) => state.me.user);
   const location = useLocation();
+
   const showTeachDropdown = !me && location.pathname !== '/teaching';
+
+  const showInstructorLink = Boolean(me);
 
   return (
     <AppBar
@@ -68,6 +73,7 @@ const AppAppBar = () => {
             >
               <BusinessDropdown />
               {showTeachDropdown && <TeachDropdown />}
+              {showInstructorLink && <InstructorLink />}
               <CartDropdownOpener />
             </Stack>
             <Stack
