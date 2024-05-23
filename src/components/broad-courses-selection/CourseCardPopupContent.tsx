@@ -1,4 +1,3 @@
-import '../dropdowns/animations/fadeAnimation.css';
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { Course } from '../../../data/courseData';
 import { dateLocale } from './common';

@@ -1,4 +1,3 @@
-import '../animations/fadeAnimation.css';
 import { ReactNode } from 'react';
 import { StyledTransparencyBox } from './StyledTransparencyBox';
 import { StyledMenuItemsList } from './StyledMenuItemsList';

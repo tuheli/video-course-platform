@@ -5,7 +5,6 @@ import {
   containerBorderWidth,
   containerBorderStyle,
 } from './common';
-import '../animations/fadeAnimation.css';
 
 export const StyledBox = styled(Box)({
   backgroundColor: 'white',
