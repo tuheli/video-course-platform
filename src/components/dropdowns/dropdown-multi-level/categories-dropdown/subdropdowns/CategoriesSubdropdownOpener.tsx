@@ -28,6 +28,7 @@ export const CategoriesSubdropdownItem = ({
       )}
       forceOpen={false}
       usePortal={true}
+      isMainDropdown={false}
       renderPosition="right"
       customOffset={customOffset}
       anchorpoint="top-right"
