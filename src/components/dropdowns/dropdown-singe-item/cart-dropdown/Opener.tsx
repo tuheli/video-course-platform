@@ -25,10 +25,11 @@ export const Opener = () => {
         <Typography
           sx={{
             position: 'absolute',
-            top: -6,
-            right: -6,
-            width: 23,
-            height: 23,
+            top: 0,
+            right: 0,
+            transform: 'translateY(-50%) translateX(50%)',
+            width: 22,
+            height: 22,
             borderRadius: '50%',
             color: 'white',
             bgcolor: 'secondary.light',
