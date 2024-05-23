@@ -5,8 +5,17 @@ interface InitialState {
   user: User | null;
 }
 
+const devUser: User = {
+  credentials: {
+    email: 'elias.test@gmail.com',
+    password: '1234',
+  },
+  fullName: 'Elias Testington',
+  receiveInsiderEmails: true,
+};
+
 const initialState: InitialState = {
-  user: null,
+  user: devUser,
 };
 
 const slice = createSlice({
