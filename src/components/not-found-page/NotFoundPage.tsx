@@ -6,7 +6,6 @@ import { Footer } from '../footer/Footer';
 export const NotFoundPage = () => {
   return (
     <>
-      <AppAppBar />
       <Box
         sx={{
           flexDirection: 'column',
@@ -14,6 +13,7 @@ export const NotFoundPage = () => {
           minHeight: '100vh',
         }}
       >
+        <AppAppBar />
         <Box
           sx={{
             py: 4,
