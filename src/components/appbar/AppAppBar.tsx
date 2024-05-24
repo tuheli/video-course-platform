@@ -11,8 +11,8 @@ import { CompanyLogo } from './CompanyLogo';
 import { CartDropdownOpener } from '../dropdowns/dropdown-singe-item/cart-dropdown/CartDropdownOpener';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
-import { TypographyLink } from '../instructor/TypographyLink';
 import { InstructorLink } from './InstructorLink';
+import { UserAvatarDropdown } from '../dropdowns/dropdown-singe-item/user-avatar-dropdown/UserAvatarDropdown';
 
 const itemGap = 2;
 
@@ -83,9 +83,22 @@ const AppAppBar = () => {
                 gap: itemGap,
               }}
             >
-              <LoginButton />
-              <SignUpButton />
-              <OpenLanguageModalButton />
+              {me && (
+                <UserAvatarDropdown
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    fontSize: 14,
+                  }}
+                />
+              )}
+              {!me && (
+                <>
+                  <LoginButton />
+                  <SignUpButton />
+                  <OpenLanguageModalButton />
+                </>
+              )}
             </Stack>
           </Stack>
         </Toolbar>
