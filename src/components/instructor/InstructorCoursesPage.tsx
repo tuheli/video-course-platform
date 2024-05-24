@@ -6,8 +6,11 @@ import { CreateAnEngagingCourse } from '../create-an-engaging-course/CreateAnEng
 import { PopularInstructorResources } from '../popular-instructor-resources/PopularInstructorResources';
 import { AreYouReadyToBegin } from './AreYouReadyToBegin';
 import { Footer } from '../footer/Footer';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
 
 export const InstructorCoursesPage = () => {
+  useScrollToTop();
+
   return (
     <>
       <InstructorAppBar />
