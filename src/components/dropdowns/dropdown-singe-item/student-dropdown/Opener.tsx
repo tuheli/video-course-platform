@@ -15,7 +15,7 @@ export const Opener = () => {
       }}
     >
       <Typography
-        variant="body2"
+        variant="body1"
         sx={{
           color: isDropdownOpen ? 'secondary.main' : 'text.primary',
           cursor: 'pointer',
