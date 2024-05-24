@@ -1,11 +1,12 @@
 import { MainDropdownOpener } from '../../dropdown-openers/MainDropdownOpener';
 import { Opener } from './Opener';
 import { Dropdown } from './Dropdown';
+import { UserAvatarProps } from '../../../me/UserAvatar';
 
-export const UserAvatarDropdown = () => {
+export const UserAvatarDropdown = ({ sx }: UserAvatarProps) => {
   return (
     <MainDropdownOpener
-      RenderComponent={Opener}
+      RenderComponent={() => Opener({ sx })}
       forceOpen={false}
       usePortal={true}
       isMainDropdown={true}
