@@ -5,6 +5,7 @@ import favoritesSlice from '../features/favoritesSlice';
 import languageSlice from '../features/languageSlice';
 import userSlice from '../features/usersSlice';
 import meSlice from '../features/meSlice';
+import courseCreationSlice from '../features/courseCreationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     language: languageSlice,
     users: userSlice,
     me: meSlice,
+    courseCreation: courseCreationSlice,
   },
 });
 
