@@ -7,7 +7,7 @@ import { SignedOutRoutes } from './components/routes/SignedOutRoutes';
 import { useAppSelector } from './app/hooks';
 import { SignedInRoutes } from './components/routes/SignedInRoutes';
 
-// NOTE: Import css baseline up top to prevent mui error that somethimes occurs
+// NOTE: Import css baseline up top to prevent mui error
 
 const App = () => {
   const me = useAppSelector((state) => state.me.user);
