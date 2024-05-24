@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export const CreateYourCourseButton = () => {
   return (
-    <Link to="create">
+    <Link to="/course/create">
       <Button
         variant="contained"
         color="secondary"
