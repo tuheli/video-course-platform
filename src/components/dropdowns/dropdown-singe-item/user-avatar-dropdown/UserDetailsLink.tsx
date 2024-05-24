@@ -3,6 +3,7 @@ import { UserAvatar } from '../../../me/UserAvatar';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { menuItemPadding, avatarSize } from './Dropdown';
+import { useDropdownContext } from '../../../../hooks/useDropdownContext';
 
 interface UserDetailsLinkProps {
   fullName: string;
@@ -11,6 +12,11 @@ interface UserDetailsLinkProps {
 
 export const UserDetailsLink = ({ fullName, email }: UserDetailsLinkProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { closeMainDropdown } = useDropdownContext();
+
+  const onClickLink = () => {
+    closeMainDropdown();
+  };
 
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -22,6 +28,7 @@ export const UserDetailsLink = ({ fullName, email }: UserDetailsLinkProps) => {
 
   return (
     <Link
+      onClick={onClickLink}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       to="/"

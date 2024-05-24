@@ -3,9 +3,15 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { menuItemPadding } from './Dropdown';
+import { useDropdownContext } from '../../../../hooks/useDropdownContext';
 
 export const BusinessLink = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const { closeMainDropdown } = useDropdownContext();
+
+  const onClickLink = () => {
+    closeMainDropdown();
+  };
 
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -17,6 +23,7 @@ export const BusinessLink = () => {
 
   return (
     <Link
+      onClick={onClickLink}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       to="/"

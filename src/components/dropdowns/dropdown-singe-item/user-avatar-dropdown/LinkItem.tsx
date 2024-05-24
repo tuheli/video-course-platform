@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { menuItemPadding, menuItemHeight } from './Dropdown';
+import { useDropdownContext } from '../../../../hooks/useDropdownContext';
 
 interface LinkItemProps {
   text: string;
@@ -11,6 +12,11 @@ interface LinkItemProps {
 
 export const LinkItem = ({ text, to, children }: LinkItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { closeMainDropdown } = useDropdownContext();
+
+  const onClickLink = () => {
+    closeMainDropdown();
+  };
 
   const onMouseEnter = () => {
     setIsHovered(true);
@@ -22,6 +28,7 @@ export const LinkItem = ({ text, to, children }: LinkItemProps) => {
 
   return (
     <Link
+      onClick={onClickLink}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       to={to}
