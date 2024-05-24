@@ -21,7 +21,7 @@ export const SignedInRoutes = () => {
         path="/course/create"
         element={<Redirect to="/course/create/1" />}
       />
-      <Route path="/teaching" element={<Redirect to="/" />} />
+      <Route path="/teaching" element={<Redirect to="/instructor" />} />
       <Route path="/signup" element={<Redirect to="/" />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
