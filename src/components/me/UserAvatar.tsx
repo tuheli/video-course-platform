@@ -28,7 +28,7 @@ const getAvatarLetters = (fullName: string): AvatarLetters => {
   };
 };
 
-interface UserAvatarProps {
+export interface UserAvatarProps {
   sx?: SxProps;
 }
 
@@ -45,7 +45,14 @@ export const UserAvatar = ({ sx }: UserAvatarProps) => {
         },
       }}
     >
-      <Avatar sx={{ ...sx }}>
+      <Avatar
+        sx={{
+          bgcolor: 'text.primary',
+          color: 'text.contrast',
+          fontWeight: 600,
+          ...sx,
+        }}
+      >
         {avatarLetters.firstLetter}
         {avatarLetters.secondLetter}
       </Avatar>
