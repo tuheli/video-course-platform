@@ -10,6 +10,7 @@ export interface PopularInstructorResource {
   linkTo: string;
   linkText: string;
   description: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
     muiName: string;
   };
