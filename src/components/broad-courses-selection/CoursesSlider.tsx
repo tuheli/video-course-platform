@@ -15,6 +15,9 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 // The position recalculation of portaled item should probably be delayed
 // in slider resizing cases until the slider resizing is completed.
 
+// NOTE ON FIX: Noticed the same thing happens for example on wikipedias on hover triggered popovers.
+// -> So fixing might not be that relevat.
+
 interface CoursesSliderProps {
   topic: CourseTopic;
   isSliderInfinite: boolean;
