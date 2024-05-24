@@ -7,18 +7,16 @@ import { CompanyLogo } from '../appbar/CompanyLogo';
 import { Copyright } from './Copyright';
 import { FooterTopExtension } from './FooterTopExtension';
 import { useLocation } from 'react-router-dom';
-import { useAppSelector } from '../../app/hooks';
 
 export const Footer = () => {
-  const me = useAppSelector((state) => state.me.user);
-
   const footerLinks = getFooterLinks();
   const footerLinkComponents = footerLinks.map(({ text }) => ({
     RenderComponent: () => <FooterLink text={text} />,
   }));
 
   const location = useLocation();
-  const showTopExtension = !me && location.pathname !== '/';
+  const showTopExtension =
+    location.pathname !== '/' && location.pathname !== '/teaching';
 
   return (
     <Stack
