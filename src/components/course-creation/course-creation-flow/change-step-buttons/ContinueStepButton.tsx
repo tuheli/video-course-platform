@@ -3,12 +3,12 @@ import { ChangeStepButton } from './ChangeStepButton';
 import { StepChangeProps } from './common';
 
 interface ContinueStepButtonProps extends StepChangeProps {
-  isButtonDisabled: boolean;
+  isAbleToContinue: boolean;
 }
 
 export const ContinueStepButton = ({
   currentStep,
-  isButtonDisabled,
+  isAbleToContinue,
 }: ContinueStepButtonProps) => {
   const nextStep = currentStep + 1;
 
@@ -20,7 +20,7 @@ export const ContinueStepButton = ({
     <ChangeStepButton
       text="Continue"
       nextStep={nextStep}
-      isButtonDisabled={isButtonDisabled}
+      isButtonDisabled={!isAbleToContinue}
     />
   );
 };
