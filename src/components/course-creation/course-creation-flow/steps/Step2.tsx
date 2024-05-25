@@ -8,11 +8,15 @@ export const Step2 = () => {
         sx={{
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 2,
+          gap: 4,
         }}
       >
         <Typography variant="h4">How about a working title?</Typography>
-        <Typography>
+        <Typography
+          sx={{
+            mb: 4,
+          }}
+        >
           It's ok if you can't think of a good title now. You can change it
           later.
         </Typography>
