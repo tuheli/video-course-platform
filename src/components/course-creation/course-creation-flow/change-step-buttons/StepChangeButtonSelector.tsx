@@ -14,7 +14,7 @@ export const StepChangeButtonSelector = () => {
   const showContinueButton = currentStep < totalSteps;
   const showFinishCourseCreationButton = currentStep === totalSteps;
 
-  const isContinueButtonDisabled = !isAbleToContinue(currentStep, steps);
+  const isAbleToContinueOrFinish = isAbleToContinue(currentStep, steps);
 
   return (
     <Paper
@@ -38,10 +38,14 @@ export const StepChangeButtonSelector = () => {
         {showContinueButton && (
           <ContinueStepButton
             currentStep={currentStep}
-            isButtonDisabled={isContinueButtonDisabled}
+            isAbleToContinue={isAbleToContinueOrFinish}
           />
         )}
-        {showFinishCourseCreationButton && <FinishCourseCreationButton />}
+        {showFinishCourseCreationButton && (
+          <FinishCourseCreationButton
+            isAbleToFinish={isAbleToContinueOrFinish}
+          />
+        )}
       </Stack>
     </Paper>
   );
