@@ -63,7 +63,7 @@ export const TextInput = ({
             pl: 1,
           }}
         />
-        <Box sx={{}}>
+        <Box>
           <StyledLabel
             htmlFor="text-input"
             sx={{
