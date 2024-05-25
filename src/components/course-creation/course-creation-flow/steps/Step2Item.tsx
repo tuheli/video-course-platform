@@ -20,12 +20,11 @@ export const Step2Item = () => {
         sx={{
           position: 'relative',
           border: '1px solid',
-          borderColor: 'text.secondary',
+          borderColor: 'text.primary',
           width: 660,
           height: 54,
           pl: 2,
           pr: 8,
-          mt: 4,
         }}
       >
         <StyledInput
