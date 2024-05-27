@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
 
+// NOTE on router: https://reactrouter.com/en/main/guides/api-development-strategy
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
