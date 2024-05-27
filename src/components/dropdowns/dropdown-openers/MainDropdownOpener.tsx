@@ -1,11 +1,11 @@
 import { ComponentType, useRef, useState } from 'react';
 import { Box, SxProps } from '@mui/material';
 import { CloseDropdownContext } from '../../../contexts/CloseDropdownContext';
+import { PortaledItem } from '../../portaled-item/PortaledItem';
 import {
   AnchorPoint,
-  PortaledItem,
   RenderPosition,
-} from '../../portaled-item/PortaledItem';
+} from '../../portaled-item/positioningUtilities';
 
 export interface OpenerProps {
   isDropdownOpen: boolean;
