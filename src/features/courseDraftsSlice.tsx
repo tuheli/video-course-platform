@@ -26,7 +26,7 @@ interface CourseContent {
 
 export type NewCourseDraftEntry = Omit<
   CourseDraft,
-  'id' | 'isPublic' | 'isSubmissionProcessCompleted'
+  'id' | 'isPublic' | 'isSubmissionProcessCompleted' | 'courseContent'
 >;
 
 export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
@@ -70,7 +70,7 @@ const initialState: CourseDraft[] = [
         'Student understands the importance of non-destructive workflows in 3D animation',
         'Student is able to use and customize constraints applied to animation rigs',
         'Student is able to create a modular rig for any given 3D model',
-        'Student understands export process of fbx files for Unity and Unreal Engine',
+        'Student understands export and import process of fbx files for Unity and Unreal Engine',
       ],
       prerequisites: [],
       intendedLearners: [
