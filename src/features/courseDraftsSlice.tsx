@@ -115,6 +115,23 @@ const initialState: CourseDraft[] = [
       videoContentLengthSeconds: 0,
     },
   },
+  {
+    id: '4',
+    creatorEmail: 'elias.test@gmail.com',
+    courseType: 'course',
+    courseTitle:
+      'A Third Course for Testing Purposes very long title to cause typography being clamped at 3 lines',
+    courseCategory: KnownCourseCategory.Business,
+    creatorTimeAvailablePerWeek: TimeAvailablePerWeek.ImVeryBusy,
+    isPublic: true,
+    isSubmissionProcessCompleted: false,
+    courseContent: {
+      learningObjectives: [],
+      prerequisites: [],
+      intendedLearners: ['Small business owners', 'Entrepreneurs'],
+      videoContentLengthSeconds: 0,
+    },
+  },
 ];
 
 const slice = createSlice({
