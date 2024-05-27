@@ -7,6 +7,7 @@ import userSlice from '../features/usersSlice';
 import meSlice from '../features/meSlice';
 import courseCreationSlice from '../features/courseCreationSlice';
 import courseDraftsSlice from '../features/courseDraftsSlice';
+import userPreferencesSlice from '../features/userPreferencesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     me: meSlice,
     courseCreation: courseCreationSlice,
     courseDrafts: courseDraftsSlice,
+    userPreferences: userPreferencesSlice,
   },
 });
 
