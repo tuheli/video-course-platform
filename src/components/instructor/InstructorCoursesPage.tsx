@@ -7,6 +7,7 @@ import { Footer } from '../footer/Footer';
 import { useScrollToTop } from '../../hooks/useScrollToTop';
 import { MyCourses } from './MyCourses';
 import { AreYouReadyToBeginOrEmpty } from './AreYouReadyToBeginOrEmpty';
+import { MyCoursesOrJumpIntoCourseCreation } from './MyCoursesOrJumpIntoCourseCreation';
 
 export const InstructorCoursesPage = () => {
   useScrollToTop();
@@ -20,7 +21,7 @@ export const InstructorCoursesPage = () => {
           pb: 4,
         }}
       >
-        <MyCourses />
+        <MyCoursesOrJumpIntoCourseCreation />
       </Box>
       <Box
         sx={{
