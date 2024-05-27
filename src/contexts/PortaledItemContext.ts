@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { RenderPosition } from '../components/portaled-item/PortaledItem';
+import { RenderPosition } from '../components/portaled-item/positioningUtilities';
 
 interface PortaledItemContextType {
   renderPosition: RenderPosition | undefined;
