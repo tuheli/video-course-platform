@@ -710,6 +710,13 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
           }),
         },
       },
+      MuiLinearProgress: {
+        styleOverrides: {
+          root: () => ({
+            background: grey[400],
+          }),
+        },
+      },
     },
   };
 }
