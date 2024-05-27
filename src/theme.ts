@@ -713,7 +713,12 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiLinearProgress: {
         styleOverrides: {
           root: () => ({
-            background: grey[400],
+            background: grey[300],
+            height: 10,
+            width: '100%',
+            '& .MuiLinearProgress-bar': {
+              backgroundColor: secondary[900],
+            },
           }),
         },
       },
