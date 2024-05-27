@@ -56,7 +56,13 @@ export const CourseCreationAppBar = () => {
           <ExitButton />
         </Stack>
       </Toolbar>
-      <LinearProgress variant="determinate" value={progressValue} />
+      <LinearProgress
+        variant="determinate"
+        value={progressValue}
+        sx={{
+          height: 8,
+        }}
+      />
     </AppBar>
   );
 };
