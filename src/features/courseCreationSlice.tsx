@@ -44,7 +44,6 @@ export const isValidCategory = (
   category: string
 ): category is KnownCourseCategory => {
   const categoryValues = Object.values(KnownCourseCategory);
-  console.log(categoryValues);
 
   for (const categoryValue of categoryValues) {
     if (category === categoryValue) {
