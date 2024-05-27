@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import { InstructorAppBar } from './InstructorAppBar';
-import { JumpIntoCourseCreation } from '../course-creation/JumpIntoCourseCreation';
 import { HelpfulResourcesHeader } from './HelpfulResourcesHeader';
 import { CreateAnEngagingCourse } from '../create-an-engaging-course/CreateAnEngagingCourse';
 import { PopularInstructorResources } from '../popular-instructor-resources/PopularInstructorResources';
-import { AreYouReadyToBegin } from './AreYouReadyToBegin';
 import { Footer } from '../footer/Footer';
 import { useScrollToTop } from '../../hooks/useScrollToTop';
+import { MyCourses } from './MyCourses';
+import { AreYouReadyToBeginOrEmpty } from './AreYouReadyToBeginOrEmpty';
 
 export const InstructorCoursesPage = () => {
   useScrollToTop();
@@ -20,7 +20,7 @@ export const InstructorCoursesPage = () => {
           pb: 4,
         }}
       >
-        <JumpIntoCourseCreation />
+        <MyCourses />
       </Box>
       <Box
         sx={{
@@ -45,11 +45,10 @@ export const InstructorCoursesPage = () => {
       </Box>
       <Box
         sx={{
-          pt: 8,
-          pb: 16,
+          py: 8,
         }}
       >
-        <AreYouReadyToBegin />
+        <AreYouReadyToBeginOrEmpty />
       </Box>
       <Box
         sx={{
