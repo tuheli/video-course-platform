@@ -22,6 +22,7 @@ interface CourseContent {
   learningObjectives: string[];
   prerequisites: string[];
   intendedLearners: string[];
+  videoContentLengthSeconds: number;
 }
 
 export type NewCourseDraftEntry = Omit<
@@ -79,6 +80,7 @@ const initialState: CourseDraft[] = [
         'Animators',
         'Programmers',
       ],
+      videoContentLengthSeconds: 158,
     },
   },
   {
@@ -94,6 +96,7 @@ const initialState: CourseDraft[] = [
       learningObjectives: [],
       prerequisites: [],
       intendedLearners: ['Small business owners', 'Entrepreneurs'],
+      videoContentLengthSeconds: 0,
     },
   },
   {
@@ -109,6 +112,7 @@ const initialState: CourseDraft[] = [
       learningObjectives: [],
       prerequisites: [],
       intendedLearners: [],
+      videoContentLengthSeconds: 0,
     },
   },
 ];
@@ -128,6 +132,7 @@ const slice = createSlice({
           intendedLearners: [],
           learningObjectives: [],
           prerequisites: [],
+          videoContentLengthSeconds: 0,
         },
       };
       state.push(newCourseDraft);
