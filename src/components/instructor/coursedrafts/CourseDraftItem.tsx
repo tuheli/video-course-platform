@@ -111,14 +111,6 @@ export const CourseDraftItem = ({ courseDraft }: CourseDraftItemProps) => {
               <LinearProgress
                 variant="determinate"
                 value={courseDraftProgressValue}
-                sx={{
-                  background: (theme) => theme.palette.grey[300],
-                  height: 10,
-                  width: '100%',
-                  '& .MuiLinearProgress-bar': {
-                    backgroundColor: 'secondary.dark',
-                  },
-                }}
               />
             </Box>
           </Stack>
