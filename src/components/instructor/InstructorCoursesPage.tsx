@@ -5,7 +5,6 @@ import { CreateAnEngagingCourse } from '../create-an-engaging-course/CreateAnEng
 import { PopularInstructorResources } from '../popular-instructor-resources/PopularInstructorResources';
 import { Footer } from '../footer/Footer';
 import { useScrollToTop } from '../../hooks/useScrollToTop';
-import { MyCourses } from './MyCourses';
 import { AreYouReadyToBeginOrEmpty } from './AreYouReadyToBeginOrEmpty';
 import { MyCoursesOrJumpIntoCourseCreation } from './MyCoursesOrJumpIntoCourseCreation';
 
