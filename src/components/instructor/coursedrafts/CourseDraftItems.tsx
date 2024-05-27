@@ -12,7 +12,7 @@ export const CourseDraftItems = () => {
   return (
     <>
       {myCourseDrafts.map((courseDraft) => (
-        <CourseDraftItem courseDraft={courseDraft} />
+        <CourseDraftItem key={courseDraft.id} courseDraft={courseDraft} />
       ))}
     </>
   );
