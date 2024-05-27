@@ -5,6 +5,7 @@ import {
 } from '../../../features/courseDraftsSlice';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { LineClampedTypography } from '../../broad-courses-selection/LineClampedTypography';
 
 interface CourseDraftItemProps {
   courseDraft: CourseDraft;
@@ -48,9 +49,11 @@ export const CourseDraftItem = ({ courseDraft }: CourseDraftItemProps) => {
           style={{
             position: 'relative',
             display: 'flex',
+            flexDirection: 'row',
             textDecoration: 'none',
             color: 'inherit',
             flexGrow: 1,
+            gap: 64,
           }}
         >
           {isHovering && <OnHoverOverlay />}
@@ -62,13 +65,14 @@ export const CourseDraftItem = ({ courseDraft }: CourseDraftItemProps) => {
               py: 2,
             }}
           >
-            <Typography
+            <LineClampedTypography
+              maxLines={3}
               sx={{
                 fontWeight: 600,
               }}
             >
               {courseDraft.courseTitle}
-            </Typography>
+            </LineClampedTypography>
             <Stack
               sx={{
                 flexDirection: 'row',
@@ -86,9 +90,11 @@ export const CourseDraftItem = ({ courseDraft }: CourseDraftItemProps) => {
                   DRAFT
                 </Typography>
               )}
-              <Typography component="span" variant="caption" sx={{}}>
-                {courseDraft.isPublic && 'Public'}
-              </Typography>
+              {courseDraft.isPublic && (
+                <Typography component="span" variant="caption">
+                  Public
+                </Typography>
+              )}
             </Stack>
           </Stack>
           <Stack
@@ -100,7 +106,13 @@ export const CourseDraftItem = ({ courseDraft }: CourseDraftItemProps) => {
               pr: 2,
             }}
           >
-            <Typography>Finish your course</Typography>
+            <Typography
+              sx={{
+                fontWeight: 500,
+              }}
+            >
+              Finish your course
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
