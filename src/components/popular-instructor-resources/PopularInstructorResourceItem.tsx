@@ -15,6 +15,7 @@ export const PopularInstructorResourceItem = ({
       style={{
         textDecoration: 'none',
         width: '100%',
+        color: 'inherit',
       }}
     >
       <Stack
@@ -26,7 +27,7 @@ export const PopularInstructorResourceItem = ({
       >
         <resource.Icon
           sx={{
-            fontSize: '4rem',
+            fontSize: 50,
             color: 'text.primary',
           }}
         />
@@ -43,8 +44,8 @@ export const PopularInstructorResourceItem = ({
           {resource.linkText}
         </Typography>
         <Typography
+          variant="body2"
           sx={{
-            maxWidth: '70%',
             textAlign: 'center',
           }}
         >

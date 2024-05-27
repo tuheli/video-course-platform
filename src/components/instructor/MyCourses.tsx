@@ -19,7 +19,7 @@ export const MyCourses = () => {
       <Stack
         sx={{
           flexDirection: 'column',
-          gap: 2,
+          gap: 3,
         }}
       >
         <Typography variant="h4">Courses</Typography>

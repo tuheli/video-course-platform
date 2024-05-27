@@ -20,7 +20,7 @@ export const PopularInstructorResources = () => {
         <Stack
           sx={{
             flexDirection: 'row',
-            flex: '1 1 0px',
+            gap: 3,
           }}
         >
           {popularInstructorResourcesData.map((resource, index) => (
