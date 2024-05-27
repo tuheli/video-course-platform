@@ -11,8 +11,6 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
   const date = new Date(0);
   date.setSeconds(durationSeconds);
 
-  console.log('date', date, 'param seconds', durationSeconds);
-
   const isoString = date.toISOString();
 
   // Cast to num to remove trailing zeroes
