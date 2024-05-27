@@ -2,8 +2,8 @@ import { Box, Container, Stack } from '@mui/material';
 import { getCustomerStoriesAvatarVersion } from '../../../data/customerStoriesData';
 import { CustomerStoryCard } from './CustomerStoryCard';
 import Slider from 'react-slick';
-import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
-import { ArrowLeft } from '../scroll-to-view-list/ArrowLeft';
+import { ArrowRight } from '../slick-arrows/ArrowRight';
+import { ArrowLeft } from '../slick-arrows/ArrowLeft';
 import { ViewMoreCustomerStoriesLink } from './ViewMoreCustomerStoriesLink';
 
 export const CustomerStories = () => {

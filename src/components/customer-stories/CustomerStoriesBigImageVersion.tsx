@@ -1,6 +1,6 @@
 import { Box, Container } from '@mui/material';
-import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
-import { ArrowLeft } from '../scroll-to-view-list/ArrowLeft';
+import { ArrowRight } from '../slick-arrows/ArrowRight';
+import { ArrowLeft } from '../slick-arrows/ArrowLeft';
 import { getCustomerStoriesBigImageVersion } from '../../../data/customerStoriesData';
 import { CustomerStoryCardBigImageVersion } from './CustomerStoryCardBigImageVersion';
 import Slider from 'react-slick';

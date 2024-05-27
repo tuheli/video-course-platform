@@ -3,8 +3,8 @@ import { BroadCoursesSelectionItem } from './BroadCoursesSelectionItem';
 import { MainDropdownOpener } from '../dropdowns/dropdown-openers/MainDropdownOpener';
 import { CourseCardPopupContent } from './CourseCardPopupContent';
 import Slider from 'react-slick';
-import { ArrowRight } from '../scroll-to-view-list/ArrowRight';
-import { ArrowLeft } from '../scroll-to-view-list/ArrowLeft';
+import { ArrowRight } from '../slick-arrows/ArrowRight';
+import { ArrowLeft } from '../slick-arrows/ArrowLeft';
 import { CourseTopic } from '../../../data/courseData';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
