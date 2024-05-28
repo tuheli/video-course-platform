@@ -22,11 +22,15 @@ export interface TextWithId {
   text: string;
 }
 
-interface CourseContent {
-  // NOTE: Remember to update getCourseDraftProgressValue when adding more properties
+interface IntendedLearnersSection {
   learningObjectives: TextWithId[];
   prerequisites: TextWithId[];
   intendedLearners: TextWithId[];
+}
+
+interface CourseContent {
+  // NOTE: Remember to update getCourseDraftProgressValue when adding more properties
+  intendedLearnersSection: IntendedLearnersSection;
   videoContentLengthSeconds: number;
 }
 
@@ -35,27 +39,112 @@ export type NewCourseDraftEntry = Omit<
   'id' | 'isPublic' | 'isSubmissionProcessCompleted' | 'courseContent'
 >;
 
+interface ValidateTextWithIdArrayOptions {
+  array: TextWithId[];
+  minElementCount: number;
+  minTextLength: number;
+}
+
+const minLearningObjectivesCount = 4;
+const minPrerequisitesCount = 1;
+const minIntendedLearnersCount = 1;
+
+// NOTE: Used in wrapper functions to be more descriptive
+const validateTextWithIdArray = ({
+  array,
+  minElementCount,
+  minTextLength,
+}: ValidateTextWithIdArrayOptions) => {
+  const hasEnoughElements = array.length >= minElementCount;
+
+  if (!hasEnoughElements) {
+    return false;
+  }
+
+  const areElementTextLengthsOk = array.every(
+    (p) => p.text.length >= minTextLength
+  );
+
+  if (!areElementTextLengthsOk) {
+    return false;
+  }
+
+  return true;
+};
+
+const isLearningObjectivesReadyForSubmission = (
+  learningObjectives: TextWithId[]
+) => {
+  return validateTextWithIdArray({
+    array: learningObjectives,
+    minElementCount: minLearningObjectivesCount,
+    minTextLength: 1,
+  });
+};
+
+const isPrerequisitesReadyForSubmission = (prerequisites: TextWithId[]) => {
+  return validateTextWithIdArray({
+    array: prerequisites,
+    minElementCount: minPrerequisitesCount,
+    minTextLength: 1,
+  });
+};
+
+const isIntendedLearnersReadyForSubmission = (
+  intendedLearners: TextWithId[]
+) => {
+  return validateTextWithIdArray({
+    array: intendedLearners,
+    minElementCount: minIntendedLearnersCount,
+    minTextLength: 1,
+  });
+};
+
+export const isIntendedLearnersSectionReadyForSubmission = (
+  intendedLearners: IntendedLearnersSection
+) => {
+  return (
+    isLearningObjectivesReadyForSubmission(
+      intendedLearners.learningObjectives
+    ) &&
+    isPrerequisitesReadyForSubmission(intendedLearners.prerequisites) &&
+    isIntendedLearnersReadyForSubmission(intendedLearners.intendedLearners)
+  );
+};
+
 export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
   const { learningObjectives, prerequisites, intendedLearners } =
-    courseDraft.courseContent;
+    courseDraft.courseContent.intendedLearnersSection;
 
-  const minValue = 2; // Lets always show some progress for the slider to be visible
+  const minProgressValue = 2; // Lets always show some progress for the slider to be visible
   const objectivesCount = 3;
   let completedObjectives = 0;
 
-  completedObjectives += learningObjectives.length > 0 ? 1 : 0;
-  completedObjectives += prerequisites.length > 0 ? 1 : 0;
-  completedObjectives += intendedLearners.length > 0 ? 1 : 0;
+  completedObjectives += isLearningObjectivesReadyForSubmission(
+    learningObjectives
+  )
+    ? 1
+    : 0;
 
-  if (completedObjectives === 0) return minValue;
+  completedObjectives += isPrerequisitesReadyForSubmission(prerequisites)
+    ? 1
+    : 0;
+
+  completedObjectives += isIntendedLearnersReadyForSubmission(intendedLearners)
+    ? 1
+    : 0;
+
+  if (completedObjectives === 0) return minProgressValue;
 
   const progressValue = (completedObjectives / objectivesCount) * 100;
 
   if (progressValue > 100) return 100;
-  if (progressValue < 0) return minValue;
+  if (progressValue < 0) return minProgressValue;
   return progressValue;
 };
 
+// NOTE: Its ok to use as is in initializing development mock data
+// Otherwise used in wrapper functions to be more descriptive
 const getTextWithIdArray = (length: number): TextWithId[] => {
   return Array.from({ length }, (_, k) => {
     return {
@@ -65,16 +154,14 @@ const getTextWithIdArray = (length: number): TextWithId[] => {
   });
 };
 
-const getInitialLearningObjectives = () => {
-  return getTextWithIdArray(4);
-};
-
-const getInitialPrerequisites = () => {
-  return getTextWithIdArray(1);
-};
-
 const getInitialIntendedLearners = () => {
-  return getTextWithIdArray(1);
+  const intendedLearners: IntendedLearnersSection = {
+    intendedLearners: getTextWithIdArray(minIntendedLearnersCount),
+    learningObjectives: getTextWithIdArray(minLearningObjectivesCount),
+    prerequisites: getTextWithIdArray(minPrerequisitesCount),
+  };
+
+  return intendedLearners;
 };
 
 const initialState: CourseDraft[] = [
@@ -88,64 +175,66 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: [
-        {
-          id: '1',
-          text: 'Student understands fbx file format and its use in game development',
-        },
-        {
-          id: '2',
-          text: 'Student understands why rigs are used, what they are and what they do',
-        },
-        {
-          id: '3',
-          text: 'Student understands real-time animation functionalities in Unity and Unreal Engine',
-        },
-        {
-          id: '4',
-          text: 'Student is able to utilize real-time animation in Unity and Unreal Engine',
-        },
-        {
-          id: '5',
-          text: 'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
-        },
-        {
-          id: '6',
-          text: 'Student understands the importance of non-destructive workflows in 3D animation',
-        },
+      intendedLearnersSection: {
+        learningObjectives: [
+          {
+            id: '1',
+            text: 'Student understands fbx file format and its use in game development',
+          },
+          {
+            id: '2',
+            text: 'Student understands why rigs are used, what they are and what they do',
+          },
+          {
+            id: '3',
+            text: 'Student understands real-time animation functionalities in Unity and Unreal Engine',
+          },
+          {
+            id: '4',
+            text: 'Student is able to utilize real-time animation in Unity and Unreal Engine',
+          },
+          {
+            id: '5',
+            text: 'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
+          },
+          {
+            id: '6',
+            text: 'Student understands the importance of non-destructive workflows in 3D animation',
+          },
 
-        {
-          id: '7',
-          text: 'Student is able to use and customize constraints applied to animation rigs',
-        },
-        {
-          id: '8',
-          text: 'Student is able to create a modular rig for any given 3D model',
-        },
-        {
-          id: '9',
-          text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
-        },
-      ],
-      prerequisites: getInitialPrerequisites(),
-      intendedLearners: [
-        {
-          id: '1',
-          text: 'Game developers',
-        },
-        {
-          id: '2',
-          text: '3D artists',
-        },
-        {
-          id: '3',
-          text: 'Animators',
-        },
-        {
-          id: '4',
-          text: 'Programmers',
-        },
-      ],
+          {
+            id: '7',
+            text: 'Student is able to use and customize constraints applied to animation rigs',
+          },
+          {
+            id: '8',
+            text: 'Student is able to create a modular rig for any given 3D model',
+          },
+          {
+            id: '9',
+            text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
+          },
+        ],
+        prerequisites: getTextWithIdArray(minPrerequisitesCount),
+        intendedLearners: [
+          {
+            id: '1',
+            text: 'Game developers',
+          },
+          {
+            id: '2',
+            text: '3D artists',
+          },
+          {
+            id: '3',
+            text: 'Animators',
+          },
+          {
+            id: '4',
+            text: 'Programmers',
+          },
+        ],
+      },
       videoContentLengthSeconds: 158,
     },
   },
@@ -159,18 +248,20 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: getInitialLearningObjectives(),
-      prerequisites: getInitialPrerequisites(),
-      intendedLearners: [
-        {
-          id: '1',
-          text: 'Small business owners',
-        },
-        {
-          id: '2',
-          text: 'Entrepreneurs',
-        },
-      ],
+      intendedLearnersSection: {
+        learningObjectives: getTextWithIdArray(minLearningObjectivesCount),
+        prerequisites: getTextWithIdArray(minPrerequisitesCount),
+        intendedLearners: [
+          {
+            id: '1',
+            text: 'Small business owners',
+          },
+          {
+            id: '2',
+            text: 'Entrepreneurs',
+          },
+        ],
+      },
       videoContentLengthSeconds: 0,
     },
   },
@@ -184,9 +275,7 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: getInitialLearningObjectives(),
-      prerequisites: getInitialPrerequisites(),
-      intendedLearners: getInitialIntendedLearners(),
+      intendedLearnersSection: getInitialIntendedLearners(),
       videoContentLengthSeconds: 0,
     },
   },
@@ -201,9 +290,7 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: getInitialLearningObjectives(),
-      prerequisites: getInitialPrerequisites(),
-      intendedLearners: getInitialIntendedLearners(),
+      intendedLearnersSection: getInitialIntendedLearners(),
       videoContentLengthSeconds: 0,
     },
   },
@@ -221,9 +308,7 @@ const slice = createSlice({
         isPublic: true,
         isSubmissionProcessCompleted: false,
         courseContent: {
-          intendedLearners: getInitialIntendedLearners(),
-          learningObjectives: getInitialLearningObjectives(),
-          prerequisites: getInitialPrerequisites(),
+          intendedLearnersSection: getInitialIntendedLearners(),
           videoContentLengthSeconds: 0,
         },
       };
@@ -239,7 +324,7 @@ const slice = createSlice({
     ) => {
       const learningObjective = state
         .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.learningObjectives.find(
+        ?.courseContent.intendedLearnersSection.learningObjectives.find(
           ({ id }) => id === action.payload.learningObjectiveId
         );
 
@@ -262,7 +347,9 @@ const slice = createSlice({
         text: '',
       };
 
-      courseDraft.courseContent.learningObjectives.push(newObjectiveEntry);
+      courseDraft.courseContent.intendedLearnersSection.learningObjectives.push(
+        newObjectiveEntry
+      );
     },
     updatedPrerequisite: (
       state,
@@ -274,7 +361,7 @@ const slice = createSlice({
     ) => {
       const prerequisite = state
         .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.prerequisites.find(
+        ?.courseContent.intendedLearnersSection.prerequisites.find(
           ({ id }) => id === action.payload.prerequisiteId
         );
 
@@ -297,7 +384,9 @@ const slice = createSlice({
         text: '',
       };
 
-      courseDraft.courseContent.prerequisites.push(newPrerequisiteEntry);
+      courseDraft.courseContent.intendedLearnersSection.prerequisites.push(
+        newPrerequisiteEntry
+      );
     },
     updatedIntendedLearners: (
       state,
@@ -309,7 +398,7 @@ const slice = createSlice({
     ) => {
       const intendedLearnersElement = state
         .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.intendedLearners.find(
+        ?.courseContent.intendedLearnersSection.intendedLearners.find(
           ({ id }) => id === action.payload.intendedLearnersId
         );
 
@@ -332,7 +421,9 @@ const slice = createSlice({
         text: '',
       };
 
-      courseDraft.courseContent.intendedLearners.push(newIntendedLearnersEntry);
+      courseDraft.courseContent.intendedLearnersSection.intendedLearners.push(
+        newIntendedLearnersEntry
+      );
     },
   },
 });
