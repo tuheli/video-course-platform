@@ -4,11 +4,14 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-interface SidebarItemProps {
+export interface SubmissionCheckItemProps {
+  isReadyForSubmission: boolean;
+}
+
+interface SidebarItemProps extends SubmissionCheckItemProps {
   text: string;
   linkTo: string;
   locationEndsWith: string;
-  isReadyForSubmission: boolean;
 }
 
 export const SidebarItem = ({
