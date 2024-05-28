@@ -1,20 +1,18 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from '../LightColoredRouterLink';
-import { useAppSelector } from '../../../app/hooks';
-import { useParams } from 'react-router-dom';
 import { EditIntendedLearnersItem } from './EditIntendedLearnersItem';
 import { AddIntendedLearnersButton } from './AddIntendedLearnersButton';
+import { useCourseDraft } from '../../../hooks/useCourseDraft';
 
 export const WhoIsThisCourseFor = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const courseDraft = useCourseDraft();
 
-  const { courseId } = useParams();
+  const intendedLearners =
+    courseDraft?.courseContent.intendedLearnersSection.intendedLearners;
 
-  const intendedLearners = useAppSelector((state) => state.courseDrafts).find(
-    ({ creatorEmail, id }) => courseId === id && creatorEmail === myEmail
-  )?.courseContent.intendedLearners;
+  const courseDraftId = courseDraft?.id;
 
-  if (!courseId || !intendedLearners) return null;
+  if (!courseDraftId || !intendedLearners) return null;
 
   return (
     <Stack
@@ -41,7 +39,7 @@ export const WhoIsThisCourseFor = () => {
       {intendedLearners.map((item) => (
         <EditIntendedLearnersItem
           key={item.id}
-          courseDraftId={courseId}
+          courseDraftId={courseDraftId}
           intendedLearners={item}
         />
       ))}

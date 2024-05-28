@@ -1,20 +1,18 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from '../LightColoredRouterLink';
-import { useAppSelector } from '../../../app/hooks';
-import { useParams } from 'react-router-dom';
 import { EditLearningObjectiveItem } from './EditLearningObjectiveItem';
 import { AddLearningObjectiveButton } from './AddLearningObjectiveButton';
+import { useCourseDraft } from '../../../hooks/useCourseDraft';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const courseDraft = useCourseDraft();
 
-  const { courseId } = useParams();
+  const learningObjectives =
+    courseDraft?.courseContent.intendedLearnersSection.learningObjectives;
 
-  const learningObjectives = useAppSelector((state) => state.courseDrafts).find(
-    ({ creatorEmail, id }) => courseId === id && creatorEmail === myEmail
-  )?.courseContent.learningObjectives;
+  const courseDraftId = courseDraft?.id;
 
-  if (!courseId || !learningObjectives) return null;
+  if (!courseDraftId || !learningObjectives) return null;
 
   return (
     <Stack
@@ -40,7 +38,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       {learningObjectives.map((learningObjective) => (
         <EditLearningObjectiveItem
           key={learningObjective.id}
-          courseDraftId={courseId}
+          courseDraftId={courseDraftId}
           learningObjective={learningObjective}
         />
       ))}

@@ -1,19 +1,17 @@
 import { Stack, Typography } from '@mui/material';
-import { useAppSelector } from '../../../app/hooks';
-import { useParams } from 'react-router-dom';
 import { EditPrerequisitesItem } from './EditPrerequisitesItem';
 import { AddPrerequisiteButton } from './AddPrerequisiteButton';
+import { useCourseDraft } from '../../../hooks/useCourseDraft';
 
 export const WhatAreTheCoursePrerequisites = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const courseDraft = useCourseDraft();
 
-  const { courseId } = useParams();
+  const prerequisites =
+    courseDraft?.courseContent.intendedLearnersSection.prerequisites;
 
-  const prerequisites = useAppSelector((state) => state.courseDrafts).find(
-    ({ creatorEmail, id }) => courseId === id && creatorEmail === myEmail
-  )?.courseContent.prerequisites;
+  const courseDraftId = courseDraft?.id;
 
-  if (!courseId || !prerequisites) return null;
+  if (!prerequisites || !courseDraftId) return null;
 
   return (
     <Stack
@@ -38,7 +36,7 @@ export const WhatAreTheCoursePrerequisites = () => {
         <EditPrerequisitesItem
           key={prerequisite.id}
           prerequisite={prerequisite}
-          courseDraftId={courseId}
+          courseDraftId={courseDraftId}
         />
       ))}
       <AddPrerequisiteButton />
