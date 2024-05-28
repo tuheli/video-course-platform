@@ -49,6 +49,7 @@ export const IntendedLearnersLayout = () => {
                 flexDirection: 'column',
                 pl: 4,
                 pr: 12,
+                pb: 4,
                 gap: 4,
               }}
             >
