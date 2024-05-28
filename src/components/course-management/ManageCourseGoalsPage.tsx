@@ -1,8 +1,12 @@
 import Box from '@mui/material/Box';
 import { CourseManagementAppBar } from './CourseManagementAppBar';
 import { Footer } from '../footer/Footer';
+import { IntendedLearnersLayout } from './IntendedLearnersLayout';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
 
 export const ManageCourseGoalsPage = () => {
+  useScrollToTop();
+
   return (
     <Box
       sx={{
@@ -12,6 +16,14 @@ export const ManageCourseGoalsPage = () => {
       }}
     >
       <CourseManagementAppBar />
+      <Box
+        sx={{
+          pt: 14,
+          pb: 8,
+        }}
+      >
+        <IntendedLearnersLayout />
+      </Box>
       <Box
         sx={{
           py: 4,
