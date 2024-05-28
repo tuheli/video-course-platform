@@ -36,7 +36,14 @@ export const InputFieldWithMaxCharacters = ({
         maxLength={maxInputLength}
         sx={{
           fontSize: 16,
+          textOverflow: 'ellipsis',
           color: 'text.primary',
+          '&::placeholder': {
+            color: 'text.secondary',
+          },
+          '&:focus::placeholder': {
+            color: 'transparent',
+          },
         }}
       />
       {isMaxCharactersVisible && (
