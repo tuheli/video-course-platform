@@ -36,7 +36,7 @@ export const WhatAreTheCoursePrerequisites = () => {
         <EditPrerequisitesItem
           key={prerequisite.id}
           prerequisite={prerequisite}
-          courseDraftId={courseDraftId}
+          courseDraft={courseDraft}
         />
       ))}
       <AddPrerequisiteButton />

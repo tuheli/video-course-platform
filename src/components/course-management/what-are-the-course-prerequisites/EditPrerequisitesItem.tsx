@@ -1,20 +1,24 @@
+import { Stack } from '@mui/material';
 import { useAppDispatch } from '../../../app/hooks';
 import {
+  CourseDraft,
   TextWithId,
   updatedPrerequisite,
 } from '../../../features/courseDraftsSlice';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { DeletePrerequisiteButton } from './DeletePrerequisiteButton';
 
 interface EditPrerequisitesItemProps {
-  courseDraftId: string;
+  courseDraft: CourseDraft;
   prerequisite: TextWithId;
 }
 
 export const EditPrerequisitesItem = ({
-  courseDraftId,
+  courseDraft,
   prerequisite,
 }: EditPrerequisitesItemProps) => {
+  const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
   const dispatch = useAppDispatch();
 
   const placeholder =
@@ -25,18 +29,42 @@ export const EditPrerequisitesItem = ({
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
       updatedPrerequisite({
-        courseDraftId,
+        courseDraftId: courseDraft.id,
         prerequisiteId: prerequisite.id,
         text: event.target.value,
       })
     );
   };
 
+  const onMouseEnter = () => {
+    setIsDeleteIconVisble(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsDeleteIconVisble(false);
+  };
+
   return (
-    <InputFieldWithMaxCharacters
-      onChange={onChange}
-      placeholder={placeholder}
-      value={prerequisite.text}
-    />
+    <Stack
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      sx={{
+        flexDirection: 'row',
+        width: 'fit-content',
+      }}
+    >
+      <InputFieldWithMaxCharacters
+        onChange={onChange}
+        maxInputLength={160}
+        placeholder={placeholder}
+        value={prerequisite.text}
+      />
+      {isDeleteIconVisible && (
+        <DeletePrerequisiteButton
+          courseDraft={courseDraft}
+          prerequisiteId={prerequisite.id}
+        />
+      )}
+    </Stack>
   );
 };
