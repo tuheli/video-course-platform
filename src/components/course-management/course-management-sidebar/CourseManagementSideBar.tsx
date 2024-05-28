@@ -2,10 +2,20 @@ import { Stack } from '@mui/material';
 import { Heading } from './Heading';
 import { IntendedLearnersItem } from './sidebar-items/IntendedLearnersItem';
 import { CourseStrucureItem } from './sidebar-items/CourseStructureItem';
+import { isIntendedLearnersSectionReadyForSubmission } from '../../../features/courseDraftsSlice';
+import { useCourseDraft } from '../../../hooks/useCourseDraft';
 
 export const basePath = '/instructor/course';
 
 export const CourseManagementSideBar = () => {
+  const courseContent = useCourseDraft()?.courseContent;
+
+  const isIntendedLearnersReadyForSubmission = courseContent
+    ? isIntendedLearnersSectionReadyForSubmission(
+        courseContent.intendedLearnersSection
+      )
+    : false;
+
   return (
     <Stack
       sx={{
@@ -33,7 +43,9 @@ export const CourseManagementSideBar = () => {
               gap: 0,
             }}
           >
-            <IntendedLearnersItem />
+            <IntendedLearnersItem
+              isReadyForSubmission={isIntendedLearnersReadyForSubmission}
+            />
             <CourseStrucureItem />
           </Stack>
         </Stack>
