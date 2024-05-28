@@ -39,7 +39,7 @@ export const WhoIsThisCourseFor = () => {
       {intendedLearners.map((item) => (
         <EditIntendedLearnersItem
           key={item.id}
-          courseDraftId={courseDraftId}
+          courseDraft={courseDraft}
           intendedLearners={item}
         />
       ))}

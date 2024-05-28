@@ -1,20 +1,24 @@
+import { Stack } from '@mui/material';
 import { useAppDispatch } from '../../../app/hooks';
 import {
+  CourseDraft,
   TextWithId,
   updatedIntendedLearners,
 } from '../../../features/courseDraftsSlice';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { DeleteIntendedLearnersButton } from './DeleteIndendedLearersButton';
 
 interface EditIntendedLearnersItemProps {
-  courseDraftId: string;
+  courseDraft: CourseDraft;
   intendedLearners: TextWithId;
 }
 
 export const EditIntendedLearnersItem = ({
-  courseDraftId,
+  courseDraft,
   intendedLearners,
 }: EditIntendedLearnersItemProps) => {
+  const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
   const dispatch = useAppDispatch();
 
   const placeholder =
@@ -25,18 +29,42 @@ export const EditIntendedLearnersItem = ({
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
       updatedIntendedLearners({
-        courseDraftId,
+        courseDraftId: courseDraft.id,
         intendedLearnersId: intendedLearners.id,
         text: event.target.value,
       })
     );
   };
 
+  const onMouseEnter = () => {
+    setIsDeleteIconVisble(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsDeleteIconVisble(false);
+  };
+
   return (
-    <InputFieldWithMaxCharacters
-      onChange={onChange}
-      placeholder={placeholder}
-      value={intendedLearners.text}
-    />
+    <Stack
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      sx={{
+        flexDirection: 'row',
+        width: 'fit-content',
+      }}
+    >
+      <InputFieldWithMaxCharacters
+        onChange={onChange}
+        maxInputLength={160}
+        placeholder={placeholder}
+        value={intendedLearners.text}
+      />
+      {isDeleteIconVisible && (
+        <DeleteIntendedLearnersButton
+          courseDraft={courseDraft}
+          intendedLearnersId={intendedLearners.id}
+        />
+      )}
+    </Stack>
   );
 };
