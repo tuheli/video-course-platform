@@ -27,8 +27,8 @@
     "data/menuItemsData.ts",
     "data/languageData.ts",
     "data/trustedCompaniesData.ts",
-    "data/createAnEngagingCourseData.tsx",
-    "data/popularInstructorResourcesData.tsx"
+    "data/createAnEngagingCourseData.ts",
+    "data/popularInstructorResourcesData.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
