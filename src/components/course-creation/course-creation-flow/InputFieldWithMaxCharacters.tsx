@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, SxProps, Typography } from '@mui/material';
 import { StyledInput } from '../../sign-up/StyledTextInput';
 import { ChangeEvent } from 'react';
 
@@ -6,6 +6,7 @@ interface InputFieldWithMaxCharactersProps {
   value: string;
   placeholder: string;
   maxInputLength?: number;
+  sx?: SxProps;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -13,6 +14,7 @@ export const InputFieldWithMaxCharacters = ({
   value,
   placeholder,
   maxInputLength,
+  sx,
   onChange,
 }: InputFieldWithMaxCharactersProps) => {
   const isMaxCharactersVisible = maxInputLength !== undefined;
@@ -27,6 +29,7 @@ export const InputFieldWithMaxCharacters = ({
         height: 54,
         pl: 2,
         pr: isMaxCharactersVisible ? 8 : 2,
+        ...sx,
       }}
     >
       <StyledInput
