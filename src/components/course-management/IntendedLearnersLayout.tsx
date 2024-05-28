@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { LightColoredRouterLink } from './LightColoredRouterLink';
 import { WhatWillStudentsLearnInYourCourse } from './what-will-students-learn-in-your-course/WhatWillStudentsLearnInYourCourse';
-import { CourseManagementSideBar } from './CourseManagementSideBar';
+import { CourseManagementSideBar } from './course-management-sidebar/CourseManagementSideBar';
 import { WhatAreTheCoursePrerequisites } from './what-are-the-course-prerequisites/WhatAreTheCoursePrerequisites';
 import { WhoIsThisCourseFor } from './who-is-this-course-for/WhoIsThisCourseFor';
 
