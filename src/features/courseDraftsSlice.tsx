@@ -17,11 +17,16 @@ export interface CourseDraft {
   courseContent: CourseContent;
 }
 
+export interface TextWithId {
+  id: string;
+  text: string;
+}
+
 interface CourseContent {
   // NOTE: Remember to update getCourseDraftProgressValue when adding more properties
-  learningObjectives: string[];
-  prerequisites: string[];
-  intendedLearners: string[];
+  learningObjectives: TextWithId[];
+  prerequisites: TextWithId[];
+  intendedLearners: TextWithId[];
   videoContentLengthSeconds: number;
 }
 
@@ -51,6 +56,27 @@ export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
   return progressValue;
 };
 
+const getTextWithIdArray = (length: number): TextWithId[] => {
+  return Array.from({ length }, (_, k) => {
+    return {
+      id: `${k}`,
+      text: '',
+    };
+  });
+};
+
+const getInitialLearningObjectives = () => {
+  return getTextWithIdArray(4);
+};
+
+const getInitialPrerequisites = () => {
+  return getTextWithIdArray(1);
+};
+
+const getInitialIntendedLearners = () => {
+  return getTextWithIdArray(1);
+};
+
 const initialState: CourseDraft[] = [
   {
     id: '1',
@@ -63,22 +89,62 @@ const initialState: CourseDraft[] = [
     isSubmissionProcessCompleted: false,
     courseContent: {
       learningObjectives: [
-        'Student understands fbx file format and its use in game development',
-        'Student understands why rigs are used, what they are and what they do',
-        'Student understands real-time animation functionalities in Unity and Unreal Engine',
-        'Student is able to utilize real-time animation in Unity and Unreal Engine',
-        'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
-        'Student understands the importance of non-destructive workflows in 3D animation',
-        'Student is able to use and customize constraints applied to animation rigs',
-        'Student is able to create a modular rig for any given 3D model',
-        'Student understands export and import process of fbx files for Unity and Unreal Engine',
+        {
+          id: '1',
+          text: 'Student understands fbx file format and its use in game development',
+        },
+        {
+          id: '2',
+          text: 'Student understands why rigs are used, what they are and what they do',
+        },
+        {
+          id: '3',
+          text: 'Student understands real-time animation functionalities in Unity and Unreal Engine',
+        },
+        {
+          id: '4',
+          text: 'Student is able to utilize real-time animation in Unity and Unreal Engine',
+        },
+        {
+          id: '5',
+          text: 'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
+        },
+        {
+          id: '6',
+          text: 'Student understands the importance of non-destructive workflows in 3D animation',
+        },
+
+        {
+          id: '7',
+          text: 'Student is able to use and customize constraints applied to animation rigs',
+        },
+        {
+          id: '8',
+          text: 'Student is able to create a modular rig for any given 3D model',
+        },
+        {
+          id: '9',
+          text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
+        },
       ],
-      prerequisites: [],
+      prerequisites: getInitialPrerequisites(),
       intendedLearners: [
-        'Game developers',
-        '3D artists',
-        'Animators',
-        'Programmers',
+        {
+          id: '1',
+          text: 'Game developers',
+        },
+        {
+          id: '2',
+          text: '3D artists',
+        },
+        {
+          id: '3',
+          text: 'Animators',
+        },
+        {
+          id: '4',
+          text: 'Programmers',
+        },
       ],
       videoContentLengthSeconds: 158,
     },
@@ -93,9 +159,18 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: [],
-      prerequisites: [],
-      intendedLearners: ['Small business owners', 'Entrepreneurs'],
+      learningObjectives: getInitialLearningObjectives(),
+      prerequisites: getInitialPrerequisites(),
+      intendedLearners: [
+        {
+          id: '1',
+          text: 'Small business owners',
+        },
+        {
+          id: '2',
+          text: 'Entrepreneurs',
+        },
+      ],
       videoContentLengthSeconds: 0,
     },
   },
@@ -109,9 +184,9 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: [],
-      prerequisites: [],
-      intendedLearners: [],
+      learningObjectives: getInitialLearningObjectives(),
+      prerequisites: getInitialPrerequisites(),
+      intendedLearners: getInitialIntendedLearners(),
       videoContentLengthSeconds: 0,
     },
   },
@@ -126,9 +201,9 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      learningObjectives: [],
-      prerequisites: [],
-      intendedLearners: ['Small business owners', 'Entrepreneurs'],
+      learningObjectives: getInitialLearningObjectives(),
+      prerequisites: getInitialPrerequisites(),
+      intendedLearners: getInitialIntendedLearners(),
       videoContentLengthSeconds: 0,
     },
   },
@@ -146,16 +221,129 @@ const slice = createSlice({
         isPublic: true,
         isSubmissionProcessCompleted: false,
         courseContent: {
-          intendedLearners: [],
-          learningObjectives: [],
-          prerequisites: [],
+          intendedLearners: getInitialIntendedLearners(),
+          learningObjectives: getInitialLearningObjectives(),
+          prerequisites: getInitialPrerequisites(),
           videoContentLengthSeconds: 0,
         },
       };
       state.push(newCourseDraft);
     },
+    updatedLearningObjective: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        learningObjectiveId: string;
+        text: string;
+      }>
+    ) => {
+      const learningObjective = state
+        .find(({ id }) => id === action.payload.courseDraftId)
+        ?.courseContent.learningObjectives.find(
+          ({ id }) => id === action.payload.learningObjectiveId
+        );
+
+      if (!learningObjective) return;
+
+      learningObjective.text = action.payload.text;
+    },
+    addedLearningObjective: (
+      state,
+      action: PayloadAction<{ courseDraftId: string }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const newObjectiveEntry = {
+        id: crypto.randomUUID(),
+        text: '',
+      };
+
+      courseDraft.courseContent.learningObjectives.push(newObjectiveEntry);
+    },
+    updatedPrerequisite: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        prerequisiteId: string;
+        text: string;
+      }>
+    ) => {
+      const prerequisite = state
+        .find(({ id }) => id === action.payload.courseDraftId)
+        ?.courseContent.prerequisites.find(
+          ({ id }) => id === action.payload.prerequisiteId
+        );
+
+      if (!prerequisite) return;
+
+      prerequisite.text = action.payload.text;
+    },
+    addedPrerequisite: (
+      state,
+      action: PayloadAction<{ courseDraftId: string }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const newPrerequisiteEntry = {
+        id: crypto.randomUUID(),
+        text: '',
+      };
+
+      courseDraft.courseContent.prerequisites.push(newPrerequisiteEntry);
+    },
+    updatedIntendedLearners: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        intendedLearnersId: string;
+        text: string;
+      }>
+    ) => {
+      const intendedLearnersElement = state
+        .find(({ id }) => id === action.payload.courseDraftId)
+        ?.courseContent.intendedLearners.find(
+          ({ id }) => id === action.payload.intendedLearnersId
+        );
+
+      if (!intendedLearnersElement) return;
+
+      intendedLearnersElement.text = action.payload.text;
+    },
+    addedIntendedLearners: (
+      state,
+      action: PayloadAction<{ courseDraftId: string }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const newIntendedLearnersEntry = {
+        id: crypto.randomUUID(),
+        text: '',
+      };
+
+      courseDraft.courseContent.intendedLearners.push(newIntendedLearnersEntry);
+    },
   },
 });
 
-export const { createdCourseDraft } = slice.actions;
+export const {
+  createdCourseDraft,
+  updatedLearningObjective,
+  addedLearningObjective,
+  updatedPrerequisite,
+  addedPrerequisite,
+  updatedIntendedLearners,
+  addedIntendedLearners,
+} = slice.actions;
 export default slice.reducer;
