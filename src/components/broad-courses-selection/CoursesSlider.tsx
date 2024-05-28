@@ -33,6 +33,7 @@ export const CoursesSlider = forwardRef<
 >(({ topic, isSliderInfinite }, ref) => {
   const slickRef = useRef<Slider>(null);
 
+  // NOTE: Concatting arrays so there is enough mock data to test slider
   const courseItems = topic?.courses
     .concat(topic.courses)
     .concat(topic.courses)
