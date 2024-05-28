@@ -38,7 +38,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       {learningObjectives.map((learningObjective) => (
         <EditLearningObjectiveItem
           key={learningObjective.id}
-          courseDraftId={courseDraftId}
+          courseDraft={courseDraft}
           learningObjective={learningObjective}
         />
       ))}
