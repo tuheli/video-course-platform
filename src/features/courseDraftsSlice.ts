@@ -164,6 +164,27 @@ const getInitialIntendedLearners = () => {
   return intendedLearners;
 };
 
+export const isAbleToDeleteLearningObjective = (courseDraft: CourseDraft) => {
+  return (
+    courseDraft.courseContent.intendedLearnersSection.learningObjectives
+      .length > minLearningObjectivesCount
+  );
+};
+
+export const isAbleToDeletePrerequisite = (courseDraft: CourseDraft) => {
+  return (
+    courseDraft.courseContent.intendedLearnersSection.prerequisites.length >
+    minPrerequisitesCount
+  );
+};
+
+export const isAbleToDeleteIntendedLearners = (courseDraft: CourseDraft) => {
+  return (
+    courseDraft.courseContent.intendedLearnersSection.intendedLearners.length >
+    minIntendedLearnersCount
+  );
+};
+
 const initialState: CourseDraft[] = [
   {
     id: '1',
@@ -351,6 +372,29 @@ const slice = createSlice({
         newObjectiveEntry
       );
     },
+    deletedLearningObjective: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        learningObjectiveId: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const idToBeDeleted = action.payload.learningObjectiveId;
+
+      const newLearningObjectives =
+        courseDraft.courseContent.intendedLearnersSection.learningObjectives.filter(
+          ({ id }) => id !== idToBeDeleted
+        );
+
+      courseDraft.courseContent.intendedLearnersSection.learningObjectives =
+        newLearningObjectives;
+    },
     updatedPrerequisite: (
       state,
       action: PayloadAction<{
@@ -387,6 +431,29 @@ const slice = createSlice({
       courseDraft.courseContent.intendedLearnersSection.prerequisites.push(
         newPrerequisiteEntry
       );
+    },
+    deletedPrerequisite: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        prerequisiteId: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const idToBeDeleted = action.payload.prerequisiteId;
+
+      const newPrerequisites =
+        courseDraft.courseContent.intendedLearnersSection.prerequisites.filter(
+          ({ id }) => id !== idToBeDeleted
+        );
+
+      courseDraft.courseContent.intendedLearnersSection.prerequisites =
+        newPrerequisites;
     },
     updatedIntendedLearners: (
       state,
@@ -425,6 +492,29 @@ const slice = createSlice({
         newIntendedLearnersEntry
       );
     },
+    deletedIntendedLearners: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        intendedLearnersId: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const idToBeDeleted = action.payload.intendedLearnersId;
+
+      const newIntendedLearners =
+        courseDraft.courseContent.intendedLearnersSection.intendedLearners.filter(
+          ({ id }) => id !== idToBeDeleted
+        );
+
+      courseDraft.courseContent.intendedLearnersSection.intendedLearners =
+        newIntendedLearners;
+    },
   },
 });
 
@@ -432,9 +522,12 @@ export const {
   createdCourseDraft,
   updatedLearningObjective,
   addedLearningObjective,
+  deletedLearningObjective,
   updatedPrerequisite,
   addedPrerequisite,
+  deletedPrerequisite,
   updatedIntendedLearners,
   addedIntendedLearners,
+  deletedIntendedLearners,
 } = slice.actions;
 export default slice.reducer;
