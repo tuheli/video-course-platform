@@ -30,7 +30,7 @@ export const SidebarItem = ({
     }
 
     setIsActiveBarVisible(false);
-  }, [location]);
+  }, [location, locationEndsWith]);
 
   return (
     <StyledRouterLink
