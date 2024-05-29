@@ -12,7 +12,9 @@ export const CourseManagementSideBar = () => {
 
   const isIntendedLearnersReadyForSubmission = courseContent
     ? isIntendedLearnersSectionReadyForSubmission(
-        courseContent.intendedLearnersSection
+        courseContent.learningObjectives.items,
+        courseContent.prerequisites.items,
+        courseContent.intendedLearners.items
       )
     : false;
 

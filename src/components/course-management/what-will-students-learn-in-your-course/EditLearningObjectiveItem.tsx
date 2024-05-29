@@ -3,7 +3,7 @@ import { useAppDispatch } from '../../../app/hooks';
 import {
   CourseDraft,
   TextWithId,
-  updatedLearningObjective,
+  updatedText,
 } from '../../../features/courseDraftsSlice';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { ChangeEvent, useState } from 'react';
@@ -35,10 +35,11 @@ export const EditLearningObjectiveItem = ({
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
-      updatedLearningObjective({
+      updatedText({
         courseDraftId: courseDraft.id,
-        learningObjectiveId: learningObjective.id,
-        text: event.target.value,
+        itemId: learningObjective.id,
+        newTextValue: event.target.value,
+        type: 'learningObjectives',
       })
     );
   };

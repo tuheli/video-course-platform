@@ -7,8 +7,7 @@ import { useCourseDraft } from '../../../hooks/useCourseDraft';
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();
 
-  const intendedLearners =
-    courseDraft?.courseContent.intendedLearnersSection.intendedLearners;
+  const intendedLearners = courseDraft?.courseContent.intendedLearners.items;
 
   const courseDraftId = courseDraft?.id;
 

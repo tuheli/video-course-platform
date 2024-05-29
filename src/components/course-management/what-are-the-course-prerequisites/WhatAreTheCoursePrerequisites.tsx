@@ -6,8 +6,7 @@ import { useCourseDraft } from '../../../hooks/useCourseDraft';
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
 
-  const prerequisites =
-    courseDraft?.courseContent.intendedLearnersSection.prerequisites;
+  const prerequisites = courseDraft?.courseContent.prerequisites.items;
 
   const courseDraftId = courseDraft?.id;
 

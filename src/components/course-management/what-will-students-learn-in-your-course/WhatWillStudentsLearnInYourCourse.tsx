@@ -8,7 +8,7 @@ import { Draggable, IDraggable } from '../../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import {
   TextWithId,
-  reorderedLearningObjectives,
+  reorderedItems,
 } from '../../../features/courseDraftsSlice';
 import { useAppDispatch } from '../../../app/hooks';
 
@@ -20,7 +20,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
     if (!courseDraft) return;
 
     const learningObjectives =
-      courseDraft.courseContent.intendedLearnersSection.learningObjectives;
+      courseDraft.courseContent.learningObjectives.items;
 
     const stateWithYPositions = learningObjectives.map((learningObjective) => {
       // Find inside map is slow in theory but the item counts are tiny
@@ -64,14 +64,23 @@ export const WhatWillStudentsLearnInYourCourse = () => {
     );
 
     dispatch(
-      reorderedLearningObjectives({ courseDraftId: courseDraft.id, newState })
+      reorderedItems({
+        courseDraftId: courseDraft.id,
+        newState,
+        type: 'learningObjectives',
+      })
     );
   };
 
   if (!courseDraft) return null;
 
-  const learningObjectives =
-    courseDraft.courseContent.intendedLearnersSection.learningObjectives;
+  const learningObjectivesCopy = [
+    ...courseDraft.courseContent.learningObjectives.items,
+  ];
+
+  const learningObjectives = learningObjectivesCopy.sort(
+    (a, b) => a.orderIndex - b.orderIndex
+  );
 
   return (
     <Stack
@@ -96,14 +105,20 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       </Typography>
       <DragAndDropContext.Provider value={{ changeOrder }}>
         <DroppableArea>
-          {learningObjectives.map((learningObjective) => (
-            <Draggable id={learningObjective.id} key={learningObjective.id}>
-              <EditLearningObjectiveItem
-                courseDraft={courseDraft}
-                learningObjective={learningObjective}
-              />
-            </Draggable>
-          ))}
+          <Stack
+            sx={{
+              gap: 2,
+            }}
+          >
+            {learningObjectives.map((learningObjective) => (
+              <Draggable id={learningObjective.id} key={learningObjective.id}>
+                <EditLearningObjectiveItem
+                  courseDraft={courseDraft}
+                  learningObjective={learningObjective}
+                />
+              </Draggable>
+            ))}
+          </Stack>
         </DroppableArea>
       </DragAndDropContext.Provider>
       <AddLearningObjectiveButton />

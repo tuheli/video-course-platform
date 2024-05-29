@@ -1,7 +1,7 @@
 import { useAppDispatch } from '../../../app/hooks';
 import {
   CourseDraft,
-  deletedPrerequisite,
+  deletedTextItem,
   isAbleToDeletePrerequisite,
 } from '../../../features/courseDraftsSlice';
 import { DeleteButton } from '../DeleteButton';
@@ -23,9 +23,10 @@ export const DeletePrerequisiteButton = ({
     if (!isClickingAllowed) return;
 
     dispatch(
-      deletedPrerequisite({
+      deletedTextItem({
         courseDraftId: courseDraft.id,
-        prerequisiteId,
+        textItemId: prerequisiteId,
+        type: 'prerequisites',
       })
     );
   };

@@ -1,7 +1,7 @@
 import { useAppDispatch } from '../../../app/hooks';
 import {
   CourseDraft,
-  deletedLearningObjective,
+  deletedTextItem,
   isAbleToDeleteLearningObjective,
 } from '../../../features/courseDraftsSlice';
 import { DeleteButton } from '../DeleteButton';
@@ -23,9 +23,10 @@ export const DeleteLearningObjectiveButton = ({
     if (!isClickingAllowed) return;
 
     dispatch(
-      deletedLearningObjective({
+      deletedTextItem({
         courseDraftId: courseDraft.id,
-        learningObjectiveId,
+        textItemId: learningObjectiveId,
+        type: 'learningObjectives',
       })
     );
   };

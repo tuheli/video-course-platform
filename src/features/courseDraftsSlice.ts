@@ -4,6 +4,17 @@ import {
   KnownCourseCategory,
   TimeAvailablePerWeek,
 } from './courseCreationSlice';
+import { getRandomInt } from '../../data/courseData';
+
+// NOTE: These types must
+// match the actual property names which
+// can be updated in course content.
+// The reducers select the correct properties
+// to be updated using these types.
+type UpdateableCourseContentProperty =
+  | 'learningObjectives'
+  | 'prerequisites'
+  | 'intendedLearners';
 
 interface Reorderable {
   orderIndex: number;
@@ -26,15 +37,17 @@ export interface TextWithId extends Reorderable {
   text: string;
 }
 
-interface IntendedLearnersSection {
-  learningObjectives: TextWithId[];
-  prerequisites: TextWithId[];
-  intendedLearners: TextWithId[];
+interface ReorderableTextArrayObject {
+  type: UpdateableCourseContentProperty;
+  items: TextWithId[];
 }
 
 interface CourseContent {
   // NOTE: Remember to update getCourseDraftProgressValue when adding more properties
-  intendedLearnersSection: IntendedLearnersSection;
+  learningObjectives: ReorderableTextArrayObject;
+  prerequisites: ReorderableTextArrayObject;
+  intendedLearners: ReorderableTextArrayObject;
+  // NOTE: Video content length is not currently checked
   videoContentLengthSeconds: number;
 }
 
@@ -105,36 +118,38 @@ const isIntendedLearnersReadyForSubmission = (
 };
 
 export const isIntendedLearnersSectionReadyForSubmission = (
-  intendedLearners: IntendedLearnersSection
+  learningObjectives: TextWithId[],
+  prerequisites: TextWithId[],
+  intendedLearners: TextWithId[]
 ) => {
   return (
-    isLearningObjectivesReadyForSubmission(
-      intendedLearners.learningObjectives
-    ) &&
-    isPrerequisitesReadyForSubmission(intendedLearners.prerequisites) &&
-    isIntendedLearnersReadyForSubmission(intendedLearners.intendedLearners)
+    isLearningObjectivesReadyForSubmission(learningObjectives) &&
+    isPrerequisitesReadyForSubmission(prerequisites) &&
+    isIntendedLearnersReadyForSubmission(intendedLearners)
   );
 };
 
 export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
   const { learningObjectives, prerequisites, intendedLearners } =
-    courseDraft.courseContent.intendedLearnersSection;
+    courseDraft.courseContent;
 
   const minProgressValue = 2; // Lets always show some progress for the slider to be visible
   const objectivesCount = 3;
   let completedObjectives = 0;
 
   completedObjectives += isLearningObjectivesReadyForSubmission(
-    learningObjectives
+    learningObjectives.items
   )
     ? 1
     : 0;
 
-  completedObjectives += isPrerequisitesReadyForSubmission(prerequisites)
+  completedObjectives += isPrerequisitesReadyForSubmission(prerequisites.items)
     ? 1
     : 0;
 
-  completedObjectives += isIntendedLearnersReadyForSubmission(intendedLearners)
+  completedObjectives += isIntendedLearnersReadyForSubmission(
+    intendedLearners.items
+  )
     ? 1
     : 0;
 
@@ -147,8 +162,6 @@ export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
   return progressValue;
 };
 
-// NOTE: Its ok to use as is in initializing development mock data
-// Otherwise used in wrapper functions to be more descriptive
 const getTextWithIdArray = (length: number): TextWithId[] => {
   return Array.from({ length }, (_, k) => {
     return {
@@ -159,33 +172,52 @@ const getTextWithIdArray = (length: number): TextWithId[] => {
   });
 };
 
-const getInitialIntendedLearners = () => {
-  const intendedLearners: IntendedLearnersSection = {
-    intendedLearners: getTextWithIdArray(minIntendedLearnersCount),
-    learningObjectives: getTextWithIdArray(minLearningObjectivesCount),
-    prerequisites: getTextWithIdArray(minPrerequisitesCount),
+const getReorderableTextArrayObject = (
+  itemCount: number,
+  type: UpdateableCourseContentProperty
+): ReorderableTextArrayObject => {
+  return {
+    type,
+    items: getTextWithIdArray(itemCount),
+  };
+};
+
+const getInitialCourseContent = () => {
+  const courseContent: CourseContent = {
+    intendedLearners: getReorderableTextArrayObject(
+      minIntendedLearnersCount,
+      'intendedLearners'
+    ),
+    learningObjectives: getReorderableTextArrayObject(
+      minLearningObjectivesCount,
+      'learningObjectives'
+    ),
+    prerequisites: getReorderableTextArrayObject(
+      minPrerequisitesCount,
+      'prerequisites'
+    ),
+    videoContentLengthSeconds: getRandomInt(0, 1000),
   };
 
-  return intendedLearners;
+  return courseContent;
 };
 
 export const isAbleToDeleteLearningObjective = (courseDraft: CourseDraft) => {
   return (
-    courseDraft.courseContent.intendedLearnersSection.learningObjectives
-      .length > minLearningObjectivesCount
+    courseDraft.courseContent.learningObjectives.items.length >
+    minLearningObjectivesCount
   );
 };
 
 export const isAbleToDeletePrerequisite = (courseDraft: CourseDraft) => {
   return (
-    courseDraft.courseContent.intendedLearnersSection.prerequisites.length >
-    minPrerequisitesCount
+    courseDraft.courseContent.prerequisites.items.length > minPrerequisitesCount
   );
 };
 
 export const isAbleToDeleteIntendedLearners = (courseDraft: CourseDraft) => {
   return (
-    courseDraft.courseContent.intendedLearnersSection.intendedLearners.length >
+    courseDraft.courseContent.intendedLearners.items.length >
     minIntendedLearnersCount
   );
 };
@@ -201,12 +233,13 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      intendedLearnersSection: {
-        learningObjectives: [
+      learningObjectives: {
+        type: 'learningObjectives',
+        items: [
           {
             id: '1',
             text: 'Student understands fbx file format and its use in game development',
-            orderIndex: -1,
+            orderIndex: 999, // Should be last
           },
           {
             id: '2',
@@ -247,11 +280,17 @@ const initialState: CourseDraft[] = [
           {
             id: '9',
             text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
-            orderIndex: -1,
+            orderIndex: -1234, // Should be first
           },
         ],
-        prerequisites: getTextWithIdArray(minPrerequisitesCount),
-        intendedLearners: [
+      },
+      prerequisites: {
+        type: 'prerequisites',
+        items: getTextWithIdArray(minPrerequisitesCount),
+      },
+      intendedLearners: {
+        type: 'intendedLearners',
+        items: [
           {
             id: '1',
             text: 'Game developers',
@@ -287,10 +326,17 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: {
-      intendedLearnersSection: {
-        learningObjectives: getTextWithIdArray(minLearningObjectivesCount),
-        prerequisites: getTextWithIdArray(minPrerequisitesCount),
-        intendedLearners: [
+      learningObjectives: {
+        type: 'learningObjectives',
+        items: getTextWithIdArray(minLearningObjectivesCount),
+      },
+      prerequisites: {
+        type: 'prerequisites',
+        items: getTextWithIdArray(minPrerequisitesCount),
+      },
+      intendedLearners: {
+        type: 'intendedLearners',
+        items: [
           {
             id: '1',
             text: 'Small business owners',
@@ -315,10 +361,7 @@ const initialState: CourseDraft[] = [
     creatorTimeAvailablePerWeek: TimeAvailablePerWeek.IHaveLotsOfFlexibility,
     isPublic: true,
     isSubmissionProcessCompleted: false,
-    courseContent: {
-      intendedLearnersSection: getInitialIntendedLearners(),
-      videoContentLengthSeconds: 0,
-    },
+    courseContent: getInitialCourseContent(),
   },
   {
     id: '4',
@@ -330,10 +373,7 @@ const initialState: CourseDraft[] = [
     creatorTimeAvailablePerWeek: TimeAvailablePerWeek.ImVeryBusy,
     isPublic: true,
     isSubmissionProcessCompleted: false,
-    courseContent: {
-      intendedLearnersSection: getInitialIntendedLearners(),
-      videoContentLengthSeconds: 0,
-    },
+    courseContent: getInitialCourseContent(),
   },
 ];
 
@@ -348,35 +388,38 @@ const slice = createSlice({
         id,
         isPublic: true,
         isSubmissionProcessCompleted: false,
-        courseContent: {
-          intendedLearnersSection: getInitialIntendedLearners(),
-          videoContentLengthSeconds: 0,
-        },
+        courseContent: getInitialCourseContent(),
       };
       state.push(newCourseDraft);
     },
-    updatedLearningObjective: (
+    updatedText: (
       state,
       action: PayloadAction<{
         courseDraftId: string;
-        learningObjectiveId: string;
-        text: string;
+        itemId: string;
+        newTextValue: string;
+        type: UpdateableCourseContentProperty;
       }>
     ) => {
-      const learningObjective = state
-        .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.intendedLearnersSection.learningObjectives.find(
-          ({ id }) => id === action.payload.learningObjectiveId
-        );
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
 
-      if (!learningObjective) return;
+      if (!courseDraft) return;
 
-      learningObjective.text = action.payload.text;
+      const { items } = courseDraft.courseContent[action.payload.type];
+
+      const textObject = items.find(({ id }) => id === action.payload.itemId);
+
+      if (!textObject) return;
+
+      textObject.text = action.payload.newTextValue;
     },
-    reorderedLearningObjectives: (
+    reorderedItems: (
       state,
       action: PayloadAction<{
         courseDraftId: string;
+        type: UpdateableCourseContentProperty;
         newState: TextWithId[];
       }>
     ) => {
@@ -386,34 +429,14 @@ const slice = createSlice({
 
       if (!courseDraft) return;
 
-      courseDraft.courseContent.intendedLearnersSection.learningObjectives =
+      courseDraft.courseContent[action.payload.type].items =
         action.payload.newState;
     },
-    addedLearningObjective: (
-      state,
-      action: PayloadAction<{ courseDraftId: string }>
-    ) => {
-      const courseDraft = state.find(
-        ({ id }) => id === action.payload.courseDraftId
-      );
-
-      if (!courseDraft) return;
-
-      const newObjectiveEntry = {
-        id: crypto.randomUUID(),
-        text: '',
-        orderIndex: -1,
-      };
-
-      courseDraft.courseContent.intendedLearnersSection.learningObjectives.push(
-        newObjectiveEntry
-      );
-    },
-    deletedLearningObjective: (
+    addedTextItem: (
       state,
       action: PayloadAction<{
         courseDraftId: string;
-        learningObjectiveId: string;
+        type: UpdateableCourseContentProperty;
       }>
     ) => {
       const courseDraft = state.find(
@@ -422,152 +445,48 @@ const slice = createSlice({
 
       if (!courseDraft) return;
 
-      const idToBeDeleted = action.payload.learningObjectiveId;
+      courseDraft.courseContent[action.payload.type].items.push({
+        id: crypto.randomUUID(),
+        text: '',
+        orderIndex:
+          Math.max(
+            ...courseDraft.courseContent[action.payload.type].items.map(
+              ({ orderIndex }) => orderIndex
+            )
+          ) + 1,
+      });
+    },
+    deletedTextItem: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        textItemId: string;
+        type: UpdateableCourseContentProperty;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
 
-      const newLearningObjectives =
-        courseDraft.courseContent.intendedLearnersSection.learningObjectives.filter(
-          ({ id }) => id !== idToBeDeleted
-        );
+      if (!courseDraft) return;
 
-      courseDraft.courseContent.intendedLearnersSection.learningObjectives =
+      const idToBeDeleted = action.payload.textItemId;
+
+      const newLearningObjectives = courseDraft.courseContent[
+        action.payload.type
+      ].items.filter(({ id }) => id !== idToBeDeleted);
+
+      courseDraft.courseContent[action.payload.type].items =
         newLearningObjectives;
-    },
-    updatedPrerequisite: (
-      state,
-      action: PayloadAction<{
-        courseDraftId: string;
-        prerequisiteId: string;
-        text: string;
-      }>
-    ) => {
-      const prerequisite = state
-        .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.intendedLearnersSection.prerequisites.find(
-          ({ id }) => id === action.payload.prerequisiteId
-        );
-
-      if (!prerequisite) return;
-
-      prerequisite.text = action.payload.text;
-    },
-    addedPrerequisite: (
-      state,
-      action: PayloadAction<{ courseDraftId: string }>
-    ) => {
-      const courseDraft = state.find(
-        ({ id }) => id === action.payload.courseDraftId
-      );
-
-      if (!courseDraft) return;
-
-      const newPrerequisiteEntry = {
-        id: crypto.randomUUID(),
-        text: '',
-        orderIndex: -1,
-      };
-
-      courseDraft.courseContent.intendedLearnersSection.prerequisites.push(
-        newPrerequisiteEntry
-      );
-    },
-    deletedPrerequisite: (
-      state,
-      action: PayloadAction<{
-        courseDraftId: string;
-        prerequisiteId: string;
-      }>
-    ) => {
-      const courseDraft = state.find(
-        ({ id }) => id === action.payload.courseDraftId
-      );
-
-      if (!courseDraft) return;
-
-      const idToBeDeleted = action.payload.prerequisiteId;
-
-      const newPrerequisites =
-        courseDraft.courseContent.intendedLearnersSection.prerequisites.filter(
-          ({ id }) => id !== idToBeDeleted
-        );
-
-      courseDraft.courseContent.intendedLearnersSection.prerequisites =
-        newPrerequisites;
-    },
-    updatedIntendedLearners: (
-      state,
-      action: PayloadAction<{
-        courseDraftId: string;
-        intendedLearnersId: string;
-        text: string;
-      }>
-    ) => {
-      const intendedLearnersElement = state
-        .find(({ id }) => id === action.payload.courseDraftId)
-        ?.courseContent.intendedLearnersSection.intendedLearners.find(
-          ({ id }) => id === action.payload.intendedLearnersId
-        );
-
-      if (!intendedLearnersElement) return;
-
-      intendedLearnersElement.text = action.payload.text;
-    },
-    addedIntendedLearners: (
-      state,
-      action: PayloadAction<{ courseDraftId: string }>
-    ) => {
-      const courseDraft = state.find(
-        ({ id }) => id === action.payload.courseDraftId
-      );
-
-      if (!courseDraft) return;
-
-      const newIntendedLearnersEntry = {
-        id: crypto.randomUUID(),
-        text: '',
-        orderIndex: -1,
-      };
-
-      courseDraft.courseContent.intendedLearnersSection.intendedLearners.push(
-        newIntendedLearnersEntry
-      );
-    },
-    deletedIntendedLearners: (
-      state,
-      action: PayloadAction<{
-        courseDraftId: string;
-        intendedLearnersId: string;
-      }>
-    ) => {
-      const courseDraft = state.find(
-        ({ id }) => id === action.payload.courseDraftId
-      );
-
-      if (!courseDraft) return;
-
-      const idToBeDeleted = action.payload.intendedLearnersId;
-
-      const newIntendedLearners =
-        courseDraft.courseContent.intendedLearnersSection.intendedLearners.filter(
-          ({ id }) => id !== idToBeDeleted
-        );
-
-      courseDraft.courseContent.intendedLearnersSection.intendedLearners =
-        newIntendedLearners;
     },
   },
 });
 
 export const {
   createdCourseDraft,
-  updatedLearningObjective,
-  addedLearningObjective,
-  deletedLearningObjective,
-  reorderedLearningObjectives,
-  updatedPrerequisite,
-  addedPrerequisite,
-  deletedPrerequisite,
-  updatedIntendedLearners,
-  addedIntendedLearners,
-  deletedIntendedLearners,
+  reorderedItems,
+  updatedText,
+  addedTextItem,
+  deletedTextItem,
 } = slice.actions;
 export default slice.reducer;

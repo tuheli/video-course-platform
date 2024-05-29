@@ -1,7 +1,7 @@
 import { useAppDispatch } from '../../../app/hooks';
 import { useParams } from 'react-router-dom';
-import { addedLearningObjective } from '../../../features/courseDraftsSlice';
 import { AddMoreButton } from '../AddMoreButton';
+import { addedTextItem } from '../../../features/courseDraftsSlice';
 
 export const AddLearningObjectiveButton = () => {
   const dispatch = useAppDispatch();
@@ -10,7 +10,9 @@ export const AddLearningObjectiveButton = () => {
   const onClick = () => {
     if (!courseId) return;
 
-    dispatch(addedLearningObjective({ courseDraftId: courseId }));
+    dispatch(
+      addedTextItem({ courseDraftId: courseId, type: 'learningObjectives' })
+    );
   };
 
   return <>{courseId && <AddMoreButton onClick={onClick} />}</>;
