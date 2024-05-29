@@ -10,6 +10,7 @@ import { ChangeEvent, useState } from 'react';
 import { DeleteLearningObjectiveButton } from './DeleteLearningObjectiveButton';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
+import { BorderAnimationWrapper } from '../../border-animation-wrapper/BorderAnimationWrapper';
 
 interface EditLearningObjectiveItemProps {
   courseDraft: CourseDraft;
@@ -22,7 +23,7 @@ export const EditLearningObjectiveItem = ({
 }: EditLearningObjectiveItemProps) => {
   const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
   const [isDraghandleVisible, setIsDraghandleVisible] = useState(false);
-  const { isBeingDragged } = useDraggableContext();
+  const { isBeingDragged, wasDroppedRecently } = useDraggableContext();
 
   const forceShowExtensions = isBeingDragged;
 
@@ -63,12 +64,24 @@ export const EditLearningObjectiveItem = ({
         width: 'fit-content',
       }}
     >
-      <InputFieldWithMaxCharacters
-        onChange={onChange}
-        maxInputLength={160}
-        placeholder={placeholder}
-        value={learningObjective.text}
-      />
+      {wasDroppedRecently && (
+        <BorderAnimationWrapper>
+          <InputFieldWithMaxCharacters
+            onChange={onChange}
+            maxInputLength={160}
+            placeholder={placeholder}
+            value={learningObjective.text}
+          />
+        </BorderAnimationWrapper>
+      )}
+      {!wasDroppedRecently && (
+        <InputFieldWithMaxCharacters
+          onChange={onChange}
+          maxInputLength={160}
+          placeholder={placeholder}
+          value={learningObjective.text}
+        />
+      )}
       {(forceShowExtensions || isDeleteIconVisible) && (
         <DeleteLearningObjectiveButton
           courseDraft={courseDraft}
