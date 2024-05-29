@@ -5,6 +5,10 @@ import {
   TimeAvailablePerWeek,
 } from './courseCreationSlice';
 
+interface Reorderable {
+  orderIndex: number;
+}
+
 export interface CourseDraft {
   id: string;
   creatorEmail: string; // Replaces id now before database exists
@@ -17,7 +21,7 @@ export interface CourseDraft {
   courseContent: CourseContent;
 }
 
-export interface TextWithId {
+export interface TextWithId extends Reorderable {
   id: string;
   text: string;
 }
@@ -150,6 +154,7 @@ const getTextWithIdArray = (length: number): TextWithId[] => {
     return {
       id: `${k}`,
       text: '',
+      orderIndex: -1,
     };
   });
 };
@@ -201,39 +206,48 @@ const initialState: CourseDraft[] = [
           {
             id: '1',
             text: 'Student understands fbx file format and its use in game development',
+            orderIndex: -1,
           },
           {
             id: '2',
             text: 'Student understands why rigs are used, what they are and what they do',
+            orderIndex: -1,
           },
           {
             id: '3',
             text: 'Student understands real-time animation functionalities in Unity and Unreal Engine',
+            orderIndex: -1,
           },
           {
             id: '4',
             text: 'Student is able to utilize real-time animation in Unity and Unreal Engine',
+            orderIndex: -1,
           },
           {
             id: '5',
             text: 'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
+            orderIndex: -1,
           },
           {
             id: '6',
             text: 'Student understands the importance of non-destructive workflows in 3D animation',
+            orderIndex: -1,
           },
 
           {
             id: '7',
             text: 'Student is able to use and customize constraints applied to animation rigs',
+            orderIndex: -1,
           },
           {
             id: '8',
             text: 'Student is able to create a modular rig for any given 3D model',
+            orderIndex: -1,
           },
           {
             id: '9',
             text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
+            orderIndex: -1,
           },
         ],
         prerequisites: getTextWithIdArray(minPrerequisitesCount),
@@ -241,18 +255,22 @@ const initialState: CourseDraft[] = [
           {
             id: '1',
             text: 'Game developers',
+            orderIndex: -1,
           },
           {
             id: '2',
             text: '3D artists',
+            orderIndex: -1,
           },
           {
             id: '3',
             text: 'Animators',
+            orderIndex: -1,
           },
           {
             id: '4',
             text: 'Programmers',
+            orderIndex: -1,
           },
         ],
       },
@@ -276,10 +294,12 @@ const initialState: CourseDraft[] = [
           {
             id: '1',
             text: 'Small business owners',
+            orderIndex: -1,
           },
           {
             id: '2',
             text: 'Entrepreneurs',
+            orderIndex: -1,
           },
         ],
       },
@@ -353,6 +373,27 @@ const slice = createSlice({
 
       learningObjective.text = action.payload.text;
     },
+    reorderedLearningObjectives: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        newState: TextWithId[];
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      console.log(
+        'reorderedLearningObjectives action.payload.newState',
+        action.payload.newState
+      );
+
+      courseDraft.courseContent.intendedLearnersSection.learningObjectives =
+        action.payload.newState;
+    },
     addedLearningObjective: (
       state,
       action: PayloadAction<{ courseDraftId: string }>
@@ -366,6 +407,7 @@ const slice = createSlice({
       const newObjectiveEntry = {
         id: crypto.randomUUID(),
         text: '',
+        orderIndex: -1,
       };
 
       courseDraft.courseContent.intendedLearnersSection.learningObjectives.push(
@@ -426,6 +468,7 @@ const slice = createSlice({
       const newPrerequisiteEntry = {
         id: crypto.randomUUID(),
         text: '',
+        orderIndex: -1,
       };
 
       courseDraft.courseContent.intendedLearnersSection.prerequisites.push(
@@ -486,6 +529,7 @@ const slice = createSlice({
       const newIntendedLearnersEntry = {
         id: crypto.randomUUID(),
         text: '',
+        orderIndex: -1,
       };
 
       courseDraft.courseContent.intendedLearnersSection.intendedLearners.push(
@@ -523,6 +567,7 @@ export const {
   updatedLearningObjective,
   addedLearningObjective,
   deletedLearningObjective,
+  reorderedLearningObjectives,
   updatedPrerequisite,
   addedPrerequisite,
   deletedPrerequisite,
