@@ -1,7 +1,8 @@
-import { DragEvent, useState } from 'react';
+import { DragEvent, useEffect, useRef, useState } from 'react';
 import { DraggableDataTransfer } from './DroppableArea';
 import { getAbsolutePosition, getAbsoluteYCenterPosition } from './utils';
 import { DraggableContext } from '../../contexts/DraggableContext';
+import { wasDroppedDuration } from './common';
 
 interface ReorderableByYPosition {
   yPosition: number;
@@ -9,6 +10,7 @@ interface ReorderableByYPosition {
 
 export interface IDraggable extends ReorderableByYPosition {
   id: string;
+  wasDroppedRecently?: boolean;
 }
 
 interface DraggableProps {
@@ -17,22 +19,13 @@ interface DraggableProps {
 }
 
 export const Draggable = ({ id, children }: DraggableProps) => {
+  const [wasDroppedRecently, setWasDroppedRecently] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   const [isBeingDragged, setIsBeingDragged] = useState(false);
   const [dragStartMouseY, setDragStartMouseY] = useState(0);
+  const timerIdRef = useRef(0);
 
   const onDragStart = (event: DragEvent) => {
-    const createInvisibleGhostImage = () => {
-      const dragGhostElement = document.createElement('div');
-
-      dragGhostElement.id = 'drag-ghost-element';
-      dragGhostElement.style.position = 'absolute';
-      dragGhostElement.style.visibility = 'hidden';
-
-      document.body.appendChild(dragGhostElement);
-      event.dataTransfer.setDragImage(dragGhostElement, 0, 0);
-    };
-
     const createPlaceholderElement = () => {
       const targetAsHTMLElement = event.target as HTMLElement;
       const placeholderElement = targetAsHTMLElement.cloneNode(
@@ -41,7 +34,16 @@ export const Draggable = ({ id, children }: DraggableProps) => {
 
       placeholderElement.id = 'drag-placeholder-element';
       placeholderElement.style.position = 'absolute';
-      placeholderElement.style.opacity = '0.5';
+      placeholderElement.style.opacity = '0.2';
+
+      // Removes border animation if it exists
+      const animatedElements = placeholderElement.querySelectorAll(
+        '.border-animation-parent'
+      );
+
+      animatedElements.forEach((element) => {
+        element.className = '';
+      });
 
       const absolutePosition = getAbsolutePosition(targetAsHTMLElement);
 
@@ -74,7 +76,13 @@ export const Draggable = ({ id, children }: DraggableProps) => {
       targetAsHTMLElement.style.backgroundColor = 'white';
     };
 
-    createInvisibleGhostImage();
+    const clearWasDroppedRecently = () => {
+      clearTimeout(timerIdRef.current);
+      setWasDroppedRecently(false);
+    };
+
+    event.dataTransfer.setDragImage(new Image(), 0, 0);
+    clearWasDroppedRecently();
     createPlaceholderElement();
     setDataTransfer();
     setDraggableStyle();
@@ -83,12 +91,6 @@ export const Draggable = ({ id, children }: DraggableProps) => {
   };
 
   const onDragEnd = (event: DragEvent) => {
-    const destroyGhostElement = () => {
-      const dragGhostElement = document.getElementById('drag-ghost-element');
-      if (!dragGhostElement) return;
-      document.body.removeChild(dragGhostElement);
-    };
-
     const destroyPlaceholderElement = () => {
       const placeholderElement = document.getElementById(
         'drag-placeholder-element'
@@ -105,11 +107,11 @@ export const Draggable = ({ id, children }: DraggableProps) => {
       targetAsHTMLElement.style.backgroundColor = '';
     };
 
-    destroyGhostElement();
     destroyPlaceholderElement();
     removeDraggableStyle();
     setIsBeingDragged(false);
     setDragStartMouseY(0);
+    setWasDroppedRecently(true);
   };
 
   const onDrag = (event: DragEvent) => {
@@ -120,8 +122,24 @@ export const Draggable = ({ id, children }: DraggableProps) => {
     targetAsHTMLElement.style.top = `${-mouseYDelta}px`;
   };
 
+  useEffect(() => {
+    if (!wasDroppedRecently) return;
+
+    const timerId = setTimeout(() => {
+      setWasDroppedRecently(false);
+    }, wasDroppedDuration);
+
+    timerIdRef.current = timerId;
+
+    return () => {
+      clearTimeout(timerIdRef.current);
+    };
+  }, [wasDroppedRecently]);
+
   return (
-    <DraggableContext.Provider value={{ isBeingDragged, setIsDraggable }}>
+    <DraggableContext.Provider
+      value={{ isBeingDragged, wasDroppedRecently, setIsDraggable }}
+    >
       <div
         draggable={isDraggable}
         id={id}
