@@ -6,5 +6,5 @@ interface DragAndDropContextState {
 }
 
 export const DragAndDropContext = createContext<DragAndDropContextState>({
-  changeOrder: () => null,
+  changeOrder: () => {},
 });
