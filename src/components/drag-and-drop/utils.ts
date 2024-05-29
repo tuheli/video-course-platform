@@ -12,3 +12,11 @@ export const getDroppedItemCenterYPosition = (
   const centerY = dropEventMouseY + droppedItem.centerOffset;
   return centerY;
 };
+
+export const getAbsolutePosition = (element: HTMLElement) => {
+  const rect = element.getBoundingClientRect();
+  return {
+    y: rect.y + window.scrollY,
+    x: rect.x + window.scrollX,
+  };
+};
