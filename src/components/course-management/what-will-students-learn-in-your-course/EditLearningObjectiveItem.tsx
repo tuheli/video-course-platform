@@ -8,6 +8,8 @@ import {
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { ChangeEvent, useState } from 'react';
 import { DeleteLearningObjectiveButton } from './DeleteLearningObjectiveButton';
+import { Draghandle } from '../../drag-and-drop/Draghandle';
+import { useDraggableContext } from '../../../hooks/useDraggableContext';
 
 interface EditLearningObjectiveItemProps {
   courseDraft: CourseDraft;
@@ -19,6 +21,11 @@ export const EditLearningObjectiveItem = ({
   learningObjective,
 }: EditLearningObjectiveItemProps) => {
   const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
+  const [isDraghandleVisible, setIsDraghandleVisible] = useState(false);
+  const { isBeingDragged } = useDraggableContext();
+
+  const forceShowExtensions = isBeingDragged;
+
   const dispatch = useAppDispatch();
 
   const placeholder =
@@ -38,10 +45,12 @@ export const EditLearningObjectiveItem = ({
 
   const onMouseEnter = () => {
     setIsDeleteIconVisble(true);
+    setIsDraghandleVisible(true);
   };
 
   const onMouseLeave = () => {
     setIsDeleteIconVisble(false);
+    setIsDraghandleVisible(false);
   };
 
   return (
@@ -59,12 +68,13 @@ export const EditLearningObjectiveItem = ({
         placeholder={placeholder}
         value={learningObjective.text}
       />
-      {isDeleteIconVisible && (
+      {(forceShowExtensions || isDeleteIconVisible) && (
         <DeleteLearningObjectiveButton
           courseDraft={courseDraft}
           learningObjectiveId={learningObjective.id}
         />
       )}
+      {(forceShowExtensions || isDraghandleVisible) && <Draghandle />}
     </Stack>
   );
 };
