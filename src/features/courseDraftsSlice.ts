@@ -386,11 +386,6 @@ const slice = createSlice({
 
       if (!courseDraft) return;
 
-      console.log(
-        'reorderedLearningObjectives action.payload.newState',
-        action.payload.newState
-      );
-
       courseDraft.courseContent.intendedLearnersSection.learningObjectives =
         action.payload.newState;
     },
