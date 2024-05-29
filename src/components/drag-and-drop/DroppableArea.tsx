@@ -1,10 +1,10 @@
-import { ReactNode, useContext, useRef } from 'react';
-import { DraggableContext } from './DraggableContext';
+import { ReactNode, useRef } from 'react';
 import {
   getAbsoluteYCenterPosition,
   getDroppedItemCenterYPosition,
 } from './utils';
-import { IDraggable } from './draggableData';
+import { IDraggable } from './Draggable';
+import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
 
 export interface DraggableDataTransfer {
   id: string;
@@ -19,11 +19,9 @@ interface DroppableAreaProps {
 // NOTE: Inside the droppable area it is important to only render elements wrapped inside the draggable component
 
 export const DroppableArea = ({ children }: DroppableAreaProps) => {
-  const { changeOrder } = useContext(DraggableContext);
+  const { changeOrder } = useDragAndDropContext();
 
   const dropareaRef = useRef<HTMLDivElement>(null);
-
-  const size = '600px';
 
   const onDragEnter = (event: React.DragEvent) => {
     event.preventDefault();
@@ -47,13 +45,13 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
     const droppedItem: DraggableDataTransfer = JSON.parse(data);
 
     const draggales: IDraggable[] = [
-      ...dropareaRef.current.querySelectorAll('div'),
+      ...dropareaRef.current.querySelectorAll('div.draggable'),
     ].map((element) => {
       const wasDropped = element.id === droppedItem.id;
 
       const yPosition = wasDropped
         ? getDroppedItemCenterYPosition(droppedItem, event.pageY)
-        : getAbsoluteYCenterPosition(element);
+        : getAbsoluteYCenterPosition(element as HTMLElement);
 
       const draggable: IDraggable = {
         id: element.id,
@@ -73,12 +71,6 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
       onDragEnter={onDragEnter}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      style={{
-        backgroundColor: 'yellow',
-        width: size,
-        height: size,
-        padding: '10px',
-      }}
     >
       {children}
     </div>
