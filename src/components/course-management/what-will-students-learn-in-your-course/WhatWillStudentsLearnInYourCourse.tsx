@@ -6,26 +6,22 @@ import { useCourseDraft } from '../../../hooks/useCourseDraft';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable, IDraggable } from '../../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
-import { useEffect, useState } from 'react';
-import { TextWithId } from '../../../features/courseDraftsSlice';
+import {
+  TextWithId,
+  reorderedLearningObjectives,
+} from '../../../features/courseDraftsSlice';
+import { useAppDispatch } from '../../../app/hooks';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
-  const [learningObjectives, setLearningObjectives] = useState<TextWithId[]>(
-    []
-  );
-
   const courseDraft = useCourseDraft();
-
-  useEffect(() => {
-    const learningObjectives =
-      courseDraft?.courseContent.intendedLearnersSection.learningObjectives;
-
-    if (!learningObjectives) return;
-
-    setLearningObjectives(learningObjectives);
-  }, []);
+  const dispatch = useAppDispatch();
 
   const changeOrder = (draggables: IDraggable[]) => {
+    if (!courseDraft) return;
+
+    const learningObjectives =
+      courseDraft.courseContent.intendedLearnersSection.learningObjectives;
+
     const stateWithYPositions = learningObjectives.map((learningObjective) => {
       // Find inside map is slow in theory but the item counts are tiny
       const draggable = draggables.find(
@@ -57,21 +53,25 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       (a, b) => a.yPosition - b.yPosition
     );
 
-    const reorderedStateWithoutYPositions: TextWithId[] = stateReordered.map(
-      ({ id, text }) => {
+    const newState: TextWithId[] = stateReordered.map(
+      (learningObjective, index) => {
         return {
-          id,
-          text,
+          id: learningObjective.id,
+          text: learningObjective.text,
+          orderIndex: index,
         };
       }
     );
 
-    setLearningObjectives(reorderedStateWithoutYPositions);
+    dispatch(
+      reorderedLearningObjectives({ courseDraftId: courseDraft.id, newState })
+    );
   };
 
-  const courseDraftId = courseDraft?.id;
+  if (!courseDraft) return null;
 
-  if (!courseDraftId || !learningObjectives) return null;
+  const learningObjectives =
+    courseDraft.courseContent.intendedLearnersSection.learningObjectives;
 
   return (
     <Stack
