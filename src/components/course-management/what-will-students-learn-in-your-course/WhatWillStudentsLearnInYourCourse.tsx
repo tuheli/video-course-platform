@@ -103,7 +103,11 @@ export const WhatWillStudentsLearnInYourCourse = () => {
         </LightColoredRouterLink>{' '}
         that learners can expect to achieve after completing your course.
       </Typography>
-      <DragAndDropContext.Provider value={{ changeOrder }}>
+      <DragAndDropContext.Provider
+        value={{
+          changeOrder,
+        }}
+      >
         <DroppableArea>
           <Stack
             sx={{
