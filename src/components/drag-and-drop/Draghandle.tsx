@@ -19,7 +19,7 @@ export const Draghandle = () => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       style={{
-        cursor: 'move',
+        cursor: 'ns-resize',
       }}
     >
       <Box
