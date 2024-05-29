@@ -56,6 +56,7 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
       const draggable: IDraggable = {
         id: element.id,
         yPosition,
+        wasDroppedRecently: wasDropped,
       };
 
       return draggable;
