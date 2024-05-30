@@ -11,7 +11,7 @@ import { getRandomInt } from '../../data/courseData';
 // can be updated in course content.
 // The reducers select the correct properties
 // to be updated using these types.
-type UpdateableCourseContentProperty =
+export type UpdateableCourseContentProperty =
   | 'learningObjectives'
   | 'prerequisites'
   | 'intendedLearners';
