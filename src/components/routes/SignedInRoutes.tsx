@@ -4,7 +4,7 @@ import { NotFoundPage } from '../not-found-page/NotFoundPage';
 import { Redirect } from '../redirect/Redirect';
 import { InstructorCoursesPage } from '../instructor/InstructorCoursesPage';
 import { CourseCreationPage } from '../course-creation/CourseCreationPage';
-import { ManageCourseGoalsPage } from '../course-management/ManageCourseGoalsPage';
+import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseGoalsPage';
 
 // NOTE: I have not yet implemented and probably will not implement a customized landing / homepage for a signed in user to stay within a reasonable scope for this project.
 
