@@ -4,76 +4,59 @@ import { EditLearningObjectiveItem } from './EditLearningObjectiveItem';
 import { AddLearningObjectiveButton } from './AddLearningObjectiveButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
-import { Draggable, IDraggable } from '../../drag-and-drop/Draggable';
+import { Draggable } from '../../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import {
   TextWithId,
   reorderedItems,
 } from '../../../features/courseDraftsSlice';
 import { useAppDispatch } from '../../../app/hooks';
+import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
   const dispatch = useAppDispatch();
 
-  const changeOrder = (draggables: IDraggable[]) => {
-    if (!courseDraft) return;
+  const changeOrder = (newOrder: ItemWithOrderIndex[]) => {
+    try {
+      if (!courseDraft) return;
 
-    const learningObjectives =
-      courseDraft.courseContent.learningObjectives.items;
+      const learningObjectives =
+        courseDraft.courseContent.learningObjectives.items;
 
-    const stateWithYPositions = learningObjectives.map((learningObjective) => {
-      // Find inside map is slow in theory but the item counts are tiny
-      const draggable = draggables.find(
-        (draggable) => draggable.id === learningObjective.id
-      );
+      const newState: TextWithId[] = newOrder.map((item) => {
+        const learningObjective = learningObjectives.find(
+          (objective) => objective.id === item.id
+        );
 
-      if (!draggable) {
-        // This would essentially break the ordering
-        // by setting the item on top but it would
-        // be a bug to not have the draggable
-        // found. Also checking if the id mapping exists
-        // from draggables to learning objectives
-        // would not help because if a mapping does not exist
-        // reordering just could not be done correctly and
-        // an early return would cause nothing to happen
+        // This would most likely mean the mapping is
+        // broken in giveItemsOrderIndicies function
+        // and we can't reorder the items here correctly
+        if (!learningObjective) {
+          throw new Error();
+        }
+
         return {
           ...learningObjective,
-          yPosition: 0,
+          orderIndex: item.orderIndex,
         };
-      }
+      });
 
-      return {
-        ...learningObjective,
-        yPosition: draggable.yPosition,
-      };
-    });
-
-    const stateReordered = stateWithYPositions.sort(
-      (a, b) => a.yPosition - b.yPosition
-    );
-
-    const newState: TextWithId[] = stateReordered.map(
-      (learningObjective, index) => {
-        return {
-          id: learningObjective.id,
-          text: learningObjective.text,
-          orderIndex: index,
-        };
-      }
-    );
-
-    dispatch(
-      reorderedItems({
-        courseDraftId: courseDraft.id,
-        newState,
-        type: 'learningObjectives',
-      })
-    );
+      dispatch(
+        reorderedItems({
+          courseDraftId: courseDraft.id,
+          newState,
+          type: 'learningObjectives',
+        })
+      );
+    } catch (error) {
+      return;
+    }
   };
 
   if (!courseDraft) return null;
 
+  // Sort the learning objectives by their order index
   const learningObjectivesCopy = [
     ...courseDraft.courseContent.learningObjectives.items,
   ];
