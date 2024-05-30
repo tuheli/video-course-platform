@@ -85,9 +85,14 @@ export const isOrderChanged = (
   return oldOrder.some((oldItem, index) => oldItem.id !== newOrder[index].id);
 };
 
-const sortByYPosition = (a: { yPosition: number }, b: { yPosition: number }) =>
-  a.yPosition - b.yPosition;
+export function getSortedCopy<T extends { orderIndex: number }>(array: T[]) {
+  const copy = [...array];
+  return copy.sort((a, b) => a.orderIndex - b.orderIndex);
+}
 
-export const sortItemsByYPosition = (items: Array<{ yPosition: number }>) => {
-  items.sort(sortByYPosition);
-};
+export function sortByYPositionCopy<T extends { yPosition: number }>(
+  array: T[]
+) {
+  const copy = [...array];
+  return copy.sort((a, b) => a.yPosition - b.yPosition);
+}
