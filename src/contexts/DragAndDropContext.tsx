@@ -1,9 +1,8 @@
 import { createContext } from 'react';
-import { IDraggable } from '../components/drag-and-drop/Draggable';
 
 interface DragAndDropContextState {
   itemsState: Array<{ id: string }>;
-  changeOrder: (draggables: IDraggable[]) => void;
+  changeOrder: (newOrder: Array<{ id: string; orderIndex: number }>) => void;
 }
 
 export const DragAndDropContext = createContext<DragAndDropContextState>({
