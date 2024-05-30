@@ -1,8 +1,11 @@
 import { useAppSelector } from '../app/hooks';
+import { getSortedCopy } from '../components/drag-and-drop/utils';
 import { UpdateableCourseContentProperty } from '../features/courseDraftsSlice';
 import { useCourseDraft } from './useCourseDraft';
 
-export const useOrderedItems = (type: UpdateableCourseContentProperty) => {
+export const useOrderedCourseContent = (
+  type: UpdateableCourseContentProperty
+) => {
   const courseDraft = useCourseDraft();
   const allCourseDrafts = useAppSelector((state) => state.courseDrafts);
 
@@ -12,7 +15,6 @@ export const useOrderedItems = (type: UpdateableCourseContentProperty) => {
 
   if (!matchingCourseDraft) return [];
 
-  const itemsCopy = [...matchingCourseDraft.courseContent[type].items];
-
-  return itemsCopy.sort((a, b) => a.orderIndex - b.orderIndex);
+  const items = matchingCourseDraft.courseContent[type].items;
+  return getSortedCopy(items);
 };
