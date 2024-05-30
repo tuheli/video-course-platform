@@ -24,8 +24,39 @@ export const Draggable = ({ id, children }: DraggableProps) => {
   const [isBeingDragged, setIsBeingDragged] = useState(false);
   const timerIdRef = useRef(0);
   const { tickUpdateOrder } = useDroppableAreaContext();
+  const selfRef = useRef<HTMLDivElement>(null);
 
-  const onDragStart = () => {
+  const onDragStart = (event: React.DragEvent) => {
+    // Border animation can cause positioning issues
+    // for the drag image. So we set it manually.
+    const setDragImage = () => {
+      if (!selfRef.current) return;
+
+      const localMousePosition = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+
+      const selfBoundingRect = selfRef.current?.getBoundingClientRect();
+
+      const selfPosition = {
+        x: selfBoundingRect.left,
+        y: selfBoundingRect.top,
+      };
+
+      const difference = {
+        x: localMousePosition.x - selfPosition.x,
+        y: localMousePosition.y - selfPosition.y,
+      };
+
+      event.dataTransfer.setDragImage(
+        selfRef.current as HTMLElement,
+        difference.x,
+        difference.y
+      );
+    };
+
+    setDragImage();
     clearTimeout(timerIdRef.current);
     setWasDroppedRecently(false);
     setIsBeingDragged(true);
@@ -65,6 +96,7 @@ export const Draggable = ({ id, children }: DraggableProps) => {
       value={{ isBeingDragged, wasDroppedRecently, setIsDraggable }}
     >
       <div
+        ref={selfRef}
         draggable={isDraggable}
         id={id}
         className="draggable"
