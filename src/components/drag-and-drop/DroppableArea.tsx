@@ -3,9 +3,9 @@ import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
 import { DroppableAreaContext } from '../../contexts/DroppableAreaContext';
 import {
   getDraggables,
-  sortItemsByYPosition,
   isOrderChanged,
   giveItemsOrderIndicies,
+  sortByYPositionCopy,
 } from './utils';
 
 export interface DraggableDataTransfer {
@@ -35,12 +35,20 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
       dragImageCenterY
     );
 
-    sortItemsByYPosition(draggables);
+    const yPositionOrderedDraggables = sortByYPositionCopy(draggables);
 
-    const didOrderChange = isOrderChanged(itemsState, draggables);
+    const didOrderChange = isOrderChanged(
+      itemsState,
+      yPositionOrderedDraggables
+    );
+
     if (!didOrderChange) return;
 
-    const newOrder = giveItemsOrderIndicies(itemsState, draggables);
+    const newOrder = giveItemsOrderIndicies(
+      itemsState,
+      yPositionOrderedDraggables
+    );
+
     changeOrder(newOrder);
   };
 
