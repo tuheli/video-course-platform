@@ -5,6 +5,7 @@ import { Redirect } from '../redirect/Redirect';
 import { InstructorCoursesPage } from '../instructor/InstructorCoursesPage';
 import { CourseCreationPage } from '../course-creation/CourseCreationPage';
 import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseGoalsPage';
+import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/ManageCourseCurriculumPage';
 
 // NOTE: I have not yet implemented and probably will not implement a customized landing / homepage for a signed in user to stay within a reasonable scope for this project.
 
@@ -32,6 +33,10 @@ export const SignedInRoutes = () => {
       <Route
         path="/instructor/course/:courseId/manage/goals"
         element={<ManageCourseGoalsPage />}
+      />
+      <Route
+        path="/instructor/course/:courseId/manage/curriculum"
+        element={<ManageCourseCurriculumPage />}
       />
 
       {/** Redirect routes leading to default route */}
