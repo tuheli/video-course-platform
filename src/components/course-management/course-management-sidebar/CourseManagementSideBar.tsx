@@ -4,6 +4,8 @@ import { IntendedLearnersItem } from './sidebar-items/IntendedLearnersItem';
 import { CourseStrucureItem } from './sidebar-items/CourseStructureItem';
 import { isIntendedLearnersSectionReadyForSubmission } from '../../../features/courseDraftsSlice';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
+import { FilmAndEditItem } from './sidebar-items/FilmAndEditItem';
+import { CurriculumItem } from './sidebar-items/CurriculumItem';
 
 export const basePath = '/instructor/course';
 
@@ -30,7 +32,7 @@ export const CourseManagementSideBar = () => {
       <Stack
         sx={{
           flexDirection: 'column',
-          gap: 2,
+          gap: 4,
         }}
       >
         <Stack
@@ -49,6 +51,22 @@ export const CourseManagementSideBar = () => {
               isReadyForSubmission={isIntendedLearnersReadyForSubmission}
             />
             <CourseStrucureItem />
+          </Stack>
+        </Stack>
+        <Stack
+          sx={{
+            flexDirection: 'column',
+            gap: 1,
+          }}
+        >
+          <Heading text="Create your content" />
+          <Stack
+            sx={{
+              gap: 0,
+            }}
+          >
+            <FilmAndEditItem />
+            <CurriculumItem />
           </Stack>
         </Stack>
       </Stack>
