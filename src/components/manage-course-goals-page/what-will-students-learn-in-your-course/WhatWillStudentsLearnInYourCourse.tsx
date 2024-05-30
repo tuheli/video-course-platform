@@ -7,12 +7,12 @@ import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable } from '../../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
-import { useOrderedItems } from '../../../hooks/useOrderedItems';
+import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../../hooks/useChangeOrder';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
-  const learningObjectives = useOrderedItems('learningObjectives');
+  const learningObjectives = useOrderedCourseContent('learningObjectives');
   const { changeOrder } = useChangeOrder('learningObjectives');
 
   const changeLearningObjectivesOrder = (newOrder: ItemWithOrderIndex[]) => {

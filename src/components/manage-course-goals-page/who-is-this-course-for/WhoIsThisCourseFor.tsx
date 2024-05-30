@@ -3,7 +3,7 @@ import { LightColoredRouterLink } from '../LightColoredRouterLink';
 import { EditIntendedLearnersItem } from './EditIntendedLearnersItem';
 import { AddIntendedLearnersButton } from './AddIntendedLearnersButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
-import { useOrderedItems } from '../../../hooks/useOrderedItems';
+import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../../hooks/useChangeOrder';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
@@ -12,7 +12,7 @@ import { Draggable } from '../../drag-and-drop/Draggable';
 
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();
-  const intendedLearners = useOrderedItems('intendedLearners');
+  const intendedLearners = useOrderedCourseContent('intendedLearners');
   const { changeOrder } = useChangeOrder('intendedLearners');
 
   const changeIntendedLearnersOrder = (newOrder: ItemWithOrderIndex[]) => {

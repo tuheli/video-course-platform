@@ -7,11 +7,11 @@ import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable } from '../../drag-and-drop/Draggable';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
 import { useChangeOrder } from '../../../hooks/useChangeOrder';
-import { useOrderedItems } from '../../../hooks/useOrderedItems';
+import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
-  const prerequisites = useOrderedItems('prerequisites');
+  const prerequisites = useOrderedCourseContent('prerequisites');
   const { changeOrder } = useChangeOrder('prerequisites');
 
   const changePrerequisitesOrder = (newOrder: ItemWithOrderIndex[]) => {
