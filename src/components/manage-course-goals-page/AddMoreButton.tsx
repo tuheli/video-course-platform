@@ -1,11 +1,17 @@
-import { Box, Typography } from '@mui/material';
+import { Box, SxProps, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 interface AddMoreButtonProps {
+  text?: string;
+  sx?: SxProps;
   onClick: () => void;
 }
 
-export const AddMoreButton = ({ onClick }: AddMoreButtonProps) => {
+export const AddMoreButton = ({
+  text = 'Add more to your response',
+  sx,
+  onClick,
+}: AddMoreButtonProps) => {
   return (
     <Box
       onClick={onClick}
@@ -22,6 +28,7 @@ export const AddMoreButton = ({ onClick }: AddMoreButtonProps) => {
           cursor: 'pointer',
           color: 'secondary.dark',
         },
+        ...sx,
       }}
     >
       <Box
@@ -36,7 +43,7 @@ export const AddMoreButton = ({ onClick }: AddMoreButtonProps) => {
           fontWeight: 500,
         }}
       >
-        Add more to your response
+        {text}
       </Typography>
     </Box>
   );
