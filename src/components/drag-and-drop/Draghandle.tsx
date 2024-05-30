@@ -26,7 +26,6 @@ export const Draghandle = () => {
         sx={{
           width: 54,
           height: 54,
-          bgcolor: 'orange',
           border: '1px solid',
           borderColor: 'text.primary',
           borderLeft: 'none',
