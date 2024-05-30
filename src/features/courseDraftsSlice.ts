@@ -42,6 +42,19 @@ interface ReorderableTextArrayObject {
   items: TextWithId[];
 }
 
+interface Lesson {
+  id: string;
+  name: string;
+  orderIndex: number;
+}
+
+export interface ICurriculumSection {
+  id: string;
+  name: string;
+  orderIndex: number;
+  lessons: Lesson[];
+}
+
 interface CourseContent {
   // NOTE: Remember to update getCourseDraftProgressValue when adding more properties
   learningObjectives: ReorderableTextArrayObject;
@@ -49,6 +62,7 @@ interface CourseContent {
   intendedLearners: ReorderableTextArrayObject;
   // NOTE: Video content length is not currently checked
   videoContentLengthSeconds: number;
+  curriculum: ICurriculumSection[];
 }
 
 export type NewCourseDraftEntry = Omit<
@@ -182,6 +196,25 @@ const getReorderableTextArrayObject = (
   };
 };
 
+const getInitialCurriculum = () => {
+  const sections: ICurriculumSection[] = [
+    {
+      id: crypto.randomUUID(),
+      name: 'New Section',
+      orderIndex: -1,
+      lessons: [
+        {
+          id: crypto.randomUUID(),
+          name: 'New Lecture',
+          orderIndex: -1,
+        },
+      ],
+    },
+  ];
+
+  return sections;
+};
+
 const getInitialCourseContent = () => {
   const courseContent: CourseContent = {
     intendedLearners: getReorderableTextArrayObject(
@@ -197,6 +230,7 @@ const getInitialCourseContent = () => {
       'prerequisites'
     ),
     videoContentLengthSeconds: getRandomInt(0, 1000),
+    curriculum: getInitialCurriculum(),
   };
 
   return courseContent;
@@ -314,6 +348,7 @@ const initialState: CourseDraft[] = [
         ],
       },
       videoContentLengthSeconds: 158,
+      curriculum: getInitialCurriculum(),
     },
   },
   {
@@ -350,6 +385,7 @@ const initialState: CourseDraft[] = [
         ],
       },
       videoContentLengthSeconds: 0,
+      curriculum: getInitialCurriculum(),
     },
   },
   {
@@ -479,6 +515,57 @@ const slice = createSlice({
       courseDraft.courseContent[action.payload.type].items =
         newLearningObjectives;
     },
+    addedCurriculumSection: (
+      state,
+      action: PayloadAction<{ courseDraftId: string }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const newSection: ICurriculumSection = {
+        id: crypto.randomUUID(),
+        name: 'New Section',
+        orderIndex:
+          Math.max(
+            ...courseDraft.courseContent.curriculum.map(
+              ({ orderIndex }) => orderIndex
+            )
+          ) + 1,
+        lessons: [
+          {
+            id: crypto.randomUUID(),
+            name: 'New Lecture',
+            orderIndex: -1,
+          },
+        ],
+      };
+
+      courseDraft.courseContent.curriculum.push(newSection);
+    },
+    deletedCurriculumSection: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const idToBeDeleted = action.payload.curriculumSectionId;
+
+      const newCurriculum = courseDraft.courseContent.curriculum.filter(
+        ({ id }) => id !== idToBeDeleted
+      );
+
+      courseDraft.courseContent.curriculum = newCurriculum;
+    },
   },
 });
 
@@ -488,5 +575,7 @@ export const {
   updatedText,
   addedTextItem,
   deletedTextItem,
+  addedCurriculumSection,
+  deletedCurriculumSection,
 } = slice.actions;
 export default slice.reducer;
