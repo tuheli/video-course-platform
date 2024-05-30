@@ -3,15 +3,24 @@ import { LightColoredRouterLink } from '../LightColoredRouterLink';
 import { EditIntendedLearnersItem } from './EditIntendedLearnersItem';
 import { AddIntendedLearnersButton } from './AddIntendedLearnersButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
+import { useOrderedItems } from '../../../hooks/useOrderedItems';
+import { useChangeOrder } from '../../../hooks/useChangeOrder';
+import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
+import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
+import { DroppableArea } from '../../drag-and-drop/DroppableArea';
+import { Draggable } from '../../drag-and-drop/Draggable';
 
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();
+  const intendedLearners = useOrderedItems('intendedLearners');
+  const { changeOrder } = useChangeOrder('intendedLearners');
 
-  const intendedLearners = courseDraft?.courseContent.intendedLearners.items;
+  const changeIntendedLearnersOrder = (newOrder: ItemWithOrderIndex[]) => {
+    if (!courseDraft) return;
+    changeOrder(newOrder, courseDraft);
+  };
 
-  const courseDraftId = courseDraft?.id;
-
-  if (!courseDraftId || !intendedLearners) return null;
+  if (!courseDraft) return null;
 
   return (
     <Stack
@@ -35,13 +44,29 @@ export const WhoIsThisCourseFor = () => {
         for your course who will find your course content valuable. This will
         help you attract the right learners to your course.
       </Typography>
-      {intendedLearners.map((item) => (
-        <EditIntendedLearnersItem
-          key={item.id}
-          courseDraft={courseDraft}
-          intendedLearners={item}
-        />
-      ))}
+      <DragAndDropContext.Provider
+        value={{
+          itemsState: intendedLearners,
+          changeOrder: changeIntendedLearnersOrder,
+        }}
+      >
+        <DroppableArea>
+          <Stack
+            sx={{
+              gap: 2,
+            }}
+          >
+            {intendedLearners.map((intendedLearner) => (
+              <Draggable id={intendedLearner.id} key={intendedLearner.id}>
+                <EditIntendedLearnersItem
+                  courseDraft={courseDraft}
+                  intendedLearner={intendedLearner}
+                />
+              </Draggable>
+            ))}
+          </Stack>
+        </DroppableArea>
+      </DragAndDropContext.Provider>
       <AddIntendedLearnersButton />
     </Stack>
   );

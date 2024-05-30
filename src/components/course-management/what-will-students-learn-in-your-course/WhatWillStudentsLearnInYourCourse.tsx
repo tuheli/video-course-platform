@@ -6,64 +6,21 @@ import { useCourseDraft } from '../../../hooks/useCourseDraft';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable } from '../../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
-import {
-  TextWithId,
-  reorderedItems,
-} from '../../../features/courseDraftsSlice';
-import { useAppDispatch } from '../../../app/hooks';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
+import { useOrderedItems } from '../../../hooks/useOrderedItems';
+import { useChangeOrder } from '../../../hooks/useChangeOrder';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
-  const dispatch = useAppDispatch();
+  const learningObjectives = useOrderedItems('learningObjectives');
+  const { changeOrder } = useChangeOrder('learningObjectives');
 
-  const changeOrder = (newOrder: ItemWithOrderIndex[]) => {
-    try {
-      if (!courseDraft) return;
-
-      const learningObjectives =
-        courseDraft.courseContent.learningObjectives.items;
-
-      const newState: TextWithId[] = newOrder.map((item) => {
-        const learningObjective = learningObjectives.find(
-          (objective) => objective.id === item.id
-        );
-
-        // This would most likely mean the mapping is
-        // broken in giveItemsOrderIndicies function
-        // and we can't reorder the items here correctly
-        if (!learningObjective) {
-          throw new Error();
-        }
-
-        return {
-          ...learningObjective,
-          orderIndex: item.orderIndex,
-        };
-      });
-
-      dispatch(
-        reorderedItems({
-          courseDraftId: courseDraft.id,
-          newState,
-          type: 'learningObjectives',
-        })
-      );
-    } catch (error) {
-      return;
-    }
+  const changeLearningObjectivesOrder = (newOrder: ItemWithOrderIndex[]) => {
+    if (!courseDraft) return;
+    changeOrder(newOrder, courseDraft);
   };
 
   if (!courseDraft) return null;
-
-  // Sort the learning objectives by their order index
-  const learningObjectivesCopy = [
-    ...courseDraft.courseContent.learningObjectives.items,
-  ];
-
-  const learningObjectives = learningObjectivesCopy.sort(
-    (a, b) => a.orderIndex - b.orderIndex
-  );
 
   return (
     <Stack
@@ -89,7 +46,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       <DragAndDropContext.Provider
         value={{
           itemsState: learningObjectives,
-          changeOrder,
+          changeOrder: changeLearningObjectivesOrder,
         }}
       >
         <DroppableArea>

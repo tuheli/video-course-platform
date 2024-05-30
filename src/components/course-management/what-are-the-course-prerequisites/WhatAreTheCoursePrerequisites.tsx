@@ -2,15 +2,24 @@ import { Stack, Typography } from '@mui/material';
 import { EditPrerequisitesItem } from './EditPrerequisitesItem';
 import { AddPrerequisiteButton } from './AddPrerequisiteButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
+import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
+import { DroppableArea } from '../../drag-and-drop/DroppableArea';
+import { Draggable } from '../../drag-and-drop/Draggable';
+import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
+import { useChangeOrder } from '../../../hooks/useChangeOrder';
+import { useOrderedItems } from '../../../hooks/useOrderedItems';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
+  const prerequisites = useOrderedItems('prerequisites');
+  const { changeOrder } = useChangeOrder('prerequisites');
 
-  const prerequisites = courseDraft?.courseContent.prerequisites.items;
+  const changePrerequisitesOrder = (newOrder: ItemWithOrderIndex[]) => {
+    if (!courseDraft) return;
+    changeOrder(newOrder, courseDraft);
+  };
 
-  const courseDraftId = courseDraft?.id;
-
-  if (!prerequisites || !courseDraftId) return null;
+  if (!courseDraft) return null;
 
   return (
     <Stack
@@ -31,13 +40,36 @@ export const WhatAreTheCoursePrerequisites = () => {
         have prior to taking your course. If there are no requirements, use this
         space as an opportunity to lower the barrier for beginners.
       </Typography>
-      {prerequisites.map((prerequisite) => (
+      {/* {prerequisites.map((prerequisite) => (
         <EditPrerequisitesItem
           key={prerequisite.id}
           prerequisite={prerequisite}
           courseDraft={courseDraft}
         />
-      ))}
+      ))} */}
+      <DragAndDropContext.Provider
+        value={{
+          itemsState: prerequisites,
+          changeOrder: changePrerequisitesOrder,
+        }}
+      >
+        <DroppableArea>
+          <Stack
+            sx={{
+              gap: 2,
+            }}
+          >
+            {prerequisites.map((prerequisite) => (
+              <Draggable id={prerequisite.id} key={prerequisite.id}>
+                <EditPrerequisitesItem
+                  courseDraft={courseDraft}
+                  prerequisite={prerequisite}
+                />
+              </Draggable>
+            ))}
+          </Stack>
+        </DroppableArea>
+      </DragAndDropContext.Provider>
       <AddPrerequisiteButton />
     </Stack>
   );

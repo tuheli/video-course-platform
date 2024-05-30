@@ -8,6 +8,9 @@ import {
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { ChangeEvent, useState } from 'react';
 import { DeletePrerequisiteButton } from './DeletePrerequisiteButton';
+import { Draghandle } from '../../drag-and-drop/Draghandle';
+import { BorderAnimationWrapper } from '../../border-animation-wrapper/BorderAnimationWrapper';
+import { useDraggableContext } from '../../../hooks/useDraggableContext';
 
 interface EditPrerequisitesItemProps {
   courseDraft: CourseDraft;
@@ -19,7 +22,11 @@ export const EditPrerequisitesItem = ({
   prerequisite,
 }: EditPrerequisitesItemProps) => {
   const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
+  const [isDraghandleVisible, setIsDraghandleVisible] = useState(false);
+  const { wasDroppedRecently, isBeingDragged } = useDraggableContext();
   const dispatch = useAppDispatch();
+
+  const forceShowExtensions = isBeingDragged;
 
   const placeholder =
     prerequisite.text.length > 0
@@ -39,10 +46,12 @@ export const EditPrerequisitesItem = ({
 
   const onMouseEnter = () => {
     setIsDeleteIconVisble(true);
+    setIsDraghandleVisible(true);
   };
 
   const onMouseLeave = () => {
     setIsDeleteIconVisble(false);
+    setIsDraghandleVisible(false);
   };
 
   return (
@@ -54,18 +63,31 @@ export const EditPrerequisitesItem = ({
         width: 'fit-content',
       }}
     >
-      <InputFieldWithMaxCharacters
-        onChange={onChange}
-        maxInputLength={160}
-        placeholder={placeholder}
-        value={prerequisite.text}
-      />
-      {isDeleteIconVisible && (
+      {wasDroppedRecently && (
+        <BorderAnimationWrapper>
+          <InputFieldWithMaxCharacters
+            onChange={onChange}
+            maxInputLength={160}
+            placeholder={placeholder}
+            value={prerequisite.text}
+          />
+        </BorderAnimationWrapper>
+      )}
+      {!wasDroppedRecently && (
+        <InputFieldWithMaxCharacters
+          onChange={onChange}
+          maxInputLength={160}
+          placeholder={placeholder}
+          value={prerequisite.text}
+        />
+      )}
+      {(forceShowExtensions || isDeleteIconVisible) && (
         <DeletePrerequisiteButton
           courseDraft={courseDraft}
           prerequisiteId={prerequisite.id}
         />
       )}
+      {(forceShowExtensions || isDraghandleVisible) && <Draghandle />}
     </Stack>
   );
 };
