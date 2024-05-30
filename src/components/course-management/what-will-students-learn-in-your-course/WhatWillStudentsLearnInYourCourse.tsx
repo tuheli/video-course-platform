@@ -105,6 +105,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       </Typography>
       <DragAndDropContext.Provider
         value={{
+          itemsState: learningObjectives,
           changeOrder,
         }}
       >
