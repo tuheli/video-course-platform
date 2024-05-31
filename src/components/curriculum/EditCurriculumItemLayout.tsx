@@ -34,6 +34,8 @@ export const EditCurriculumItemLayout = ({
     <Paper
       sx={{
         p: 1,
+        border: '1px solid',
+        borderColor: 'text.primary',
       }}
     >
       <Stack
@@ -42,7 +44,11 @@ export const EditCurriculumItemLayout = ({
           gap: 2,
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            minWidth: '13%',
+          }}
+        >
           <Typography
             sx={{
               fontWeight: 400,
