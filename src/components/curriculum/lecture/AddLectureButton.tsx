@@ -8,6 +8,11 @@ import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 // cause a re-render at this point since
 // the state doesn't change.
 
+// FIX: On specific conditions, when these buttons
+// are visible and a lecture is being edited above,
+// hovering this button causes text in the
+// add more button to move a few pixels upwards.
+
 interface AddableItemOptionButtonProps {
   type: EditableItemType | undefined;
   text: string;
