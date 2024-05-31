@@ -1,9 +1,9 @@
 import { Paper, Stack } from '@mui/material';
-import { ICurriculumSection } from '../../../features/courseDraftsSlice';
-import { useState } from 'react';
-import { CurriculumSectionContext } from '../../../contexts/CurriculumSectionContext';
-import { SectionEditingHeading } from './SectionEditingHeading';
+import { ICurriculumSection } from '../../../../features/courseDraftsSlice';
+import { CurriculumSectionContext } from '../../../../contexts/CurriculumSectionContext';
+import { SectionEditingHeading } from '../SectionEditingHeading';
 import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
+import { useEditableCurriculumItem } from '../../../../hooks/useEditableCurriculumItem';
 
 interface CurriculumSectionProps {
   courseDraftId: string;
@@ -16,26 +16,14 @@ export const CurriculumSection = ({
   curriculumSection,
   index,
 }: CurriculumSectionProps) => {
-  const [isHeadingPartVisible, setIsHeadingPartVisible] = useState(true);
-  const [isDeleteButtonVisible, setIsDeleteButtonVisible] = useState(false);
-  const [isEditSectionButtonVisible, setIsEditSectionButtonVisible] =
-    useState(false);
-
-  const isEditSectionTitleAndLearningObjectiveVisible = !isHeadingPartVisible;
-
-  const onMouseEnter = () => {
-    setIsDeleteButtonVisible(true);
-    setIsEditSectionButtonVisible(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsDeleteButtonVisible(false);
-    setIsEditSectionButtonVisible(false);
-  };
-
-  const changeHeadingVisibility = (isVisible: boolean) => {
-    setIsHeadingPartVisible(isVisible);
-  };
+  const {
+    isHeadingPartVisible,
+    isDeleteButtonVisible,
+    isEditButtonVisible,
+    onMouseEnter,
+    onMouseLeave,
+    changeHeadingVisibility,
+  } = useEditableCurriculumItem();
 
   return (
     <CurriculumSectionContext.Provider
@@ -59,11 +47,11 @@ export const CurriculumSection = ({
           {isHeadingPartVisible && (
             <SectionEditingHeading
               isDeleteButtonVisible={isDeleteButtonVisible}
-              isEditSectionButtonVisible={isEditSectionButtonVisible}
+              isEditSectionButtonVisible={isEditButtonVisible}
               changeHeadingVisibility={changeHeadingVisibility}
             />
           )}
-          {isEditSectionTitleAndLearningObjectiveVisible && (
+          {!isHeadingPartVisible && (
             <EditSectionTitleAndLearningObjective
               changeHeadingVisibility={changeHeadingVisibility}
             />

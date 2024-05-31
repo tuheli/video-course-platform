@@ -1,9 +1,9 @@
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { useAppDispatch } from '../../../app/hooks';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { InputFieldWithMaxCharacters } from '../../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { useAppDispatch } from '../../../../app/hooks';
+import { useCurriculumSectionContext } from '../../../../hooks/useCurriculumSectionContext';
 import { ChangeEvent } from 'react';
-import { updatedCurriculumSectionText } from '../../../features/courseDraftsSlice';
+import { updatedCurriculumSectionText } from '../../../../features/courseDraftsSlice';
 
 interface EditSectionTitleAndLearningObjectiveProps {
   changeHeadingVisibility: (isVisible: boolean) => void;
@@ -88,8 +88,9 @@ export const EditSectionTitleAndLearningObjective = ({
             }}
           />
           <Typography
+            variant="body2"
             sx={{
-              fontWeight: 500,
+              fontWeight: 600,
             }}
           >
             What will students be able to do at the end of this section?
