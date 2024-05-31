@@ -3,11 +3,11 @@ import { AddCurriculumItemButton } from './AddCurriculumItemButton';
 import { CurriculumItemOptions } from './CurriculumItemOptions';
 
 export const CurriculumItemSelection = () => {
-  const [animateIconBack, setAnimateIconBack] = useState(false);
+  const [animateCloseIconBack, setAnimateCloseIconBack] = useState(false);
   const [isSelectionVisible, setIsSelectionVisible] = useState(false);
 
   const onItemOptionsClose = () => {
-    setAnimateIconBack(true);
+    setAnimateCloseIconBack(true);
     setIsSelectionVisible(false);
   };
 
@@ -16,7 +16,7 @@ export const CurriculumItemSelection = () => {
       {!isSelectionVisible && (
         <AddCurriculumItemButton
           setOptionsVisibility={setIsSelectionVisible}
-          animateIconBack={animateIconBack}
+          animateIconBack={animateCloseIconBack}
         />
       )}
       {isSelectionVisible && (
