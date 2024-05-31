@@ -8,6 +8,8 @@ interface CurriculumSectionContextProps {
   courseDraftId: string;
   curriculumSection: ICurriculumSection;
   editingItemType: EditableItem | undefined;
+  isOptionsAnimationEnabled: boolean;
+  setIsOptionsAnimationEnabled: (isEnabled: boolean) => void;
   setEditingItemType: (itemType: EditableItem | undefined) => void;
 }
 
@@ -21,8 +23,10 @@ const defaultValue: CurriculumSectionContextProps = {
     orderIndex: -1,
   },
   editingItemType: undefined,
-  setEditingItemType: () => {},
   index: 0,
+  isOptionsAnimationEnabled: true,
+  setIsOptionsAnimationEnabled: () => {},
+  setEditingItemType: () => {},
 };
 
 export const CurriculumSectionContext =
