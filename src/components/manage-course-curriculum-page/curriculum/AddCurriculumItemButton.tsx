@@ -1,3 +1,4 @@
+import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { useEnableActionTimer } from '../../../hooks/useEnableActionTimer';
 import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 import { animationDurationSeconds } from './common';
@@ -12,11 +13,15 @@ export const AddCurriculumItemButton = ({
   setOptionsVisibility,
 }: AddCurriculumItemButtonProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
+  const { setEditingItemType, setIsOptionsAnimationEnabled } =
+    useCurriculumSectionContext();
 
   const isClickAllowed = animateIconBack ? isEnabled : true;
 
   const onClick = () => {
     if (!isClickAllowed) return;
+    setEditingItemType(undefined);
+    setIsOptionsAnimationEnabled(true);
     setOptionsVisibility(true);
   };
 
