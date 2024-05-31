@@ -1,6 +1,9 @@
 import './css/slickSlider.css';
 import './css/dropdownFadeInAnimation.css';
 import './css/borderAnimationStyle.css';
+import './css/closeIconRollAnimation.css';
+import './css/closeIconMoveAnimation.css';
+import './css/opacityAnimation.css';
 import ReactDOM from 'react-dom/client';
 import { StrictMode } from 'react';
 import { store } from './app/store.ts';
