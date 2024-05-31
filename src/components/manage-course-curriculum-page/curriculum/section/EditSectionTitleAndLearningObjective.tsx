@@ -1,9 +1,11 @@
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { useAppDispatch } from '../../../../app/hooks';
 import { useCurriculumSectionContext } from '../../../../hooks/useCurriculumSectionContext';
 import { ChangeEvent } from 'react';
 import { updatedCurriculumSectionText } from '../../../../features/courseDraftsSlice';
+import { inputOuterDivSx, inputSx } from '../common';
+import { EditCurriculumItemLayout } from '../EditCurriculumItemLayout';
 
 interface EditSectionTitleAndLearningObjectiveProps {
   changeHeadingVisibility: (isVisible: boolean) => void;
@@ -48,106 +50,37 @@ export const EditSectionTitleAndLearningObjective = ({
   };
 
   return (
-    <Paper
-      sx={{
-        p: 1,
-      }}
+    <EditCurriculumItemLayout
+      onChangeTitle={onChangeTitle}
+      onClickCancel={onClickCancel}
+      onClickSave={onClickSaveSection}
+      saveButtonText="Save Section"
+      title={`Section ${index + 1}:`}
+      titleValue={curriculumSection.title}
     >
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          gap: 2,
-        }}
-      >
+      <>
         <Typography
+          variant="body2"
           sx={{
             fontWeight: 600,
           }}
         >
-          Section {index + 1}:
+          What will students be able to do at the end of this section?
         </Typography>
-        <Stack
-          sx={{
-            flexDirection: 'column',
-            gap: 1,
+        <InputFieldWithMaxCharacters
+          onChange={onChangeLearningObjective}
+          maxInputLength={80}
+          value={curriculumSection.learningObjective}
+          placeholder="Enter a learning objective"
+          autofocus={false}
+          outerDivSx={{
+            ...inputOuterDivSx,
           }}
-        >
-          <InputFieldWithMaxCharacters
-            onChange={onChangeTitle}
-            maxInputLength={80}
-            value={curriculumSection.title}
-            placeholder="Enter a title"
-            autofocus={true}
-            sx={{
-              height: 28,
-              pl: 1,
-              mb: 1,
-            }}
-            placeholderSx={{
-              fontSize: 14,
-            }}
-          />
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            What will students be able to do at the end of this section?
-          </Typography>
-          <InputFieldWithMaxCharacters
-            onChange={onChangeLearningObjective}
-            maxInputLength={80}
-            value={curriculumSection.learningObjective}
-            placeholder="Enter a learning objective"
-            autofocus={false}
-            sx={{
-              height: 28,
-              pl: 1,
-              mb: 1,
-            }}
-            placeholderSx={{
-              fontSize: 14,
-            }}
-          />
-          <Stack
-            sx={{
-              flexDirection: 'row',
-              marginLeft: 'auto',
-              gap: 1,
-            }}
-          >
-            <Button
-              onClick={onClickCancel}
-              variant="text"
-              color="primary"
-              sx={{
-                height: 32,
-                p: 1,
-                fontWeight: 600,
-                '&:hover': {
-                  color: 'text.primary',
-                },
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={onClickSaveSection}
-              variant="contained"
-              color="primary"
-              sx={{
-                height: 32,
-                p: 1,
-                fontWeight: 600,
-                transition: 'none',
-              }}
-            >
-              Save section
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
-    </Paper>
+          inputSx={{
+            ...inputSx,
+          }}
+        />
+      </>
+    </EditCurriculumItemLayout>
   );
 };
