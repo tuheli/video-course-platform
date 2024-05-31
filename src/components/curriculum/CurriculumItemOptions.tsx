@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { animationDurationSeconds } from './common';
-import { AddLectureButton } from './lecture/AddLectureButton';
+import { AddableItemOptionButton } from './lecture/AddLectureButton';
 import { EditableCurriculumItemSelector } from './EditableCurriculumItemSelector';
 import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
@@ -70,7 +70,11 @@ export const CurriculumItemOptions = ({
               : undefined,
           }}
         >
-          <AddLectureButton />
+          <AddableItemOptionButton text="Lecture" type="addLecture" />
+          {/** Just for displaying more options - these dont do anything */}
+          <AddableItemOptionButton text="Quiz" type={undefined} />
+          <AddableItemOptionButton text="Coding Exercise" type={undefined} />
+          <AddableItemOptionButton text="Assignment" type={undefined} />
         </Stack>
       )}
       {isEditableCurriculumItemSelectorVisible && (
