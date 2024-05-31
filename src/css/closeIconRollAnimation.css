@@ -1,0 +1,7 @@
+@keyframes closeIconRollAnimation {
+  0% {
+  }
+  100% {
+    transform: rotate(-315deg);
+  }
+}
