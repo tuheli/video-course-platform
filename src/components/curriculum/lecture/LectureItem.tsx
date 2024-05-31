@@ -2,6 +2,7 @@ import { ChangeEvent } from 'react';
 import { useAppDispatch } from '../../../app/hooks';
 import {
   Lesson,
+  deletedLecture,
   updatedLectureTitle,
 } from '../../../features/courseDraftsSlice';
 import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
@@ -40,6 +41,16 @@ export const LectureItem = ({ lecture, index }: LectureItemProps) => {
     changeHeadingVisibility(true);
   };
 
+  const onClickDeleteIcon = () => {
+    dispatch(
+      deletedLecture({
+        courseDraftId,
+        curriculumSectionId: curriculumSection.id,
+        lectureId: lecture.id,
+      })
+    );
+  };
+
   return (
     <>
       {isHeadingPartVisible && (
@@ -48,6 +59,7 @@ export const LectureItem = ({ lecture, index }: LectureItemProps) => {
           index={index}
           title={lecture.name}
           changeHeadingVisibility={changeHeadingVisibility}
+          onClickDeleteIcon={onClickDeleteIcon}
         />
       )}
       {!isHeadingPartVisible && (
