@@ -1,8 +1,10 @@
 import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
-import { DeleteCurriculumSectionButton } from './DeleteCurriculumSectionButton';
-import { EditButton } from './section/EditButton';
+import { DeleteIconButton } from './DeleteIconButton';
+import { EditIconButton } from './EditIconButton';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
+import { useAppDispatch } from '../../app/hooks';
+import { deletedCurriculumSection } from '../../features/courseDraftsSlice';
 
 interface SectionEditingHeadingProps {
   isDeleteButtonVisible: boolean;
@@ -17,6 +19,17 @@ export const SectionEditingHeading = ({
 }: SectionEditingHeadingProps) => {
   const { index, courseDraftId, curriculumSection } =
     useCurriculumSectionContext();
+
+  const dispatch = useAppDispatch();
+
+  const onClickDeleteButton = () => {
+    dispatch(
+      deletedCurriculumSection({
+        courseDraftId,
+        curriculumSectionId: curriculumSection.id,
+      })
+    );
+  };
 
   return (
     <Stack
@@ -48,13 +61,10 @@ export const SectionEditingHeading = ({
       </Box>
       <Typography>{curriculumSection.title}</Typography>
       {isEditSectionButtonVisible && (
-        <EditButton changeHeadingVisibility={changeHeadingVisibility} />
+        <EditIconButton changeHeadingVisibility={changeHeadingVisibility} />
       )}
       {isDeleteButtonVisible && (
-        <DeleteCurriculumSectionButton
-          courseDraftId={courseDraftId}
-          curriculumSectionId={curriculumSection.id}
-        />
+        <DeleteIconButton onClick={onClickDeleteButton} />
       )}
     </Stack>
   );
