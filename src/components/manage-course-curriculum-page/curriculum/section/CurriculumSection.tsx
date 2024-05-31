@@ -1,10 +1,14 @@
 import { Paper, Stack } from '@mui/material';
 import { ICurriculumSection } from '../../../../features/courseDraftsSlice';
-import { CurriculumSectionContext } from '../../../../contexts/CurriculumSectionContext';
+import {
+  CurriculumSectionContext,
+  EditableItem,
+} from '../../../../contexts/CurriculumSectionContext';
 import { SectionEditingHeading } from '../SectionEditingHeading';
 import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
 import { useEditableCurriculumItem } from '../../../../hooks/useEditableCurriculumItem';
 import { CurriculumItemSelection } from '../CurriculumItemSelection';
+import { useState } from 'react';
 
 interface CurriculumSectionProps {
   courseDraftId: string;
@@ -17,6 +21,10 @@ export const CurriculumSection = ({
   curriculumSection,
   index,
 }: CurriculumSectionProps) => {
+  const [editingItemType, setEditingItemType] = useState<
+    EditableItem | undefined
+  >(undefined);
+
   const {
     isHeadingPartVisible,
     isDeleteButtonVisible,
@@ -28,7 +36,13 @@ export const CurriculumSection = ({
 
   return (
     <CurriculumSectionContext.Provider
-      value={{ courseDraftId, curriculumSection, index }}
+      value={{
+        courseDraftId,
+        curriculumSection,
+        index,
+        editingItemType,
+        setEditingItemType,
+      }}
     >
       <Paper
         onMouseEnter={onMouseEnter}
