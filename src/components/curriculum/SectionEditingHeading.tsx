@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
 import { DeleteCurriculumSectionButton } from './DeleteCurriculumSectionButton';
-import { EditSectionTitleAndLearningObjectiveButton } from './section/EditSectionTitleAndLearningObjectiveButton';
+import { EditButton } from './section/EditButton';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 
 interface SectionEditingHeadingProps {
@@ -48,9 +48,7 @@ export const SectionEditingHeading = ({
       </Box>
       <Typography>{curriculumSection.title}</Typography>
       {isEditSectionButtonVisible && (
-        <EditSectionTitleAndLearningObjectiveButton
-          changeHeadingVisibility={changeHeadingVisibility}
-        />
+        <EditButton changeHeadingVisibility={changeHeadingVisibility} />
       )}
       {isDeleteButtonVisible && (
         <DeleteCurriculumSectionButton
