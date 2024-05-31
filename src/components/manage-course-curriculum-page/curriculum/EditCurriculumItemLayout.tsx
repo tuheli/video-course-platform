@@ -2,6 +2,7 @@ import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { ChangeEvent } from 'react';
 import { inputSx, inputOuterDivSx } from './common';
+import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 
 interface NewCurriculumItemLayoutProps {
   title: string;
@@ -22,6 +23,13 @@ export const EditCurriculumItemLayout = ({
   onClickCancel,
   onClickSave,
 }: NewCurriculumItemLayoutProps) => {
+  const { setIsOptionsAnimationEnabled } = useCurriculumSectionContext();
+
+  const onClickCancelWithDisableOptionsAnimation = () => {
+    setIsOptionsAnimationEnabled(false);
+    onClickCancel();
+  };
+
   return (
     <Paper
       sx={{
@@ -72,7 +80,7 @@ export const EditCurriculumItemLayout = ({
             }}
           >
             <Button
-              onClick={onClickCancel}
+              onClick={onClickCancelWithDisableOptionsAnimation}
               variant="text"
               color="primary"
               sx={{
