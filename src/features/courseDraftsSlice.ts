@@ -653,6 +653,32 @@ const slice = createSlice({
 
       lecture.name = action.payload.newLectureTitle;
     },
+    deletedLecture: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+        lectureId: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.curriculumSectionId
+      );
+
+      if (!section) return;
+
+      const newLectures = section.lessons.filter(
+        ({ id }) => id !== action.payload.lectureId
+      );
+
+      section.lessons = newLectures;
+    },
   },
 });
 
@@ -667,5 +693,6 @@ export const {
   updatedCurriculumSectionText,
   addedLecture,
   updatedLectureTitle,
+  deletedLecture,
 } = slice.actions;
 export default slice.reducer;
