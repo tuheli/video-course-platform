@@ -52,7 +52,7 @@ export const LectureItem = ({ lecture, index }: LectureItemProps) => {
       )}
       {!isHeadingPartVisible && (
         <EditCurriculumItemLayout
-          title={`Lecture ${index + 1}:`}
+          title={`Lecture ${index + 1}`}
           titleValue={lecture.name}
           saveButtonText="Save Lecture"
           onChangeTitle={onChangeTitle}
