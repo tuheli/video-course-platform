@@ -1,13 +1,15 @@
 import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
 import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
-import { EditButton } from './section/EditButton';
+import { EditIconButton } from './EditIconButton';
+import { DeleteIconButton } from './DeleteIconButton';
 
 interface SectionItemLayoutProps {
   itemName: 'Section' | 'Lecture';
   title: string;
   index: number;
   changeHeadingVisibility: (isVisible: boolean) => void;
+  onClickDeleteIcon: () => void;
 }
 
 export const SectionItemHeadingLayout = ({
@@ -15,6 +17,7 @@ export const SectionItemHeadingLayout = ({
   title,
   index,
   changeHeadingVisibility,
+  onClickDeleteIcon,
 }: SectionItemLayoutProps) => {
   const {
     isEditButtonVisible,
@@ -58,9 +61,11 @@ export const SectionItemHeadingLayout = ({
       </Box>
       {title && <Typography>{title}</Typography>}
       {isEditButtonVisible && (
-        <EditButton changeHeadingVisibility={changeHeadingVisibility} />
+        <EditIconButton changeHeadingVisibility={changeHeadingVisibility} />
       )}
-      {isDeleteButtonVisible && <></>}
+      {isDeleteButtonVisible && (
+        <DeleteIconButton onClick={onClickDeleteIcon} />
+      )}
     </Stack>
   );
 };
