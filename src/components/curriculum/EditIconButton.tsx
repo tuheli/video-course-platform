@@ -5,7 +5,9 @@ interface EditButtonProps {
   changeHeadingVisibility: (isVisible: boolean) => void;
 }
 
-export const EditButton = ({ changeHeadingVisibility }: EditButtonProps) => {
+export const EditIconButton = ({
+  changeHeadingVisibility,
+}: EditButtonProps) => {
   const onClick = () => {
     changeHeadingVisibility(false);
   };
