@@ -16,6 +16,8 @@ export type UpdateableCourseContentProperty =
   | 'prerequisites'
   | 'intendedLearners';
 
+export type UpdateableCurriculumSectionProperty = 'title' | 'learningObjective';
+
 interface Reorderable {
   orderIndex: number;
 }
@@ -50,7 +52,8 @@ interface Lesson {
 
 export interface ICurriculumSection {
   id: string;
-  name: string;
+  title: string;
+  learningObjective: string;
   orderIndex: number;
   lessons: Lesson[];
 }
@@ -200,7 +203,8 @@ const getInitialCurriculum = () => {
   const sections: ICurriculumSection[] = [
     {
       id: crypto.randomUUID(),
-      name: 'New Section',
+      title: 'New Section',
+      learningObjective: '',
       orderIndex: -1,
       lessons: [
         {
@@ -527,7 +531,8 @@ const slice = createSlice({
 
       const newSection: ICurriculumSection = {
         id: crypto.randomUUID(),
-        name: 'New Section',
+        title: 'New Section',
+        learningObjective: '',
         orderIndex:
           Math.max(
             ...courseDraft.courseContent.curriculum.map(
@@ -566,6 +571,29 @@ const slice = createSlice({
 
       courseDraft.courseContent.curriculum = newCurriculum;
     },
+    updatedCurriculumSectionText: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+        newValue: string;
+        type: UpdateableCurriculumSectionProperty;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.curriculumSectionId
+      );
+
+      if (!section) return;
+
+      section[action.payload.type] = action.payload.newValue;
+    },
   },
 });
 
@@ -577,5 +605,6 @@ export const {
   deletedTextItem,
   addedCurriculumSection,
   deletedCurriculumSection,
+  updatedCurriculumSectionText,
 } = slice.actions;
 export default slice.reducer;
