@@ -11,6 +11,7 @@ import { DeleteIntendedLearnersButton } from './DeleteIndendedLearersButton';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
 import { BorderAnimationWrapper } from '../../border-animation-wrapper/BorderAnimationWrapper';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
+import { inputFieldWidth } from '../common';
 
 interface EditIntendedLearnersItemProps {
   courseDraft: CourseDraft;
@@ -70,6 +71,7 @@ export const EditIntendedLearnersItem = ({
             maxInputLength={160}
             placeholder={placeholder}
             value={intendedLearners.text}
+            outerDivSx={{ width: inputFieldWidth }}
           />
         </BorderAnimationWrapper>
       )}
@@ -79,6 +81,7 @@ export const EditIntendedLearnersItem = ({
           maxInputLength={160}
           placeholder={placeholder}
           value={intendedLearners.text}
+          outerDivSx={{ width: inputFieldWidth }}
         />
       )}
       {(forceShowExtensions || isDeleteIconVisible) && (

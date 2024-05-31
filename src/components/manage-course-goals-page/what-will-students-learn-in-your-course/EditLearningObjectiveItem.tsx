@@ -11,6 +11,7 @@ import { DeleteLearningObjectiveButton } from './DeleteLearningObjectiveButton';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
 import { BorderAnimationWrapper } from '../../border-animation-wrapper/BorderAnimationWrapper';
+import { inputFieldWidth } from '../common';
 
 interface EditLearningObjectiveItemProps {
   courseDraft: CourseDraft;
@@ -61,7 +62,6 @@ export const EditLearningObjectiveItem = ({
       onMouseLeave={onMouseLeave}
       sx={{
         flexDirection: 'row',
-        width: 'fit-content',
       }}
     >
       {wasDroppedRecently && (
@@ -71,6 +71,7 @@ export const EditLearningObjectiveItem = ({
             maxInputLength={160}
             placeholder={placeholder}
             value={learningObjective.text}
+            outerDivSx={{ width: inputFieldWidth }}
           />
         </BorderAnimationWrapper>
       )}
@@ -80,6 +81,7 @@ export const EditLearningObjectiveItem = ({
           maxInputLength={160}
           placeholder={placeholder}
           value={learningObjective.text}
+          outerDivSx={{ width: inputFieldWidth }}
         />
       )}
       {(forceShowExtensions || isDeleteIconVisible) && (

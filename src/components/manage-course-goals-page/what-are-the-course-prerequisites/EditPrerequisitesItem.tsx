@@ -11,6 +11,7 @@ import { DeletePrerequisiteButton } from './DeletePrerequisiteButton';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
 import { BorderAnimationWrapper } from '../../border-animation-wrapper/BorderAnimationWrapper';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
+import { inputFieldWidth } from '../common';
 
 interface EditPrerequisitesItemProps {
   courseDraft: CourseDraft;
@@ -70,6 +71,7 @@ export const EditPrerequisitesItem = ({
             maxInputLength={160}
             placeholder={placeholder}
             value={prerequisite.text}
+            outerDivSx={{ width: inputFieldWidth }}
           />
         </BorderAnimationWrapper>
       )}
@@ -79,6 +81,7 @@ export const EditPrerequisitesItem = ({
           maxInputLength={160}
           placeholder={placeholder}
           value={prerequisite.text}
+          outerDivSx={{ width: inputFieldWidth }}
         />
       )}
       {(forceShowExtensions || isDeleteIconVisible) && (
