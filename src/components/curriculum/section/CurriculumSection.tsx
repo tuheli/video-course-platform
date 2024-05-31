@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ICurriculumSection } from '../../../features/courseDraftsSlice';
 import {
   CurriculumSectionContext,
-  EditableItem,
+  EditableItemType,
 } from '../../../contexts/CurriculumSectionContext';
 import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
 import { LectureItem } from '../lecture/LectureItem';
@@ -31,7 +31,7 @@ export const CurriculumSection = ({
   index,
 }: CurriculumSectionProps) => {
   const [editingItemType, setEditingItemType] = useState<
-    EditableItem | undefined
+    EditableItemType | undefined
   >(undefined);
   const [isOptionsAnimationEnabled, setIsOptionsAnimationEnabled] =
     useState(true);
