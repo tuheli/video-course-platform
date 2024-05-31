@@ -14,7 +14,8 @@ export const CurriculumItemOptions = ({
   setVisibility,
 }: CurriculumItemOptionsProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
-  const { editingItemType } = useCurriculumSectionContext();
+  const { editingItemType, isOptionsAnimationEnabled } =
+    useCurriculumSectionContext();
 
   const isEditableCurriculumItemSelectorVisible = editingItemType !== undefined;
   const isAddButtonsVisible = !isEditableCurriculumItemSelectorVisible;
@@ -64,7 +65,9 @@ export const CurriculumItemOptions = ({
             gap: 1,
             border: '1px dashed',
             borderColor: 'text.primary',
-            animation: `opacityAnimation ${animationDurationSeconds}s ease-in forwards`,
+            animation: isOptionsAnimationEnabled
+              ? `opacityAnimation ${0.3}s ease-in forwards`
+              : undefined,
           }}
         >
           <AddLectureButton />
