@@ -33,7 +33,6 @@ export const AddCurriculumItemButton = ({
       addIconSx={
         animateIconBack
           ? {
-              // transform: 'rotate(45deg)',
               animation: `closeIconRollAnimation ${animationDurationSeconds}s ease-in forwards`,
               animationDirection: 'reverse',
             }
