@@ -9,6 +9,7 @@ import {
   EditableItem,
 } from '../../../contexts/CurriculumSectionContext';
 import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
+import { LectureItem } from '../lecture/LectureItem';
 
 interface CurriculumSectionProps {
   courseDraftId: string;
@@ -43,6 +44,8 @@ export const CurriculumSection = ({
     onMouseLeave,
     changeHeadingVisibility,
   } = useEditableCurriculumItem();
+
+  const lectures = curriculumSection.lessons;
 
   return (
     <CurriculumSectionContext.Provider
@@ -90,8 +93,14 @@ export const CurriculumSection = ({
               mt: 2,
               pl: 6,
               pr: 1,
+              gap: 2,
             }}
           >
+            {lectures.map((lecture, index) => {
+              return (
+                <LectureItem key={lecture.id} lecture={lecture} index={index} />
+              );
+            })}
             <CurriculumItemSelection />
           </Stack>
         </Stack>
