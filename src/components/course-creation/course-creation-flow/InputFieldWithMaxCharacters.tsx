@@ -7,8 +7,8 @@ interface InputFieldWithMaxCharactersProps {
   placeholder: string;
   autofocus?: boolean;
   maxInputLength?: number;
-  sx?: SxProps;
-  placeholderSx?: SxProps;
+  outerDivSx?: SxProps;
+  inputSx?: SxProps;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,8 +17,8 @@ export const InputFieldWithMaxCharacters = ({
   placeholder,
   autofocus = false,
   maxInputLength,
-  sx,
-  placeholderSx,
+  outerDivSx,
+  inputSx,
   onChange,
 }: InputFieldWithMaxCharactersProps) => {
   const isMaxCharactersVisible = maxInputLength !== undefined;
@@ -29,11 +29,10 @@ export const InputFieldWithMaxCharacters = ({
         position: 'relative',
         border: '1px solid',
         borderColor: 'text.primary',
-        width: 660,
         height: 54,
         pl: 2,
         pr: isMaxCharactersVisible ? 8 : 2,
-        ...sx,
+        ...outerDivSx,
       }}
     >
       <StyledInput
@@ -52,7 +51,7 @@ export const InputFieldWithMaxCharacters = ({
           '&:focus::placeholder': {
             color: 'transparent',
           },
-          ...placeholderSx,
+          ...inputSx,
         }}
       />
       {isMaxCharactersVisible && (
