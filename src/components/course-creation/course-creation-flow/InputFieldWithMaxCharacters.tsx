@@ -5,16 +5,20 @@ import { ChangeEvent } from 'react';
 interface InputFieldWithMaxCharactersProps {
   value: string;
   placeholder: string;
+  autofocus?: boolean;
   maxInputLength?: number;
   sx?: SxProps;
+  placeholderSx?: SxProps;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const InputFieldWithMaxCharacters = ({
   value,
   placeholder,
+  autofocus = false,
   maxInputLength,
   sx,
+  placeholderSx,
   onChange,
 }: InputFieldWithMaxCharactersProps) => {
   const isMaxCharactersVisible = maxInputLength !== undefined;
@@ -37,6 +41,7 @@ export const InputFieldWithMaxCharacters = ({
         value={value}
         placeholder={placeholder}
         maxLength={maxInputLength}
+        autoFocus={autofocus}
         sx={{
           fontSize: 16,
           textOverflow: 'ellipsis',
@@ -47,6 +52,7 @@ export const InputFieldWithMaxCharacters = ({
           '&:focus::placeholder': {
             color: 'transparent',
           },
+          ...placeholderSx,
         }}
       />
       {isMaxCharactersVisible && (
