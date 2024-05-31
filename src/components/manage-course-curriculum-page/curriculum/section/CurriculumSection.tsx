@@ -16,6 +16,14 @@ interface CurriculumSectionProps {
   index: number;
 }
 
+// NOTE: Editing items are closed by setting
+// the editingItemType to undefined and shown
+// by setting the type.
+
+// NOTE: This components nested hierarchy is a bit
+// complex partly because the rolling close button
+// animations use specific child parent relationship.
+
 export const CurriculumSection = ({
   courseDraftId,
   curriculumSection,
