@@ -1,16 +1,16 @@
 import { createContext } from 'react';
 import { ICurriculumSection } from '../features/courseDraftsSlice';
 
-export type EditableItem = 'addLecture';
+export type EditableItemType = 'addLecture';
 
 interface CurriculumSectionContextProps {
   index: number;
   courseDraftId: string;
   curriculumSection: ICurriculumSection;
-  editingItemType: EditableItem | undefined;
+  editingItemType: EditableItemType | undefined;
   isOptionsAnimationEnabled: boolean;
   setIsOptionsAnimationEnabled: (isEnabled: boolean) => void;
-  setEditingItemType: (itemType: EditableItem | undefined) => void;
+  setEditingItemType: (itemType: EditableItemType | undefined) => void;
 }
 
 const defaultValue: CurriculumSectionContextProps = {
