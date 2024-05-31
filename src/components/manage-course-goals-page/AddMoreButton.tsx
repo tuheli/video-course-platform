@@ -4,12 +4,16 @@ import AddIcon from '@mui/icons-material/Add';
 interface AddMoreButtonProps {
   text?: string;
   sx?: SxProps;
+  addIconSx?: SxProps;
+  addIconContainerSx?: SxProps;
   onClick: () => void;
 }
 
 export const AddMoreButton = ({
   text = 'Add more to your response',
   sx,
+  addIconSx,
+  addIconContainerSx,
   onClick,
 }: AddMoreButtonProps) => {
   return (
@@ -34,17 +38,24 @@ export const AddMoreButton = ({
       <Box
         sx={{
           display: 'flex',
+          ...addIconContainerSx,
         }}
       >
-        <AddIcon />
+        <AddIcon
+          sx={{
+            ...addIconSx,
+          }}
+        />
       </Box>
-      <Typography
-        sx={{
-          fontWeight: 500,
-        }}
-      >
-        {text}
-      </Typography>
+      {text && (
+        <Typography
+          sx={{
+            fontWeight: 500,
+          }}
+        >
+          {text}
+        </Typography>
+      )}
     </Box>
   );
 };
