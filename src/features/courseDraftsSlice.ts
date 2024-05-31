@@ -594,6 +594,36 @@ const slice = createSlice({
 
       section[action.payload.type] = action.payload.newValue;
     },
+    addedLecture: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+        lectureTitle: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.curriculumSectionId
+      );
+
+      if (!section) return;
+
+      section.lessons.push({
+        id: crypto.randomUUID(),
+        name: action.payload.lectureTitle,
+        orderIndex:
+          section.lessons.length > 0
+            ? Math.max(...section.lessons.map(({ orderIndex }) => orderIndex)) +
+              1
+            : -1,
+      });
+    },
   },
 });
 
@@ -606,5 +636,6 @@ export const {
   addedCurriculumSection,
   deletedCurriculumSection,
   updatedCurriculumSectionText,
+  addedLecture,
 } = slice.actions;
 export default slice.reducer;
