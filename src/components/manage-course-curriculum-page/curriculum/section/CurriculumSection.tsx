@@ -4,6 +4,7 @@ import { CurriculumSectionContext } from '../../../../contexts/CurriculumSection
 import { SectionEditingHeading } from '../SectionEditingHeading';
 import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
 import { useEditableCurriculumItem } from '../../../../hooks/useEditableCurriculumItem';
+import { CurriculumItemSelection } from '../CurriculumItemSelection';
 
 interface CurriculumSectionProps {
   courseDraftId: string;
@@ -42,6 +43,7 @@ export const CurriculumSection = ({
         <Stack
           sx={{
             flexDirection: 'column',
+            gap: 2,
           }}
         >
           {isHeadingPartVisible && (
@@ -56,6 +58,16 @@ export const CurriculumSection = ({
               changeHeadingVisibility={changeHeadingVisibility}
             />
           )}
+          <Stack
+            sx={{
+              flexDirection: 'column',
+              mt: 2,
+              pl: 6,
+              pr: 1,
+            }}
+          >
+            <CurriculumItemSelection />
+          </Stack>
         </Stack>
       </Paper>
     </CurriculumSectionContext.Provider>
