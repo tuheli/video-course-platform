@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react';
 import { EditCurriculumItemLayout } from './EditCurriculumItemLayout';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
-import { useAppDispatch } from '../../../app/hooks';
-import { addedLecture } from '../../../features/courseDraftsSlice';
+import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
+import { useAppDispatch } from '../../app/hooks';
+import { addedLecture } from '../../features/courseDraftsSlice';
 
 export const NewLectureCard = () => {
   const [title, setTitle] = useState('');

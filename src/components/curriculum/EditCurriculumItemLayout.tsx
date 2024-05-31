@@ -1,8 +1,8 @@
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
-import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { ChangeEvent } from 'react';
 import { inputSx, inputOuterDivSx } from './common';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
+import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 
 interface NewCurriculumItemLayoutProps {
   title: string;

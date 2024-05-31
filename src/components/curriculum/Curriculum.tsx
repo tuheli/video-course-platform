@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material';
-import { useCurriculum } from '../../../hooks/useCurriculum';
 import { CurriculumSection } from './section/CurriculumSection';
 import { AddCurriculumSectionButton } from './AddCurriculumSectionButton';
+import { useCurriculum } from '../../hooks/useCurriculum';
 
 export const Curriculum = () => {
   const { curriculum, courseDraft } = useCurriculum();

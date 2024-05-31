@@ -1,11 +1,11 @@
 import { Typography } from '@mui/material';
-import { InputFieldWithMaxCharacters } from '../../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { useAppDispatch } from '../../../../app/hooks';
-import { useCurriculumSectionContext } from '../../../../hooks/useCurriculumSectionContext';
 import { ChangeEvent } from 'react';
-import { updatedCurriculumSectionText } from '../../../../features/courseDraftsSlice';
 import { inputOuterDivSx, inputSx } from '../common';
 import { EditCurriculumItemLayout } from '../EditCurriculumItemLayout';
+import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { useAppDispatch } from '../../../app/hooks';
+import { updatedCurriculumSectionText } from '../../../features/courseDraftsSlice';
+import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 
 interface EditSectionTitleAndLearningObjectiveProps {
   changeHeadingVisibility: (isVisible: boolean) => void;

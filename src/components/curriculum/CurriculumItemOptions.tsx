@@ -1,10 +1,10 @@
 import { Box, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useEnableActionTimer } from '../../../hooks/useEnableActionTimer';
 import { animationDurationSeconds } from './common';
 import { AddLectureButton } from './lecture/AddLectureButton';
 import { EditableCurriculumItemSelector } from './EditableCurriculumItemSelector';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
+import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 
 interface CurriculumItemOptionsProps {
   setVisibility: (isVisible: boolean) => void;

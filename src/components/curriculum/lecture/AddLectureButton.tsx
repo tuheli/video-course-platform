@@ -1,5 +1,5 @@
-import { useCurriculumSectionContext } from '../../../../hooks/useCurriculumSectionContext';
-import { AddMoreButton } from '../../../manage-course-goals-page/AddMoreButton';
+import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 
 export const AddLectureButton = () => {
   const { setEditingItemType } = useCurriculumSectionContext();

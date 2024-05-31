@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/material';
-import { useAppDispatch } from '../../../app/hooks';
-import { deletedCurriculumSection } from '../../../features/courseDraftsSlice';
+import { useAppDispatch } from '../../app/hooks';
+import { deletedCurriculumSection } from '../../features/courseDraftsSlice';
 
 interface DeleteCurriculumSectionButtonProps {
   courseDraftId: string;

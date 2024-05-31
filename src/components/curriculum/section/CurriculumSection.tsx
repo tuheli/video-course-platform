@@ -1,14 +1,14 @@
 import { Paper, Stack } from '@mui/material';
-import { ICurriculumSection } from '../../../../features/courseDraftsSlice';
+import { SectionEditingHeading } from '../SectionEditingHeading';
+import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
+import { CurriculumItemSelection } from '../CurriculumItemSelection';
+import { useState } from 'react';
+import { ICurriculumSection } from '../../../features/courseDraftsSlice';
 import {
   CurriculumSectionContext,
   EditableItem,
-} from '../../../../contexts/CurriculumSectionContext';
-import { SectionEditingHeading } from '../SectionEditingHeading';
-import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
-import { useEditableCurriculumItem } from '../../../../hooks/useEditableCurriculumItem';
-import { CurriculumItemSelection } from '../CurriculumItemSelection';
-import { useState } from 'react';
+} from '../../../contexts/CurriculumSectionContext';
+import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
 
 interface CurriculumSectionProps {
   courseDraftId: string;

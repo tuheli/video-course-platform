@@ -1,7 +1,7 @@
-import { useAppDispatch } from '../../../app/hooks';
-import { addedCurriculumSection } from '../../../features/courseDraftsSlice';
-import { useCourseDraft } from '../../../hooks/useCourseDraft';
-import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
+import { useAppDispatch } from '../../app/hooks';
+import { addedCurriculumSection } from '../../features/courseDraftsSlice';
+import { useCourseDraft } from '../../hooks/useCourseDraft';
+import { AddMoreButton } from '../manage-course-goals-page/AddMoreButton';
 
 export const AddCurriculumSectionButton = () => {
   const courseDraft = useCourseDraft();

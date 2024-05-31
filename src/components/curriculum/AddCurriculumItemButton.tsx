@@ -1,6 +1,6 @@
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
-import { useEnableActionTimer } from '../../../hooks/useEnableActionTimer';
-import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
+import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
+import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
+import { AddMoreButton } from '../manage-course-goals-page/AddMoreButton';
 import { animationDurationSeconds } from './common';
 
 interface AddCurriculumItemButtonProps {

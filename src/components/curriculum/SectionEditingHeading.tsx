@@ -1,8 +1,8 @@
 import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
 import { DeleteCurriculumSectionButton } from './DeleteCurriculumSectionButton';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { EditSectionTitleAndLearningObjectiveButton } from './section/EditSectionTitleAndLearningObjectiveButton';
+import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 
 interface SectionEditingHeadingProps {
   isDeleteButtonVisible: boolean;
