@@ -1,8 +1,10 @@
 import { Box, Stack } from '@mui/material';
-import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 import AddIcon from '@mui/icons-material/Add';
 import { useEnableActionTimer } from '../../../hooks/useEnableActionTimer';
 import { animationDurationSeconds } from './common';
+import { AddLectureButton } from './lecture/AddLectureButton';
+import { EditableCurriculumItemSelector } from './EditableCurriculumItemSelector';
+import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 
 interface CurriculumItemOptionsProps {
   setVisibility: (isVisible: boolean) => void;
@@ -12,6 +14,10 @@ export const CurriculumItemOptions = ({
   setVisibility,
 }: CurriculumItemOptionsProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
+  const { editingItemType } = useCurriculumSectionContext();
+
+  const isEditableCurriculumItemSelectorVisible = editingItemType !== undefined;
+  const isAddButtonsVisible = !isEditableCurriculumItemSelectorVisible;
 
   const isClickAllowed = isEnabled;
 
@@ -32,14 +38,14 @@ export const CurriculumItemOptions = ({
           position: 'absolute',
           top: 11,
           left: 11,
-          animation: 'closeIconMoveAnimation 1s ease-out forwards',
+          animation: `closeIconMoveAnimation ${animationDurationSeconds}s ease-out forwards`,
         }}
       >
         <Box
           onClick={onClickCloseIcon}
           sx={{
             transform: 'rotate(45deg)',
-            animation: 'closeIconRollAnimation 1s ease-out forwards',
+            animation: `closeIconRollAnimation ${animationDurationSeconds}s ease-out forwards`,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -51,40 +57,22 @@ export const CurriculumItemOptions = ({
           <AddIcon />
         </Box>
       </Box>
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          gap: 1,
-          border: '1px dashed',
-          borderColor: 'text.primary',
-          animation: 'opacityAnimation 1s ease-in forwards',
-        }}
-      >
-        <AddLectureButton />
-        <AddLectureButton />
-        <AddLectureButton />
-        <AddLectureButton />
-      </Stack>
+      {isAddButtonsVisible && (
+        <Stack
+          sx={{
+            flexDirection: 'row',
+            gap: 1,
+            border: '1px dashed',
+            borderColor: 'text.primary',
+            animation: `opacityAnimation ${animationDurationSeconds}s ease-in forwards`,
+          }}
+        >
+          <AddLectureButton />
+        </Stack>
+      )}
+      {isEditableCurriculumItemSelectorVisible && (
+        <EditableCurriculumItemSelector />
+      )}
     </Box>
-  );
-};
-
-const AddLectureButton = () => {
-  const onClick = () => {};
-
-  return (
-    <AddMoreButton
-      text="Lecture"
-      onClick={onClick}
-      sx={{
-        pl: 1,
-        color: 'secondary.main',
-        bgcolor: 'inherit',
-        '&:hover': {
-          cursor: 'pointer',
-          color: 'secondary.dark',
-        },
-      }}
-    />
   );
 };
