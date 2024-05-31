@@ -6,8 +6,12 @@ import { addedLecture } from '../../features/courseDraftsSlice';
 
 export const NewLectureCard = () => {
   const [title, setTitle] = useState('');
-  const { courseDraftId, curriculumSection, setEditingItemType } =
-    useCurriculumSectionContext();
+  const {
+    courseDraftId,
+    curriculumSection,
+    setEditingItemType,
+    setIsOptionsAnimationEnabled,
+  } = useCurriculumSectionContext();
   const dispatch = useAppDispatch();
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -23,10 +27,12 @@ export const NewLectureCard = () => {
       })
     );
 
+    setIsOptionsAnimationEnabled(true);
     setEditingItemType(undefined);
   };
 
   const onClickCancel = () => {
+    setIsOptionsAnimationEnabled(false);
     setEditingItemType(undefined);
   };
 
