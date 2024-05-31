@@ -1,10 +1,14 @@
 import { createContext } from 'react';
 import { ICurriculumSection } from '../features/courseDraftsSlice';
 
+export type EditableItem = 'addLecture';
+
 interface CurriculumSectionContextProps {
   index: number;
   courseDraftId: string;
   curriculumSection: ICurriculumSection;
+  editingItemType: EditableItem | undefined;
+  setEditingItemType: (itemType: EditableItem | undefined) => void;
 }
 
 const defaultValue: CurriculumSectionContextProps = {
@@ -16,6 +20,8 @@ const defaultValue: CurriculumSectionContextProps = {
     lessons: [],
     orderIndex: -1,
   },
+  editingItemType: undefined,
+  setEditingItemType: () => {},
   index: 0,
 };
 
