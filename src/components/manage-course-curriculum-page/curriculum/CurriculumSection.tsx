@@ -1,8 +1,9 @@
-import { Box, Paper, Stack, Typography } from '@mui/material';
+import { Paper, Stack } from '@mui/material';
 import { ICurriculumSection } from '../../../features/courseDraftsSlice';
-import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
 import { useState } from 'react';
-import { DeleteCurriculumSectionButton } from './DeleteCurriculumSectionButton';
+import { CurriculumSectionContext } from '../../../contexts/CurriculumSectionContext';
+import { SectionEditingHeading } from './SectionEditingHeading';
+import { EditSectionTitleAndLearningObjective } from './EditSectionTitleAndLearningObjective';
 
 interface CurriculumSectionProps {
   courseDraftId: string;
@@ -15,70 +16,60 @@ export const CurriculumSection = ({
   curriculumSection,
   index,
 }: CurriculumSectionProps) => {
+  const [isHeadingPartVisible, setIsHeadingPartVisible] = useState(true);
   const [isDeleteButtonVisible, setIsDeleteButtonVisible] = useState(false);
+  const [isEditSectionButtonVisible, setIsEditSectionButtonVisible] =
+    useState(false);
+
+  const isEditSectionTitleAndLearningObjectiveVisible = !isHeadingPartVisible;
 
   const onMouseEnter = () => {
     setIsDeleteButtonVisible(true);
+    setIsEditSectionButtonVisible(true);
   };
 
   const onMouseLeave = () => {
     setIsDeleteButtonVisible(false);
+    setIsEditSectionButtonVisible(false);
+  };
+
+  const changeHeadingVisibility = (isVisible: boolean) => {
+    setIsHeadingPartVisible(isVisible);
   };
 
   return (
-    <Paper
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      sx={{
-        bgcolor: 'background.paperDarker',
-        border: '1px solid',
-        borderColor: 'text.primary',
-        py: 2,
-        px: 1,
-      }}
+    <CurriculumSectionContext.Provider
+      value={{ courseDraftId, curriculumSection, index }}
     >
-      <Stack
+      <Paper
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         sx={{
-          flexDirection: 'column',
-          minHeight: 100,
+          bgcolor: 'background.paperDarker',
+          border: '1px solid',
+          borderColor: 'text.primary',
+          p: 1,
         }}
       >
         <Stack
           sx={{
-            flexDirection: 'row',
-            gap: 1,
+            flexDirection: 'column',
           }}
         >
-          <Typography
-            sx={{
-              fontWeight: 600,
-            }}
-          >
-            Section {index + 1}:
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <NoteOutlinedIcon
-              sx={{
-                transform: 'scaleX(0.63)',
-                fontSize: 21,
-              }}
+          {isHeadingPartVisible && (
+            <SectionEditingHeading
+              isDeleteButtonVisible={isDeleteButtonVisible}
+              isEditSectionButtonVisible={isEditSectionButtonVisible}
+              changeHeadingVisibility={changeHeadingVisibility}
             />
-          </Box>
-          <Typography>{curriculumSection.name}</Typography>
-          {isDeleteButtonVisible && (
-            <DeleteCurriculumSectionButton
-              courseDraftId={courseDraftId}
-              curriculumSectionId={curriculumSection.id}
+          )}
+          {isEditSectionTitleAndLearningObjectiveVisible && (
+            <EditSectionTitleAndLearningObjective
+              changeHeadingVisibility={changeHeadingVisibility}
             />
           )}
         </Stack>
-      </Stack>
-    </Paper>
+      </Paper>
+    </CurriculumSectionContext.Provider>
   );
 };
