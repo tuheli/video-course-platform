@@ -24,6 +24,8 @@ export const CurriculumSection = ({
   const [editingItemType, setEditingItemType] = useState<
     EditableItem | undefined
   >(undefined);
+  const [isOptionsAnimationEnabled, setIsOptionsAnimationEnabled] =
+    useState(true);
 
   const {
     isHeadingPartVisible,
@@ -41,6 +43,8 @@ export const CurriculumSection = ({
         curriculumSection,
         index,
         editingItemType,
+        isOptionsAnimationEnabled,
+        setIsOptionsAnimationEnabled,
         setEditingItemType,
       }}
     >
