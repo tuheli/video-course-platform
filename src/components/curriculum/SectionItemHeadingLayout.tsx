@@ -40,7 +40,7 @@ export const SectionItemHeadingLayout = ({
           fontWeight: 600,
         }}
       >
-        {itemName}: {index + 1}:
+        {itemName} {index + 1}:
       </Typography>
       <Box
         sx={{
