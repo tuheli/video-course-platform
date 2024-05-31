@@ -44,7 +44,7 @@ interface ReorderableTextArrayObject {
   items: TextWithId[];
 }
 
-interface Lesson {
+export interface Lesson {
   id: string;
   name: string;
   orderIndex: number;
@@ -624,6 +624,35 @@ const slice = createSlice({
             : -1,
       });
     },
+    updatedLectureTitle: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+        lectureId: string;
+        newLectureTitle: string;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.curriculumSectionId
+      );
+
+      if (!section) return;
+
+      const lecture = section.lessons.find(
+        ({ id }) => id === action.payload.lectureId
+      );
+
+      if (!lecture) return;
+
+      lecture.name = action.payload.newLectureTitle;
+    },
   },
 });
 
@@ -637,5 +666,6 @@ export const {
   deletedCurriculumSection,
   updatedCurriculumSectionText,
   addedLecture,
+  updatedLectureTitle,
 } = slice.actions;
 export default slice.reducer;
