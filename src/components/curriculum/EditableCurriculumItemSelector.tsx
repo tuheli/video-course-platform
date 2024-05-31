@@ -1,12 +1,12 @@
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
-import { NewLectureCard } from './NewLectureCard';
+import { AddLectureCard } from './lecture/AddLectureCard';
 
 export const EditableCurriculumItemSelector = () => {
   const { editingItemType } = useCurriculumSectionContext();
 
   switch (editingItemType) {
     case 'addLecture':
-      return <NewLectureCard />;
+      return <AddLectureCard />;
     default:
       return <></>;
   }
