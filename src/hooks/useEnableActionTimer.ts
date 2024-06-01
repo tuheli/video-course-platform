@@ -26,7 +26,7 @@ export const useEnableActionTimer = (enableAfterDuration: number) => {
     return () => {
       clearTimeout(timerId);
     };
-  }, []);
+  }, [enableAfterDuration, isEnabled]);
 
   return { isEnabled };
 };
