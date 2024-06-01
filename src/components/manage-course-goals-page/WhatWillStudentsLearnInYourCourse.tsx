@@ -1,15 +1,15 @@
 import { Stack, Typography } from '@mui/material';
-import { LightColoredRouterLink } from '../LightColoredRouterLink';
-import { useCourseDraft } from '../../../hooks/useCourseDraft';
-import { DroppableArea } from '../../drag-and-drop/DroppableArea';
-import { Draggable } from '../../drag-and-drop/Draggable';
-import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
-import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
-import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
-import { useChangeOrder } from '../../../hooks/useChangeOrder';
-import { EditableTextItem } from '../EditableTextItem';
-import { isAbleToDeleteLearningObjective } from '../../../features/courseDraftsSlice';
-import { AddItemButton } from '../AddItemButton';
+import { LightColoredRouterLink } from './LightColoredRouterLink';
+import { useCourseDraft } from '../../hooks/useCourseDraft';
+import { DroppableArea } from '../drag-and-drop/DroppableArea';
+import { Draggable } from '../drag-and-drop/Draggable';
+import { DragAndDropContext } from '../../contexts/DragAndDropContext';
+import { ItemWithOrderIndex } from '../drag-and-drop/utils';
+import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
+import { useChangeOrder } from '../../hooks/useChangeOrder';
+import { EditableTextItem } from './EditableTextItem';
+import { isAbleToDeleteLearningObjective } from '../../features/courseDraftsSlice';
+import { AddItemButton } from './AddItemButton';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();

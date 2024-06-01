@@ -4,9 +4,9 @@ import { CourseManagementAppBar } from '../course-management/CourseManagementApp
 import { CourseManagementPageLayout } from '../course-management/CourseManagementPageLayout';
 import { Heading } from './Heading';
 import { Description } from './Description';
-import { WhatWillStudentsLearnInYourCourse } from './what-will-students-learn-in-your-course/WhatWillStudentsLearnInYourCourse';
-import { WhatAreTheCoursePrerequisites } from './what-are-the-course-prerequisites/WhatAreTheCoursePrerequisites';
-import { WhoIsThisCourseFor } from './who-is-this-course-for/WhoIsThisCourseFor';
+import { WhatWillStudentsLearnInYourCourse } from './WhatWillStudentsLearnInYourCourse';
+import { WhatAreTheCoursePrerequisites } from './WhatAreTheCoursePrerequisites';
+import { WhoIsThisCourseFor } from './WhoIsThisCourseFor';
 import { Footer } from '../footer/Footer';
 
 export const ManageCourseGoalsPage = () => {

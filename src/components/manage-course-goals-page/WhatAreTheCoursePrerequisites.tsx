@@ -1,14 +1,14 @@
 import { Stack, Typography } from '@mui/material';
-import { useCourseDraft } from '../../../hooks/useCourseDraft';
-import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
-import { DroppableArea } from '../../drag-and-drop/DroppableArea';
-import { Draggable } from '../../drag-and-drop/Draggable';
-import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
-import { useChangeOrder } from '../../../hooks/useChangeOrder';
-import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
-import { EditableTextItem } from '../EditableTextItem';
-import { isAbleToDeletePrerequisite } from '../../../features/courseDraftsSlice';
-import { AddItemButton } from '../AddItemButton';
+import { useCourseDraft } from '../../hooks/useCourseDraft';
+import { DragAndDropContext } from '../../contexts/DragAndDropContext';
+import { DroppableArea } from '../drag-and-drop/DroppableArea';
+import { Draggable } from '../drag-and-drop/Draggable';
+import { ItemWithOrderIndex } from '../drag-and-drop/utils';
+import { useChangeOrder } from '../../hooks/useChangeOrder';
+import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
+import { EditableTextItem } from './EditableTextItem';
+import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
+import { AddItemButton } from './AddItemButton';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
