@@ -200,21 +200,7 @@ const getReorderableTextArrayObject = (
 };
 
 const getInitialCurriculum = () => {
-  const sections: ICurriculumSection[] = [
-    {
-      id: crypto.randomUUID(),
-      title: 'New Section',
-      learningObjective: '',
-      orderIndex: -1,
-      lessons: [
-        {
-          id: crypto.randomUUID(),
-          name: 'New Lecture',
-          orderIndex: -1,
-        },
-      ],
-    },
-  ];
+  const sections: ICurriculumSection[] = [];
 
   return sections;
 };
@@ -539,13 +525,7 @@ const slice = createSlice({
               ({ orderIndex }) => orderIndex
             )
           ) + 1,
-        lessons: [
-          {
-            id: crypto.randomUUID(),
-            name: 'New Lecture',
-            orderIndex: -1,
-          },
-        ],
+        lessons: [],
       };
 
       courseDraft.courseContent.curriculum.push(newSection);
