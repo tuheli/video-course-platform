@@ -1,7 +1,5 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from '../LightColoredRouterLink';
-import { EditLearningObjectiveItem } from './EditLearningObjectiveItem';
-import { AddLearningObjectiveButton } from './AddLearningObjectiveButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable } from '../../drag-and-drop/Draggable';
@@ -9,11 +7,17 @@ import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
 import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../../hooks/useChangeOrder';
+import { EditableTextItem } from '../EditableTextItem';
+import { isAbleToDeleteLearningObjective } from '../../../features/courseDraftsSlice';
+import { AddItemButton } from '../AddItemButton';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
   const learningObjectives = useOrderedCourseContent('learningObjectives');
   const { changeOrder } = useChangeOrder('learningObjectives');
+
+  const examplePlaceholderText =
+    'Example: Define the roles and responsibilities of a project manager';
 
   const changeLearningObjectivesOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
@@ -55,18 +59,23 @@ export const WhatWillStudentsLearnInYourCourse = () => {
               gap: 2,
             }}
           >
-            {learningObjectives.map((learningObjective) => (
-              <Draggable id={learningObjective.id} key={learningObjective.id}>
-                <EditLearningObjectiveItem
-                  courseDraft={courseDraft}
-                  learningObjective={learningObjective}
-                />
-              </Draggable>
-            ))}
+            {learningObjectives.map((learningObjective) => {
+              return (
+                <Draggable id={learningObjective.id} key={learningObjective.id}>
+                  <EditableTextItem
+                    examplePlaceholderText={examplePlaceholderText}
+                    type={'learningObjectives'}
+                    item={learningObjective}
+                    courseDraft={courseDraft}
+                    isAbleToDeleteItem={isAbleToDeleteLearningObjective}
+                  />
+                </Draggable>
+              );
+            })}
           </Stack>
         </DroppableArea>
       </DragAndDropContext.Provider>
-      <AddLearningObjectiveButton />
+      <AddItemButton courseDraftId={courseDraft.id} type="learningObjectives" />
     </Stack>
   );
 };

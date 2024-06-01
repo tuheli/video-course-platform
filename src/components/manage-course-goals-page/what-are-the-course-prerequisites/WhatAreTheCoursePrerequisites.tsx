@@ -1,6 +1,4 @@
 import { Stack, Typography } from '@mui/material';
-import { EditPrerequisitesItem } from './EditPrerequisitesItem';
-import { AddPrerequisiteButton } from './AddPrerequisiteButton';
 import { useCourseDraft } from '../../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
@@ -8,11 +6,17 @@ import { Draggable } from '../../drag-and-drop/Draggable';
 import { ItemWithOrderIndex } from '../../drag-and-drop/utils';
 import { useChangeOrder } from '../../../hooks/useChangeOrder';
 import { useOrderedCourseContent } from '../../../hooks/useOrderedCourseContent';
+import { EditableTextItem } from '../EditableTextItem';
+import { isAbleToDeletePrerequisite } from '../../../features/courseDraftsSlice';
+import { AddItemButton } from '../AddItemButton';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
   const prerequisites = useOrderedCourseContent('prerequisites');
   const { changeOrder } = useChangeOrder('prerequisites');
+
+  const examplePlaceholderText =
+    'Example: No programming experience needed. You will learn everything you need to know';
 
   const changePrerequisitesOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
@@ -40,13 +44,6 @@ export const WhatAreTheCoursePrerequisites = () => {
         have prior to taking your course. If there are no requirements, use this
         space as an opportunity to lower the barrier for beginners.
       </Typography>
-      {/* {prerequisites.map((prerequisite) => (
-        <EditPrerequisitesItem
-          key={prerequisite.id}
-          prerequisite={prerequisite}
-          courseDraft={courseDraft}
-        />
-      ))} */}
       <DragAndDropContext.Provider
         value={{
           itemsState: prerequisites,
@@ -59,18 +56,23 @@ export const WhatAreTheCoursePrerequisites = () => {
               gap: 2,
             }}
           >
-            {prerequisites.map((prerequisite) => (
-              <Draggable id={prerequisite.id} key={prerequisite.id}>
-                <EditPrerequisitesItem
-                  courseDraft={courseDraft}
-                  prerequisite={prerequisite}
-                />
-              </Draggable>
-            ))}
+            {prerequisites.map((prerequisite) => {
+              return (
+                <Draggable id={prerequisite.id} key={prerequisite.id}>
+                  <EditableTextItem
+                    examplePlaceholderText={examplePlaceholderText}
+                    type={'prerequisites'}
+                    item={prerequisite}
+                    courseDraft={courseDraft}
+                    isAbleToDeleteItem={isAbleToDeletePrerequisite}
+                  />
+                </Draggable>
+              );
+            })}
           </Stack>
         </DroppableArea>
       </DragAndDropContext.Provider>
-      <AddPrerequisiteButton />
+      <AddItemButton courseDraftId={courseDraft.id} type="prerequisites" />
     </Stack>
   );
 };
