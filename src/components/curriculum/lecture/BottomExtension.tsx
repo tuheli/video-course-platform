@@ -1,10 +1,19 @@
 import { Paper, Stack } from '@mui/material';
 import { AddMoreButtonDarkVariant } from '../../manage-course-goals-page/AddMoreButtonDarkVariant';
+import { useState } from 'react';
+import { DesctiptionEditor } from './DescriptionEditor';
 
 // For consistent size
 const minButtoWidth = 140;
 
 export const BottomExtension = () => {
+  const [isDescriptionEditorVisible, setIsDescriptionEditorVisible] =
+    useState(true);
+
+  const onClickDescriptionButton = () => {
+    setIsDescriptionEditorVisible(true);
+  };
+
   return (
     <Paper
       sx={{
@@ -19,13 +28,16 @@ export const BottomExtension = () => {
           gap: 1,
         }}
       >
-        <AddMoreButtonDarkVariant
-          text="Description"
-          onClick={() => {}}
-          sx={{
-            minWidth: minButtoWidth,
-          }}
-        />
+        {!isDescriptionEditorVisible && (
+          <AddMoreButtonDarkVariant
+            text="Description"
+            onClick={onClickDescriptionButton}
+            sx={{
+              minWidth: minButtoWidth,
+            }}
+          />
+        )}
+        {isDescriptionEditorVisible && <DesctiptionEditor />}
         <AddMoreButtonDarkVariant
           text="Resources"
           onClick={() => {}}
