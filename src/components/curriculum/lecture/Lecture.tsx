@@ -62,11 +62,14 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
           title={lecture.name}
           changeHeadingVisibility={changeHeadingVisibility}
           onClickDeleteIcon={onClickDeleteIcon}
+          titleSx={{
+            fontWeight: 400,
+          }}
         />
       )}
       {isEditVisible && (
         <EditHeading
-          title={`Lecture ${index + 1}`}
+          title={`Lecture ${index + 1}:`}
           titleValue={lecture.name}
           saveButtonText="Save Lecture"
           onChangeTitle={onChangeTitle}

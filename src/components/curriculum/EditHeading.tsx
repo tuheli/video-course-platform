@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, SxProps, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { inputSx, inputOuterDivSx } from './common';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
@@ -9,6 +9,7 @@ interface EditHeading {
   titleValue: string;
   saveButtonText: string;
   children?: React.ReactNode;
+  titleSx?: SxProps;
   onChangeTitle: (event: ChangeEvent<HTMLInputElement>) => void;
   onClickCancel: () => void;
   onClickSave: () => void;
@@ -19,6 +20,7 @@ export const EditHeading = ({
   titleValue,
   saveButtonText,
   children,
+  titleSx,
   onChangeTitle,
   onClickCancel,
   onClickSave,
@@ -34,14 +36,14 @@ export const EditHeading = ({
     <Paper
       sx={{
         p: 1,
+        py: 1.5,
         border: '1px solid',
-        borderColor: 'text.primary',
       }}
     >
       <Stack
         sx={{
           flexDirection: 'row',
-          gap: 2,
+          gap: 1,
         }}
       >
         <Box
@@ -52,6 +54,7 @@ export const EditHeading = ({
           <Typography
             sx={{
               fontWeight: 400,
+              ...titleSx,
             }}
           >
             {title}

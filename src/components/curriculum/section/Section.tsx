@@ -128,16 +128,23 @@ export const Section = ({
               title={curriculumSection.title}
               changeHeadingVisibility={changeHeadingVisibility}
               onClickDeleteIcon={onClickDeleteIcon}
+              paperSx={{
+                bgcolor: 'background.paperDarker',
+                borderColor: 'background.paperDarker', // Hides border but keeps size consistent with editheading component
+              }}
             />
           )}
           {isEditVisible && (
             <EditHeading
-              title={`Section ${index + 1}`}
+              title={`Section ${index + 1}:`}
               titleValue={curriculumSection.title}
               saveButtonText="Save Section"
               onChangeTitle={onChangeTitle}
               onClickCancel={onClickCancel}
               onClickSave={onClickSave}
+              titleSx={{
+                fontWeight: 600,
+              }}
             >
               <>
                 <Typography
