@@ -9,6 +9,12 @@ interface ElementProps {
 export const Element = ({ attributes, children, element }: ElementProps) => {
   const style = { textAlign: element.align };
   switch (element.type) {
+    case 'paragraph':
+      return (
+        <div style={style} {...attributes}>
+          {children}
+        </div>
+      );
     case 'block-quote':
       return (
         <blockquote style={style} {...attributes}>
@@ -47,9 +53,9 @@ export const Element = ({ attributes, children, element }: ElementProps) => {
       );
     default:
       return (
-        <p style={style} {...attributes}>
+        <div style={style} {...attributes}>
           {children}
-        </p>
+        </div>
       );
   }
 };
