@@ -9,6 +9,8 @@ import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumI
 import { EditHeading } from '../EditHeading';
 import { Heading } from '../Heading';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
+import { BottomExtension } from './BottomExtension';
+import { Stack } from '@mui/material';
 
 interface LectureProps {
   lecture: Lesson;
@@ -23,6 +25,7 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
   const dispatch = useAppDispatch();
 
   const isEditVisible = !isHeadingVisible;
+  const isBottomExtensionVisible = true;
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -54,7 +57,7 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
   };
 
   return (
-    <>
+    <Stack>
       {isHeadingVisible && (
         <Heading
           itemName={'Lecture'}
@@ -77,6 +80,7 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
           onClickSave={onClickSave}
         />
       )}
-    </>
+      {isBottomExtensionVisible && <BottomExtension />}
+    </Stack>
   );
 };
