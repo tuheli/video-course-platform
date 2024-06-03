@@ -9,7 +9,7 @@ import {
 } from 'slate-react';
 import { createEditor, Descendant } from 'slate';
 import { withHistory } from 'slate-history';
-import { Toolbar } from './Components';
+import { Toolbar } from './Toolbar';
 import { HOTKEYS, isKnownHotkey } from './constants';
 import { toggleMark } from './utils';
 import { Element } from './Element';
