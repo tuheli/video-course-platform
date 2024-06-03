@@ -169,7 +169,7 @@ export const Section = ({
               flexDirection: 'column',
               mt: 2,
               pl: 6,
-              pr: 1,
+              pr: 0,
               gap: 2,
             }}
           >
