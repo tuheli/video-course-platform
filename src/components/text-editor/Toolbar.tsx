@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Stack } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface ToolbarProps {
@@ -7,12 +7,15 @@ interface ToolbarProps {
 
 export const Toolbar = ({ children }: ToolbarProps) => {
   return (
-    <Box
+    <Stack
       sx={{
         position: 'relative',
+        flexDirection: 'row',
+        gap: 2,
+        p: 1,
       }}
     >
       {children}
-    </Box>
+    </Stack>
   );
 };
