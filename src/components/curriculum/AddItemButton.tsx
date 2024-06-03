@@ -1,6 +1,6 @@
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
-import { AddMoreButton } from '../manage-course-goals-page/AddMoreButton';
+import { AddMoreButtonDarkVariant } from '../manage-course-goals-page/AddMoreButtonDarkVariant';
 import { animationDurationSeconds } from './common';
 
 interface AddItemButtonProps {
@@ -26,7 +26,7 @@ export const AddItemButton = ({
   };
 
   return (
-    <AddMoreButton
+    <AddMoreButtonDarkVariant
       addIconContainerSx={
         animateIconBack
           ? {
@@ -45,17 +45,6 @@ export const AddItemButton = ({
       }
       text="Curriculum item"
       onClick={onClick}
-      sx={{
-        pl: 1,
-        border: '1px solid',
-        borderColor: 'text.primary',
-        color: 'text.primary',
-        bgcolor: 'background.default',
-        '&:hover': {
-          bgcolor: 'background.paperDarker',
-          cursor: 'pointer',
-        },
-      }}
     />
   );
 };
