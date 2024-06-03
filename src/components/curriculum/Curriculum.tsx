@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material';
-import { CurriculumSection } from './section/CurriculumSection';
-import { AddCurriculumSectionButton } from './AddCurriculumSectionButton';
+import { Section } from './section/Section';
 import { useCurriculum } from '../../hooks/useCurriculum';
+import { AddSectionButton } from './section/AddSectionButton';
 
 export const Curriculum = () => {
   const { curriculum, courseDraft } = useCurriculum();
@@ -16,14 +16,14 @@ export const Curriculum = () => {
       }}
     >
       {curriculum.map((curriculumSection, index) => (
-        <CurriculumSection
+        <Section
           key={curriculumSection.id}
           curriculumSection={curriculumSection}
           courseDraftId={courseDraft.id}
           index={index}
         />
       ))}
-      <AddCurriculumSectionButton />
+      <AddSectionButton />
     </Stack>
   );
 };

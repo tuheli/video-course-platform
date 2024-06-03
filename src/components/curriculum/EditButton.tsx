@@ -1,11 +1,15 @@
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 
-interface DeleteButtonProps {
-  onClick: () => void;
+interface EditButtonProps {
+  changeHeadingVisibility: (isVisible: boolean) => void;
 }
 
-export const DeleteIconButton = ({ onClick }: DeleteButtonProps) => {
+export const EditButton = ({ changeHeadingVisibility }: EditButtonProps) => {
+  const onClick = () => {
+    changeHeadingVisibility(false);
+  };
+
   return (
     <Box
       onClick={onClick}
@@ -18,7 +22,7 @@ export const DeleteIconButton = ({ onClick }: DeleteButtonProps) => {
         },
       }}
     >
-      <DeleteIcon
+      <EditIcon
         sx={{
           fontSize: 17,
         }}

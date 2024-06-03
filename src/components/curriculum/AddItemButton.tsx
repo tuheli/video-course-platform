@@ -3,15 +3,15 @@ import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
 import { AddMoreButton } from '../manage-course-goals-page/AddMoreButton';
 import { animationDurationSeconds } from './common';
 
-interface AddCurriculumItemButtonProps {
+interface AddItemButtonProps {
   setOptionsVisibility: (isVisible: boolean) => void;
   animateIconBack: boolean;
 }
 
-export const AddCurriculumItemButton = ({
+export const AddItemButton = ({
   animateIconBack,
   setOptionsVisibility,
-}: AddCurriculumItemButtonProps) => {
+}: AddItemButtonProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
   const { setEditingItemType, setIsOptionsAnimationEnabled } =
     useCurriculumSectionContext();

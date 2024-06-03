@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export const useEditableCurriculumItem = () => {
-  const [isHeadingPartVisible, setIsHeadingPartVisible] = useState(true);
+  const [isHeadingVisible, setIsHeadingPartVisible] = useState(true);
   const [isDeleteButtonVisible, setIsDeleteButtonVisible] = useState(false);
   const [isEditButtonVisible, setIsEditSectionButtonVisible] = useState(false);
 
@@ -20,7 +20,7 @@ export const useEditableCurriculumItem = () => {
   };
 
   return {
-    isHeadingPartVisible,
+    isHeadingVisible,
     isDeleteButtonVisible,
     isEditButtonVisible,
     onMouseEnter,

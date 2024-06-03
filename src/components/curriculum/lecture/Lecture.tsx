@@ -6,21 +6,23 @@ import {
   updatedLectureTitle,
 } from '../../../features/courseDraftsSlice';
 import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
-import { EditCurriculumItemLayout } from '../EditCurriculumItemLayout';
-import { SectionItemHeadingLayout } from '../SectionItemHeadingLayout';
+import { EditHeading } from '../EditHeading';
+import { Heading } from '../Heading';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 
-interface LectureItemProps {
+interface LectureProps {
   lecture: Lesson;
   index: number;
 }
 
-export const LectureItem = ({ lecture, index }: LectureItemProps) => {
-  const { isHeadingPartVisible, changeHeadingVisibility } =
+export const Lecture = ({ lecture, index }: LectureProps) => {
+  const { isHeadingVisible, changeHeadingVisibility } =
     useEditableCurriculumItem();
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
 
   const dispatch = useAppDispatch();
+
+  const isEditVisible = !isHeadingVisible;
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -53,8 +55,8 @@ export const LectureItem = ({ lecture, index }: LectureItemProps) => {
 
   return (
     <>
-      {isHeadingPartVisible && (
-        <SectionItemHeadingLayout
+      {isHeadingVisible && (
+        <Heading
           itemName={'Lecture'}
           index={index}
           title={lecture.name}
@@ -62,8 +64,8 @@ export const LectureItem = ({ lecture, index }: LectureItemProps) => {
           onClickDeleteIcon={onClickDeleteIcon}
         />
       )}
-      {!isHeadingPartVisible && (
-        <EditCurriculumItemLayout
+      {isEditVisible && (
+        <EditHeading
           title={`Lecture ${index + 1}`}
           titleValue={lecture.name}
           saveButtonText="Save Lecture"

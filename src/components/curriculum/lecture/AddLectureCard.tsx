@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { EditCurriculumItemLayout } from '../EditCurriculumItemLayout';
+import { EditHeading } from '../EditHeading';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { useAppDispatch } from '../../../app/hooks';
 import { addedLecture } from '../../../features/courseDraftsSlice';
@@ -37,7 +37,7 @@ export const AddLectureCard = () => {
   };
 
   return (
-    <EditCurriculumItemLayout
+    <EditHeading
       title="New lecture:"
       titleValue={title}
       saveButtonText="Add Lecture"

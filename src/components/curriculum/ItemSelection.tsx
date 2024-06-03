@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { AddCurriculumItemButton } from './AddCurriculumItemButton';
-import { CurriculumItemOptions } from './CurriculumItemOptions';
+import { AddItemButton } from './AddItemButton';
+import { ItemOptions } from './ItemOptions';
 
-export const CurriculumItemSelection = () => {
+export const ItemSelection = () => {
   const [animateCloseIconBack, setAnimateCloseIconBack] = useState(false);
   const [isSelectionVisible, setIsSelectionVisible] = useState(false);
 
@@ -14,14 +14,12 @@ export const CurriculumItemSelection = () => {
   return (
     <>
       {!isSelectionVisible && (
-        <AddCurriculumItemButton
+        <AddItemButton
           setOptionsVisibility={setIsSelectionVisible}
           animateIconBack={animateCloseIconBack}
         />
       )}
-      {isSelectionVisible && (
-        <CurriculumItemOptions setVisibility={onItemOptionsClose} />
-      )}
+      {isSelectionVisible && <ItemOptions setVisibility={onItemOptionsClose} />}
     </>
   );
 };

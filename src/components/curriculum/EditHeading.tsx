@@ -4,7 +4,7 @@ import { inputSx, inputOuterDivSx } from './common';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 
-interface NewCurriculumItemLayoutProps {
+interface EditHeading {
   title: string;
   titleValue: string;
   saveButtonText: string;
@@ -14,7 +14,7 @@ interface NewCurriculumItemLayoutProps {
   onClickSave: () => void;
 }
 
-export const EditCurriculumItemLayout = ({
+export const EditHeading = ({
   title,
   titleValue,
   saveButtonText,
@@ -22,7 +22,7 @@ export const EditCurriculumItemLayout = ({
   onChangeTitle,
   onClickCancel,
   onClickSave,
-}: NewCurriculumItemLayoutProps) => {
+}: EditHeading) => {
   const { setIsOptionsAnimationEnabled } = useCurriculumSectionContext();
 
   const onClickCancelWithDisableOptionsAnimation = () => {

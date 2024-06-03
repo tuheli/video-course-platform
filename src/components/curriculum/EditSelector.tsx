@@ -1,7 +1,7 @@
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 import { AddLectureCard } from './lecture/AddLectureCard';
 
-export const EditableCurriculumItemSelector = () => {
+export const EditSelector = () => {
   const { editingItemType } = useCurriculumSectionContext();
 
   switch (editingItemType) {

@@ -2,17 +2,15 @@ import { Box, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { animationDurationSeconds } from './common';
 import { AddableItemOptionButton } from './lecture/AddLectureButton';
-import { EditableCurriculumItemSelector } from './EditableCurriculumItemSelector';
+import { EditSelector } from './EditSelector';
 import { useEnableActionTimer } from '../../hooks/useEnableActionTimer';
 import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 
-interface CurriculumItemOptionsProps {
+interface ItemOptionsProps {
   setVisibility: (isVisible: boolean) => void;
 }
 
-export const CurriculumItemOptions = ({
-  setVisibility,
-}: CurriculumItemOptionsProps) => {
+export const ItemOptions = ({ setVisibility }: ItemOptionsProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
   const { editingItemType, isOptionsAnimationEnabled } =
     useCurriculumSectionContext();
@@ -77,9 +75,7 @@ export const CurriculumItemOptions = ({
           <AddableItemOptionButton text="Assignment" type={undefined} />
         </Stack>
       )}
-      {isEditableCurriculumItemSelectorVisible && (
-        <EditableCurriculumItemSelector />
-      )}
+      {isEditableCurriculumItemSelectorVisible && <EditSelector />}
     </Box>
   );
 };
