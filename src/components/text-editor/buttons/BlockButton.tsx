@@ -4,6 +4,7 @@ import { TEXT_ALIGN_TYPES } from '../constants';
 import { isBlockActive, toggleBlock } from '../utils';
 import { Alignment, IconType, TextBlockType } from '../types';
 import { Button } from './Button';
+import { MouseEvent } from 'react';
 
 interface BlockButtonProps {
   blockPropertyName?: TextBlockType;
@@ -28,7 +29,8 @@ export const BlockButton = ({
       )
     : false;
 
-  const onMouseDown = () => {
+  const onMouseDown = (event: MouseEvent) => {
+    event.preventDefault();
     if (!blockPropertyName) return;
     toggleBlock(editor, blockPropertyName);
   };

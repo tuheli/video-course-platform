@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 import { Span } from '../styled/Span';
 
 interface ButtonProps {
   isActive: boolean;
   children: ReactNode;
-  onMouseDown: () => void;
+  onMouseDown: (event: MouseEvent<HTMLSpanElement>) => void;
 }
 
 export const Button = ({ isActive, children, onMouseDown }: ButtonProps) => {
