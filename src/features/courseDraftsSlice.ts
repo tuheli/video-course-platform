@@ -48,6 +48,7 @@ export interface Lesson {
   id: string;
   name: string;
   orderIndex: number;
+  description: string;
 }
 
 export interface ICurriculumSection {
@@ -200,7 +201,22 @@ const getReorderableTextArrayObject = (
 };
 
 const getInitialCurriculum = () => {
-  const sections: ICurriculumSection[] = [];
+  const sections: ICurriculumSection[] = [
+    {
+      id: crypto.randomUUID(),
+      title: 'Introduction',
+      learningObjective: '',
+      orderIndex: -1,
+      lessons: [
+        {
+          id: crypto.randomUUID(),
+          name: 'Course Introduction',
+          orderIndex: -1,
+          description: '',
+        },
+      ],
+    },
+  ];
 
   return sections;
 };
@@ -602,15 +618,17 @@ const slice = createSlice({
             ? Math.max(...section.lessons.map(({ orderIndex }) => orderIndex)) +
               1
             : -1,
+        description: '',
       });
     },
-    updatedLectureTitle: (
+    updatedLecture: (
       state,
       action: PayloadAction<{
         courseDraftId: string;
         curriculumSectionId: string;
         lectureId: string;
-        newLectureTitle: string;
+        propertyName: 'name' | 'description';
+        newValue: string;
       }>
     ) => {
       const courseDraft = state.find(
@@ -631,7 +649,7 @@ const slice = createSlice({
 
       if (!lecture) return;
 
-      lecture.name = action.payload.newLectureTitle;
+      lecture[action.payload.propertyName] = action.payload.newValue;
     },
     deletedLecture: (
       state,
@@ -672,7 +690,7 @@ export const {
   deletedCurriculumSection,
   updatedCurriculumSectionText,
   addedLecture,
-  updatedLectureTitle,
+  updatedLecture,
   deletedLecture,
 } = slice.actions;
 export default slice.reducer;
