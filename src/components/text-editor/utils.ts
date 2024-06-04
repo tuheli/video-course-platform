@@ -90,7 +90,13 @@ export const getLectureDescriptionLocalStorageKey = (
   sectionId: string,
   lectureId: string
 ) => {
-  return `${courseDraftId}_${sectionId}_${lectureId}`;
+  return `ld_${courseDraftId}_${sectionId}_${lectureId}`;
+};
+
+export const getAllLectureDescriptionsKeys = (courseDraftId: string) => {
+  return Object.keys(localStorage).filter((key) =>
+    key.startsWith(`ld_${courseDraftId}`)
+  );
 };
 
 export const saveToLocalStorage = (key: string, value: Descendant[]) => {
