@@ -8,10 +8,14 @@ const minButtoWidth = 140;
 
 export const BottomExtension = () => {
   const [isDescriptionEditorVisible, setIsDescriptionEditorVisible] =
-    useState(true);
+    useState(false);
 
   const onClickDescriptionButton = () => {
     setIsDescriptionEditorVisible(true);
+  };
+
+  const closeDescriptionEditor = () => {
+    setIsDescriptionEditorVisible(false);
   };
 
   return (
@@ -37,7 +41,9 @@ export const BottomExtension = () => {
             }}
           />
         )}
-        {isDescriptionEditorVisible && <DesctiptionEditor />}
+        {isDescriptionEditorVisible && (
+          <DesctiptionEditor closeEditor={closeDescriptionEditor} />
+        )}
         <AddMoreButtonDarkVariant
           text="Resources"
           onClick={() => {}}
