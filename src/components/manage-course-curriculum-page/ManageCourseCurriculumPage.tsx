@@ -15,7 +15,11 @@ export const ManageCourseCurriculumPage = () => {
       sx={{
         flexDirection: 'column',
         display: 'flex',
-        minHeight: '100vh',
+        // Always show scrollbar with + 1px
+        // preventing undesired horizontal movement
+        // when scrollbar appears with more content
+        // being added to the page
+        minHeight: 'calc(100vh + 1px)',
       }}
     >
       <CourseManagementAppBar />
