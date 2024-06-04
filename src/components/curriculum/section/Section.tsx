@@ -17,6 +17,7 @@ import { useAppDispatch } from '../../../app/hooks';
 import { EditHeading } from '../EditHeading';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { inputOuterDivSx, inputSx } from '../common';
+import { Draghandle } from '../../drag-and-drop/Draghandle';
 
 interface SectionProps {
   courseDraftId: string;
@@ -130,9 +131,24 @@ export const Section = ({
               onClickDeleteIcon={onClickDeleteIcon}
               paperSx={{
                 bgcolor: 'background.paperDarker',
-                borderColor: 'background.paperDarker', // Hides border but keeps size consistent with editheading component
+                // Hides border but keeps size
+                // consistent with editheading component
+                borderColor: 'background.paperDarker',
               }}
-            />
+              outerStackSx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              leftStackSx={{
+                flexGrow: 1,
+              }}
+            >
+              <Draghandle
+                sx={{
+                  border: 'none',
+                }}
+              />
+            </Heading>
           )}
           {isEditVisible && (
             <EditHeading
