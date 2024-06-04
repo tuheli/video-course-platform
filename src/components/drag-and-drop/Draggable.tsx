@@ -3,6 +3,7 @@ import { DraggableContext } from '../../contexts/DraggableContext';
 import { wasDroppedDuration } from './common';
 import { useDroppableAreaContext } from '../../hooks/useDroppableAreaContext';
 import { getAbsoluteYCenterPosition } from './utils';
+import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
 
 interface ReorderableByYPosition {
   yPosition: number;
@@ -24,6 +25,7 @@ export const Draggable = ({ id, children }: DraggableProps) => {
   const [isBeingDragged, setIsBeingDragged] = useState(false);
   const timerIdRef = useRef(0);
   const { tickUpdateOrder } = useDroppableAreaContext();
+  const { setIsSomethingDragged } = useDragAndDropContext();
   const selfRef = useRef<HTMLDivElement>(null);
 
   const onDragStart = (event: React.DragEvent) => {
@@ -60,11 +62,13 @@ export const Draggable = ({ id, children }: DraggableProps) => {
     clearTimeout(timerIdRef.current);
     setWasDroppedRecently(false);
     setIsBeingDragged(true);
+    setIsSomethingDragged(true);
   };
 
   const onDragEnd = () => {
     setIsBeingDragged(false);
     setWasDroppedRecently(true);
+    setIsSomethingDragged(false);
   };
 
   const onDrag = (event: DragEvent) => {
