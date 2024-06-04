@@ -23,10 +23,40 @@ export const Draggable = ({ id, children }: DraggableProps) => {
   const [wasDroppedRecently, setWasDroppedRecently] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   const [isBeingDragged, setIsBeingDragged] = useState(false);
-  const timerIdRef = useRef(0);
   const { tickUpdateOrder } = useDroppableAreaContext();
   const { setIsSomethingDragged } = useDragAndDropContext();
   const selfRef = useRef<HTMLDivElement>(null);
+  const wasDroppedRecentlyTimerRef = useRef(0);
+
+  // NOTE: Not smooth at all,
+  // no time between calls is considered
+  // but this is good enough for now.
+  const handleScrollOnDragByMousePosition = (localMouseY: number) => {
+    const isMouseNearTop = localMouseY < 100;
+    const isMouseNearBottom = localMouseY > window.innerHeight - 100;
+
+    const scrollAmount = 50;
+
+    if (isMouseNearTop) {
+      window.scrollBy({
+        top: -scrollAmount,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
+    if (isMouseNearBottom) {
+      window.scrollBy({
+        top: scrollAmount,
+        behavior: 'smooth',
+      });
+      return;
+    }
+  };
+
+  const handleMouseScrollOnDrag = (value: any) => {
+    console.log('scrolling', value);
+  };
 
   const onDragStart = (event: React.DragEvent) => {
     // Border animation can cause positioning issues
@@ -58,8 +88,12 @@ export const Draggable = ({ id, children }: DraggableProps) => {
       );
     };
 
+    // NOTE: Some data transfer is required
+    // on firefox. Is it?
+    event.dataTransfer.setData('text/plain', 'for-firefox');
+
     setDragImage();
-    clearTimeout(timerIdRef.current);
+    clearTimeout(wasDroppedRecentlyTimerRef.current);
     setWasDroppedRecently(false);
     setIsBeingDragged(true);
     setIsSomethingDragged && setIsSomethingDragged(true);
@@ -78,7 +112,13 @@ export const Draggable = ({ id, children }: DraggableProps) => {
     const centerOffset = centerY - event.pageY;
     const imagePosition = centerY - centerOffset;
 
+    // handleScrollOnDragByMousePosition(event.clientY);
     tickUpdateOrder(id, imagePosition);
+  };
+
+  const onDrop = (event: DragEvent) => {
+    event.preventDefault();
+    console.log('dropped');
   };
 
   useEffect(() => {
@@ -88,10 +128,10 @@ export const Draggable = ({ id, children }: DraggableProps) => {
       setWasDroppedRecently(false);
     }, wasDroppedDuration);
 
-    timerIdRef.current = timerId;
+    wasDroppedRecentlyTimerRef.current = timerId;
 
     return () => {
-      clearTimeout(timerIdRef.current);
+      clearTimeout(wasDroppedRecentlyTimerRef.current);
     };
   }, [wasDroppedRecently]);
 
@@ -107,6 +147,10 @@ export const Draggable = ({ id, children }: DraggableProps) => {
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         onDrag={onDrag}
+        onDrop={onDrop}
+        style={{
+          width: 'fit-content',
+        }}
       >
         {children}
       </div>
