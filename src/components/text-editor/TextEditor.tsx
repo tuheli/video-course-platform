@@ -32,9 +32,10 @@ const initialValue: Descendant[] = [
 
 interface TextEditorProps {
   placeholder: string;
+  onChange: (value: Descendant[]) => void;
 }
 
-export const TextEditor = ({ placeholder }: TextEditorProps) => {
+export const TextEditor = ({ placeholder, onChange }: TextEditorProps) => {
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     []
@@ -66,6 +67,16 @@ export const TextEditor = ({ placeholder }: TextEditorProps) => {
     } catch (error) {}
   };
 
+  const onChangeWrapper = (value: Descendant[]) => {
+    const isAstChange = editor.operations.some(
+      (op) => 'set_selection' !== op.type
+    );
+
+    if (!isAstChange) return;
+
+    onChange(value);
+  };
+
   // NOTE: Focus the editor on mount for the
   // mark buttons to work immediately without
   // the user first manually clicking the editor.
@@ -75,7 +86,11 @@ export const TextEditor = ({ placeholder }: TextEditorProps) => {
   }, []);
 
   return (
-    <Slate editor={editor} initialValue={initialValue}>
+    <Slate
+      editor={editor}
+      initialValue={initialValue}
+      onChange={onChangeWrapper}
+    >
       <Stack
         sx={{
           border: '1px solid',
