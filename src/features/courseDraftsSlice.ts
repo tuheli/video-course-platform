@@ -621,6 +621,12 @@ const slice = createSlice({
         description: '',
       });
     },
+    // NOTE: The lecture description is edited
+    // in rich text editor. We might not ever
+    // need or want to save the state in redux.
+    // The editor state is saved in local storage.
+    // Instead we can send the data to server
+    // without saving it in redux.
     updatedLecture: (
       state,
       action: PayloadAction<{
