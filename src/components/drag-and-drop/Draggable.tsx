@@ -62,13 +62,13 @@ export const Draggable = ({ id, children }: DraggableProps) => {
     clearTimeout(timerIdRef.current);
     setWasDroppedRecently(false);
     setIsBeingDragged(true);
-    setIsSomethingDragged(true);
+    setIsSomethingDragged && setIsSomethingDragged(true);
   };
 
   const onDragEnd = () => {
     setIsBeingDragged(false);
     setWasDroppedRecently(true);
-    setIsSomethingDragged(false);
+    setIsSomethingDragged && setIsSomethingDragged(false);
   };
 
   const onDrag = (event: DragEvent) => {
