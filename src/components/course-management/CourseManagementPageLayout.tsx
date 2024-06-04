@@ -16,19 +16,30 @@ export const CourseManagementPageLayout = ({
         sx={{
           flexDirection: 'row',
           gap: 2,
+          width: '100%',
+          justifyContent: 'space-between',
         }}
       >
-        <CourseManagementSideBar />
+        <Box
+          sx={{
+            width: '20%',
+          }}
+        >
+          <CourseManagementSideBar />
+        </Box>
         <Paper
           sx={{
-            width: '100%',
+            // 100% total width causes some horizontal
+            // growing of the text editor in this layout.
+            // Maybe some padding or margin causes it
+            // but this fixes the issue
+            width: '78%',
             p: 0,
           }}
         >
           <Stack
             sx={{
               flexDirection: 'column',
-              width: '100%',
               gap: 4,
             }}
           >
