@@ -106,7 +106,14 @@ export const EditableTextItem = ({
       {(forceShowExtensions || isDeleteIconVisible) && (
         <DeleteButton onClick={onClickDeleteIcon} cursor={deleteIconCursor} />
       )}
-      {(forceShowExtensions || isDraghandleVisible) && <Draghandle />}
+      {(forceShowExtensions || isDraghandleVisible) && (
+        <Draghandle
+          sx={{
+            width: 54,
+            height: 54,
+          }}
+        />
+      )}
     </Stack>
   );
 };
