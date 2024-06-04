@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import isHotkey from 'is-hotkey';
 import {
   Editable,
@@ -7,7 +7,12 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { createEditor, Descendant } from 'slate';
+import {
+  createEditor,
+  Descendant,
+  Transforms,
+  Element as IElement,
+} from 'slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from './Toolbar';
 import { HOTKEYS, isKnownHotkey } from './constants';
@@ -17,18 +22,6 @@ import { Leaf } from './Leaf';
 import { BlockButton } from './buttons/BlockButton';
 import { MarkButton } from './buttons/MarkButton';
 import { Divider, Stack } from '@mui/material';
-import { TextEditorContext } from '../../contexts/TextEditorContext';
-
-// TODO: Ensure the editor gets focused,
-// placeholder node is removed and editor
-// contains atleast an empty text element on focus
-// or if mark button is pressed
-
-// TODO: Remove list formats if there is no
-// text in the editor and user presses backspace
-
-// TODO: Style the list formats so they dont
-// add margins and paddings
 
 const initialValue: Descendant[] = [
   {
@@ -42,8 +35,6 @@ interface TextEditorProps {
 }
 
 export const TextEditor = ({ placeholder }: TextEditorProps) => {
-  const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(true);
-
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     []
@@ -56,62 +47,83 @@ export const TextEditor = ({ placeholder }: TextEditorProps) => {
 
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
+  const focusEditor = () => {
+    try {
+      const childCount = editor.children.length;
+      if (childCount === 0) return;
+
+      const lastChild = editor.children[childCount - 1];
+
+      if (!IElement.isElement(lastChild)) return;
+
+      const lastChildText = lastChild.children[0].text;
+      const lastChildTextLength = lastChildText.length;
+
+      Transforms.select(editor, {
+        offset: lastChildTextLength,
+        path: [childCount - 1, 0],
+      });
+    } catch (error) {}
+  };
+
+  // NOTE: Focus the editor on mount for the
+  // mark buttons to work immediately without
+  // the user first manually clicking the editor.
+  // The autofocus attribute is also needed.
+  useEffect(() => {
+    focusEditor();
+  }, []);
+
   return (
     <Slate editor={editor} initialValue={initialValue}>
-      <TextEditorContext.Provider
-        value={{
-          setIsPlaceholderVisible,
+      <Stack
+        sx={{
+          border: '1px solid',
+          borderColor: 'text.primary',
         }}
       >
-        <Stack
+        <Toolbar>
+          <MarkButton format="bold" iconName="format_bold" />
+          <MarkButton format="italic" iconName="format_italic" />
+          <BlockButton
+            blockPropertyName="numbered-list"
+            icon="format_list_numbered"
+          />
+          <BlockButton
+            blockPropertyName="bulleted-list"
+            icon="format_list_bulleted"
+          />
+        </Toolbar>
+        <Divider
           sx={{
-            border: '1px solid',
             borderColor: 'text.primary',
+            mb: 1,
           }}
-        >
-          <Toolbar>
-            <MarkButton format="bold" iconName="format_bold" />
-            <MarkButton format="italic" iconName="format_italic" />
-            <BlockButton
-              blockPropertyName="numbered-list"
-              icon="format_list_numbered"
-            />
-            <BlockButton
-              blockPropertyName="bulleted-list"
-              icon="format_list_bulleted"
-            />
-          </Toolbar>
-          <Divider
-            sx={{
-              borderColor: 'text.primary',
-              mb: 1,
-            }}
-          />
-          <Editable
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            placeholder={isPlaceholderVisible ? placeholder : ''}
-            spellCheck={false}
-            autoFocus={false}
-            onKeyDown={(event) => {
-              for (const hotkey in HOTKEYS) {
-                if (isHotkey(hotkey, event as any)) {
-                  event.preventDefault();
-                  if (!isKnownHotkey(hotkey)) return;
-                  const mark = HOTKEYS[hotkey];
-                  toggleMark(editor, mark);
-                }
+        />
+        <Editable
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          placeholder={placeholder}
+          spellCheck
+          autoFocus
+          onKeyDown={(event) => {
+            for (const hotkey in HOTKEYS) {
+              if (isHotkey(hotkey, event as any)) {
+                event.preventDefault();
+                if (!isKnownHotkey(hotkey)) return;
+                const mark = HOTKEYS[hotkey];
+                toggleMark(editor, mark);
               }
-            }}
-            style={{
-              outline: 'none',
-              paddingLeft: 14,
-              paddingRight: 14,
-              paddingBottom: 32,
-            }}
-          />
-        </Stack>
-      </TextEditorContext.Provider>
+            }
+          }}
+          style={{
+            outline: 'none',
+            paddingLeft: 14,
+            paddingRight: 14,
+            paddingBottom: 32,
+          }}
+        />
+      </Stack>
     </Slate>
   );
 };
