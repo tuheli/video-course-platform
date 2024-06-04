@@ -81,6 +81,8 @@ export const EditableTextItem = ({
       sx={{
         flexDirection: 'row',
         width: 'fit-content',
+        outline: isBeingDragged ? '2px solid' : 'none',
+        outlineColor: isBeingDragged ? 'secondary.light' : 'none',
       }}
     >
       {wasDroppedRecently && (
@@ -100,17 +102,27 @@ export const EditableTextItem = ({
           maxInputLength={160}
           placeholder={placeholder}
           value={item.text}
-          outerDivSx={{ width: inputFieldWidth }}
+          outerDivSx={{
+            width: inputFieldWidth,
+            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+          }}
         />
       )}
       {(forceShowExtensions || isDeleteIconVisible) && (
-        <DeleteButton onClick={onClickDeleteIcon} cursor={deleteIconCursor} />
+        <DeleteButton
+          onClick={onClickDeleteIcon}
+          cursor={deleteIconCursor}
+          sx={{
+            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+          }}
+        />
       )}
       {(forceShowExtensions || isDraghandleVisible) && (
         <Draghandle
           sx={{
             width: 54,
             height: 54,
+            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
           }}
         />
       )}

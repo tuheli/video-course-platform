@@ -18,6 +18,7 @@ import { EditHeading } from '../EditHeading';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { inputOuterDivSx, inputSx } from '../common';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
+import { useDraggableContext } from '../../../hooks/useDraggableContext';
 
 interface SectionProps {
   courseDraftId: string;
@@ -43,6 +44,8 @@ export const Section = ({
   >(undefined);
   const [isOptionsAnimationEnabled, setIsOptionsAnimationEnabled] =
     useState(true);
+  const { isBeingDragged } = useDraggableContext();
+
   const dispatch = useAppDispatch();
 
   const {
@@ -112,7 +115,9 @@ export const Section = ({
         sx={{
           bgcolor: 'background.paperDarker',
           border: '1px solid',
-          borderColor: 'text.primary',
+          outline: isBeingDragged ? '2px solid' : 'none',
+          outlineColor: 'secondary.light',
+          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
           p: 1,
         }}
       >
