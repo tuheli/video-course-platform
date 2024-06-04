@@ -10,6 +10,9 @@ interface HeadingProps {
   index: number;
   paperSx?: SxProps;
   titleSx?: SxProps;
+  outerStackSx?: SxProps;
+  leftStackSx?: SxProps;
+  children?: React.ReactNode;
   changeHeadingVisibility: (isVisible: boolean) => void;
   onClickDeleteIcon: () => void;
 }
@@ -20,6 +23,9 @@ export const Heading = ({
   index,
   paperSx,
   titleSx,
+  outerStackSx,
+  leftStackSx,
+  children,
   changeHeadingVisibility,
   onClickDeleteIcon,
 }: HeadingProps) => {
@@ -40,40 +46,50 @@ export const Heading = ({
       }}
     >
       <Stack
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         sx={{
-          flexDirection: 'row',
-          gap: 1,
+          ...outerStackSx,
         }}
       >
-        <Typography
+        <Stack
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
           sx={{
-            fontWeight: 600,
-            ...titleSx,
+            flexDirection: 'row',
+            gap: 1,
+            ...leftStackSx,
           }}
         >
-          {itemName} {index + 1}:
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <NoteOutlinedIcon
+          <Typography
             sx={{
-              transform: 'scaleX(0.63)',
-              fontSize: 21,
+              fontWeight: 600,
+              ...titleSx,
             }}
-          />
-        </Box>
-        {title && <Typography>{title}</Typography>}
-        {isEditButtonVisible && (
-          <EditButton changeHeadingVisibility={changeHeadingVisibility} />
-        )}
-        {isDeleteButtonVisible && <DeleteButton onClick={onClickDeleteIcon} />}
+          >
+            {itemName} {index + 1}:
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <NoteOutlinedIcon
+              sx={{
+                transform: 'scaleX(0.63)',
+                fontSize: 21,
+              }}
+            />
+          </Box>
+          {title && <Typography>{title}</Typography>}
+          {isEditButtonVisible && (
+            <EditButton changeHeadingVisibility={changeHeadingVisibility} />
+          )}
+          {isDeleteButtonVisible && (
+            <DeleteButton onClick={onClickDeleteIcon} />
+          )}
+        </Stack>
+        {children}
       </Stack>
     </Paper>
   );
