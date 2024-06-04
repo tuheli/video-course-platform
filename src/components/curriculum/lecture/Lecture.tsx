@@ -3,7 +3,7 @@ import { useAppDispatch } from '../../../app/hooks';
 import {
   Lesson,
   deletedLecture,
-  updatedLectureTitle,
+  updatedLecture,
 } from '../../../features/courseDraftsSlice';
 import { useEditableCurriculumItem } from '../../../hooks/useEditableCurriculumItem';
 import { EditHeading } from '../EditHeading';
@@ -11,6 +11,7 @@ import { Heading } from '../Heading';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { BottomExtension } from './BottomExtension';
 import { Stack } from '@mui/material';
+import { LectureContext } from '../../../contexts/LectureContext';
 
 interface LectureProps {
   lecture: Lesson;
@@ -29,11 +30,12 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
-      updatedLectureTitle({
+      updatedLecture({
         courseDraftId,
         curriculumSectionId: curriculumSection.id,
         lectureId: lecture.id,
-        newLectureTitle: event.target.value,
+        newValue: event.target.value,
+        propertyName: 'name',
       })
     );
   };
@@ -57,30 +59,36 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
   };
 
   return (
-    <Stack>
-      {isHeadingVisible && (
-        <Heading
-          itemName={'Lecture'}
-          index={index}
-          title={lecture.name}
-          changeHeadingVisibility={changeHeadingVisibility}
-          onClickDeleteIcon={onClickDeleteIcon}
-          titleSx={{
-            fontWeight: 400,
-          }}
-        />
-      )}
-      {isEditVisible && (
-        <EditHeading
-          title={`Lecture ${index + 1}:`}
-          titleValue={lecture.name}
-          saveButtonText="Save Lecture"
-          onChangeTitle={onChangeTitle}
-          onClickCancel={onClickCancel}
-          onClickSave={onClickSave}
-        />
-      )}
-      {isBottomExtensionVisible && <BottomExtension />}
-    </Stack>
+    <LectureContext.Provider
+      value={{
+        lecture,
+      }}
+    >
+      <Stack>
+        {isHeadingVisible && (
+          <Heading
+            itemName={'Lecture'}
+            index={index}
+            title={lecture.name}
+            changeHeadingVisibility={changeHeadingVisibility}
+            onClickDeleteIcon={onClickDeleteIcon}
+            titleSx={{
+              fontWeight: 400,
+            }}
+          />
+        )}
+        {isEditVisible && (
+          <EditHeading
+            title={`Lecture ${index + 1}:`}
+            titleValue={lecture.name}
+            saveButtonText="Save Lecture"
+            onChangeTitle={onChangeTitle}
+            onClickCancel={onClickCancel}
+            onClickSave={onClickSave}
+          />
+        )}
+        {isBottomExtensionVisible && <BottomExtension />}
+      </Stack>
+    </LectureContext.Provider>
   );
 };
