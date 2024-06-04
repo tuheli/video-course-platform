@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useAppDispatch } from '../../../app/hooks';
 import {
   Lesson,
@@ -12,6 +12,7 @@ import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSection
 import { BottomExtension } from './BottomExtension';
 import { Stack } from '@mui/material';
 import { LectureContext } from '../../../contexts/LectureContext';
+import { BottomExtensionOpener } from './BottomExtensionOpener';
 
 interface LectureProps {
   lecture: Lesson;
@@ -19,6 +20,7 @@ interface LectureProps {
 }
 
 export const Lecture = ({ lecture, index }: LectureProps) => {
+  const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
   const { isHeadingVisible, changeHeadingVisibility } =
     useEditableCurriculumItem();
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
@@ -26,7 +28,6 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
   const dispatch = useAppDispatch();
 
   const isEditVisible = !isHeadingVisible;
-  const isBottomExtensionVisible = true;
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -75,7 +76,19 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
             titleSx={{
               fontWeight: 400,
             }}
-          />
+            outerStackSx={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            leftStackSx={{
+              flexGrow: 1,
+            }}
+          >
+            <BottomExtensionOpener
+              isOpen={isBottomExtensionOpen}
+              setIsOpen={setIsBottomExtensionOpen}
+            />
+          </Heading>
         )}
         {isEditVisible && (
           <EditHeading
@@ -87,7 +100,7 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
             onClickSave={onClickSave}
           />
         )}
-        {isBottomExtensionVisible && <BottomExtension />}
+        {isBottomExtensionOpen && <BottomExtension />}
       </Stack>
     </LectureContext.Provider>
   );
