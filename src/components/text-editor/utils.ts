@@ -1,6 +1,7 @@
 import { Editor, Transforms, Element as SlateElement } from 'slate';
 import { TEXT_ALIGN_TYPES, LIST_TYPES } from './constants';
 import { Alignment, MarkType, TextBlockType } from './types';
+import { Descendant } from 'slate';
 
 export const toggleBlock = (
   editor: Editor,
@@ -82,4 +83,34 @@ export const isBlockActive = (
 export const isMarkActive = (editor: Editor, markPropertyName: MarkType) => {
   const marks = Editor.marks(editor);
   return marks ? marks[markPropertyName] === true : false;
+};
+
+export const getLectureDescriptionLocalStorageKey = (
+  courseDraftId: string,
+  sectionId: string,
+  lectureId: string
+) => {
+  return `${courseDraftId}_${sectionId}_${lectureId}`;
+};
+
+export const saveToLocalStorage = (key: string, value: Descendant[]) => {
+  const stringValue = JSON.stringify(value);
+  localStorage.setItem(key, stringValue);
+};
+
+export const getStateFromLocalStorageOrDefault = (
+  key: string
+): Descendant[] => {
+  const stringValue = localStorage.getItem(key);
+
+  if (!stringValue) {
+    return [
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ];
+  }
+
+  return JSON.parse(stringValue);
 };
