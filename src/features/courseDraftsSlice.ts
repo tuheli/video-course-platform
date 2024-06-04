@@ -6,6 +6,7 @@ import {
 } from './courseCreationSlice';
 import { getRandomInt } from '../../data/courseData';
 import { getLectureDescriptionLocalStorageKey } from '../components/text-editor/utils';
+import { ItemWithOrderIndex } from '../components/drag-and-drop/utils';
 
 // NOTE: These types must
 // match the actual property names which
@@ -610,6 +611,28 @@ const slice = createSlice({
 
       section[action.payload.type] = action.payload.newValue;
     },
+    reorderedSections: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        newOrder: ItemWithOrderIndex[];
+      }>
+    ) => {
+      const newOrder = action.payload.newOrder;
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      courseDraft.courseContent.curriculum.forEach((section) => {
+        const newOrderIndex = newOrder.find(
+          ({ id }) => id === section.id
+        )?.orderIndex;
+        if (newOrderIndex === undefined) return;
+        section.orderIndex = newOrderIndex;
+      });
+    },
     addedLecture: (
       state,
       action: PayloadAction<{
@@ -726,6 +749,7 @@ export const {
   addedCurriculumSection,
   deletedCurriculumSection,
   updatedCurriculumSectionText,
+  reorderedSections,
   addedLecture,
   updatedLecture,
   deletedLecture,
