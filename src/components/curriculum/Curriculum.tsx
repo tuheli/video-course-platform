@@ -1,10 +1,14 @@
 import { Stack } from '@mui/material';
 import { Section } from './section/Section';
-import { useCurriculum } from '../../hooks/useCurriculum';
+import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { AddSectionButton } from './section/AddSectionButton';
 
-export const Curriculum = () => {
-  const { curriculum, courseDraft } = useCurriculum();
+interface CurriculumProps {
+  forcedCourseId?: string;
+}
+
+export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
+  const { curriculum, courseDraft } = useCurriculumFromParams(forcedCourseId);
 
   if (!courseDraft) return null;
 
@@ -23,7 +27,7 @@ export const Curriculum = () => {
           index={index}
         />
       ))}
-      <AddSectionButton />
+      <AddSectionButton courseDraftId={courseDraft.id} />
     </Stack>
   );
 };
