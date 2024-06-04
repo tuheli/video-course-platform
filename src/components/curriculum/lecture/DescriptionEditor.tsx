@@ -4,6 +4,11 @@ import { Descendant } from 'slate';
 import { useLectureContext } from '../../../hooks/useLectureContext';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
+import {
+  getLectureDescriptionLocalStorageKey,
+  getStateFromLocalStorageOrDefault,
+  saveToLocalStorage,
+} from '../../text-editor/utils';
 
 const placeholder =
   'Add a description. Include what students will be able to do after completing the lecture.';
@@ -16,33 +21,17 @@ export const DesctiptionEditor = ({ closeEditor }: DescriptionEditorProps) => {
   const { lecture } = useLectureContext();
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
 
-  const key = `${courseDraftId}_${curriculumSection.id}_${lecture.id}`;
-
-  const saveToLocalStorage = (value: Descendant[]) => {
-    const stringValue = JSON.stringify(value);
-    localStorage.setItem(key, stringValue);
-  };
-
-  const getFromLocalStorageOrDefault = (): Descendant[] => {
-    const stringValue = localStorage.getItem(key);
-
-    if (!stringValue) {
-      return [
-        {
-          type: 'paragraph',
-          children: [{ text: '' }],
-        },
-      ];
-    }
-
-    return JSON.parse(stringValue);
-  };
+  const localStorageKey = getLectureDescriptionLocalStorageKey(
+    courseDraftId,
+    curriculumSection.id,
+    lecture.id
+  );
 
   const onChange = (value: Descendant[]) => {
-    saveToLocalStorage(value);
+    saveToLocalStorage(localStorageKey, value);
   };
 
-  const initialValue = getFromLocalStorageOrDefault();
+  const initialValue = getStateFromLocalStorageOrDefault(localStorageKey);
 
   return (
     <Stack
