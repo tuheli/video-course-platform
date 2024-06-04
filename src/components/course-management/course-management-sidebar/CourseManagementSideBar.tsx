@@ -25,8 +25,6 @@ export const CourseManagementSideBar = () => {
       sx={{
         flexDirection: 'column',
         pt: 5,
-        width: 280,
-        height: 600,
       }}
     >
       <Stack
