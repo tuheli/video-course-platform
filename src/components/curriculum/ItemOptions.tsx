@@ -12,16 +12,21 @@ interface ItemOptionsProps {
 
 export const ItemOptions = ({ setVisibility }: ItemOptionsProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
-  const { editingItemType, isOptionsAnimationEnabled } =
-    useCurriculumSectionContext();
+  const {
+    editingItemType,
+    isOptionsAnimationEnabled,
+    setIsOptionsAnimationEnabled,
+  } = useCurriculumSectionContext();
 
   const isEditableCurriculumItemSelectorVisible = editingItemType !== undefined;
+
   const isAddButtonsVisible = !isEditableCurriculumItemSelectorVisible;
 
   const isClickAllowed = isEnabled;
 
   const onClickCloseIcon = () => {
     if (!isClickAllowed) return;
+    setIsOptionsAnimationEnabled(true);
     setVisibility(false);
   };
 
@@ -37,14 +42,23 @@ export const ItemOptions = ({ setVisibility }: ItemOptionsProps) => {
           position: 'absolute',
           top: 11,
           left: 11,
-          animation: `closeIconMoveAnimation ${animationDurationSeconds}s ease-out forwards`,
+          transform: !isOptionsAnimationEnabled
+            ? 'translateX(-150%) translateY(-150%)'
+            : undefined,
+          animation: isOptionsAnimationEnabled
+            ? `closeIconMoveAnimation ${animationDurationSeconds}s ease-out forwards`
+            : undefined,
         }}
       >
         <Box
           onClick={onClickCloseIcon}
           sx={{
-            transform: 'rotate(45deg)',
-            animation: `closeIconRollAnimation ${animationDurationSeconds}s ease-out forwards`,
+            transform: isOptionsAnimationEnabled
+              ? 'rotate(45deg)'
+              : 'rotate(-315deg)',
+            animation: isOptionsAnimationEnabled
+              ? `closeIconRollAnimation ${animationDurationSeconds}s ease-out forwards`
+              : undefined,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

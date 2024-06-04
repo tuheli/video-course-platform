@@ -4,8 +4,8 @@ import { AddMoreButtonDarkVariant } from '../manage-course-goals-page/AddMoreBut
 import { animationDurationSeconds } from './common';
 
 interface AddItemButtonProps {
-  setOptionsVisibility: (isVisible: boolean) => void;
   animateIconBack: boolean;
+  setOptionsVisibility: (isVisible: boolean) => void;
 }
 
 export const AddItemButton = ({
@@ -13,8 +13,11 @@ export const AddItemButton = ({
   setOptionsVisibility,
 }: AddItemButtonProps) => {
   const { isEnabled } = useEnableActionTimer(animationDurationSeconds * 1000);
-  const { setEditingItemType, setIsOptionsAnimationEnabled } =
-    useCurriculumSectionContext();
+  const {
+    setEditingItemType,
+    setIsOptionsAnimationEnabled,
+    isOptionsAnimationEnabled,
+  } = useCurriculumSectionContext();
 
   const isClickAllowed = animateIconBack ? isEnabled : true;
 
@@ -28,7 +31,7 @@ export const AddItemButton = ({
   return (
     <AddMoreButtonDarkVariant
       addIconContainerSx={
-        animateIconBack
+        isOptionsAnimationEnabled && animateIconBack
           ? {
               animation: `closeIconMoveAnimation ${animationDurationSeconds}s ease-in forwards`,
               animationDirection: 'reverse',
@@ -36,7 +39,7 @@ export const AddItemButton = ({
           : {}
       }
       addIconSx={
-        animateIconBack
+        isOptionsAnimationEnabled && animateIconBack
           ? {
               animation: `closeIconRollAnimation ${animationDurationSeconds}s ease-in forwards`,
               animationDirection: 'reverse',
