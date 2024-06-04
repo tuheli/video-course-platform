@@ -7,12 +7,7 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import {
-  createEditor,
-  Descendant,
-  Transforms,
-  Element as IElement,
-} from 'slate';
+import { createEditor, Descendant, Transforms } from 'slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from './Toolbar';
 import { HOTKEYS, isKnownHotkey } from './constants';
@@ -23,19 +18,22 @@ import { BlockButton } from './buttons/BlockButton';
 import { MarkButton } from './buttons/MarkButton';
 import { Divider, Stack } from '@mui/material';
 
-const initialValue: Descendant[] = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-];
-
 interface TextEditorProps {
   placeholder: string;
+  initialValue?: Descendant[];
   onChange: (value: Descendant[]) => void;
 }
 
-export const TextEditor = ({ placeholder, onChange }: TextEditorProps) => {
+export const TextEditor = ({
+  placeholder,
+  initialValue = [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ],
+  onChange,
+}: TextEditorProps) => {
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     []
@@ -49,20 +47,17 @@ export const TextEditor = ({ placeholder, onChange }: TextEditorProps) => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   const focusEditor = () => {
+    // Focus at the beginning of the editor instead
+    // of the end. I think its nicer ux
+    // since the screen will do a sudden
+    // jump to the end if there is a lot of text.
     try {
       const childCount = editor.children.length;
       if (childCount === 0) return;
 
-      const lastChild = editor.children[childCount - 1];
-
-      if (!IElement.isElement(lastChild)) return;
-
-      const lastChildText = lastChild.children[0].text;
-      const lastChildTextLength = lastChildText.length;
-
       Transforms.select(editor, {
-        offset: lastChildTextLength,
-        path: [childCount - 1, 0],
+        offset: 0,
+        path: [0, 0],
       });
     } catch (error) {}
   };
@@ -136,6 +131,7 @@ export const TextEditor = ({ placeholder, onChange }: TextEditorProps) => {
             paddingLeft: 14,
             paddingRight: 14,
             paddingBottom: 32,
+            maxWidth: '100%',
           }}
         />
       </Stack>
