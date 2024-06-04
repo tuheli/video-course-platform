@@ -1,10 +1,25 @@
+import { useParams } from 'react-router-dom';
+import { useAppSelector } from '../app/hooks';
 import { getSortedCopy } from '../components/drag-and-drop/utils';
-import { useCourseDraft } from './useCourseDraft';
+import { ICurriculumSection } from '../features/courseDraftsSlice';
 
-export const useCurriculum = () => {
-  const courseDraft = useCourseDraft();
+export const useCurriculumFromParams = (forcedCourseId: string = '') => {
+  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
 
-  if (!courseDraft) return { courseDraft: null, curriculum: [] };
+  const courseId = forcedCourseId || useParams().courseId;
+
+  const courseDraft = useAppSelector((state) => state.courseDrafts).find(
+    ({ id, creatorEmail }) => id === courseId && creatorEmail === myEmail
+  );
+
+  if (!courseDraft) {
+    const curriculum: ICurriculumSection[] = [];
+
+    return {
+      courseDraft: null,
+      curriculum,
+    };
+  }
 
   const sortedCurriculum = getSortedCopy(courseDraft.courseContent.curriculum);
 
