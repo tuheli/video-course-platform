@@ -5,6 +5,7 @@ import {
   TimeAvailablePerWeek,
 } from './courseCreationSlice';
 import { getRandomInt } from '../../data/courseData';
+import { getLectureDescriptionLocalStorageKey } from '../components/text-editor/utils';
 
 // NOTE: These types must
 // match the actual property names which
@@ -561,6 +562,25 @@ const slice = createSlice({
 
       const idToBeDeleted = action.payload.curriculumSectionId;
 
+      const section = courseDraft.courseContent.curriculum.find(
+        (p) => p.id === idToBeDeleted
+      );
+
+      if (!section) return;
+
+      // NOTE: Currently lecture
+      // descriptions use text editor
+      // and the state is in local storage.
+      section.lessons.forEach((lesson) => {
+        const localStorageKey = getLectureDescriptionLocalStorageKey(
+          courseDraft.id,
+          section.id,
+          lesson.id
+        );
+
+        localStorage.removeItem(localStorageKey);
+      });
+
       const newCurriculum = courseDraft.courseContent.curriculum.filter(
         ({ id }) => id !== idToBeDeleted
       );
@@ -682,6 +702,17 @@ const slice = createSlice({
       );
 
       section.lessons = newLectures;
+
+      // NOTE: Currently lecture
+      // descriptions use text editor
+      // and the state is in local storage.
+      const localStorageKey = getLectureDescriptionLocalStorageKey(
+        courseDraft.id,
+        section.id,
+        action.payload.lectureId
+      );
+
+      localStorage.removeItem(localStorageKey);
     },
   },
 });
