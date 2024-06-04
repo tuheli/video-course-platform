@@ -23,7 +23,14 @@ export const Element = ({ attributes, children, element }: ElementProps) => {
       );
     case 'bulleted-list':
       return (
-        <ul style={style} {...attributes}>
+        <ul
+          style={{
+            paddingLeft: 32,
+            margin: 0,
+            ...style,
+          }}
+          {...attributes}
+        >
           {children}
         </ul>
       );
@@ -47,7 +54,14 @@ export const Element = ({ attributes, children, element }: ElementProps) => {
       );
     case 'numbered-list':
       return (
-        <ol style={style} {...attributes}>
+        <ol
+          style={{
+            paddingLeft: 32,
+            margin: 0,
+            ...style,
+          }}
+          {...attributes}
+        >
           {children}
         </ol>
       );
