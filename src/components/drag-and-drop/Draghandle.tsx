@@ -1,8 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, SxProps } from '@mui/material';
 import { useDraggableContext } from '../../hooks/useDraggableContext';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export const Draghandle = () => {
+interface DraghandleProps {
+  sx?: SxProps;
+}
+
+export const Draghandle = ({ sx }: DraghandleProps) => {
   const { setIsDraggable } = useDraggableContext();
 
   const onMouseEnter = () => {
@@ -24,14 +28,13 @@ export const Draghandle = () => {
     >
       <Box
         sx={{
-          width: 54,
-          height: 54,
           border: '1px solid',
           borderColor: 'text.primary',
           borderLeft: 'none',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          ...sx,
         }}
       >
         <MenuIcon />
