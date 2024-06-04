@@ -1,12 +1,13 @@
-import { Box } from '@mui/material';
+import { Box, SxProps } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface DeleteButtonProps {
   cursor: 'pointer' | 'not-allowed';
   onClick: () => void;
+  sx?: SxProps;
 }
 
-export const DeleteButton = ({ onClick, cursor }: DeleteButtonProps) => {
+export const DeleteButton = ({ onClick, cursor, sx }: DeleteButtonProps) => {
   return (
     <Box
       onClick={onClick}
@@ -20,6 +21,7 @@ export const DeleteButton = ({ onClick, cursor }: DeleteButtonProps) => {
         '&:hover': {
           cursor,
         },
+        ...sx,
       }}
     >
       <DeleteIcon />
