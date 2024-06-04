@@ -1,8 +1,8 @@
-import { Box, Button, Paper, Stack, SxProps, Typography } from '@mui/material';
+import { Box, Paper, Stack, SxProps, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { inputSx, inputOuterDivSx } from './common';
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { SaveAndCancelButton } from './SaveAndCancelButton';
 
 interface EditHeading {
   title: string;
@@ -25,13 +25,6 @@ export const EditHeading = ({
   onClickCancel,
   onClickSave,
 }: EditHeading) => {
-  const { setIsOptionsAnimationEnabled } = useCurriculumSectionContext();
-
-  const onClickCancelWithDisableOptionsAnimation = () => {
-    setIsOptionsAnimationEnabled(false);
-    onClickCancel();
-  };
-
   return (
     <Paper
       sx={{
@@ -81,42 +74,11 @@ export const EditHeading = ({
             }}
           />
           {children}
-          <Stack
-            sx={{
-              flexDirection: 'row',
-              marginLeft: 'auto',
-              gap: 1,
-            }}
-          >
-            <Button
-              onClick={onClickCancelWithDisableOptionsAnimation}
-              variant="text"
-              color="primary"
-              sx={{
-                height: 32,
-                p: 1,
-                fontWeight: 600,
-                '&:hover': {
-                  color: 'text.primary',
-                },
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={onClickSave}
-              variant="contained"
-              color="primary"
-              sx={{
-                height: 32,
-                p: 1,
-                fontWeight: 600,
-                transition: 'none',
-              }}
-            >
-              {saveButtonText}
-            </Button>
-          </Stack>
+          <SaveAndCancelButton
+            saveButtonText={saveButtonText}
+            onClickCancel={onClickCancel}
+            onClickSave={onClickSave}
+          />
         </Stack>
       </Stack>
     </Paper>
