@@ -3,28 +3,46 @@ import { TextEditor } from '../../text-editor/TextEditor';
 import { Descendant } from 'slate';
 import { useLectureContext } from '../../../hooks/useLectureContext';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
-import { useAppDispatch } from '../../../app/hooks';
-import { updatedLecture } from '../../../features/courseDraftsSlice';
+import { SaveAndCancelButton } from '../SaveAndCancelButton';
 
 const placeholder =
   'Add a description. Include what students will be able to do after completing the lecture.';
 
-export const DesctiptionEditor = () => {
+interface DescriptionEditorProps {
+  closeEditor: () => void;
+}
+
+export const DesctiptionEditor = ({ closeEditor }: DescriptionEditorProps) => {
   const { lecture } = useLectureContext();
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
-  const dispatch = useAppDispatch();
+
+  const key = `${courseDraftId}_${curriculumSection.id}_${lecture.id}`;
+
+  const saveToLocalStorage = (value: Descendant[]) => {
+    const stringValue = JSON.stringify(value);
+    localStorage.setItem(key, stringValue);
+  };
+
+  const getFromLocalStorageOrDefault = (): Descendant[] => {
+    const stringValue = localStorage.getItem(key);
+
+    if (!stringValue) {
+      return [
+        {
+          type: 'paragraph',
+          children: [{ text: '' }],
+        },
+      ];
+    }
+
+    return JSON.parse(stringValue);
+  };
 
   const onChange = (value: Descendant[]) => {
-    dispatch(
-      updatedLecture({
-        courseDraftId,
-        curriculumSectionId: curriculumSection.id,
-        lectureId: lecture.id,
-        newValue: JSON.stringify(value),
-        propertyName: 'description',
-      })
-    );
+    saveToLocalStorage(value);
   };
+
+  const initialValue = getFromLocalStorageOrDefault();
 
   return (
     <Stack
@@ -39,7 +57,16 @@ export const DesctiptionEditor = () => {
       >
         Lecture Description
       </Typography>
-      <TextEditor placeholder={placeholder} onChange={onChange} />
+      <TextEditor
+        placeholder={placeholder}
+        initialValue={initialValue}
+        onChange={onChange}
+      />
+      <SaveAndCancelButton
+        saveButtonText="Save Description"
+        onClickCancel={closeEditor}
+        onClickSave={closeEditor}
+      />
     </Stack>
   );
 };
