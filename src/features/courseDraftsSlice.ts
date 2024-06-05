@@ -633,6 +633,7 @@ const slice = createSlice({
         section.orderIndex = newOrderIndex;
       });
     },
+
     addedLecture: (
       state,
       action: PayloadAction<{
@@ -737,6 +738,35 @@ const slice = createSlice({
 
       localStorage.removeItem(localStorageKey);
     },
+    reorderedLectures: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        sectionId: string;
+        newOrder: ItemWithOrderIndex[];
+      }>
+    ) => {
+      const newOrder = action.payload.newOrder;
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.sectionId
+      );
+
+      if (!section) return;
+
+      section.lessons.forEach((lecture) => {
+        const newOrderIndex = newOrder.find(
+          ({ id }) => id === lecture.id
+        )?.orderIndex;
+        if (newOrderIndex === undefined) return;
+        lecture.orderIndex = newOrderIndex;
+      });
+    },
   },
 });
 
@@ -753,5 +783,6 @@ export const {
   addedLecture,
   updatedLecture,
   deletedLecture,
+  reorderedLectures,
 } = slice.actions;
 export default slice.reducer;
