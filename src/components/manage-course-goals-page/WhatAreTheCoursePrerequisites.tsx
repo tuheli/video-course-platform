@@ -58,7 +58,14 @@ export const WhatAreTheCoursePrerequisites = () => {
           >
             {prerequisites.map((prerequisite) => {
               return (
-                <Draggable id={prerequisite.id} key={prerequisite.id}>
+                <Draggable
+                  id={prerequisite.id}
+                  key={prerequisite.id}
+                  sx={{
+                    width: 'fit-content',
+                    backgroundColor: 'background.default',
+                  }}
+                >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}
                     type={'prerequisites'}

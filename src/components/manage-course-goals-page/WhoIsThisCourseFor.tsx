@@ -65,6 +65,10 @@ export const WhoIsThisCourseFor = () => {
                 <Draggable
                   id={intendedLearnersItem.id}
                   key={intendedLearnersItem.id}
+                  sx={{
+                    width: 'fit-content',
+                    backgroundColor: 'background.default',
+                  }}
                 >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}

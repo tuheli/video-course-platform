@@ -61,7 +61,14 @@ export const WhatWillStudentsLearnInYourCourse = () => {
           >
             {learningObjectives.map((learningObjective) => {
               return (
-                <Draggable id={learningObjective.id} key={learningObjective.id}>
+                <Draggable
+                  id={learningObjective.id}
+                  key={learningObjective.id}
+                  sx={{
+                    width: 'fit-content',
+                    backgroundColor: 'background.default',
+                  }}
+                >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}
                     type={'learningObjectives'}
