@@ -17,11 +17,17 @@ export interface IDraggable extends ReorderableByYPosition {
 
 interface DraggableProps {
   id: string;
+  classNameId: string;
   children: React.ReactNode;
   sx?: SxProps;
 }
 
-export const Draggable = ({ id, children, sx }: DraggableProps) => {
+export const Draggable = ({
+  id,
+  classNameId,
+  children,
+  sx,
+}: DraggableProps) => {
   const [wasDroppedRecently, setWasDroppedRecently] = useState(false);
   const [isDraggable, setIsDraggable] = useState(false);
   const [isBeingDragged, setIsBeingDragged] = useState(false);
@@ -30,7 +36,9 @@ export const Draggable = ({ id, children, sx }: DraggableProps) => {
   const selfRef = useRef<HTMLDivElement>(null);
   const wasDroppedRecentlyTimerRef = useRef(0);
 
-  const onDragStart = () => {
+  const onDragStart = (event: DragEvent) => {
+    event.stopPropagation();
+
     clearTimeout(wasDroppedRecentlyTimerRef.current);
     setWasDroppedRecently(false);
     setIsBeingDragged(true);
@@ -38,7 +46,9 @@ export const Draggable = ({ id, children, sx }: DraggableProps) => {
     setDraggedItemId(id);
   };
 
-  const onDragEnd = () => {
+  const onDragEnd = (event: DragEvent) => {
+    event.stopPropagation();
+
     setIsBeingDragged(false);
     setWasDroppedRecently(true);
     setIsSomethingDragged && setIsSomethingDragged(false);
@@ -47,12 +57,15 @@ export const Draggable = ({ id, children, sx }: DraggableProps) => {
   };
 
   const onDrag = (event: DragEvent) => {
+    event.stopPropagation();
     event.preventDefault();
+
     const itemCenterY = getAbsoluteYCenterPosition(event.target as HTMLElement);
     setDraggedItemCenterY(itemCenterY);
   };
 
   const onDrop = (event: DragEvent) => {
+    event.stopPropagation();
     event.preventDefault();
   };
 
@@ -78,7 +91,7 @@ export const Draggable = ({ id, children, sx }: DraggableProps) => {
         ref={selfRef}
         draggable={isDraggable}
         id={id}
-        className="draggable"
+        className={`draggable-${classNameId}`}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         onDrop={onDrop}

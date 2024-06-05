@@ -8,13 +8,8 @@ import {
   sortByYPositionCopy,
 } from './utils';
 
-export interface DraggableDataTransfer {
-  id: string;
-  centerY: number;
-  centerOffset: number;
-}
-
 interface DroppableAreaProps {
+  draggableClassNameId: string;
   children: ReactNode;
 }
 
@@ -22,7 +17,10 @@ interface DroppableAreaProps {
 // to only render elements wrapped inside the draggable
 // component
 
-export const DroppableArea = ({ children }: DroppableAreaProps) => {
+export const DroppableArea = ({
+  draggableClassNameId,
+  children,
+}: DroppableAreaProps) => {
   const [draggedItemId, setDraggedItemId] = useState('');
   const [draggedItemCenterY, setDraggedItemCenterY] = useState<
     number | undefined
@@ -36,7 +34,8 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
     const draggables = getDraggables(
       dropareaRef.current,
       draggedItemId,
-      dragImageCenterY
+      dragImageCenterY,
+      draggableClassNameId
     );
 
     const yPositionOrderedDraggables = sortByYPositionCopy(draggables);
@@ -57,11 +56,14 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
   };
 
   const onDragEnter = (event: React.DragEvent) => {
+    event.stopPropagation();
     event.preventDefault();
   };
 
   const onDragOver = (event: React.DragEvent) => {
+    event.stopPropagation();
     event.preventDefault();
+
     if (!draggedItemId || draggedItemCenterY === undefined) return;
 
     const centerOffset = draggedItemCenterY - event.pageY;
@@ -71,6 +73,7 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
   };
 
   const onDrop = (event: React.DragEvent) => {
+    event.stopPropagation();
     event.preventDefault();
   };
 
