@@ -56,10 +56,11 @@ export const getAbsolutePosition = (element: HTMLElement) => {
 export const getDraggables = (
   dropareaElement: HTMLDivElement,
   draggedItemId: string,
-  dragImageCenterY: number
+  dragImageCenterY: number,
+  classNameId: string
 ) => {
   const draggales: IDraggable[] = [
-    ...dropareaElement.querySelectorAll('div.draggable'),
+    ...dropareaElement.querySelectorAll(`div.draggable-${classNameId}`),
   ].map((element) => {
     const isDragged = element.id === draggedItemId;
 
