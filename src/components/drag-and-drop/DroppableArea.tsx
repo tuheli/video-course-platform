@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
 import { DroppableAreaContext } from '../../contexts/DroppableAreaContext';
 import {
@@ -23,6 +23,10 @@ interface DroppableAreaProps {
 // component
 
 export const DroppableArea = ({ children }: DroppableAreaProps) => {
+  const [draggedItemId, setDraggedItemId] = useState('');
+  const [draggedItemCenterY, setDraggedItemCenterY] = useState<
+    number | undefined
+  >(undefined);
   const { itemsState, changeOrder } = useDragAndDropContext();
   const dropareaRef = useRef<HTMLDivElement>(null);
 
@@ -58,6 +62,12 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
 
   const onDragOver = (event: React.DragEvent) => {
     event.preventDefault();
+    if (!draggedItemId || draggedItemCenterY === undefined) return;
+
+    const centerOffset = draggedItemCenterY - event.pageY;
+    const imagePosition = draggedItemCenterY - centerOffset;
+
+    tickUpdateOrder(draggedItemId, imagePosition);
   };
 
   const onDrop = (event: React.DragEvent) => {
@@ -65,7 +75,9 @@ export const DroppableArea = ({ children }: DroppableAreaProps) => {
   };
 
   return (
-    <DroppableAreaContext.Provider value={{ tickUpdateOrder }}>
+    <DroppableAreaContext.Provider
+      value={{ setDraggedItemId, setDraggedItemCenterY }}
+    >
       <div
         ref={dropareaRef}
         className="droppable-area"

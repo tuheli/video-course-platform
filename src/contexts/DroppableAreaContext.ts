@@ -1,9 +1,11 @@
 import { createContext } from 'react';
 
 interface DroppableAreaContextState {
-  tickUpdateOrder: (draggedItemId: string, dragImageCenterY: number) => void;
+  setDraggedItemId: (id: string) => void;
+  setDraggedItemCenterY: (centerY: number | undefined) => void;
 }
 
 export const DroppableAreaContext = createContext<DroppableAreaContextState>({
-  tickUpdateOrder: () => {},
+  setDraggedItemId: () => {},
+  setDraggedItemCenterY: () => {},
 });
