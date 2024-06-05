@@ -6,6 +6,9 @@ interface DraghandleProps {
   sx?: SxProps;
 }
 
+// NOTE: Technically draggables can be dragged
+// from anywhere but this is a visual indicator
+
 export const Draghandle = ({ sx }: DraghandleProps) => {
   const { setIsDraggable } = useDraggableContext();
 
