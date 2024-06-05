@@ -30,7 +30,6 @@ export const EditHeading = ({
       sx={{
         p: 1,
         py: 1.5,
-        border: '1px solid',
       }}
     >
       <Stack

@@ -22,9 +22,8 @@ export const BottomExtension = () => {
     <Paper
       sx={{
         width: '100%',
-        borderColor: 'text.primary',
-        borderTop: 'none',
         p: 1,
+        border: 'none',
       }}
     >
       <Stack
