@@ -50,6 +50,9 @@ export const SidebarItem = ({
           gap: 2,
           pr: 1,
           width: '100%',
+          '&:hover': {
+            bgcolor: 'background.paper',
+          },
         }}
       >
         <Box
