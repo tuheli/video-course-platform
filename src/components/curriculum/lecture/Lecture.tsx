@@ -10,9 +10,11 @@ import { EditHeading } from '../EditHeading';
 import { Heading } from '../Heading';
 import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { BottomExtension } from './BottomExtension';
-import { Stack } from '@mui/material';
+import { Paper, Stack } from '@mui/material';
 import { LectureContext } from '../../../contexts/LectureContext';
 import { BottomExtensionOpener } from './BottomExtensionOpener';
+import { Draghandle } from '../../drag-and-drop/Draghandle';
+import { useDraggableContext } from '../../../hooks/useDraggableContext';
 
 interface LectureProps {
   lecture: Lesson;
@@ -24,6 +26,7 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
   const { isHeadingVisible, changeHeadingVisibility } =
     useEditableCurriculumItem();
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
+  const { isBeingDragged } = useDraggableContext();
 
   const dispatch = useAppDispatch();
 
@@ -65,43 +68,64 @@ export const Lecture = ({ lecture, index }: LectureProps) => {
         lecture,
       }}
     >
-      <Stack>
-        {isHeadingVisible && (
-          <Heading
-            itemName={'Lecture'}
-            index={index}
-            title={lecture.name}
-            changeHeadingVisibility={changeHeadingVisibility}
-            onClickDeleteIcon={onClickDeleteIcon}
-            titleSx={{
-              fontWeight: 400,
-            }}
-            outerStackSx={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-            leftStackSx={{
-              flexGrow: 1,
-            }}
-          >
-            <BottomExtensionOpener
-              isOpen={isBottomExtensionOpen}
-              setIsOpen={setIsBottomExtensionOpen}
+      <Paper
+        sx={{
+          p: 0,
+          m: 0,
+          bgcolor: 'background.paperDarker',
+          border: '1px solid',
+          borderRadius: 0,
+          outline: isBeingDragged ? '2px solid' : 'none',
+          outlineColor: 'secondary.light',
+          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+        }}
+      >
+        <Stack>
+          {isHeadingVisible && (
+            <Heading
+              itemName={'Lecture'}
+              index={index}
+              title={lecture.name}
+              changeHeadingVisibility={changeHeadingVisibility}
+              onClickDeleteIcon={onClickDeleteIcon}
+              titleSx={{
+                fontWeight: 400,
+              }}
+              outerStackSx={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              leftStackSx={{
+                flexGrow: 1,
+              }}
+              paperSx={{
+                border: 'none',
+              }}
+            >
+              <BottomExtensionOpener
+                isOpen={isBottomExtensionOpen}
+                setIsOpen={setIsBottomExtensionOpen}
+              />
+              <Draghandle
+                sx={{
+                  border: 'none',
+                }}
+              />
+            </Heading>
+          )}
+          {isEditVisible && (
+            <EditHeading
+              title={`Lecture ${index + 1}:`}
+              titleValue={lecture.name}
+              saveButtonText="Save Lecture"
+              onChangeTitle={onChangeTitle}
+              onClickCancel={onClickCancel}
+              onClickSave={onClickSave}
             />
-          </Heading>
-        )}
-        {isEditVisible && (
-          <EditHeading
-            title={`Lecture ${index + 1}:`}
-            titleValue={lecture.name}
-            saveButtonText="Save Lecture"
-            onChangeTitle={onChangeTitle}
-            onClickCancel={onClickCancel}
-            onClickSave={onClickSave}
-          />
-        )}
-        {isBottomExtensionOpen && <BottomExtension />}
-      </Stack>
+          )}
+          {isBottomExtensionOpen && <BottomExtension />}
+        </Stack>
+      </Paper>
     </LectureContext.Provider>
   );
 };
