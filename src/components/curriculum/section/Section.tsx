@@ -24,6 +24,7 @@ import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
 import { DroppableArea } from '../../drag-and-drop/DroppableArea';
 import { Draggable } from '../../drag-and-drop/Draggable';
 import { ItemWithOrderIndex, getSortedCopy } from '../../drag-and-drop/utils';
+import { useDragAndDropContext } from '../../../hooks/useDragAndDropContext';
 
 interface SectionProps {
   courseDraftId: string;
@@ -50,6 +51,7 @@ export const Section = ({
   const [isOptionsAnimationEnabled, setIsOptionsAnimationEnabled] =
     useState(true);
   const { isBeingDragged } = useDraggableContext();
+  const { isSomethingDragged, setIsSomethingDragged } = useDragAndDropContext();
 
   const dispatch = useAppDispatch();
 
@@ -58,7 +60,7 @@ export const Section = ({
     onMouseEnter,
     onMouseLeave,
     changeHeadingVisibility,
-  } = useEditableCurriculumItem();
+  } = useEditableCurriculumItem(!isSomethingDragged);
 
   const sortedLectures = getSortedCopy(curriculumSection.lessons);
   const isEditVisible = !isHeadingVisible;
@@ -212,8 +214,10 @@ export const Section = ({
             {sortedLectures.length > 0 && (
               <DragAndDropContext.Provider
                 value={{
+                  isSomethingDragged,
                   itemsState: sortedLectures,
                   changeOrder: changeLecturesOrder,
+                  setIsSomethingDragged,
                 }}
               >
                 <DroppableArea draggableClassNameId="lecture">

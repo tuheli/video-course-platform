@@ -15,6 +15,7 @@ import { LectureContext } from '../../../contexts/LectureContext';
 import { BottomExtensionOpener } from './BottomExtensionOpener';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
+import { useDragAndDropContext } from '../../../hooks/useDragAndDropContext';
 
 interface LectureProps {
   lecture: Lesson;
@@ -23,8 +24,9 @@ interface LectureProps {
 
 export const Lecture = ({ lecture, index }: LectureProps) => {
   const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
+  const { isSomethingDragged } = useDragAndDropContext();
   const { isHeadingVisible, changeHeadingVisibility } =
-    useEditableCurriculumItem();
+    useEditableCurriculumItem(!isSomethingDragged);
   const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
   const { isBeingDragged } = useDraggableContext();
 

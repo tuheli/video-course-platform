@@ -30,13 +30,15 @@ export const Heading = ({
   changeHeadingVisibility,
   onClickDeleteIcon,
 }: HeadingProps) => {
+  const { isSomethingDragged } = useDragAndDropContext();
+
   const {
     isEditButtonVisible,
     isDeleteButtonVisible,
     areChildrenVisible,
     onMouseEnter,
     onMouseLeave,
-  } = useEditableCurriculumItem();
+  } = useEditableCurriculumItem(!isSomethingDragged);
 
   return (
     <Paper
