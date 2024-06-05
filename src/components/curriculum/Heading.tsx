@@ -3,6 +3,7 @@ import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
 import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
 import { EditButton } from './EditButton';
 import { DeleteButton } from './DeleteButton';
+import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
 
 interface HeadingProps {
   itemName: 'Section' | 'Lecture';
@@ -32,6 +33,7 @@ export const Heading = ({
   const {
     isEditButtonVisible,
     isDeleteButtonVisible,
+    areChildrenVisible,
     onMouseEnter,
     onMouseLeave,
   } = useEditableCurriculumItem();
@@ -56,6 +58,9 @@ export const Heading = ({
           sx={{
             flexDirection: 'row',
             gap: 1,
+            minHeight: 32,
+            display: 'flex',
+            alignItems: 'center',
             ...leftStackSx,
           }}
         >
@@ -86,10 +91,16 @@ export const Heading = ({
             <EditButton changeHeadingVisibility={changeHeadingVisibility} />
           )}
           {isDeleteButtonVisible && (
-            <DeleteButton onClick={onClickDeleteIcon} />
+            <Box
+              sx={{
+                marginRight: 'auto',
+              }}
+            >
+              <DeleteButton onClick={onClickDeleteIcon} />
+            </Box>
           )}
+          {areChildrenVisible && children}
         </Stack>
-        {children}
       </Stack>
     </Paper>
   );
