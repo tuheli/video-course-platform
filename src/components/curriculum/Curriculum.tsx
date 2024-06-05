@@ -39,7 +39,7 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
           setIsSomethingDragged,
         }}
       >
-        <DroppableArea>
+        <DroppableArea draggableClassNameId="section">
           <Stack
             sx={{
               flexDirection: 'column',
@@ -47,7 +47,11 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
             }}
           >
             {curriculum.map((curriculumSection, index) => (
-              <Draggable key={curriculumSection.id} id={curriculumSection.id}>
+              <Draggable
+                key={curriculumSection.id}
+                id={curriculumSection.id}
+                classNameId="section"
+              >
                 <Section
                   curriculumSection={curriculumSection}
                   courseDraftId={courseDraft.id}
