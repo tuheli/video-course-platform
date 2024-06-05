@@ -9,7 +9,6 @@ import {
 import { useDraggableContext } from '../../hooks/useDraggableContext';
 import { useAppDispatch } from '../../app/hooks';
 import { Stack } from '@mui/material';
-import { BorderAnimationWrapper } from '../border-animation-wrapper/BorderAnimationWrapper';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { inputFieldWidth } from './common';
 import { Draghandle } from '../drag-and-drop/Draghandle';
@@ -32,7 +31,7 @@ export const EditableTextItem = ({
 }: EditableTextItemProps) => {
   const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
   const [isDraghandleVisible, setIsDraghandleVisible] = useState(false);
-  const { wasDroppedRecently, isBeingDragged } = useDraggableContext();
+  const { isBeingDragged } = useDraggableContext();
   const dispatch = useAppDispatch();
 
   const forceShowExtensions = isBeingDragged;
@@ -85,29 +84,16 @@ export const EditableTextItem = ({
         outlineColor: isBeingDragged ? 'secondary.light' : 'none',
       }}
     >
-      {wasDroppedRecently && (
-        <BorderAnimationWrapper>
-          <InputFieldWithMaxCharacters
-            onChange={onChangeInputField}
-            maxInputLength={160}
-            placeholder={placeholder}
-            value={item.text}
-            outerDivSx={{ width: inputFieldWidth }}
-          />
-        </BorderAnimationWrapper>
-      )}
-      {!wasDroppedRecently && (
-        <InputFieldWithMaxCharacters
-          onChange={onChangeInputField}
-          maxInputLength={160}
-          placeholder={placeholder}
-          value={item.text}
-          outerDivSx={{
-            width: inputFieldWidth,
-            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
-          }}
-        />
-      )}
+      <InputFieldWithMaxCharacters
+        onChange={onChangeInputField}
+        maxInputLength={160}
+        placeholder={placeholder}
+        value={item.text}
+        outerDivSx={{
+          width: inputFieldWidth,
+          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+        }}
+      />
       {(forceShowExtensions || isDeleteIconVisible) && (
         <DeleteButton
           onClick={onClickDeleteIcon}
