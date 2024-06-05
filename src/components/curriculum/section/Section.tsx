@@ -1,9 +1,10 @@
-import { Paper, Stack, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { ItemSelection } from '../ItemSelection';
 import { ChangeEvent, useState } from 'react';
 import {
   ICurriculumSection,
   deletedCurriculumSection,
+  reorderedLectures,
   updatedCurriculumSectionText,
 } from '../../../features/courseDraftsSlice';
 import {
@@ -19,6 +20,10 @@ import { InputFieldWithMaxCharacters } from '../../course-creation/course-creati
 import { inputOuterDivSx, inputSx } from '../common';
 import { Draghandle } from '../../drag-and-drop/Draghandle';
 import { useDraggableContext } from '../../../hooks/useDraggableContext';
+import { DragAndDropContext } from '../../../contexts/DragAndDropContext';
+import { DroppableArea } from '../../drag-and-drop/DroppableArea';
+import { Draggable } from '../../drag-and-drop/Draggable';
+import { ItemWithOrderIndex, getSortedCopy } from '../../drag-and-drop/utils';
 
 interface SectionProps {
   courseDraftId: string;
@@ -55,7 +60,7 @@ export const Section = ({
     changeHeadingVisibility,
   } = useEditableCurriculumItem();
 
-  const lectures = curriculumSection.lessons;
+  const sortedLectures = getSortedCopy(curriculumSection.lessons);
   const isEditVisible = !isHeadingVisible;
 
   const onClickDeleteIcon = () => {
@@ -97,119 +102,154 @@ export const Section = ({
     changeHeadingVisibility(true);
   };
 
-  return (
-    <CurriculumSectionContext.Provider
-      value={{
+  const changeLecturesOrder = (newOrder: ItemWithOrderIndex[]) => {
+    dispatch(
+      reorderedLectures({
         courseDraftId,
-        curriculumSection,
-        index,
-        editingItemType,
-        isOptionsAnimationEnabled,
-        setIsOptionsAnimationEnabled,
-        setEditingItemType,
-      }}
-    >
-      <Paper
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        sx={{
-          bgcolor: 'background.paperDarker',
-          border: '1px solid',
-          outline: isBeingDragged ? '2px solid' : 'none',
-          outlineColor: 'secondary.light',
-          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
-          p: 1,
+        sectionId: curriculumSection.id,
+        newOrder,
+      })
+    );
+  };
+
+  return (
+    <>
+      <CurriculumSectionContext.Provider
+        value={{
+          courseDraftId,
+          curriculumSection,
+          index,
+          editingItemType,
+          isOptionsAnimationEnabled,
+          setIsOptionsAnimationEnabled,
+          setEditingItemType,
         }}
       >
-        <Stack
+        <Paper
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
           sx={{
-            flexDirection: 'column',
-            gap: 2,
+            bgcolor: 'background.paperDarker',
+            border: '1px solid',
+            borderRadius: 0,
+            outline: isBeingDragged ? '2px solid' : 'none',
+            outlineColor: 'secondary.light',
+            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+            p: 1,
           }}
         >
-          {isHeadingVisible && (
-            <Heading
-              itemName="Section"
-              index={index}
-              title={curriculumSection.title}
-              changeHeadingVisibility={changeHeadingVisibility}
-              onClickDeleteIcon={onClickDeleteIcon}
-              paperSx={{
-                bgcolor: 'background.paperDarker',
-                // Hides border but keeps size
-                // consistent with editheading component
-                borderColor: 'background.paperDarker',
-              }}
-              outerStackSx={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              leftStackSx={{
-                flexGrow: 1,
-              }}
-            >
-              <Draghandle
-                sx={{
-                  border: 'none',
-                }}
-              />
-            </Heading>
-          )}
-          {isEditVisible && (
-            <EditHeading
-              title={`Section ${index + 1}:`}
-              titleValue={curriculumSection.title}
-              saveButtonText="Save Section"
-              onChangeTitle={onChangeTitle}
-              onClickCancel={onClickCancel}
-              onClickSave={onClickSave}
-              titleSx={{
-                fontWeight: 600,
-              }}
-            >
-              <>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontWeight: 600,
-                  }}
-                >
-                  What will students be able to do at the end of this section?
-                </Typography>
-                <InputFieldWithMaxCharacters
-                  onChange={onChangeLearningObjective}
-                  maxInputLength={80}
-                  value={curriculumSection.learningObjective}
-                  placeholder="Enter a learning objective"
-                  autofocus={false}
-                  outerDivSx={{
-                    ...inputOuterDivSx,
-                  }}
-                  inputSx={{
-                    ...inputSx,
-                  }}
-                />
-              </>
-            </EditHeading>
-          )}
           <Stack
             sx={{
               flexDirection: 'column',
-              mt: 2,
-              pl: 6,
-              pr: 0,
               gap: 2,
             }}
           >
-            {lectures.map((lecture, index) => {
-              return (
-                <Lecture key={lecture.id} lecture={lecture} index={index} />
-              );
-            })}
-            <ItemSelection />
+            {isHeadingVisible && (
+              <Heading
+                itemName="Section"
+                index={index}
+                title={curriculumSection.title}
+                changeHeadingVisibility={changeHeadingVisibility}
+                onClickDeleteIcon={onClickDeleteIcon}
+                paperSx={{
+                  bgcolor: 'background.paperDarker',
+                  // Hides border but keeps size
+                  // consistent with editheading component
+                  borderColor: 'background.paperDarker',
+                }}
+                outerStackSx={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                leftStackSx={{
+                  flexGrow: 1,
+                }}
+              >
+                <Draghandle
+                  sx={{
+                    border: 'none',
+                  }}
+                />
+              </Heading>
+            )}
+            {isEditVisible && (
+              <EditHeading
+                title={`Section ${index + 1}:`}
+                titleValue={curriculumSection.title}
+                saveButtonText="Save Section"
+                onChangeTitle={onChangeTitle}
+                onClickCancel={onClickCancel}
+                onClickSave={onClickSave}
+                titleSx={{
+                  fontWeight: 600,
+                }}
+              >
+                <>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    What will students be able to do at the end of this section?
+                  </Typography>
+                  <InputFieldWithMaxCharacters
+                    onChange={onChangeLearningObjective}
+                    maxInputLength={80}
+                    value={curriculumSection.learningObjective}
+                    placeholder="Enter a learning objective"
+                    autofocus={false}
+                    outerDivSx={{
+                      ...inputOuterDivSx,
+                    }}
+                    inputSx={{
+                      ...inputSx,
+                    }}
+                  />
+                </>
+              </EditHeading>
+            )}
+            {sortedLectures.length > 0 && (
+              <DragAndDropContext.Provider
+                value={{
+                  itemsState: sortedLectures,
+                  changeOrder: changeLecturesOrder,
+                }}
+              >
+                <DroppableArea draggableClassNameId="lecture">
+                  <Stack
+                    sx={{
+                      flexDirection: 'column',
+                      ml: 6,
+                      pr: 0,
+                      gap: 2,
+                    }}
+                  >
+                    {sortedLectures.map((lecture, index) => {
+                      return (
+                        <Draggable
+                          id={lecture.id}
+                          classNameId="lecture"
+                          key={lecture.id}
+                        >
+                          <Lecture lecture={lecture} index={index} />
+                        </Draggable>
+                      );
+                    })}
+                  </Stack>
+                </DroppableArea>
+              </DragAndDropContext.Provider>
+            )}
+            <Box
+              sx={{
+                ml: 6,
+              }}
+            >
+              <ItemSelection />
+            </Box>
           </Stack>
-        </Stack>
-      </Paper>
-    </CurriculumSectionContext.Provider>
+        </Paper>
+      </CurriculumSectionContext.Provider>
+    </>
   );
 };
