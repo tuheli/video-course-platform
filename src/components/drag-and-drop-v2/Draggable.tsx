@@ -128,6 +128,8 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
   const startDrag = (event: MouseEvent) => {
     if (currentlyDraggedItemId !== null) return;
 
+    document.body.style.overflowX = 'hidden';
+
     setCurrentlyDraggedItemId(dataId);
     createDragImage(event);
 
@@ -177,6 +179,9 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
     const isMovingUp = nextTopPosition < parseFloat(element.style.top);
     const canMoveUp = rect.top > 10;
 
+    element.style.top = `${nextTopPosition}px`;
+    return;
+
     if (isMovingDown && canMoveDown) {
       element.style.top = `${nextTopPosition}px`;
     } else if (isMovingUp && canMoveUp) {
@@ -192,6 +197,9 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
 
     const isMovingRight = nextLeftPosition > parseFloat(element.style.left);
     const canMoveRight = rect.right < window.innerWidth - 28;
+
+    element.style.left = `${nextLeftPosition}px`;
+    return;
 
     if (isMovingLeft && canMoveLeft) {
       element.style.left = `${nextLeftPosition}px`;
@@ -292,6 +300,8 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
 
     mousePosition.current = { x: null, y: null };
     setCurrentlyDraggedItemId(null);
+
+    document.body.style.overflowX = '';
   };
 
   useEffect(() => {
