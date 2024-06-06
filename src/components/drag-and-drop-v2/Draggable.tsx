@@ -1,29 +1,51 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { DragAndDropContext } from './DragAndDropContext';
+import { useDragAndDropContext } from './useDragAndDropContext';
+
+const dataIds = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
 
 export const DragDropV2 = () => {
+  const [currentlyDraggedItemId, setCurrentlyDraggedItemId] = useState<
+    string | null
+  >(null);
+
+  console.log('currentlyDraggedItemId', currentlyDraggedItemId);
+
   return (
-    <div
-      style={{
-        backgroundColor: 'grey',
-        margin: '100px',
-        padding: '10px',
-        justifyContent: 'space-around',
+    <DragAndDropContext.Provider
+      value={{
+        currentlyDraggedItemId,
+        setCurrentlyDraggedItemId,
       }}
     >
-      <Dropzone allowedDropzoneTag="lecture">
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}
-        >
-          <Draggable dataId="1" allowedDropzoneTag="lecture" />
-          <Draggable dataId="2" allowedDropzoneTag="lecture" />
-          <Draggable dataId="3" allowedDropzoneTag="lecture" />
-        </div>
-      </Dropzone>
-    </div>
+      <div
+        style={{
+          height: 'calc(100vh + 1000px)',
+          backgroundColor: 'grey',
+          margin: '100px',
+          padding: '10px',
+          justifyContent: 'space-around',
+        }}
+      >
+        <Dropzone allowedDropzoneTag="lecture">
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+            }}
+          >
+            {dataIds.map((dataId) => (
+              <Draggable
+                key={dataId}
+                dataId={dataId}
+                allowedDropzoneTag="lecture"
+              />
+            ))}
+          </div>
+        </Dropzone>
+      </div>
+    </DragAndDropContext.Provider>
   );
 };
 
@@ -70,6 +92,12 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
   const mousePosition = useRef<Position>({ x: null, y: null });
   const tickIntervalId = useRef<number | null>(null);
   const selfRef = useRef<HTMLDivElement>(null);
+  const scrollOffset = useRef<number>(0);
+
+  const { currentlyDraggedItemId, setCurrentlyDraggedItemId } =
+    useDragAndDropContext();
+
+  scrollOffset.current = window.scrollY;
 
   const updateMouseOffset = (event: MouseEvent) => {
     if (!selfRef.current) return;
@@ -90,14 +118,17 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
 
   const updateMousePosition = (event: MouseEvent) => {
     const eventMousePosition = {
-      x: event.clientX,
-      y: event.clientY,
+      x: event.pageX,
+      y: event.pageY,
     };
 
     mousePosition.current = eventMousePosition;
   };
 
   const startDrag = (event: MouseEvent) => {
+    if (currentlyDraggedItemId !== null) return;
+
+    setCurrentlyDraggedItemId(dataId);
     createDragImage(event);
 
     if (tickIntervalId.current) {
@@ -110,6 +141,7 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
 
     window.addEventListener('mouseup', endDrag);
     window.addEventListener('mousemove', onDragMouseMove);
+    window.addEventListener('scroll', onScroll);
   };
 
   const createDragImage = (event: MouseEvent) => {
@@ -122,8 +154,8 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
     dragImage.style.pointerEvents = 'none';
 
     dragImage.style.position = 'absolute';
-    dragImage.style.top = `${event.clientY + mouseOffset.current.y}px`;
-    dragImage.style.left = `${event.clientX + mouseOffset.current.x}px`;
+    dragImage.style.top = `${event.pageY + mouseOffset.current.y}px`;
+    dragImage.style.left = `${event.pageX + mouseOffset.current.x}px`;
 
     dragImage.style.backgroundColor = 'red';
     dragImage.style.zIndex = '1000';
@@ -133,14 +165,67 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
 
   const onDragMouseMove = (event: MouseEvent) => {
     updateMousePosition(event);
+    updateDragImagePosition(event);
+  };
 
+  const moveVertically = (nextTopPosition: number, element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+
+    const isMovingDown = nextTopPosition > parseFloat(element.style.top);
+    const canMoveDown = rect.bottom < window.innerHeight - 10;
+
+    const isMovingUp = nextTopPosition < parseFloat(element.style.top);
+    const canMoveUp = rect.top > 10;
+
+    if (isMovingDown && canMoveDown) {
+      element.style.top = `${nextTopPosition}px`;
+    } else if (isMovingUp && canMoveUp) {
+      element.style.top = `${nextTopPosition}px`;
+    }
+  };
+
+  const moveHorizontally = (nextLeftPosition: number, element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+
+    const isMovingLeft = nextLeftPosition < parseFloat(element.style.left);
+    const canMoveLeft = rect.left > 10;
+
+    const isMovingRight = nextLeftPosition > parseFloat(element.style.left);
+    const canMoveRight = rect.right < window.innerWidth - 28;
+
+    if (isMovingLeft && canMoveLeft) {
+      element.style.left = `${nextLeftPosition}px`;
+    } else if (isMovingRight && canMoveRight) {
+      element.style.left = `${nextLeftPosition}px`;
+    }
+  };
+
+  const updateDragImagePosition = (event: MouseEvent) => {
     const dragImage = document.getElementById('drag-image');
 
     if (!dragImage) return;
     if (!mouseOffset.current.x || !mouseOffset.current.y) return;
 
-    dragImage.style.top = `${event.clientY + mouseOffset.current.y}px`;
-    dragImage.style.left = `${event.clientX + mouseOffset.current.x}px`;
+    if (event.type === 'scroll') {
+      const scrollDelta = window.scrollY - scrollOffset.current;
+      scrollOffset.current = window.scrollY;
+
+      const currentTop = parseFloat(dragImage.style.top);
+      const nextTopPosition = currentTop + scrollDelta;
+
+      moveVertically(nextTopPosition, dragImage);
+    } else {
+      const nextTopPosition = event.pageY + mouseOffset.current.y;
+      moveVertically(nextTopPosition, dragImage);
+
+      const nextLeftPosition = event.pageX + mouseOffset.current.x;
+      moveHorizontally(nextLeftPosition, dragImage);
+    }
+  };
+
+  const onScroll = (event: any) => {
+    updateMousePosition(event);
+    updateDragImagePosition(event);
   };
 
   const onDragTick = () => {
@@ -148,9 +233,6 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
     if (!dropzoneUnderneath) return;
 
     const itemsInDropzone = getItemsInDropzone(dropzoneUnderneath);
-    itemsInDropzone.forEach((element) => {
-      console.log('element', element);
-    });
   };
 
   const getDropzoneUnderneath = () => {
@@ -199,13 +281,17 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
   const endDrag = () => {
     window.removeEventListener('mouseup', endDrag);
     window.removeEventListener('mousemove', onDragMouseMove);
+    window.removeEventListener('scroll', onScroll);
 
     const dragImage = document.getElementById('drag-image');
     dragImage?.remove();
 
-    if (!tickIntervalId.current) return;
-    clearInterval(tickIntervalId.current);
+    if (tickIntervalId.current) {
+      clearInterval(tickIntervalId.current);
+    }
+
     mousePosition.current = { x: null, y: null };
+    setCurrentlyDraggedItemId(null);
   };
 
   useEffect(() => {
