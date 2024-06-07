@@ -1,73 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { DragAndDropContext } from './DragAndDropContext';
+import { useEffect, useRef } from 'react';
 import { useDragAndDropContext } from './useDragAndDropContext';
-
-const dataIds = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
-
-export const DragDropV2 = () => {
-  const [currentlyDraggedItemId, setCurrentlyDraggedItemId] = useState<
-    string | null
-  >(null);
-
-  console.log('currentlyDraggedItemId', currentlyDraggedItemId);
-
-  return (
-    <DragAndDropContext.Provider
-      value={{
-        currentlyDraggedItemId,
-        setCurrentlyDraggedItemId,
-      }}
-    >
-      <div
-        style={{
-          height: 'calc(100vh + 1000px)',
-          backgroundColor: 'grey',
-          margin: '100px',
-          padding: '10px',
-          justifyContent: 'space-around',
-        }}
-      >
-        <Dropzone allowedDropzoneTag="lecture">
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-            }}
-          >
-            {dataIds.map((dataId) => (
-              <Draggable
-                key={dataId}
-                dataId={dataId}
-                allowedDropzoneTag="lecture"
-              />
-            ))}
-          </div>
-        </Dropzone>
-      </div>
-    </DragAndDropContext.Provider>
-  );
-};
-
-interface DropzoneProps {
-  allowedDropzoneTag: string;
-  children?: React.ReactNode;
-}
-
-const Dropzone = ({ allowedDropzoneTag, children }: DropzoneProps) => {
-  return (
-    <div
-      className={`dropzone-${allowedDropzoneTag}`}
-      style={{
-        backgroundColor: 'lightgreen',
-        width: '400px',
-        height: '400px',
-      }}
-    >
-      {children}
-    </div>
-  );
-};
+import { giveItemsOrderIndicies } from '../drag-and-drop/utils';
 
 interface Reorderable {
   id: string;
@@ -77,6 +10,7 @@ interface Reorderable {
 interface DraggableProps {
   dataId: string;
   allowedDropzoneTag: string;
+  children: React.ReactNode;
 }
 
 interface Position {
@@ -84,7 +18,11 @@ interface Position {
   y: number | null;
 }
 
-const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
+export const Draggable = ({
+  dataId,
+  allowedDropzoneTag,
+  children,
+}: DraggableProps) => {
   const mouseOffset = useRef<Position>({
     x: null,
     y: null,
@@ -93,8 +31,7 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
   const tickIntervalId = useRef<number | null>(null);
   const selfRef = useRef<HTMLDivElement>(null);
   const scrollOffset = useRef<number>(0);
-
-  const { currentlyDraggedItemId, setCurrentlyDraggedItemId } =
+  const { currentlyDraggedItemId, setCurrentlyDraggedItemId, changeOrder } =
     useDragAndDropContext();
 
   scrollOffset.current = window.scrollY;
@@ -241,6 +178,20 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
     if (!dropzoneUnderneath) return;
 
     const itemsInDropzone = getItemsInDropzone(dropzoneUnderneath);
+    const sortedItems = sortByYPosition(itemsInDropzone);
+    const shouldReorder = isOrderChanged(itemsInDropzone, sortedItems);
+
+    if (!shouldReorder) return;
+
+    const newOrder = giveItemsOrderIndicies(itemsInDropzone, sortedItems);
+    changeOrder(newOrder);
+  };
+
+  const isOrderChanged = (
+    oldOrder: Array<{ id: string }>,
+    newOrder: Array<{ id: string }>
+  ) => {
+    return oldOrder.some((oldItem, index) => oldItem.id !== newOrder[index].id);
   };
 
   const getDropzoneUnderneath = () => {
@@ -286,6 +237,12 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
     return itemsArray;
   };
 
+  const sortByYPosition = (array: Reorderable[]) => {
+    const copy = [...array];
+    copy.sort((a, b) => a.yPosition - b.yPosition);
+    return copy;
+  };
+
   const endDrag = () => {
     window.removeEventListener('mouseup', endDrag);
     window.removeEventListener('mousemove', onDragMouseMove);
@@ -322,6 +279,8 @@ const Draggable = ({ dataId, allowedDropzoneTag }: DraggableProps) => {
         width: '100px',
         height: '100px',
       }}
-    ></div>
+    >
+      {children}
+    </div>
   );
 };
