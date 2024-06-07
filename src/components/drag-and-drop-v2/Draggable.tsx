@@ -1,6 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDragAndDropContext } from './useDragAndDropContext';
-import { giveItemsOrderIndicies } from '../drag-and-drop/utils';
+import {
+  ItemWithOrderIndex,
+  giveItemsOrderIndicies,
+} from '../drag-and-drop/utils';
+import { DraggableContext } from './DraggableContext';
 
 interface Reorderable {
   id: string;
@@ -11,6 +15,7 @@ interface DraggableProps {
   dataId: string;
   allowedDropzoneTag: string;
   children: React.ReactNode;
+  changeOrder: (newOrder: ItemWithOrderIndex[]) => void;
 }
 
 interface Position {
@@ -22,7 +27,9 @@ export const Draggable = ({
   dataId,
   allowedDropzoneTag,
   children,
+  changeOrder,
 }: DraggableProps) => {
+  const [isDraggable, setIsDraggable] = useState<boolean>(false);
   const mouseOffset = useRef<Position>({
     x: null,
     y: null,
@@ -31,7 +38,7 @@ export const Draggable = ({
   const tickIntervalId = useRef<number | null>(null);
   const selfRef = useRef<HTMLDivElement>(null);
   const scrollOffset = useRef<number>(0);
-  const { currentlyDraggedItemId, setCurrentlyDraggedItemId, changeOrder } =
+  const { currentlyDraggedItemId, setCurrentlyDraggedItemId } =
     useDragAndDropContext();
 
   scrollOffset.current = window.scrollY;
@@ -45,6 +52,8 @@ export const Draggable = ({
   };
 
   const onMouseDown = (event: React.MouseEvent) => {
+    if (!isDraggable) return;
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -56,7 +65,7 @@ export const Draggable = ({
   const updateMousePosition = (event: MouseEvent) => {
     const eventMousePosition = {
       x: event.pageX,
-      y: event.pageY,
+      y: event.pageY - window.scrollY,
     };
 
     mousePosition.current = eventMousePosition;
@@ -90,14 +99,17 @@ export const Draggable = ({
     const dragImage = selfRef.current.cloneNode(true) as HTMLElement;
 
     dragImage.id = 'drag-image';
+
     dragImage.style.pointerEvents = 'none';
+
+    dragImage.style.zIndex = '1000';
 
     dragImage.style.position = 'absolute';
     dragImage.style.top = `${event.pageY + mouseOffset.current.y}px`;
     dragImage.style.left = `${event.pageX + mouseOffset.current.x}px`;
 
-    dragImage.style.backgroundColor = 'red';
-    dragImage.style.zIndex = '1000';
+    dragImage.style.width = `${selfRef.current.offsetWidth}px`;
+    dragImage.style.height = `${selfRef.current.offsetHeight}px`;
 
     document.body.appendChild(dragImage);
   };
@@ -108,41 +120,12 @@ export const Draggable = ({
   };
 
   const moveVertically = (nextTopPosition: number, element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-
-    const isMovingDown = nextTopPosition > parseFloat(element.style.top);
-    const canMoveDown = rect.bottom < window.innerHeight - 10;
-
-    const isMovingUp = nextTopPosition < parseFloat(element.style.top);
-    const canMoveUp = rect.top > 10;
-
     element.style.top = `${nextTopPosition}px`;
     return;
-
-    if (isMovingDown && canMoveDown) {
-      element.style.top = `${nextTopPosition}px`;
-    } else if (isMovingUp && canMoveUp) {
-      element.style.top = `${nextTopPosition}px`;
-    }
   };
 
   const moveHorizontally = (nextLeftPosition: number, element: HTMLElement) => {
-    const rect = element.getBoundingClientRect();
-
-    const isMovingLeft = nextLeftPosition < parseFloat(element.style.left);
-    const canMoveLeft = rect.left > 10;
-
-    const isMovingRight = nextLeftPosition > parseFloat(element.style.left);
-    const canMoveRight = rect.right < window.innerWidth - 28;
-
     element.style.left = `${nextLeftPosition}px`;
-    return;
-
-    if (isMovingLeft && canMoveLeft) {
-      element.style.left = `${nextLeftPosition}px`;
-    } else if (isMovingRight && canMoveRight) {
-      element.style.left = `${nextLeftPosition}px`;
-    }
   };
 
   const updateDragImagePosition = (event: MouseEvent) => {
@@ -274,13 +257,14 @@ export const Draggable = ({
       ref={selfRef}
       className={`draggable-${allowedDropzoneTag}`}
       onMouseDown={onMouseDown}
-      style={{
-        backgroundColor: 'orange',
-        width: '100px',
-        height: '100px',
-      }}
     >
-      {children}
+      <DraggableContext.Provider
+        value={{
+          setIsDraggable,
+        }}
+      >
+        {children}
+      </DraggableContext.Provider>
     </div>
   );
 };
