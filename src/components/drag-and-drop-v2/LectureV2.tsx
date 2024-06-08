@@ -1,11 +1,9 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, memo, useState } from 'react';
 import {
   Lesson,
   deletedLecture,
   updatedLecture,
 } from '../../features/courseDraftsSlice';
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
-import { useDragAndDropContext } from './useDragAndDropContext';
 import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
 import { useAppDispatch } from '../../app/hooks';
 import { LectureContext } from '../../contexts/LectureContext';
@@ -15,21 +13,22 @@ import { EditHeading } from '../curriculum/EditHeading';
 import { BottomExtension } from '../curriculum/lecture/BottomExtension';
 import { HeadingV2 } from './HeadingV2';
 
-interface LectureProps {
+export interface LectureProps {
   lecture: Lesson;
   index: number;
+  courseDraftId: string;
+  sectionId: string;
 }
 
-export const LectureV2 = ({ lecture, index }: LectureProps) => {
+const LectureV2 = ({
+  lecture,
+  index,
+  courseDraftId,
+  sectionId,
+}: LectureProps) => {
   const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
-  const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
-  const { currentlyDraggedItemId } = useDragAndDropContext();
-
-  const isDraggingSomething = Boolean(currentlyDraggedItemId);
-  const isBeingDragged = currentlyDraggedItemId === lecture.id;
-
   const { isHeadingVisible, changeHeadingVisibility } =
-    useEditableCurriculumItem(!isDraggingSomething);
+    useEditableCurriculumItem(false);
 
   const dispatch = useAppDispatch();
 
@@ -39,7 +38,7 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
     dispatch(
       updatedLecture({
         courseDraftId,
-        curriculumSectionId: curriculumSection.id,
+        curriculumSectionId: sectionId,
         lectureId: lecture.id,
         newValue: event.target.value,
         propertyName: 'name',
@@ -59,7 +58,7 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
     dispatch(
       deletedLecture({
         courseDraftId,
-        curriculumSectionId: curriculumSection.id,
+        curriculumSectionId: sectionId,
         lectureId: lecture.id,
       })
     );
@@ -78,9 +77,7 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
           bgcolor: 'background.paperDarker',
           border: '1px solid',
           borderRadius: 0,
-          outline: isBeingDragged ? '2px solid' : 'none',
           outlineColor: 'secondary.light',
-          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
         }}
       >
         <Stack>
@@ -127,3 +124,5 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
     </LectureContext.Provider>
   );
 };
+
+export default memo(LectureV2);

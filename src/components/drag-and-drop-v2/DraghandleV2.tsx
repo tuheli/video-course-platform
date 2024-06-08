@@ -1,28 +1,14 @@
 import { Box, SxProps } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useDraggableContext } from './useDraggableContext';
+import { memo } from 'react';
 
 interface DraghandleProps {
   sx?: SxProps;
 }
 
-export const DraghandleV2 = ({ sx }: DraghandleProps) => {
-  const { setIsDraggable } = useDraggableContext();
-
-  const onMouseEnter = () => {
-    setIsDraggable(true);
-  };
-
-  const onMouseLeave = () => {
-    setIsDraggable(false);
-  };
-
+const DraghandleV2 = ({ sx }: DraghandleProps) => {
   return (
-    <div
-      className="draghandle"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+    <div className="draghandle">
       <Box
         sx={{
           display: 'flex',
@@ -36,3 +22,5 @@ export const DraghandleV2 = ({ sx }: DraghandleProps) => {
     </div>
   );
 };
+
+export default memo(DraghandleV2);

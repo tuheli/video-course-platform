@@ -4,7 +4,7 @@ import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem
 import { DeleteButton } from '../curriculum/DeleteButton';
 import { EditButton } from '../curriculum/EditButton';
 import { useDragAndDropContext } from './useDragAndDropContext';
-import { DraghandleV2 } from './DraghandleV2';
+import DraghandleV2 from './DraghandleV2';
 
 interface HeadingProps {
   itemName: 'Section' | 'Lecture';

@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@mui/material';
+import { Box, Paper, Stack } from '@mui/material';
 import {
   ICurriculumSection,
   deletedCurriculumSection,
@@ -7,17 +7,17 @@ import {
 import { HeadingV2 } from './HeadingV2';
 import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop/utils';
 import { Dropzone } from './Dropzone';
-import { Draggable } from './Draggable';
 import { useAppDispatch } from '../../app/hooks';
-import { LectureV2 } from './LectureV2';
+import { memo } from 'react';
+import DraggableLecture from './DraggableLecture';
 
-interface SectionProps {
+export interface SectionProps {
   courseDraftId: string;
   curriculumSection: ICurriculumSection;
   index: number;
 }
 
-export const SectionV2 = ({
+const SectionV2 = ({
   courseDraftId,
   curriculumSection,
   index,
@@ -60,6 +60,14 @@ export const SectionV2 = ({
           gap: 2,
         }}
       >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        ></Box>
         <HeadingV2
           itemName="Section"
           index={index}
@@ -68,8 +76,6 @@ export const SectionV2 = ({
           onClickDeleteIcon={onClickDelete}
           paperSx={{
             bgcolor: 'background.paperDarker',
-            // Hides border but keeps size
-            // consistent with editheading component
             borderColor: 'background.paperDarker',
           }}
           outerStackSx={{
@@ -92,14 +98,15 @@ export const SectionV2 = ({
             >
               {sortedLectures.map((lecture, index) => {
                 return (
-                  <Draggable
-                    dataId={lecture.id}
+                  <DraggableLecture
                     allowedDropzoneTag="lecture"
-                    key={lecture.id}
+                    courseDraftId={courseDraftId}
+                    index={index}
+                    lecture={lecture}
+                    sectionId={curriculumSection.id}
                     changeOrder={changeOrder}
-                  >
-                    <LectureV2 lecture={lecture} index={index} />
-                  </Draggable>
+                    key={lecture.id}
+                  />
                 );
               })}
             </Stack>
@@ -109,3 +116,5 @@ export const SectionV2 = ({
     </Paper>
   );
 };
+
+export default memo(SectionV2);
