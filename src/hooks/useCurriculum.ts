@@ -26,5 +26,6 @@ export const useCurriculumFromParams = (forcedCourseId: string = '') => {
   return {
     courseDraft,
     curriculum: sortedCurriculum,
+    courseDraftId: courseDraft.id,
   };
 };
