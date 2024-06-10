@@ -1,5 +1,3 @@
-import { IDraggable } from './Draggable';
-
 export interface ItemWithOrderIndex {
   id: string;
   orderIndex: number;
@@ -51,32 +49,6 @@ export const getAbsolutePosition = (element: HTMLElement) => {
     y: rect.y + window.scrollY,
     x: rect.x + window.scrollX,
   };
-};
-
-export const getDraggables = (
-  dropareaElement: HTMLDivElement,
-  draggedItemId: string,
-  dragImageCenterY: number,
-  classNameId: string
-) => {
-  const draggales: IDraggable[] = [
-    ...dropareaElement.querySelectorAll(`div.draggable-${classNameId}`),
-  ].map((element) => {
-    const isDragged = element.id === draggedItemId;
-
-    const yPosition = isDragged
-      ? dragImageCenterY
-      : getAbsoluteYCenterPosition(element as HTMLElement);
-
-    const draggable: IDraggable = {
-      id: element.id,
-      yPosition,
-    };
-
-    return draggable;
-  });
-
-  return draggales;
 };
 
 export const isOrderChanged = (

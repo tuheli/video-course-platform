@@ -1,4 +1,4 @@
-import { getSortedCopy } from '../components/drag-and-drop/utils';
+import { getSortedCopy } from '../components/drag-and-drop-v2/utils';
 import { UpdateableCourseContentProperty } from '../features/courseDraftsSlice';
 import { useCourseDraft } from './useCourseDraft';
 

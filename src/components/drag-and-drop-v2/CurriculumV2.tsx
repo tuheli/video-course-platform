@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop/utils';
+import { ItemWithOrderIndex, getSortedCopy } from './utils';
 import { useAppDispatch } from '../../app/hooks';
 import { reorderedSections } from '../../features/courseDraftsSlice';
 import { useCurriculumFromParams } from '../../hooks/useCurriculum';
@@ -38,11 +38,11 @@ export const CurriculumV2 = ({ forcedCourseId }: CurriculumProps) => {
           {sortedCurriculum.map((curriculumSection, index) => (
             <DraggableSection
               key={curriculumSection.id}
-              dataId={curriculumSection.id}
               allowedDropzoneTag="section"
               changeOrder={changeOrder}
-              curriculumSection={curriculumSection}
               courseDraftId={courseDraft.id}
+              curriculumSection={curriculumSection}
+              dataId={curriculumSection.id}
               index={index}
             />
           ))}

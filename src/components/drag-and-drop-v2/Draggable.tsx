@@ -1,8 +1,5 @@
 import { memo, useEffect, useRef } from 'react';
-import {
-  ItemWithOrderIndex,
-  giveItemsOrderIndicies,
-} from '../drag-and-drop/utils';
+import { ItemWithOrderIndex, giveItemsOrderIndicies } from './utils';
 
 interface Reorderable {
   id: string;

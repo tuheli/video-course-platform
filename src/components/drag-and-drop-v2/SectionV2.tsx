@@ -6,7 +6,7 @@ import {
   updatedCurriculumSectionText,
 } from '../../features/courseDraftsSlice';
 import { HeadingV2 } from './HeadingV2';
-import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop/utils';
+import { ItemWithOrderIndex, getSortedCopy } from './utils';
 import { Dropzone } from './Dropzone';
 import { useAppDispatch } from '../../app/hooks';
 import { ChangeEvent, memo, useState } from 'react';
