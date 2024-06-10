@@ -113,6 +113,7 @@ const SectionV2 = ({
     >
       {isEditingHeading ? (
         <Stack
+          onMouseDown={(event) => event.stopPropagation()}
           sx={{
             flexDirection: 'row',
             gap: 1,
