@@ -1,17 +1,15 @@
 import { Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import { MouseEvent } from 'react';
 
 interface EditButtonProps {
-  changeHeadingVisibility: (isVisible: boolean) => void;
+  onClick: (event: MouseEvent) => void;
 }
 
-export const EditButton = ({ changeHeadingVisibility }: EditButtonProps) => {
-  const onClick = () => {
-    changeHeadingVisibility(false);
-  };
-
+export const EditButton = ({ onClick }: EditButtonProps) => {
   return (
     <Box
+      onMouseDown={(event) => event.stopPropagation()}
       onClick={onClick}
       sx={{
         display: 'flex',
