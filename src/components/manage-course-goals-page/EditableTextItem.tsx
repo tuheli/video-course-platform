@@ -99,8 +99,11 @@ export const EditableTextItem = ({
               }}
             />
             <Draghandle
-              style={{
+              sx={{
                 width: '50%',
+                border: '1px solid',
+                borderLeft: 'none',
+                borderColor: 'text.primary',
               }}
             />
           </>
