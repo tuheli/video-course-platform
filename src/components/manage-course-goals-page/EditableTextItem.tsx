@@ -10,7 +10,6 @@ import { useDraggableContext } from '../../hooks/useDraggableContext';
 import { useAppDispatch } from '../../app/hooks';
 import { Stack } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { inputFieldWidth } from './common';
 import { Draghandle } from '../drag-and-drop/Draghandle';
 import { DeleteButton } from './DeleteButton';
 
@@ -89,29 +88,15 @@ export const EditableTextItem = ({
         maxInputLength={160}
         placeholder={placeholder}
         value={item.text}
-        outerDivSx={{
-          width: inputFieldWidth,
-          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
-        }}
       />
       {(forceShowExtensions || isDeleteIconVisible) && (
         <DeleteButton
+          fontSize={16}
           onClick={onClickDeleteIcon}
           cursor={deleteIconCursor}
-          sx={{
-            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
-          }}
         />
       )}
-      {(forceShowExtensions || isDraghandleVisible) && (
-        <Draghandle
-          sx={{
-            width: 54,
-            height: 54,
-            borderColor: isBeingDragged ? 'transparent' : 'text.primary',
-          }}
-        />
-      )}
+      {(forceShowExtensions || isDraghandleVisible) && <Draghandle />}
     </Stack>
   );
 };
