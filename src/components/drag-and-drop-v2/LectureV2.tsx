@@ -4,14 +4,15 @@ import {
   deletedLecture,
   updatedLecture,
 } from '../../features/courseDraftsSlice';
-import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
 import { useAppDispatch } from '../../app/hooks';
 import { LectureContext } from '../../contexts/LectureContext';
-import { Paper, Stack } from '@mui/material';
-import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
-import { EditHeading } from '../curriculum/EditHeading';
-import { BottomExtension } from '../curriculum/lecture/BottomExtension';
+import { Stack, Typography } from '@mui/material';
 import { HeadingV2 } from './HeadingV2';
+import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
+import DraghandleV2 from './DraghandleV2';
+import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
+import { BottomExtension } from '../curriculum/lecture/BottomExtension';
 
 export interface LectureProps {
   lecture: Lesson;
@@ -26,13 +27,11 @@ const LectureV2 = ({
   courseDraftId,
   sectionId,
 }: LectureProps) => {
+  const [isEditingHeading, setIsEditingHeading] = useState(false);
   const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
-  const { isHeadingVisible, changeHeadingVisibility } =
-    useEditableCurriculumItem(false);
+  const [isHeadingIconsVisible, setIsHeadingIconsVisible] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  const isEditVisible = !isHeadingVisible;
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -46,12 +45,14 @@ const LectureV2 = ({
     );
   };
 
-  const onClickCancel = () => {
-    changeHeadingVisibility(true);
+  const onClickCancelHeadingEdit = () => {
+    setIsHeadingIconsVisible(false);
+    setIsEditingHeading(false);
   };
 
-  const onClickSave = () => {
-    changeHeadingVisibility(true);
+  const onClickSaveHeadingEdit = () => {
+    setIsHeadingIconsVisible(false);
+    setIsEditingHeading(false);
   };
 
   const onClickDeleteIcon = () => {
@@ -64,63 +65,102 @@ const LectureV2 = ({
     );
   };
 
+  const onMouseEnter = () => {
+    setIsHeadingIconsVisible(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsHeadingIconsVisible(false);
+  };
+
   return (
     <LectureContext.Provider
       value={{
         lecture,
       }}
     >
-      <Paper
+      <Stack
         sx={{
-          p: 0,
-          m: 0,
-          bgcolor: 'background.paperDarker',
-          border: '1px solid',
-          borderRadius: 0,
-          outlineColor: 'secondary.light',
+          flexDirection: 'column',
         }}
       >
-        <Stack>
-          {isHeadingVisible && (
+        {isEditingHeading ? (
+          <Stack
+            onMouseDown={(event) => event.stopPropagation()}
+            sx={{
+              flexDirection: 'row',
+              gap: 1,
+              p: 1,
+              border: '1px solid',
+              borderColor: 'text.primary',
+              bgcolor: 'background.default',
+            }}
+          >
+            <Stack
+              sx={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                flex: 1,
+                gap: 1,
+              }}
+            >
+              <Stack
+                sx={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography>Lecture {index + 1}:</Typography>
+                <InputFieldWithMaxCharacters
+                  onChange={onChangeTitle}
+                  maxInputLength={80}
+                  value={lecture.name}
+                  placeholder="Enter a title"
+                  autofocus={true}
+                />
+              </Stack>
+              <SaveAndCancelButton
+                saveButtonText="Save Lecture"
+                onClickCancel={onClickCancelHeadingEdit}
+                onClickSave={onClickSaveHeadingEdit}
+              />
+            </Stack>
+          </Stack>
+        ) : (
+          <Stack
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            sx={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              p: 1,
+              border: '1px solid',
+              borderColor: 'text.primary',
+              bgcolor: 'background.default',
+            }}
+          >
             <HeadingV2
+              isHeadingIconsVisible={isHeadingIconsVisible}
               itemName={'Lecture'}
               index={index}
               title={lecture.name}
-              changeHeadingVisibility={changeHeadingVisibility}
+              setIsEditingHeading={setIsEditingHeading}
               onClickDeleteIcon={onClickDeleteIcon}
-              titleSx={{
-                fontWeight: 400,
-              }}
-              outerStackSx={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              leftStackSx={{
-                flexGrow: 1,
-              }}
-              paperSx={{
-                border: 'none',
-              }}
-            >
-              <BottomExtensionOpener
-                isOpen={isBottomExtensionOpen}
-                setIsOpen={setIsBottomExtensionOpen}
-              />
-            </HeadingV2>
-          )}
-          {isEditVisible && (
-            <EditHeading
-              title={`Lecture ${index + 1}:`}
-              titleValue={lecture.name}
-              saveButtonText="Save Lecture"
-              onChangeTitle={onChangeTitle}
-              onClickCancel={onClickCancel}
-              onClickSave={onClickSave}
             />
-          )}
-          {isBottomExtensionOpen && <BottomExtension />}
-        </Stack>
-      </Paper>
+            {isHeadingIconsVisible && (
+              <>
+                <BottomExtensionOpener
+                  isOpen={isBottomExtensionOpen}
+                  setIsOpen={setIsBottomExtensionOpen}
+                />
+                <DraghandleV2 />
+              </>
+            )}
+          </Stack>
+        )}
+        {isBottomExtensionOpen && <BottomExtension />}
+      </Stack>
     </LectureContext.Provider>
   );
 };
