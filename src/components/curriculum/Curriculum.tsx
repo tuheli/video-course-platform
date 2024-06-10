@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
-import { ItemWithOrderIndex, getSortedCopy } from './utils';
 import { useAppDispatch } from '../../app/hooks';
 import { reorderedSections } from '../../features/courseDraftsSlice';
 import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { Stack } from '@mui/material';
-import { Dropzone } from './Dropzone';
 import { AddSectionButton } from '../curriculum/section/AddSectionButton';
-import DraggableSection from './DraggableSection';
+import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
+import { Dropzone } from '../drag-and-drop-v2/Dropzone';
+import DraggableSection from './section/DraggableSection';
 
 interface CurriculumProps {
   forcedCourseId?: string;

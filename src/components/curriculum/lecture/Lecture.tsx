@@ -3,16 +3,16 @@ import {
   Lesson,
   deletedLecture,
   updatedLecture,
-} from '../../features/courseDraftsSlice';
-import { useAppDispatch } from '../../app/hooks';
-import { LectureContext } from '../../contexts/LectureContext';
+} from '../../../features/courseDraftsSlice';
+import { useAppDispatch } from '../../../app/hooks';
+import { LectureContext } from '../../../contexts/LectureContext';
 import { Stack, Typography } from '@mui/material';
-import { Heading } from './Heading';
-import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
-import Draghandle from './Draghandle';
-import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
-import { BottomExtension } from '../curriculum/lecture/BottomExtension';
+import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { SaveAndCancelButton } from '../SaveAndCancelButton';
+import Draghandle from '../../drag-and-drop-v2/Draghandle';
+import { BottomExtensionOpener } from './BottomExtensionOpener';
+import { BottomExtension } from './BottomExtension';
+import { Heading } from '../Heading';
 
 export interface LectureProps {
   lecture: Lesson;

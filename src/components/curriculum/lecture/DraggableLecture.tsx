@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import Draggable, { DraggableProps } from './Draggable';
+import Draggable, { DraggableProps } from '../../drag-and-drop-v2/Draggable';
 import Lecture, { LectureProps } from './Lecture';
 
 type DraggableLectureProps = Omit<

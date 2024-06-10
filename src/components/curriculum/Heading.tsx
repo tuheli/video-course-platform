@@ -1,98 +1,75 @@
-import { Box, Paper, Stack, SxProps, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
-import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
-import { EditButton } from './EditButton';
-import { DeleteButton } from './DeleteButton';
-import { useDragAndDropContext } from '../../hooks/useDragAndDropContext';
+import { DeleteButton } from '../curriculum/DeleteButton';
+import { EditButton } from '../curriculum/EditButton';
+import { MouseEvent } from 'react';
 
 interface HeadingProps {
   itemName: 'Section' | 'Lecture';
   title: string;
+  isTitleBold?: boolean;
   index: number;
-  paperSx?: SxProps;
-  titleSx?: SxProps;
-  outerStackSx?: SxProps;
-  leftStackSx?: SxProps;
-  children?: React.ReactNode;
-  changeHeadingVisibility: (isVisible: boolean) => void;
+  isHeadingIconsVisible: boolean;
+  setIsEditingHeading: (isVisible: boolean) => void;
   onClickDeleteIcon: () => void;
 }
 
 export const Heading = ({
   itemName,
   title,
+  isTitleBold,
   index,
-  paperSx,
-  titleSx,
-  outerStackSx,
-  leftStackSx,
-  children,
-  changeHeadingVisibility,
+  isHeadingIconsVisible,
+  setIsEditingHeading,
   onClickDeleteIcon,
 }: HeadingProps) => {
-  const { isSomethingDragged } = useDragAndDropContext();
-
-  const {
-    isEditButtonVisible,
-    isDeleteButtonVisible,
-    areChildrenVisible,
-    onMouseEnter,
-    onMouseLeave,
-  } = useEditableCurriculumItem(!isSomethingDragged);
+  const onClickEditIcon = (event: MouseEvent) => {
+    event.stopPropagation();
+    setIsEditingHeading(true);
+  };
 
   return (
-    <Paper
+    <Stack
       sx={{
-        p: 1,
-        py: 1.5,
-        border: '1px solid',
-        ...paperSx,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
       }}
     >
       <Stack
         sx={{
-          ...outerStackSx,
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          gap: 1,
+          flexGrow: 1,
         }}
       >
-        <Stack
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
+        <Typography
           sx={{
-            flexDirection: 'row',
-            gap: 1,
-            minHeight: 32,
-            display: 'flex',
-            alignItems: 'center',
-            ...leftStackSx,
+            fontWeight: isTitleBold ? 600 : 400,
           }}
         >
-          <Typography
+          {itemName} {index + 1}:
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <NoteOutlinedIcon
             sx={{
-              fontWeight: 600,
-              ...titleSx,
+              transform: 'scaleX(0.63)',
+              fontSize: 21,
             }}
-          >
-            {itemName} {index + 1}:
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <NoteOutlinedIcon
-              sx={{
-                transform: 'scaleX(0.63)',
-                fontSize: 21,
-              }}
-            />
-          </Box>
-          {title && <Typography>{title}</Typography>}
-          {isEditButtonVisible && (
-            <EditButton changeHeadingVisibility={changeHeadingVisibility} />
-          )}
-          {isDeleteButtonVisible && (
+          />
+        </Box>
+        {title && <Typography>{title}</Typography>}
+        {isHeadingIconsVisible && (
+          <>
+            <EditButton onClick={onClickEditIcon} />
             <Box
               sx={{
                 marginRight: 'auto',
@@ -100,10 +77,9 @@ export const Heading = ({
             >
               <DeleteButton onClick={onClickDeleteIcon} />
             </Box>
-          )}
-          {areChildrenVisible && children}
-        </Stack>
+          </>
+        )}
       </Stack>
-    </Paper>
+    </Stack>
   );
 };

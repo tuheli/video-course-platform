@@ -4,21 +4,24 @@ import {
   deletedCurriculumSection,
   reorderedLectures,
   updatedCurriculumSectionText,
-} from '../../features/courseDraftsSlice';
-import { Heading } from './Heading';
-import { ItemWithOrderIndex, getSortedCopy } from './utils';
-import { Dropzone } from './Dropzone';
-import { useAppDispatch } from '../../app/hooks';
+} from '../../../features/courseDraftsSlice';
+import {
+  ItemWithOrderIndex,
+  getSortedCopy,
+} from '../../drag-and-drop-v2/utils';
+import { Dropzone } from '../../drag-and-drop-v2/Dropzone';
+import { useAppDispatch } from '../../../app/hooks';
 import { ChangeEvent, memo, useState } from 'react';
-import DraggableLecture from './DraggableLecture';
-import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
-import Draghandle from './Draghandle';
-import { EditableItemType } from '../../contexts/CurriculumSectionContext';
+import DraggableLecture from '../lecture/DraggableLecture';
+import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { SaveAndCancelButton } from '../SaveAndCancelButton';
+import Draghandle from '../../drag-and-drop-v2/Draghandle';
+import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
 import AddIcon from '@mui/icons-material/Add';
-import { AddableItemOptionButton } from '../curriculum/lecture/AddLectureButton';
-import { AddItemButton } from '../curriculum/AddItemButton';
-import { EditSelector } from '../curriculum/EditSelector';
+import { AddableItemOptionButton } from '../lecture/AddLectureButton';
+import { AddItemButton } from '../AddItemButton';
+import { EditSelector } from '../EditSelector';
+import { Heading } from '../Heading';
 
 export interface SectionProps {
   courseDraftId: string;
