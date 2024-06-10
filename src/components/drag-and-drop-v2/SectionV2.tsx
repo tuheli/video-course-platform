@@ -125,8 +125,10 @@ const SectionV2 = ({
                 value={curriculumSection.title}
                 placeholder="Enter a title"
                 autofocus={true}
+                fontSize={14}
                 sx={{
                   width: '80%',
+                  py: 0.5,
                 }}
               />
             </Stack>
@@ -257,6 +259,7 @@ const SectionV2 = ({
               onMouseDown={(event) => event.stopPropagation()}
               sx={{
                 ml: 4,
+                width: 'fit-content',
               }}
             >
               <AddItemButton setOptionsVisibility={setIsSelectionVisible} />
@@ -264,18 +267,20 @@ const SectionV2 = ({
           )}
         </>
       )}
-      <Box
-        sx={{
-          ml: 4,
-        }}
-      >
-        <EditSelector
-          activeEditType={activeEditType}
-          courseDraftId={courseDraftId}
-          curriculumSectionId={curriculumSection.id}
-          setEditingItemType={setActiveEditType}
-        />
-      </Box>
+      {activeEditType !== null && (
+        <Box
+          sx={{
+            ml: 4,
+          }}
+        >
+          <EditSelector
+            activeEditType={activeEditType}
+            courseDraftId={courseDraftId}
+            curriculumSectionId={curriculumSection.id}
+            setEditingItemType={setActiveEditType}
+          />
+        </Box>
+      )}
     </Stack>
   );
 };

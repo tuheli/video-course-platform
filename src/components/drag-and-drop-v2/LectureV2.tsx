@@ -118,8 +118,10 @@ const LectureV2 = ({
                   value={lecture.name}
                   placeholder="Enter a title"
                   autofocus={true}
+                  fontSize={14}
                   sx={{
                     width: '80%',
+                    py: 0.5,
                   }}
                 />
               </Stack>
