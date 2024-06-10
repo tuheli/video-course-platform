@@ -8,6 +8,7 @@ interface InputFieldWithMaxCharactersProps {
   autofocus?: boolean;
   maxInputLength?: number;
   sx: SxProps;
+  fontSize?: number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -16,6 +17,7 @@ export const InputFieldWithMaxCharacters = ({
   placeholder,
   autofocus = false,
   maxInputLength,
+  fontSize = 16,
   sx,
   onChange,
 }: InputFieldWithMaxCharactersProps) => {
@@ -42,7 +44,7 @@ export const InputFieldWithMaxCharacters = ({
         maxLength={maxInputLength}
         autoFocus={autofocus}
         sx={{
-          fontSize: 16,
+          fontSize,
           textOverflow: 'ellipsis',
           color: 'text.primary',
           '&::placeholder': {
