@@ -6,9 +6,8 @@ import {
   deletedTextItem,
   updatedText,
 } from '../../features/courseDraftsSlice';
-import { useDraggableContext } from '../../hooks/useDraggableContext';
 import { useAppDispatch } from '../../app/hooks';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { Draghandle } from '../drag-and-drop/Draghandle';
 import { DeleteButton } from './DeleteButton';
@@ -28,16 +27,11 @@ export const EditableTextItem = ({
   type,
   isAbleToDeleteItem,
 }: EditableTextItemProps) => {
-  const [isDeleteIconVisible, setIsDeleteIconVisble] = useState(false);
-  const [isDraghandleVisible, setIsDraghandleVisible] = useState(false);
-  const { isBeingDragged } = useDraggableContext();
+  const [isMouseOver, setIsMouseOver] = useState(false);
+
   const dispatch = useAppDispatch();
 
-  const forceShowExtensions = isBeingDragged;
-
   const isAbleToDelete = isAbleToDeleteItem(courseDraft);
-  const deleteIconCursor = isAbleToDelete ? 'pointer' : 'not-allowed';
-
   const placeholder = item.text.length > 0 ? item.text : examplePlaceholderText;
 
   const onChangeInputField = (event: ChangeEvent<HTMLInputElement>) => {
@@ -63,13 +57,11 @@ export const EditableTextItem = ({
   };
 
   const onMouseEnter = () => {
-    setIsDeleteIconVisble(true);
-    setIsDraghandleVisible(true);
+    setIsMouseOver(true);
   };
 
   const onMouseLeave = () => {
-    setIsDeleteIconVisble(false);
-    setIsDraghandleVisible(false);
+    setIsMouseOver(false);
   };
 
   return (
@@ -78,9 +70,6 @@ export const EditableTextItem = ({
       onMouseLeave={onMouseLeave}
       sx={{
         flexDirection: 'row',
-        width: 'fit-content',
-        outline: isBeingDragged ? '2px solid' : 'none',
-        outlineColor: isBeingDragged ? 'secondary.light' : 'none',
       }}
     >
       <InputFieldWithMaxCharacters
@@ -88,15 +77,35 @@ export const EditableTextItem = ({
         maxInputLength={160}
         placeholder={placeholder}
         value={item.text}
+        sx={{
+          width: '90%',
+          height: 54,
+        }}
       />
-      {(forceShowExtensions || isDeleteIconVisible) && (
-        <DeleteButton
-          fontSize={16}
-          onClick={onClickDeleteIcon}
-          cursor={deleteIconCursor}
-        />
-      )}
-      {(forceShowExtensions || isDraghandleVisible) && <Draghandle />}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '16%',
+        }}
+      >
+        {isMouseOver && (
+          <>
+            <DeleteButton
+              onClick={onClickDeleteIcon}
+              cursor={isAbleToDelete ? 'pointer' : 'not-allowed'}
+              sx={{
+                width: '50%',
+              }}
+            />
+            <Draghandle
+              style={{
+                width: '50%',
+              }}
+            />
+          </>
+        )}
+      </Box>
     </Stack>
   );
 };
