@@ -112,8 +112,12 @@ const SectionV2 = ({
                 justifyContent: 'space-between',
               }}
             >
-              <Typography>
-                Section {index + 1}: {curriculumSection.title}
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                }}
+              >
+                Section {index + 1}:
               </Typography>
               <InputFieldWithMaxCharacters
                 onChange={onChangeTitle}
@@ -121,6 +125,9 @@ const SectionV2 = ({
                 value={curriculumSection.title}
                 placeholder="Enter a title"
                 autofocus={true}
+                sx={{
+                  width: '80%',
+                }}
               />
             </Stack>
             <SaveAndCancelButton
