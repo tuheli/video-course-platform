@@ -5,7 +5,7 @@ import {
   reorderedLectures,
   updatedCurriculumSectionText,
 } from '../../features/courseDraftsSlice';
-import { HeadingV2 } from './HeadingV2';
+import { Heading } from './Heading';
 import { ItemWithOrderIndex, getSortedCopy } from './utils';
 import { Dropzone } from './Dropzone';
 import { useAppDispatch } from '../../app/hooks';
@@ -13,7 +13,7 @@ import { ChangeEvent, memo, useState } from 'react';
 import DraggableLecture from './DraggableLecture';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
-import DraghandleV2 from './DraghandleV2';
+import Draghandle from './Draghandle';
 import { EditableItemType } from '../../contexts/CurriculumSectionContext';
 import AddIcon from '@mui/icons-material/Add';
 import { AddableItemOptionButton } from '../curriculum/lecture/AddLectureButton';
@@ -26,11 +26,7 @@ export interface SectionProps {
   index: number;
 }
 
-const SectionV2 = ({
-  courseDraftId,
-  curriculumSection,
-  index,
-}: SectionProps) => {
+const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
   const [isEditingHeading, setIsEditingHeading] = useState(false);
   const [isHeadingIconsVisible, setIsHeadingIconsVisible] = useState(false);
   const [activeEditType, setActiveEditType] = useState<EditableItemType | null>(
@@ -181,7 +177,7 @@ const SectionV2 = ({
             alignItems: 'center',
           }}
         >
-          <HeadingV2
+          <Heading
             isHeadingIconsVisible={isHeadingIconsVisible}
             itemName="Section"
             index={index}
@@ -190,7 +186,7 @@ const SectionV2 = ({
             setIsEditingHeading={setIsEditingHeading}
             onClickDeleteIcon={onClickDelete}
           />
-          {isHeadingIconsVisible && <DraghandleV2 style={{ marginRight: 8 }} />}
+          {isHeadingIconsVisible && <Draghandle style={{ marginRight: 8 }} />}
         </Stack>
       )}
       {sortedLectures.length > 0 && (
@@ -318,4 +314,4 @@ const SectionV2 = ({
   );
 };
 
-export default memo(SectionV2);
+export default memo(Section);

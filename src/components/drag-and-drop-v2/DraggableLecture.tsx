@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Draggable, { DraggableProps } from './Draggable';
-import LectureV2, { LectureProps } from './LectureV2';
+import Lecture, { LectureProps } from './Lecture';
 
 type DraggableLectureProps = Omit<
   LectureProps & DraggableProps,
@@ -22,7 +22,7 @@ const DraggableLecture = ({
       key={lecture.id}
       changeOrder={changeOrder}
     >
-      <LectureV2
+      <Lecture
         lecture={lecture}
         index={index}
         courseDraftId={courseDraftId}

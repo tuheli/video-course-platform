@@ -5,7 +5,7 @@ interface DraghandleProps {
   style?: React.CSSProperties;
 }
 
-const DraghandleV2 = ({ style }: DraghandleProps) => {
+const Draghandle = ({ style }: DraghandleProps) => {
   return (
     <div
       className="draghandle"
@@ -26,4 +26,4 @@ const DraghandleV2 = ({ style }: DraghandleProps) => {
   );
 };
 
-export default memo(DraghandleV2);
+export default memo(Draghandle);

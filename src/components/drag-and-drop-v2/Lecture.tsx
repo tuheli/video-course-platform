@@ -7,10 +7,10 @@ import {
 import { useAppDispatch } from '../../app/hooks';
 import { LectureContext } from '../../contexts/LectureContext';
 import { Stack, Typography } from '@mui/material';
-import { HeadingV2 } from './HeadingV2';
+import { Heading } from './Heading';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
-import DraghandleV2 from './DraghandleV2';
+import Draghandle from './Draghandle';
 import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
 import { BottomExtension } from '../curriculum/lecture/BottomExtension';
 
@@ -21,7 +21,7 @@ export interface LectureProps {
   sectionId: string;
 }
 
-const LectureV2 = ({
+const Lecture = ({
   lecture,
   index,
   courseDraftId,
@@ -145,7 +145,7 @@ const LectureV2 = ({
               bgcolor: 'background.default',
             }}
           >
-            <HeadingV2
+            <Heading
               isHeadingIconsVisible={isHeadingIconsVisible}
               itemName={'Lecture'}
               index={index}
@@ -159,7 +159,7 @@ const LectureV2 = ({
                   isOpen={isBottomExtensionOpen}
                   setIsOpen={setIsBottomExtensionOpen}
                 />
-                <DraghandleV2 />
+                <Draghandle />
               </>
             )}
           </Stack>
@@ -170,4 +170,4 @@ const LectureV2 = ({
   );
 };
 
-export default memo(LectureV2);
+export default memo(Lecture);

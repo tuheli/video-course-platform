@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Draggable, { DraggableProps } from './Draggable';
-import SectionV2, { SectionProps } from './SectionV2';
+import Section, { SectionProps } from './Section';
 
 type DraggableSectionProps = Omit<SectionProps & DraggableProps, 'children'>;
 
@@ -18,7 +18,7 @@ const DraggableSection = ({
       dataId={dataId}
       changeOrder={changeOrder}
     >
-      <SectionV2
+      <Section
         courseDraftId={courseDraftId}
         curriculumSection={curriculumSection}
         index={index}

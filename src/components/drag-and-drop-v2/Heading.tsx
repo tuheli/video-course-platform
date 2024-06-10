@@ -14,7 +14,7 @@ interface HeadingProps {
   onClickDeleteIcon: () => void;
 }
 
-export const HeadingV2 = ({
+export const Heading = ({
   itemName,
   title,
   isTitleBold,

@@ -12,7 +12,7 @@ interface CurriculumProps {
   forcedCourseId?: string;
 }
 
-export const CurriculumV2 = ({ forcedCourseId }: CurriculumProps) => {
+export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
   const { curriculum, courseDraft, courseDraftId } =
     useCurriculumFromParams(forcedCourseId);
 
