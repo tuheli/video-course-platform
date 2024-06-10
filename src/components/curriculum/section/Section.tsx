@@ -12,7 +12,6 @@ import {
 import { Dropzone } from '../../drag-and-drop-v2/Dropzone';
 import { useAppDispatch } from '../../../app/hooks';
 import { ChangeEvent, memo, useState } from 'react';
-import DraggableLecture from '../lecture/DraggableLecture';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
 import Draghandle from '../../drag-and-drop-v2/Draghandle';
@@ -22,6 +21,7 @@ import { AddableItemOptionButton } from '../lecture/AddLectureButton';
 import { AddItemButton } from '../AddItemButton';
 import { EditSelector } from '../EditSelector';
 import { Heading } from '../Heading';
+import { MemoDraggableLecture } from '../lecture/DraggableLecture';
 
 export interface SectionProps {
   courseDraftId: string;
@@ -189,7 +189,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
             setIsEditingHeading={setIsEditingHeading}
             onClickDeleteIcon={onClickDelete}
           />
-          {isHeadingIconsVisible && <Draghandle style={{ marginRight: 8 }} />}
+          {isHeadingIconsVisible && <Draghandle sx={{ mr: 1 }} />}
         </Stack>
       )}
       {sortedLectures.length > 0 && (
@@ -203,7 +203,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
           >
             {sortedLectures.map((lecture, index) => {
               return (
-                <DraggableLecture
+                <MemoDraggableLecture
                   allowedDropzoneTag="lecture"
                   courseDraftId={courseDraftId}
                   index={index}
