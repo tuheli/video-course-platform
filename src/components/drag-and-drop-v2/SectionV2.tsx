@@ -3,12 +3,13 @@ import {
   ICurriculumSection,
   deletedCurriculumSection,
   reorderedLectures,
+  updatedCurriculumSectionText,
 } from '../../features/courseDraftsSlice';
 import { HeadingV2 } from './HeadingV2';
 import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop/utils';
 import { Dropzone } from './Dropzone';
 import { useAppDispatch } from '../../app/hooks';
-import { memo, useState } from 'react';
+import { ChangeEvent, memo, useState } from 'react';
 import DraggableLecture from './DraggableLecture';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
@@ -57,7 +58,27 @@ const SectionV2 = ({
     );
   };
 
-  const onChangeTitle = () => {};
+  const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      updatedCurriculumSectionText({
+        courseDraftId,
+        curriculumSectionId: curriculumSection.id,
+        newValue: event.target.value,
+        type: 'title',
+      })
+    );
+  };
+
+  const onChangeLearningObjective = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      updatedCurriculumSectionText({
+        courseDraftId,
+        curriculumSectionId: curriculumSection.id,
+        newValue: event.target.value,
+        type: 'learningObjective',
+      })
+    );
+  };
 
   const onClickCancelHeadingEdit = () => {
     setIsHeadingIconsVisible(false);
@@ -97,6 +118,13 @@ const SectionV2 = ({
             gap: 1,
           }}
         >
+          <Typography
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Section {index + 1}:
+          </Typography>
           <Stack
             sx={{
               flexDirection: 'column',
@@ -105,33 +133,37 @@ const SectionV2 = ({
               gap: 1,
             }}
           >
-            <Stack
+            <InputFieldWithMaxCharacters
+              onChange={onChangeTitle}
+              maxInputLength={80}
+              value={curriculumSection.title}
+              placeholder="Enter a title"
+              autofocus={true}
+              fontSize={14}
               sx={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                width: '100%',
+                py: 0.5,
+              }}
+            />
+            <Typography
+              sx={{
+                fontWeight: 600,
               }}
             >
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                }}
-              >
-                Section {index + 1}:
-              </Typography>
-              <InputFieldWithMaxCharacters
-                onChange={onChangeTitle}
-                maxInputLength={80}
-                value={curriculumSection.title}
-                placeholder="Enter a title"
-                autofocus={true}
-                fontSize={14}
-                sx={{
-                  width: '80%',
-                  py: 0.5,
-                }}
-              />
-            </Stack>
+              What will students be able to do at the end of this section?
+            </Typography>
+            <InputFieldWithMaxCharacters
+              onChange={onChangeLearningObjective}
+              maxInputLength={80}
+              value={curriculumSection.learningObjective}
+              placeholder="Enter a learning objective"
+              autofocus={true}
+              fontSize={14}
+              sx={{
+                width: '100%',
+                py: 0.5,
+              }}
+            />
             <SaveAndCancelButton
               saveButtonText="Save Section"
               onClickCancel={onClickCancelHeadingEdit}
@@ -157,7 +189,7 @@ const SectionV2 = ({
             setIsEditingHeading={setIsEditingHeading}
             onClickDeleteIcon={onClickDelete}
           />
-          {isHeadingIconsVisible && <DraghandleV2 />}
+          {isHeadingIconsVisible && <DraghandleV2 style={{ marginRight: 8 }} />}
         </Stack>
       )}
       {sortedLectures.length > 0 && (
