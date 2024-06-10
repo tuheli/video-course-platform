@@ -49,8 +49,6 @@ const Draggable = ({
   };
 
   const onMouseDown = (event: React.MouseEvent) => {
-    // if (!isDraggable) return;
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -97,6 +95,8 @@ const Draggable = ({
     dragImage.style.pointerEvents = 'none';
 
     dragImage.style.zIndex = '1000';
+
+    dragImage.style.opacity = '0.8';
 
     dragImage.style.position = 'absolute';
     dragImage.style.top = `${event.pageY + mouseOffset.current.y}px`;
