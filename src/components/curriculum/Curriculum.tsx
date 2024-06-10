@@ -18,10 +18,13 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
 
   const dispatch = useCallback(useAppDispatch(), []);
 
-  const changeOrder = useCallback((newOrder: ItemWithOrderIndex[]) => {
-    if (!courseDraftId) return;
-    dispatch(reorderedSections({ courseDraftId, newOrder }));
-  }, []);
+  const changeOrder = useCallback(
+    (newOrder: ItemWithOrderIndex[]) => {
+      if (!courseDraftId) return;
+      dispatch(reorderedSections({ courseDraftId, newOrder }));
+    },
+    [courseDraftId, dispatch]
+  );
 
   if (!courseDraft) return null;
 
