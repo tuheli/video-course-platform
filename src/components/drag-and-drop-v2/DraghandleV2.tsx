@@ -1,25 +1,27 @@
-import { Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { memo } from 'react';
 
-interface DraghandleProps {}
+interface DraghandleProps {
+  style?: React.CSSProperties;
+}
 
-const DraghandleV2 = ({}: DraghandleProps) => {
+const DraghandleV2 = ({ style }: DraghandleProps) => {
   return (
-    <div className="draghandle">
-      <Box
+    <div
+      className="draghandle"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'move',
+        ...style,
+      }}
+    >
+      <MenuIcon
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          fontSize: 18,
         }}
-      >
-        <MenuIcon
-          sx={{
-            fontSize: 18,
-          }}
-        />
-      </Box>
+      />
     </div>
   );
 };
