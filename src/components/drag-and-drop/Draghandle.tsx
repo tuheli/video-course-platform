@@ -1,15 +1,15 @@
-import { Box, SxProps } from '@mui/material';
 import { useDraggableContext } from '../../hooks/useDraggableContext';
 import MenuIcon from '@mui/icons-material/Menu';
 
 interface DraghandleProps {
-  sx?: SxProps;
+  fontSize?: number;
+  style: React.CSSProperties;
 }
 
 // NOTE: Technically draggables can be dragged
 // from anywhere but this is a visual indicator
 
-export const Draghandle = ({ sx }: DraghandleProps) => {
+export const Draghandle = ({ fontSize, style }: DraghandleProps) => {
   const { setIsDraggable } = useDraggableContext();
 
   const onMouseEnter = () => {
@@ -27,25 +27,20 @@ export const Draghandle = ({ sx }: DraghandleProps) => {
       onMouseLeave={onMouseLeave}
       style={{
         cursor: 'ns-resize',
+        border: '1px solid',
+        borderColor: 'text.primary',
+        borderLeft: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...style,
       }}
     >
-      <Box
+      <MenuIcon
         sx={{
-          border: '1px solid',
-          borderColor: 'text.primary',
-          borderLeft: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          ...sx,
+          fontSize,
         }}
-      >
-        <MenuIcon
-          sx={{
-            fontSize: 16,
-          }}
-        />
-      </Box>
+      />
     </div>
   );
 };
