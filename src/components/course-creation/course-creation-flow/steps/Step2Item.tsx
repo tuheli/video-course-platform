@@ -19,6 +19,10 @@ export const Step2Item = () => {
         placeholder="e.g. Learn Photoshop CS6 from Scratch"
         maxInputLength={60}
         onChange={onChangeText}
+        sx={{
+          height: 54,
+          width: 660,
+        }}
       />
     </Box>
   );
