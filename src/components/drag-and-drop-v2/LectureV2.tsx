@@ -118,6 +118,9 @@ const LectureV2 = ({
                   value={lecture.name}
                   placeholder="Enter a title"
                   autofocus={true}
+                  sx={{
+                    width: '80%',
+                  }}
                 />
               </Stack>
               <SaveAndCancelButton
