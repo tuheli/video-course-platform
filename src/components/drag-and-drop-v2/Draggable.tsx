@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDragAndDropContext } from './useDragAndDropContext';
+import { memo, useEffect, useRef } from 'react';
 import {
   ItemWithOrderIndex,
   giveItemsOrderIndicies,
 } from '../drag-and-drop/utils';
-import { DraggableContext } from './DraggableContext';
 
 interface Reorderable {
   id: string;
   yPosition: number;
 }
 
-interface DraggableProps {
+export interface DraggableProps {
   dataId: string;
   allowedDropzoneTag: string;
   children: React.ReactNode;
@@ -23,13 +21,12 @@ interface Position {
   y: number | null;
 }
 
-export const Draggable = ({
+const Draggable = ({
   dataId,
   allowedDropzoneTag,
   children,
   changeOrder,
 }: DraggableProps) => {
-  const [isDraggable, setIsDraggable] = useState<boolean>(false);
   const mouseOffset = useRef<Position>({
     x: null,
     y: null,
@@ -38,8 +35,8 @@ export const Draggable = ({
   const tickIntervalId = useRef<number | null>(null);
   const selfRef = useRef<HTMLDivElement>(null);
   const scrollOffset = useRef<number>(0);
-  const { currentlyDraggedItemId, setCurrentlyDraggedItemId } =
-    useDragAndDropContext();
+
+  const tickSpeed = 16.7;
 
   scrollOffset.current = window.scrollY;
 
@@ -52,8 +49,6 @@ export const Draggable = ({
   };
 
   const onMouseDown = (event: React.MouseEvent) => {
-    if (!isDraggable) return;
-
     event.preventDefault();
     event.stopPropagation();
 
@@ -72,11 +67,8 @@ export const Draggable = ({
   };
 
   const startDrag = (event: MouseEvent) => {
-    if (currentlyDraggedItemId !== null) return;
-
     document.body.style.overflowX = 'hidden';
 
-    setCurrentlyDraggedItemId(dataId);
     createDragImage(event);
 
     if (tickIntervalId.current) {
@@ -85,7 +77,7 @@ export const Draggable = ({
 
     tickIntervalId.current = setInterval(() => {
       onDragTick();
-    }, 100);
+    }, tickSpeed);
 
     window.addEventListener('mouseup', endDrag);
     window.addEventListener('mousemove', onDragMouseMove);
@@ -103,6 +95,8 @@ export const Draggable = ({
     dragImage.style.pointerEvents = 'none';
 
     dragImage.style.zIndex = '1000';
+
+    dragImage.style.opacity = '0.8';
 
     dragImage.style.position = 'absolute';
     dragImage.style.top = `${event.pageY + mouseOffset.current.y}px`;
@@ -240,7 +234,6 @@ export const Draggable = ({
     }
 
     mousePosition.current = { x: null, y: null };
-    setCurrentlyDraggedItemId(null);
 
     document.body.style.overflowX = '';
   };
@@ -259,13 +252,9 @@ export const Draggable = ({
       className={`draggable-${allowedDropzoneTag}`}
       onMouseDown={onMouseDown}
     >
-      <DraggableContext.Provider
-        value={{
-          setIsDraggable,
-        }}
-      >
-        {children}
-      </DraggableContext.Provider>
+      {children}
     </div>
   );
 };
+
+export default memo(Draggable);

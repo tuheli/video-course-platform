@@ -1,5 +1,4 @@
 import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 
 // NOTE: I added undefined as a type option
@@ -14,17 +13,20 @@ import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
 // add more button to move a few pixels upwards.
 
 interface AddableItemOptionButtonProps {
-  type: EditableItemType | undefined;
+  type: EditableItemType | null;
   text: string;
+  setEditingItemType: (type: EditableItemType | null) => void;
+  closeEditOptions: () => void;
 }
 
 export const AddableItemOptionButton = ({
   type,
   text,
+  setEditingItemType,
+  closeEditOptions,
 }: AddableItemOptionButtonProps) => {
-  const { setEditingItemType } = useCurriculumSectionContext();
-
   const onClick = () => {
+    closeEditOptions();
     setEditingItemType(type);
   };
 

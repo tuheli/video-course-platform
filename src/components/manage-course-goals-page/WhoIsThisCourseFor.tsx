@@ -5,11 +5,11 @@ import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
-import { DroppableArea } from '../drag-and-drop/DroppableArea';
-import { Draggable } from '../drag-and-drop/Draggable';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteIntendedLearners } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
+import { Dropzone } from '../drag-and-drop-v2/Dropzone';
+import Draggable from '../drag-and-drop-v2/Draggable';
 
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();
@@ -54,7 +54,7 @@ export const WhoIsThisCourseFor = () => {
           changeOrder: changeIntendedLearnersOrder,
         }}
       >
-        <DroppableArea>
+        <Dropzone allowedDropzoneTag="intended-learners">
           <Stack
             sx={{
               gap: 2,
@@ -63,12 +63,10 @@ export const WhoIsThisCourseFor = () => {
             {intendedLearners.map((intendedLearnersItem) => {
               return (
                 <Draggable
-                  id={intendedLearnersItem.id}
                   key={intendedLearnersItem.id}
-                  sx={{
-                    width: 'fit-content',
-                    backgroundColor: 'background.default',
-                  }}
+                  dataId={intendedLearnersItem.id}
+                  allowedDropzoneTag="intended-learners"
+                  changeOrder={changeIntendedLearnersOrder}
                 >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}
@@ -81,7 +79,7 @@ export const WhoIsThisCourseFor = () => {
               );
             })}
           </Stack>
-        </DroppableArea>
+        </Dropzone>
       </DragAndDropContext.Provider>
       <AddItemButton courseDraftId={courseDraft.id} type="intendedLearners" />
     </Stack>

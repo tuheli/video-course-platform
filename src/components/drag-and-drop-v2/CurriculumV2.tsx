@@ -1,30 +1,27 @@
-import { useState } from 'react';
+import { useCallback } from 'react';
 import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop/utils';
 import { useAppDispatch } from '../../app/hooks';
 import { reorderedSections } from '../../features/courseDraftsSlice';
 import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { Stack } from '@mui/material';
-import { DragAndDropContext } from './DragAndDropContext';
 import { Dropzone } from './Dropzone';
-import { Draggable } from './Draggable';
 import { AddSectionButton } from '../curriculum/section/AddSectionButton';
-import { SectionV2 } from './SectionV2';
+import DraggableSection from './DraggableSection';
 
 interface CurriculumProps {
   forcedCourseId?: string;
 }
 
 export const CurriculumV2 = ({ forcedCourseId }: CurriculumProps) => {
-  const [currentlyDraggedItemId, setCurrentlyDraggedItemId] = useState<
-    string | null
-  >(null);
-  const { curriculum, courseDraft } = useCurriculumFromParams(forcedCourseId);
-  const dispatch = useAppDispatch();
+  const { curriculum, courseDraft, courseDraftId } =
+    useCurriculumFromParams(forcedCourseId);
 
-  const changeOrder = (newOrder: ItemWithOrderIndex[]) => {
-    if (!courseDraft) return;
-    dispatch(reorderedSections({ courseDraftId: courseDraft.id, newOrder }));
-  };
+  const dispatch = useCallback(useAppDispatch(), []);
+
+  const changeOrder = useCallback((newOrder: ItemWithOrderIndex[]) => {
+    if (!courseDraftId) return;
+    dispatch(reorderedSections({ courseDraftId, newOrder }));
+  }, []);
 
   if (!courseDraft) return null;
 
@@ -32,35 +29,25 @@ export const CurriculumV2 = ({ forcedCourseId }: CurriculumProps) => {
 
   return (
     <>
-      <DragAndDropContext.Provider
-        value={{
-          currentlyDraggedItemId,
-          setCurrentlyDraggedItemId,
-        }}
-      >
-        <Dropzone allowedDropzoneTag="section">
-          <Stack
-            sx={{
-              gap: 4,
-            }}
-          >
-            {sortedCurriculum.map((curriculumSection, index) => (
-              <Draggable
-                key={curriculumSection.id}
-                dataId={curriculumSection.id}
-                allowedDropzoneTag="section"
-                changeOrder={changeOrder}
-              >
-                <SectionV2
-                  curriculumSection={curriculumSection}
-                  courseDraftId={courseDraft.id}
-                  index={index}
-                />
-              </Draggable>
-            ))}
-          </Stack>
-        </Dropzone>
-      </DragAndDropContext.Provider>
+      <Dropzone allowedDropzoneTag="section">
+        <Stack
+          sx={{
+            gap: 4,
+          }}
+        >
+          {sortedCurriculum.map((curriculumSection, index) => (
+            <DraggableSection
+              key={curriculumSection.id}
+              dataId={curriculumSection.id}
+              allowedDropzoneTag="section"
+              changeOrder={changeOrder}
+              curriculumSection={curriculumSection}
+              courseDraftId={courseDraft.id}
+              index={index}
+            />
+          ))}
+        </Stack>
+      </Dropzone>
       <AddSectionButton courseDraftId={courseDraft.id} />
     </>
   );

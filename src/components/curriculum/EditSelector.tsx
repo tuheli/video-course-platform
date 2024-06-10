@@ -1,12 +1,28 @@
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
-import { AddLectureCard } from './lecture/AddLectureCard';
+import { EditableItemType } from '../../contexts/CurriculumSectionContext';
+import { NewLectureCard } from './lecture/NewLectureCard';
 
-export const EditSelector = () => {
-  const { editingItemType } = useCurriculumSectionContext();
+interface EditSelectorProps {
+  activeEditType: EditableItemType | null;
+  courseDraftId: string;
+  curriculumSectionId: string;
+  setEditingItemType: (type: EditableItemType | null) => void;
+}
 
-  switch (editingItemType) {
+export const EditSelector = ({
+  activeEditType,
+  courseDraftId,
+  curriculumSectionId,
+  setEditingItemType,
+}: EditSelectorProps) => {
+  switch (activeEditType) {
     case 'addLecture':
-      return <AddLectureCard />;
+      return (
+        <NewLectureCard
+          courseDraftId={courseDraftId}
+          curriculumSectionId={curriculumSectionId}
+          setEditingItemType={setEditingItemType}
+        />
+      );
     default:
       return <></>;
   }

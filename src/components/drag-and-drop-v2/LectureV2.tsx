@@ -1,45 +1,43 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, memo, useState } from 'react';
 import {
   Lesson,
   deletedLecture,
   updatedLecture,
 } from '../../features/courseDraftsSlice';
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
-import { useDragAndDropContext } from './useDragAndDropContext';
-import { useEditableCurriculumItem } from '../../hooks/useEditableCurriculumItem';
 import { useAppDispatch } from '../../app/hooks';
 import { LectureContext } from '../../contexts/LectureContext';
-import { Paper, Stack } from '@mui/material';
-import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
-import { EditHeading } from '../curriculum/EditHeading';
-import { BottomExtension } from '../curriculum/lecture/BottomExtension';
+import { Stack, Typography } from '@mui/material';
 import { HeadingV2 } from './HeadingV2';
+import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
+import { SaveAndCancelButton } from '../curriculum/SaveAndCancelButton';
+import DraghandleV2 from './DraghandleV2';
+import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
+import { BottomExtension } from '../curriculum/lecture/BottomExtension';
 
-interface LectureProps {
+export interface LectureProps {
   lecture: Lesson;
   index: number;
+  courseDraftId: string;
+  sectionId: string;
 }
 
-export const LectureV2 = ({ lecture, index }: LectureProps) => {
+const LectureV2 = ({
+  lecture,
+  index,
+  courseDraftId,
+  sectionId,
+}: LectureProps) => {
+  const [isEditingHeading, setIsEditingHeading] = useState(false);
   const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
-  const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
-  const { currentlyDraggedItemId } = useDragAndDropContext();
-
-  const isDraggingSomething = Boolean(currentlyDraggedItemId);
-  const isBeingDragged = currentlyDraggedItemId === lecture.id;
-
-  const { isHeadingVisible, changeHeadingVisibility } =
-    useEditableCurriculumItem(!isDraggingSomething);
+  const [isHeadingIconsVisible, setIsHeadingIconsVisible] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  const isEditVisible = !isHeadingVisible;
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
       updatedLecture({
         courseDraftId,
-        curriculumSectionId: curriculumSection.id,
+        curriculumSectionId: sectionId,
         lectureId: lecture.id,
         newValue: event.target.value,
         propertyName: 'name',
@@ -47,22 +45,32 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
     );
   };
 
-  const onClickCancel = () => {
-    changeHeadingVisibility(true);
+  const onClickCancelHeadingEdit = () => {
+    setIsHeadingIconsVisible(false);
+    setIsEditingHeading(false);
   };
 
-  const onClickSave = () => {
-    changeHeadingVisibility(true);
+  const onClickSaveHeadingEdit = () => {
+    setIsHeadingIconsVisible(false);
+    setIsEditingHeading(false);
   };
 
   const onClickDeleteIcon = () => {
     dispatch(
       deletedLecture({
         courseDraftId,
-        curriculumSectionId: curriculumSection.id,
+        curriculumSectionId: sectionId,
         lectureId: lecture.id,
       })
     );
+  };
+
+  const onMouseEnter = () => {
+    setIsHeadingIconsVisible(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsHeadingIconsVisible(false);
   };
 
   return (
@@ -71,59 +79,93 @@ export const LectureV2 = ({ lecture, index }: LectureProps) => {
         lecture,
       }}
     >
-      <Paper
+      <Stack
         sx={{
-          p: 0,
-          m: 0,
-          bgcolor: 'background.paperDarker',
-          border: '1px solid',
-          borderRadius: 0,
-          outline: isBeingDragged ? '2px solid' : 'none',
-          outlineColor: 'secondary.light',
-          borderColor: isBeingDragged ? 'transparent' : 'text.primary',
+          flexDirection: 'column',
         }}
       >
-        <Stack>
-          {isHeadingVisible && (
+        {isEditingHeading ? (
+          <Stack
+            onMouseDown={(event) => event.stopPropagation()}
+            sx={{
+              flexDirection: 'row',
+              gap: 1,
+              p: 1,
+              border: '1px solid',
+              borderColor: 'text.primary',
+              bgcolor: 'background.default',
+            }}
+          >
+            <Stack
+              sx={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                flex: 1,
+                gap: 1,
+              }}
+            >
+              <Stack
+                sx={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography>Lecture {index + 1}:</Typography>
+                <InputFieldWithMaxCharacters
+                  onChange={onChangeTitle}
+                  maxInputLength={80}
+                  value={lecture.name}
+                  placeholder="Enter a title"
+                  autofocus={true}
+                  sx={{
+                    width: '80%',
+                  }}
+                />
+              </Stack>
+              <SaveAndCancelButton
+                saveButtonText="Save Lecture"
+                onClickCancel={onClickCancelHeadingEdit}
+                onClickSave={onClickSaveHeadingEdit}
+              />
+            </Stack>
+          </Stack>
+        ) : (
+          <Stack
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            sx={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              p: 1,
+              border: '1px solid',
+              borderColor: 'text.primary',
+              bgcolor: 'background.default',
+            }}
+          >
             <HeadingV2
+              isHeadingIconsVisible={isHeadingIconsVisible}
               itemName={'Lecture'}
               index={index}
               title={lecture.name}
-              changeHeadingVisibility={changeHeadingVisibility}
+              setIsEditingHeading={setIsEditingHeading}
               onClickDeleteIcon={onClickDeleteIcon}
-              titleSx={{
-                fontWeight: 400,
-              }}
-              outerStackSx={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              leftStackSx={{
-                flexGrow: 1,
-              }}
-              paperSx={{
-                border: 'none',
-              }}
-            >
-              <BottomExtensionOpener
-                isOpen={isBottomExtensionOpen}
-                setIsOpen={setIsBottomExtensionOpen}
-              />
-            </HeadingV2>
-          )}
-          {isEditVisible && (
-            <EditHeading
-              title={`Lecture ${index + 1}:`}
-              titleValue={lecture.name}
-              saveButtonText="Save Lecture"
-              onChangeTitle={onChangeTitle}
-              onClickCancel={onClickCancel}
-              onClickSave={onClickSave}
             />
-          )}
-          {isBottomExtensionOpen && <BottomExtension />}
-        </Stack>
-      </Paper>
+            {isHeadingIconsVisible && (
+              <>
+                <BottomExtensionOpener
+                  isOpen={isBottomExtensionOpen}
+                  setIsOpen={setIsBottomExtensionOpen}
+                />
+                <DraghandleV2 />
+              </>
+            )}
+          </Stack>
+        )}
+        {isBottomExtensionOpen && <BottomExtension />}
+      </Stack>
     </LectureContext.Provider>
   );
 };
+
+export default memo(LectureV2);

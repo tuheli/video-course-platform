@@ -1,8 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from './LightColoredRouterLink';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
-import { DroppableArea } from '../drag-and-drop/DroppableArea';
-import { Draggable } from '../drag-and-drop/Draggable';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
 import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
@@ -10,6 +8,8 @@ import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteLearningObjective } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
+import { Dropzone } from '../drag-and-drop-v2/Dropzone';
+import Draggable from '../drag-and-drop-v2/Draggable';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
@@ -53,7 +53,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
           changeOrder: changeLearningObjectivesOrder,
         }}
       >
-        <DroppableArea>
+        <Dropzone allowedDropzoneTag="learning-objective">
           <Stack
             sx={{
               gap: 2,
@@ -62,12 +62,10 @@ export const WhatWillStudentsLearnInYourCourse = () => {
             {learningObjectives.map((learningObjective) => {
               return (
                 <Draggable
-                  id={learningObjective.id}
                   key={learningObjective.id}
-                  sx={{
-                    width: 'fit-content',
-                    backgroundColor: 'background.default',
-                  }}
+                  dataId={learningObjective.id}
+                  allowedDropzoneTag="learning-objective"
+                  changeOrder={changeLearningObjectivesOrder}
                 >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}
@@ -80,7 +78,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
               );
             })}
           </Stack>
-        </DroppableArea>
+        </Dropzone>
       </DragAndDropContext.Provider>
       <AddItemButton courseDraftId={courseDraft.id} type="learningObjectives" />
     </Stack>

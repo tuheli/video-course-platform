@@ -1,43 +1,26 @@
 import { useEffect, useState } from 'react';
 
-export const useEditableCurriculumItem = (canReceiveMouseEvents: boolean) => {
-  const [isHeadingVisible, setIsHeadingPartVisible] = useState(true);
-  const [isDeleteButtonVisible, setIsDeleteButtonVisible] = useState(false);
-  const [isEditButtonVisible, setIsEditSectionButtonVisible] = useState(false);
-  const [areChildrenVisible, setAreChildrenVisible] = useState(false);
+export const useEditableCurriculumItem = () => {
+  const [isEditingHeading, setIsEditingHeading] = useState(false);
+  const [isMouseOver, setIsMouseOver] = useState(false);
 
   useEffect(() => {
-    if (canReceiveMouseEvents) return;
-    setIsDeleteButtonVisible(false);
-    setIsEditSectionButtonVisible(false);
-    setAreChildrenVisible(false);
-  }, [canReceiveMouseEvents]);
+    setIsMouseOver(false);
+  }, []);
 
   const onMouseEnter = () => {
-    if (!canReceiveMouseEvents) return;
-    setIsDeleteButtonVisible(true);
-    setIsEditSectionButtonVisible(true);
-    setAreChildrenVisible(true);
+    setIsMouseOver(true);
   };
 
   const onMouseLeave = () => {
-    if (!canReceiveMouseEvents) return;
-    setIsDeleteButtonVisible(false);
-    setIsEditSectionButtonVisible(false);
-    setAreChildrenVisible(false);
-  };
-
-  const changeHeadingVisibility = (isVisible: boolean) => {
-    setIsHeadingPartVisible(isVisible);
+    setIsMouseOver(false);
   };
 
   return {
-    isHeadingVisible,
-    isDeleteButtonVisible,
-    isEditButtonVisible,
-    areChildrenVisible,
+    isEditingHeading,
+    isMouseOver,
     onMouseEnter,
     onMouseLeave,
-    changeHeadingVisibility,
+    setIsEditingHeading,
   };
 };

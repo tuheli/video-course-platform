@@ -16,6 +16,7 @@ export const BottomExtensionOpener = ({
 
   return (
     <Box
+      onMouseDown={(event) => event.stopPropagation()}
       onClick={onClick}
       sx={{
         display: 'flex',
@@ -28,7 +29,11 @@ export const BottomExtensionOpener = ({
         },
       }}
     >
-      <KeyboardArrowDownIcon />
+      <KeyboardArrowDownIcon
+        sx={{
+          fontSize: 18,
+        }}
+      />
     </Box>
   );
 };

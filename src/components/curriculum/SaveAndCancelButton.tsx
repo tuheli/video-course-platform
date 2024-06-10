@@ -21,6 +21,7 @@ export const SaveAndCancelButton = ({
 
   return (
     <Stack
+      onMouseDown={(event) => event.stopPropagation()}
       sx={{
         flexDirection: 'row',
         marginLeft: 'auto',

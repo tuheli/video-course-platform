@@ -8,6 +8,7 @@ interface DeleteButtonProps {
 export const DeleteButton = ({ onClick }: DeleteButtonProps) => {
   return (
     <Box
+      onMouseDown={(event) => event.stopPropagation()}
       onClick={onClick}
       sx={{
         display: 'flex',
