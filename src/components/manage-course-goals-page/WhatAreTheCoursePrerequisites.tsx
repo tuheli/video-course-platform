@@ -1,14 +1,14 @@
 import { Stack, Typography } from '@mui/material';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
-import { DroppableArea } from '../drag-and-drop/DroppableArea';
-import { Draggable } from '../drag-and-drop/Draggable';
 import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
+import { Dropzone } from '../drag-and-drop-v2/Dropzone';
+import Draggable from '../drag-and-drop-v2/Draggable';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
@@ -50,7 +50,7 @@ export const WhatAreTheCoursePrerequisites = () => {
           changeOrder: changePrerequisitesOrder,
         }}
       >
-        <DroppableArea>
+        <Dropzone allowedDropzoneTag="course-prerequisite">
           <Stack
             sx={{
               gap: 2,
@@ -59,12 +59,10 @@ export const WhatAreTheCoursePrerequisites = () => {
             {prerequisites.map((prerequisite) => {
               return (
                 <Draggable
-                  id={prerequisite.id}
                   key={prerequisite.id}
-                  sx={{
-                    width: 'fit-content',
-                    backgroundColor: 'background.default',
-                  }}
+                  dataId={prerequisite.id}
+                  allowedDropzoneTag="course-prerequisite"
+                  changeOrder={changePrerequisitesOrder}
                 >
                   <EditableTextItem
                     examplePlaceholderText={examplePlaceholderText}
@@ -77,7 +75,7 @@ export const WhatAreTheCoursePrerequisites = () => {
               );
             })}
           </Stack>
-        </DroppableArea>
+        </Dropzone>
       </DragAndDropContext.Provider>
       <AddItemButton courseDraftId={courseDraft.id} type="prerequisites" />
     </Stack>
