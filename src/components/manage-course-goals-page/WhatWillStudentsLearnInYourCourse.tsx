@@ -2,7 +2,6 @@ import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from './LightColoredRouterLink';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
-import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { EditableTextItem } from './EditableTextItem';
@@ -10,6 +9,7 @@ import { isAbleToDeleteLearningObjective } from '../../features/courseDraftsSlic
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import Draggable from '../drag-and-drop-v2/Draggable';
+import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();

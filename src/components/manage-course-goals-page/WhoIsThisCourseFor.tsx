@@ -3,13 +3,13 @@ import { LightColoredRouterLink } from './LightColoredRouterLink';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
-import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteIntendedLearners } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import Draggable from '../drag-and-drop-v2/Draggable';
+import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();

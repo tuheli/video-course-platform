@@ -1,7 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
-import { ItemWithOrderIndex } from '../drag-and-drop/utils';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { EditableTextItem } from './EditableTextItem';
@@ -9,6 +8,7 @@ import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import Draggable from '../drag-and-drop-v2/Draggable';
+import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
