@@ -1,16 +1,16 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { Box } from '@mui/material';
+import { Box, SxProps } from '@mui/material';
 import { memo } from 'react';
 
 interface DraghandleProps {
-  sx?: React.CSSProperties;
+  sx?: SxProps;
 }
 
 const Draghandle = ({ sx }: DraghandleProps) => {
   return (
     <Box
       className="draghandle"
-      style={{
+      sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
