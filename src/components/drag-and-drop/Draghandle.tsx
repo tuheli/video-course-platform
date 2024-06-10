@@ -40,7 +40,11 @@ export const Draghandle = ({ sx }: DraghandleProps) => {
           ...sx,
         }}
       >
-        <MenuIcon />
+        <MenuIcon
+          sx={{
+            fontSize: 16,
+          }}
+        />
       </Box>
     </div>
   );
