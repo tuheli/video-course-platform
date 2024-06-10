@@ -1,10 +1,7 @@
-import { Paper, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { AddMoreButtonDarkVariant } from '../../manage-course-goals-page/AddMoreButtonDarkVariant';
 import { useState } from 'react';
 import { DesctiptionEditor } from './DescriptionEditor';
-
-// For consistent size
-const minButtoWidth = 140;
 
 export const BottomExtension = () => {
   const [isDescriptionEditorVisible, setIsDescriptionEditorVisible] =
@@ -19,38 +16,37 @@ export const BottomExtension = () => {
   };
 
   return (
-    <Paper
+    <Stack
+      onMouseDown={(event) => event.stopPropagation()}
       sx={{
         width: '100%',
+        gap: 1,
         p: 1,
-        border: 'none',
+        border: '1px solid',
+        borderTop: 'none',
+        borderColor: 'text.primary',
+        bgcolor: 'background.default',
       }}
     >
-      <Stack
-        sx={{
-          gap: 1,
-        }}
-      >
-        {!isDescriptionEditorVisible && (
-          <AddMoreButtonDarkVariant
-            text="Description"
-            onClick={onClickDescriptionButton}
-            sx={{
-              minWidth: minButtoWidth,
-            }}
-          />
-        )}
-        {isDescriptionEditorVisible && (
-          <DesctiptionEditor closeEditor={closeDescriptionEditor} />
-        )}
+      {!isDescriptionEditorVisible && (
         <AddMoreButtonDarkVariant
-          text="Resources"
-          onClick={() => {}}
+          text="Description"
+          onClick={onClickDescriptionButton}
           sx={{
-            minWidth: minButtoWidth,
+            minWidth: 140,
           }}
         />
-      </Stack>
-    </Paper>
+      )}
+      {isDescriptionEditorVisible && (
+        <DesctiptionEditor closeEditor={closeDescriptionEditor} />
+      )}
+      <AddMoreButtonDarkVariant
+        text="Resources"
+        onClick={() => {}}
+        sx={{
+          minWidth: 140,
+        }}
+      />
+    </Stack>
   );
 };
