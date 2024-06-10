@@ -254,6 +254,7 @@ const SectionV2 = ({
         <>
           {activeEditType === null && (
             <Box
+              onMouseDown={(event) => event.stopPropagation()}
               sx={{
                 ml: 4,
               }}
