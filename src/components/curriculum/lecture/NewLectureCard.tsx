@@ -74,6 +74,9 @@ export const NewLectureCard = ({
             value={title}
             placeholder="Enter a title"
             autofocus={true}
+            sx={{
+              width: '80%',
+            }}
           />
         </Stack>
         <SaveAndCancelButton
