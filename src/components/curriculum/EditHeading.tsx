@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from './SaveAndCancelButton';
@@ -51,6 +51,9 @@ export const EditHeading = ({
             value={titleValue}
             placeholder="Enter a title"
             autofocus={true}
+            sx={{
+              width: '80%',
+            }}
           />
         </Stack>
         <SaveAndCancelButton
