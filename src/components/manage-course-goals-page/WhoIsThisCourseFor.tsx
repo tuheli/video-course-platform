@@ -8,8 +8,8 @@ import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteIntendedLearners } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import Draggable from '../drag-and-drop-v2/Draggable';
 import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
 
 export const WhoIsThisCourseFor = () => {
   const courseDraft = useCourseDraft();
@@ -62,7 +62,7 @@ export const WhoIsThisCourseFor = () => {
           >
             {intendedLearners.map((intendedLearnersItem) => {
               return (
-                <Draggable
+                <MemoDraggable
                   key={intendedLearnersItem.id}
                   dataId={intendedLearnersItem.id}
                   allowedDropzoneTag="intended-learners"
@@ -75,7 +75,7 @@ export const WhoIsThisCourseFor = () => {
                     courseDraft={courseDraft}
                     isAbleToDeleteItem={isAbleToDeleteIntendedLearners}
                   />
-                </Draggable>
+                </MemoDraggable>
               );
             })}
           </Stack>

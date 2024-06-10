@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { Box, Stack } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { DeleteButton } from './DeleteButton';
-import Draghandle from '../drag-and-drop-v2/Draghandle';
+import { MemoDraghandle } from '../drag-and-drop-v2/Draghandle';
 
 interface EditableTextItemProps {
   examplePlaceholderText: string;
@@ -98,7 +98,7 @@ export const EditableTextItem = ({
                 width: '50%',
               }}
             />
-            <Draghandle
+            <MemoDraghandle
               sx={{
                 width: '50%',
                 border: '1px solid',

@@ -1,6 +1,5 @@
 import { ChangeEvent, memo, useState } from 'react';
 import {
-  Lesson,
   deletedLecture,
   updatedLecture,
 } from '../../../features/courseDraftsSlice';
@@ -9,17 +8,11 @@ import { LectureContext } from '../../../contexts/LectureContext';
 import { Stack, Typography } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
-import Draghandle from '../../drag-and-drop-v2/Draghandle';
 import { BottomExtensionOpener } from './BottomExtensionOpener';
 import { BottomExtension } from './BottomExtension';
 import { Heading } from '../Heading';
-
-export interface LectureProps {
-  lecture: Lesson;
-  index: number;
-  courseDraftId: string;
-  sectionId: string;
-}
+import { LectureProps } from './types';
+import { MemoDraghandle } from '../../drag-and-drop-v2/Draghandle';
 
 const Lecture = ({
   lecture,
@@ -159,7 +152,7 @@ const Lecture = ({
                   isOpen={isBottomExtensionOpen}
                   setIsOpen={setIsBottomExtensionOpen}
                 />
-                <Draghandle />
+                <MemoDraghandle />
               </>
             )}
           </Stack>
@@ -170,4 +163,4 @@ const Lecture = ({
   );
 };
 
-export default memo(Lecture);
+export const MemoLecture = memo(Lecture);

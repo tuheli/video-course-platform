@@ -1,8 +1,12 @@
 import { CustomText } from './types';
 
+type ExtendedLeftAttributes = React.HTMLAttributes<HTMLElement> & {
+  'data-slate-leaf': true;
+};
+
 interface LeafProps {
-  attributes: any;
-  children: any;
+  attributes: ExtendedLeftAttributes;
+  children: React.ReactNode;
   leaf: CustomText;
 }
 

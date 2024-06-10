@@ -59,7 +59,9 @@ export const TextEditor = ({
         offset: 0,
         path: [0, 0],
       });
-    } catch (error) {}
+    } catch (error) {
+      // Ignore the error
+    }
   };
 
   const onChangeWrapper = (value: Descendant[]) => {
@@ -118,6 +120,7 @@ export const TextEditor = ({
           autoFocus
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               if (isHotkey(hotkey, event as any)) {
                 event.preventDefault();
                 if (!isKnownHotkey(hotkey)) return;

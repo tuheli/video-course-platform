@@ -1,6 +1,7 @@
 import { memo } from 'react';
-import Draggable, { DraggableProps } from '../../drag-and-drop-v2/Draggable';
-import Section, { SectionProps } from './Section';
+import { DraggableProps } from '../../drag-and-drop-v2/types';
+import { MemoDraggable } from '../../drag-and-drop-v2/Draggable';
+import { MemoSection, SectionProps } from './Section';
 
 type DraggableSectionProps = Omit<SectionProps & DraggableProps, 'children'>;
 
@@ -13,18 +14,18 @@ const DraggableSection = ({
   changeOrder,
 }: DraggableSectionProps) => {
   return (
-    <Draggable
+    <MemoDraggable
       allowedDropzoneTag={allowedDropzoneTag}
       dataId={dataId}
       changeOrder={changeOrder}
     >
-      <Section
+      <MemoSection
         courseDraftId={courseDraftId}
         curriculumSection={curriculumSection}
         index={index}
       />
-    </Draggable>
+    </MemoDraggable>
   );
 };
 
-export default memo(DraggableSection);
+export const MemoDraggableSection = memo(DraggableSection);

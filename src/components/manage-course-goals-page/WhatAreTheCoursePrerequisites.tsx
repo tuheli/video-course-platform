@@ -7,8 +7,8 @@ import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import Draggable from '../drag-and-drop-v2/Draggable';
 import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
 
 export const WhatAreTheCoursePrerequisites = () => {
   const courseDraft = useCourseDraft();
@@ -58,7 +58,7 @@ export const WhatAreTheCoursePrerequisites = () => {
           >
             {prerequisites.map((prerequisite) => {
               return (
-                <Draggable
+                <MemoDraggable
                   key={prerequisite.id}
                   dataId={prerequisite.id}
                   allowedDropzoneTag="course-prerequisite"
@@ -71,7 +71,7 @@ export const WhatAreTheCoursePrerequisites = () => {
                     courseDraft={courseDraft}
                     isAbleToDeleteItem={isAbleToDeletePrerequisite}
                   />
-                </Draggable>
+                </MemoDraggable>
               );
             })}
           </Stack>

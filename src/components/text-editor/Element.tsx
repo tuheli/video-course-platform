@@ -1,8 +1,9 @@
+import React from 'react';
 import { CustomElement } from './types';
 
 interface ElementProps {
-  attributes: any;
-  children: any;
+  attributes: React.HTMLAttributes<HTMLElement>;
+  children: React.ReactNode;
   element: CustomElement;
 }
 

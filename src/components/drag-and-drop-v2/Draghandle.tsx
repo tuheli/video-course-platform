@@ -27,4 +27,4 @@ const Draghandle = ({ sx }: DraghandleProps) => {
   );
 };
 
-export default memo(Draghandle);
+export const MemoDraghandle = memo(Draghandle);

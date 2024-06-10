@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import Draggable, { DraggableProps } from '../../drag-and-drop-v2/Draggable';
-import Lecture, { LectureProps } from './Lecture';
+import { MemoDraggable } from '../../drag-and-drop-v2/Draggable';
+import { DraggableProps } from '../../drag-and-drop-v2/types';
+import { LectureProps } from './types';
+import { MemoLecture } from './Lecture';
 
 type DraggableLectureProps = Omit<
   LectureProps & DraggableProps,
@@ -16,20 +18,20 @@ const DraggableLecture = ({
   changeOrder,
 }: DraggableLectureProps) => {
   return (
-    <Draggable
+    <MemoDraggable
       dataId={lecture.id}
       allowedDropzoneTag={allowedDropzoneTag}
       key={lecture.id}
       changeOrder={changeOrder}
     >
-      <Lecture
+      <MemoLecture
         lecture={lecture}
         index={index}
         courseDraftId={courseDraftId}
         sectionId={sectionId}
       />
-    </Draggable>
+    </MemoDraggable>
   );
 };
 
-export default memo(DraggableLecture);
+export const MemoDraggableLecture = memo(DraggableLecture);

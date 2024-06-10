@@ -6,7 +6,8 @@ import { ICurriculumSection } from '../features/courseDraftsSlice';
 export const useCurriculumFromParams = (forcedCourseId: string = '') => {
   const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
 
-  const courseId = forcedCourseId || useParams().courseId;
+  const courseIdFromParams = useParams().courseId;
+  const courseId = forcedCourseId || courseIdFromParams;
 
   const courseDraft = useAppSelector((state) => state.courseDrafts).find(
     ({ id, creatorEmail }) => id === courseId && creatorEmail === myEmail

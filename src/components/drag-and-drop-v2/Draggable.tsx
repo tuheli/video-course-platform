@@ -1,16 +1,10 @@
 import { memo, useEffect, useRef } from 'react';
-import { ItemWithOrderIndex, giveItemsOrderIndicies } from './utils';
+import { giveItemsOrderIndicies } from './utils';
+import { DraggableProps } from './types';
 
 interface Reorderable {
   id: string;
   yPosition: number;
-}
-
-export interface DraggableProps {
-  dataId: string;
-  allowedDropzoneTag: string;
-  children: React.ReactNode;
-  changeOrder: (newOrder: ItemWithOrderIndex[]) => void;
 }
 
 interface Position {
@@ -142,6 +136,7 @@ const Draggable = ({
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onScroll = (event: any) => {
     updateMousePosition(event);
     updateDragImagePosition(event);
@@ -254,4 +249,4 @@ const Draggable = ({
   );
 };
 
-export default memo(Draggable);
+export const MemoDraggable = memo(Draggable);

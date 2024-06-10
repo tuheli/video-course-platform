@@ -8,8 +8,8 @@ import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteLearningObjective } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import Draggable from '../drag-and-drop-v2/Draggable';
 import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft = useCourseDraft();
@@ -61,7 +61,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
           >
             {learningObjectives.map((learningObjective) => {
               return (
-                <Draggable
+                <MemoDraggable
                   key={learningObjective.id}
                   dataId={learningObjective.id}
                   allowedDropzoneTag="learning-objective"
@@ -74,7 +74,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
                     courseDraft={courseDraft}
                     isAbleToDeleteItem={isAbleToDeleteLearningObjective}
                   />
-                </Draggable>
+                </MemoDraggable>
               );
             })}
           </Stack>

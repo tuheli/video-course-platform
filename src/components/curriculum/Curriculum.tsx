@@ -6,7 +6,7 @@ import { Stack } from '@mui/material';
 import { AddSectionButton } from '../curriculum/section/AddSectionButton';
 import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import DraggableSection from './section/DraggableSection';
+import { MemoDraggableSection } from './section/DraggableSection';
 
 interface CurriculumProps {
   forcedCourseId?: string;
@@ -36,7 +36,7 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
           }}
         >
           {sortedCurriculum.map((curriculumSection, index) => (
-            <DraggableSection
+            <MemoDraggableSection
               key={curriculumSection.id}
               allowedDropzoneTag="section"
               changeOrder={changeOrder}
