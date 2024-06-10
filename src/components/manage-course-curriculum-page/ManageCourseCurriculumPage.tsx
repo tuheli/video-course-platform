@@ -5,7 +5,7 @@ import { CourseManagementAppBar } from '../course-management/CourseManagementApp
 import { CourseManagementPageLayout } from '../course-management/CourseManagementPageLayout';
 import { Footer } from '../footer/Footer';
 import { Description } from './Description';
-import { Curriculum } from '../drag-and-drop-v2/Curriculum';
+import { Curriculum } from '../curriculum/Curriculum';
 
 export const ManageCourseCurriculumPage = () => {
   useScrollToTop();
