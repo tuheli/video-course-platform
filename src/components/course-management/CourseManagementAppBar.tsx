@@ -1,5 +1,5 @@
 import { AppBar, Box, Button, Stack, Toolbar, Typography } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
@@ -33,6 +33,7 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 
 export const CourseManagementAppBar = () => {
   const { courseId } = useParams();
+  const location = useLocation();
 
   const course = useAppSelector((state) => state.courseDrafts).find(
     ({ id }) => id === courseId
@@ -45,6 +46,9 @@ export const CourseManagementAppBar = () => {
         courseContent.videoContentLengthSeconds
       )
     : '0min';
+
+  const isSaveButtonVisible = location.pathname.endsWith('/goals');
+  const isPreviewButtonVisible = location.pathname.endsWith('/curriculum');
 
   return (
     <AppBar
@@ -134,14 +138,36 @@ export const CourseManagementAppBar = () => {
                 gap: itemGap,
               }}
             >
-              <Button
-                variant="outlined"
-                sx={{
-                  minWidth: 80,
-                }}
-              >
-                Save
-              </Button>
+              {isSaveButtonVisible && (
+                <Button
+                  variant="outlined"
+                  sx={{
+                    minWidth: 80,
+                  }}
+                >
+                  Save
+                </Button>
+              )}
+              {isPreviewButtonVisible && (
+                <Link to={`/course/draft/${courseId}/preview`}>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      px: 2,
+                      color: 'text.contrast',
+                      background: 'none',
+                      outline: '1px solid ',
+                      outlineColor: 'text.contrast',
+                      transition: 'none',
+                      '&:hover': {
+                        background: 'rgba(255, 255, 255, 0.05)',
+                      },
+                    }}
+                  >
+                    Preview
+                  </Button>
+                </Link>
+              )}
               <Link
                 to=""
                 style={{
