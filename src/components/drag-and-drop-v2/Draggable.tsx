@@ -1,5 +1,9 @@
 import { memo, useEffect, useRef } from 'react';
-import { giveItemsOrderIndicies } from './utils';
+import {
+  giveItemsOrderIndicies,
+  isOrderChanged,
+  sortByYPositionCopy,
+} from './utils';
 import { DraggableProps } from './types';
 
 interface Reorderable {
@@ -146,20 +150,13 @@ const Draggable = ({
     if (!dropzoneUnderneath) return;
 
     const itemsInDropzone = getItemsInDropzone(dropzoneUnderneath);
-    const sortedItems = sortByYPosition(itemsInDropzone);
+    const sortedItems = sortByYPositionCopy(itemsInDropzone);
     const shouldReorder = isOrderChanged(itemsInDropzone, sortedItems);
 
     if (!shouldReorder) return;
 
     const newOrder = giveItemsOrderIndicies(itemsInDropzone, sortedItems);
     changeOrder(newOrder);
-  };
-
-  const isOrderChanged = (
-    oldOrder: Array<{ id: string }>,
-    newOrder: Array<{ id: string }>
-  ) => {
-    return oldOrder.some((oldItem, index) => oldItem.id !== newOrder[index].id);
   };
 
   const getDropzoneUnderneath = () => {
@@ -204,12 +201,6 @@ const Draggable = ({
     });
 
     return itemsArray;
-  };
-
-  const sortByYPosition = (array: Reorderable[]) => {
-    const copy = [...array];
-    copy.sort((a, b) => a.yPosition - b.yPosition);
-    return copy;
   };
 
   const endDrag = () => {
