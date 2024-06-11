@@ -8,7 +8,10 @@ import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseG
 import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/ManageCourseCurriculumPage';
 import { CourseDraftPreviewPage } from '../course-draft-preview/CourseDraftPreviewPage';
 
-// NOTE: I have not yet implemented and probably will not implement a customized landing / homepage for a signed in user to stay within a reasonable scope for this project.
+// NOTE: I have not yet implemented and probably
+// will not implement a customized landing / homepage
+// for a signed in user to stay within a reasonable
+// scope for this project.
 
 export const SignedInRoutes = () => {
   return (
