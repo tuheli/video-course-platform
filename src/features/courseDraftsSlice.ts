@@ -7,6 +7,7 @@ import {
 import { getRandomInt } from '../../data/courseData';
 import { getLectureDescriptionLocalStorageKey } from '../components/text-editor/utils';
 import { ItemWithOrderIndex } from '../components/drag-and-drop-v2/utils';
+import { Language, getLanguage } from './languageSlice';
 
 // NOTE: These types must
 // match the actual property names which
@@ -24,6 +25,18 @@ interface Reorderable {
   orderIndex: number;
 }
 
+interface Rating {
+  courseId: string;
+  userEmail: string;
+  rating: number;
+}
+
+interface Enrollment {
+  courseId: string;
+  userEmail: string;
+  enrollmentDate: string;
+}
+
 export interface CourseDraft {
   id: string;
   creatorEmail: string; // Replaces id now before database exists
@@ -34,6 +47,10 @@ export interface CourseDraft {
   isPublic: boolean;
   isSubmissionProcessCompleted: boolean;
   courseContent: CourseContent;
+  ratings: Rating[];
+  enrollments: Enrollment[];
+  createdAt: string;
+  language: Language;
 }
 
 export interface TextWithId extends Reorderable {
@@ -77,7 +94,12 @@ interface CourseContent {
 
 export type NewCourseDraftEntry = Omit<
   CourseDraft,
-  'id' | 'isPublic' | 'isSubmissionProcessCompleted' | 'courseContent'
+  | 'id'
+  | 'isPublic'
+  | 'isSubmissionProcessCompleted'
+  | 'courseContent'
+  | 'ratings'
+  | 'enrollments'
 >;
 
 interface ValidateTextWithIdArrayOptions {
@@ -291,6 +313,9 @@ export const isAbleToDeleteIntendedLearners = (courseDraft: CourseDraft) => {
   );
 };
 
+const initialCreatedAt = new Date().toISOString();
+const initialLanguage = getLanguage('english');
+
 const initialState: CourseDraft[] = [
   {
     id: '1',
@@ -385,6 +410,10 @@ const initialState: CourseDraft[] = [
       videoContentLengthSeconds: 158,
       curriculum: getInitialCurriculum(),
     },
+    ratings: [],
+    enrollments: [],
+    createdAt: initialCreatedAt,
+    language: initialLanguage,
   },
   {
     id: '2',
@@ -422,6 +451,10 @@ const initialState: CourseDraft[] = [
       videoContentLengthSeconds: 0,
       curriculum: getInitialCurriculum(),
     },
+    ratings: [],
+    enrollments: [],
+    createdAt: initialCreatedAt,
+    language: initialLanguage,
   },
   {
     id: '3',
@@ -433,6 +466,10 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: getInitialCourseContent(),
+    ratings: [],
+    enrollments: [],
+    createdAt: initialCreatedAt,
+    language: initialLanguage,
   },
   {
     id: '4',
@@ -445,6 +482,10 @@ const initialState: CourseDraft[] = [
     isPublic: true,
     isSubmissionProcessCompleted: false,
     courseContent: getInitialCourseContent(),
+    ratings: [],
+    enrollments: [],
+    createdAt: initialCreatedAt,
+    language: initialLanguage,
   },
 ];
 
@@ -460,6 +501,8 @@ const slice = createSlice({
         isPublic: true,
         isSubmissionProcessCompleted: false,
         courseContent: getInitialCourseContent(),
+        ratings: [],
+        enrollments: [],
       };
       state.push(newCourseDraft);
     },
