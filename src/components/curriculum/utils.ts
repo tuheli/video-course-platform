@@ -46,3 +46,25 @@ export const cleanupCurriculumLocalStorage = (
     localStorage.removeItem(key);
   });
 };
+
+export const getAudioDuration = async (file: File) => {
+  const promise = new Promise<number>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (!reader.result || reader.result instanceof ArrayBuffer) {
+        return reject('Invalid file');
+      }
+
+      const audio = new Audio(reader.result);
+      audio.onloadedmetadata = () => {
+        const duration = audio.duration;
+        return resolve(duration);
+      };
+    };
+
+    reader.readAsDataURL(file);
+    reader.onerror = (error) => reject(error);
+  });
+
+  return promise;
+};
