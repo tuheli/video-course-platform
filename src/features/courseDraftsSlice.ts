@@ -6,7 +6,7 @@ import {
 } from './courseCreationSlice';
 import { getRandomInt } from '../../data/courseData';
 import { getLectureDescriptionLocalStorageKey } from '../components/text-editor/utils';
-import { ItemWithOrderIndex } from '../components/drag-and-drop/utils';
+import { ItemWithOrderIndex } from '../components/drag-and-drop-v2/utils';
 
 // NOTE: These types must
 // match the actual property names which
@@ -51,6 +51,7 @@ export interface Lesson {
   name: string;
   orderIndex: number;
   description: string;
+  videoUrl?: string;
 }
 
 export interface ICurriculumSection {
@@ -203,6 +204,29 @@ const getReorderableTextArrayObject = (
 };
 
 const getInitialCurriculum = () => {
+  // const sectionCount = 100;
+  // const lectureCount = 10;
+
+  // const sections: ICurriculumSection[] = Array.from(
+  //   { length: sectionCount },
+  //   (_, k) => {
+  //     return {
+  //       id: crypto.randomUUID(),
+  //       title: `Section ${k + 1}`,
+  //       learningObjective: '',
+  //       orderIndex: k,
+  //       lessons: Array.from({ length: lectureCount }, (_, l) => {
+  //         return {
+  //           id: crypto.randomUUID(),
+  //           name: `Lecture ${l + 1}`,
+  //           orderIndex: l,
+  //           description: '',
+  //         };
+  //       }),
+  //     };
+  //   }
+  // );
+
   const sections: ICurriculumSection[] = [
     {
       id: crypto.randomUUID(),
@@ -677,7 +701,7 @@ const slice = createSlice({
         courseDraftId: string;
         curriculumSectionId: string;
         lectureId: string;
-        propertyName: 'name' | 'description';
+        propertyName: 'name' | 'description' | 'videoUrl';
         newValue: string;
       }>
     ) => {
