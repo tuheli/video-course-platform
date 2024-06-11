@@ -4,7 +4,7 @@ import { reorderedSections } from '../../features/courseDraftsSlice';
 import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { Stack } from '@mui/material';
 import { AddSectionButton } from '../curriculum/section/AddSectionButton';
-import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
+import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import { MemoDraggableSection } from './section/DraggableSection';
 
@@ -28,8 +28,6 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
 
   if (!courseDraft) return null;
 
-  const sortedCurriculum = getSortedCopy(curriculum);
-
   return (
     <>
       <Dropzone allowedDropzoneTag="section">
@@ -38,7 +36,7 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
             gap: 4,
           }}
         >
-          {sortedCurriculum.map((curriculumSection, index) => (
+          {curriculum.map((curriculumSection, index) => (
             <MemoDraggableSection
               key={curriculumSection.id}
               allowedDropzoneTag="section"
