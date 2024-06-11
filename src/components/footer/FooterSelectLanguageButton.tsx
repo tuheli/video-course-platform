@@ -2,11 +2,11 @@ import { useAppSelector } from '../../app/hooks';
 import { OpenLanguageModalButton } from '../language-selection/OpenLanguageModalButton';
 
 export const FooterSelectLanguageButton = () => {
-  const text = useAppSelector((state) => state.language.language.text);
+  const language = useAppSelector((state) => state.language.currentLanguage);
 
   return (
     <OpenLanguageModalButton
-      text={text}
+      text={language.name}
       sx={{
         width: 130,
         color: 'white',
