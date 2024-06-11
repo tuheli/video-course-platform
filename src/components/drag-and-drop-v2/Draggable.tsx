@@ -2,7 +2,7 @@ import { memo, useEffect, useRef } from 'react';
 import {
   giveItemsOrderIndicies,
   isOrderChanged,
-  sortByYPositionCopy,
+  sortByYPosition,
 } from './utils';
 import { DraggableProps } from './types';
 
@@ -150,7 +150,7 @@ const Draggable = ({
     if (!dropzoneUnderneath) return;
 
     const itemsInDropzone = getItemsInDropzone(dropzoneUnderneath);
-    const sortedItems = sortByYPositionCopy(itemsInDropzone);
+    const sortedItems = sortByYPosition(itemsInDropzone);
     const shouldReorder = isOrderChanged(itemsInDropzone, sortedItems);
 
     if (!shouldReorder) return;
