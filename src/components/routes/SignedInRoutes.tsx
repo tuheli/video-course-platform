@@ -6,6 +6,7 @@ import { InstructorCoursesPage } from '../instructor/InstructorCoursesPage';
 import { CourseCreationPage } from '../course-creation/CourseCreationPage';
 import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseGoalsPage';
 import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/ManageCourseCurriculumPage';
+import { CourseDraftPreviewPage } from '../course-draft-preview/CourseDraftPreviewPage';
 
 // NOTE: I have not yet implemented and probably will not implement a customized landing / homepage for a signed in user to stay within a reasonable scope for this project.
 
@@ -37,6 +38,12 @@ export const SignedInRoutes = () => {
       <Route
         path="/instructor/course/:courseId/manage/curriculum"
         element={<ManageCourseCurriculumPage />}
+      />
+
+      {/** Course draft preview route */}
+      <Route
+        path="/course/draft/:courseId/preview"
+        element={<CourseDraftPreviewPage />}
       />
 
       {/** Redirect routes leading to default route */}
