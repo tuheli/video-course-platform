@@ -1,17 +1,19 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
 import { useAppDispatch } from '../../../app/hooks';
-import { updatedLecture } from '../../../features/courseDraftsSlice';
+import { updatedVideo } from '../../../features/courseDraftsSlice';
+import { getAudioDuration } from '../utils';
 
 const StyledLabel = styled('label')({});
-
-// NOTE: Added mock timer to change upload status.
 
 interface SelectVideoProps {
   courseDraftId: string;
   sectionId: string;
   lectureId: string;
 }
+
+// NOTE: Mock timer to change upload status.
+const mockUploadDelay = 2000;
 
 export const SelectVideo = ({
   courseDraftId,
@@ -33,6 +35,29 @@ export const SelectVideo = ({
     setFile(null);
   };
 
+  const finishUpload = async (file: File) => {
+    const newVideoUrl = URL.createObjectURL(file);
+    try {
+      const duration = await getAudioDuration(file);
+
+      dispatch(
+        updatedVideo({
+          courseDraftId,
+          curriculumSectionId: sectionId,
+          lectureId,
+          url: newVideoUrl,
+          lengthSeconds: duration,
+        })
+      );
+
+      setIsUploadComplete(true);
+    } catch (error) {
+      // Ignore error
+      // Maybe popup notification to user
+      URL.revokeObjectURL(newVideoUrl);
+    }
+  };
+
   useEffect(() => {
     if (file === null) {
       setIsUploadComplete(false);
@@ -41,22 +66,16 @@ export const SelectVideo = ({
 
     uploadTimeoutRef.current = setTimeout(() => {
       if (file === null) return;
-      const videoUrl = URL.createObjectURL(file);
-      dispatch(
-        updatedLecture({
-          courseDraftId,
-          curriculumSectionId: sectionId,
-          lectureId,
-          propertyName: 'videoUrl',
-          newValue: videoUrl,
-        })
-      );
-      setIsUploadComplete(true);
-    }, 2000);
+      finishUpload(file);
+    }, mockUploadDelay);
 
     return () => {
-      if (uploadTimeoutRef.current !== null)
+      // NOTE: Unmount just cancels the upload for now.
+      // Maybe web workers for background upload.
+      if (uploadTimeoutRef.current !== null) {
         clearTimeout(uploadTimeoutRef.current);
+        uploadTimeoutRef.current = null;
+      }
     };
   }, [file]);
 
