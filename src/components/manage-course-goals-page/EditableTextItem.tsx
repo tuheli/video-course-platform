@@ -70,6 +70,7 @@ export const EditableTextItem = ({
       onMouseLeave={onMouseLeave}
       sx={{
         flexDirection: 'row',
+        bgcolor: 'background.default',
       }}
     >
       <InputFieldWithMaxCharacters
