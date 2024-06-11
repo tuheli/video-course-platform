@@ -1,10 +1,14 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
 
 const StyledLabel = styled('label')({});
 
+// NOTE: Added mock timer to change upload status.
+
 export const SelectVideo = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [isUploadComplete, setIsUploadComplete] = useState(false);
+  const uploadTimeoutRef = useRef<number | null>(null);
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -15,6 +19,22 @@ export const SelectVideo = () => {
   const onClickReplace = () => {
     setFile(null);
   };
+
+  useEffect(() => {
+    if (file === null) {
+      setIsUploadComplete(false);
+      return;
+    }
+
+    uploadTimeoutRef.current = setTimeout(() => {
+      setIsUploadComplete(true);
+    }, 2000);
+
+    return () => {
+      if (uploadTimeoutRef.current !== null)
+        clearTimeout(uploadTimeoutRef.current);
+    };
+  }, [file]);
 
   return (
     <>
@@ -231,7 +251,9 @@ export const SelectVideo = () => {
                   width: '25%',
                 }}
               >
-                <Typography>Processing</Typography>
+                <Typography>
+                  {isUploadComplete ? 'Uploaded' : 'Processing'}
+                </Typography>
               </Box>
               <Box
                 sx={{
@@ -263,19 +285,38 @@ export const SelectVideo = () => {
                 gap: 0.5,
               }}
             >
-              <Typography
-                component="span"
-                variant="caption"
-                sx={{
-                  fontWeight: 600,
-                }}
-              >
-                Note:
-              </Typography>
-              <Typography component="span" variant="caption">
-                This video is still being processed. We will send you an email
-                when it is ready.
-              </Typography>
+              {isUploadComplete ? (
+                <>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Note:
+                  </Typography>
+                  <Typography component="span" variant="caption">
+                    Video has been uploaded successfully.
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography
+                    component="span"
+                    variant="caption"
+                    sx={{
+                      fontWeight: 600,
+                    }}
+                  >
+                    Note:
+                  </Typography>
+                  <Typography component="span" variant="caption">
+                    This video is still being processed. We will send you an
+                    email when it is ready.
+                  </Typography>
+                </>
+              )}
             </Stack>
           </Stack>
         </>
