@@ -63,9 +63,7 @@ export function getSortedCopy<T extends { orderIndex: number }>(array: T[]) {
   return copy.sort((a, b) => a.orderIndex - b.orderIndex);
 }
 
-export function sortByYPositionCopy<T extends { yPosition: number }>(
-  array: T[]
-) {
+export function sortByYPosition<T extends { yPosition: number }>(array: T[]) {
   const copy = [...array];
   return copy.sort((a, b) => a.yPosition - b.yPosition);
 }
