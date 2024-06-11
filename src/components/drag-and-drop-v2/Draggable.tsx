@@ -27,7 +27,7 @@ const Draggable = ({
   const selfRef = useRef<HTMLDivElement>(null);
   const scrollOffset = useRef<number>(0);
 
-  const tickSpeed = 16.7;
+  const tickSpeed = 16.7; // Around 60 fps
 
   scrollOffset.current = window.scrollY;
 
