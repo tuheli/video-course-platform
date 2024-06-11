@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { CourseCategory, getFeaturedTopics } from '../../../data/courseData';
-import { format } from '../../utils/numberFormatters';
+import { formatValue } from '../../utils/formatters';
 import { StyledLink } from './StyledLink';
 
 interface TopicsByCategoryStackProps {
@@ -42,7 +42,7 @@ export const TopicsByCategoryStack = ({
             >
               <StyledLink onClick={onClickLink}>{topic.name}</StyledLink>
               <Typography variant="caption">
-                {format(learnerCount)} learners
+                {formatValue(learnerCount)} learners
               </Typography>
             </Stack>
           );

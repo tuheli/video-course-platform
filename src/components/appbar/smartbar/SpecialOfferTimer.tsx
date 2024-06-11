@@ -6,7 +6,7 @@ import {
   maxOfferDuration,
   secondPassed,
 } from '../../../features/specialOfferSlice';
-import { getDuration } from '../../../utils/numberFormatters';
+import { getDuration } from '../../../utils/formatters';
 
 const formatDuration = (durationSeconds: number) => {
   const { hours, minutes, seconds } = getDuration(durationSeconds);

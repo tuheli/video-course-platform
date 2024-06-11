@@ -5,7 +5,7 @@ import { StarRating } from './StarRating';
 import { DiscountedPrice } from './DiscountedPrice';
 import { NormalPrice } from './NormalPrice';
 import { BestSeller } from './BestSeller';
-import { format } from '../../utils/numberFormatters';
+import { formatValue } from '../../utils/formatters';
 
 interface BroadCoursesSelectionItemProps {
   courseItem: Course;
@@ -85,7 +85,7 @@ export const BroadCoursesSelectionItem = ({
               color: 'text.secondary',
             }}
           >
-            ({format(courseItem.ratingCount)})
+            ({formatValue(courseItem.ratingCount)})
           </Typography>
         </Stack>
         {isDiscounted ? (

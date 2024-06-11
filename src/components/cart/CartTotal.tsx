@@ -1,6 +1,6 @@
 import { useAppSelector } from '../../app/hooks';
 import { Stack, Typography } from '@mui/material';
-import { currencyFormatter } from '../../utils/numberFormatters';
+import { currencyFormatter } from '../../utils/formatters';
 
 export const CartTotal = () => {
   const totalPrice = useAppSelector((state) =>
