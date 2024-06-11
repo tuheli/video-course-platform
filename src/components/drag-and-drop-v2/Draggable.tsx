@@ -106,7 +106,6 @@ const Draggable = ({
 
   const moveVertically = (nextTopPosition: number, element: HTMLElement) => {
     element.style.top = `${nextTopPosition}px`;
-    return;
   };
 
   const moveHorizontally = (nextLeftPosition: number, element: HTMLElement) => {
