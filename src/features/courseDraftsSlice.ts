@@ -51,7 +51,10 @@ export interface Lesson {
   name: string;
   orderIndex: number;
   description: string;
-  videoUrl?: string;
+  video?: {
+    url: string;
+    lengthSeconds: number;
+  };
 }
 
 export interface ICurriculumSection {
@@ -657,7 +660,6 @@ const slice = createSlice({
         section.orderIndex = newOrderIndex;
       });
     },
-
     addedLecture: (
       state,
       action: PayloadAction<{
@@ -701,7 +703,7 @@ const slice = createSlice({
         courseDraftId: string;
         curriculumSectionId: string;
         lectureId: string;
-        propertyName: 'name' | 'description' | 'videoUrl';
+        propertyName: 'name' | 'description';
         newValue: string;
       }>
     ) => {
@@ -724,6 +726,44 @@ const slice = createSlice({
       if (!lecture) return;
 
       lecture[action.payload.propertyName] = action.payload.newValue;
+    },
+    updatedVideo: (
+      state,
+      action: PayloadAction<{
+        courseDraftId: string;
+        curriculumSectionId: string;
+        lectureId: string;
+        url: string;
+        lengthSeconds: number;
+      }>
+    ) => {
+      const courseDraft = state.find(
+        ({ id }) => id === action.payload.courseDraftId
+      );
+
+      if (!courseDraft) return;
+
+      const section = courseDraft.courseContent.curriculum.find(
+        ({ id }) => id === action.payload.curriculumSectionId
+      );
+
+      if (!section) return;
+
+      const lecture = section.lessons.find(
+        ({ id }) => id === action.payload.lectureId
+      );
+
+      if (!lecture) return;
+
+      // Release old url if it exists
+      if (lecture.video) {
+        URL.revokeObjectURL(lecture.video.url);
+      }
+
+      lecture.video = {
+        url: action.payload.url,
+        lengthSeconds: action.payload.lengthSeconds,
+      };
     },
     deletedLecture: (
       state,
@@ -806,6 +846,7 @@ export const {
   reorderedSections,
   addedLecture,
   updatedLecture,
+  updatedVideo,
   deletedLecture,
   reorderedLectures,
 } = slice.actions;
