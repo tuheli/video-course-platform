@@ -1,14 +1,27 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
+import { useAppDispatch } from '../../../app/hooks';
+import { updatedLecture } from '../../../features/courseDraftsSlice';
 
 const StyledLabel = styled('label')({});
 
 // NOTE: Added mock timer to change upload status.
 
-export const SelectVideo = () => {
+interface SelectVideoProps {
+  courseDraftId: string;
+  sectionId: string;
+  lectureId: string;
+}
+
+export const SelectVideo = ({
+  courseDraftId,
+  sectionId,
+  lectureId,
+}: SelectVideoProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const uploadTimeoutRef = useRef<number | null>(null);
+  const dispatch = useCallback(useAppDispatch(), []);
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -27,6 +40,17 @@ export const SelectVideo = () => {
     }
 
     uploadTimeoutRef.current = setTimeout(() => {
+      if (file === null) return;
+      const videoUrl = URL.createObjectURL(file);
+      dispatch(
+        updatedLecture({
+          courseDraftId,
+          curriculumSectionId: sectionId,
+          lectureId,
+          propertyName: 'videoUrl',
+          newValue: videoUrl,
+        })
+      );
       setIsUploadComplete(true);
     }, 2000);
 
