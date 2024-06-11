@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { useAppDispatch } from '../../app/hooks';
-import { changedLanguage } from '../../features/languageSlice';
-import { Language } from '../../../data/languageData';
+import { Language, changedLanguage } from '../../features/languageSlice';
 
 interface LanguageRenderComponentProps {
   language: Language;
@@ -31,7 +30,7 @@ export const SelectLanguageButton = ({
           },
         }}
       >
-        {language.text}
+        {language.name}
       </Box>
     </a>
   );
