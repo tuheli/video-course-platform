@@ -32,6 +32,9 @@ export const Layout = () => {
             bgcolor: 'background.default',
             width: '78%',
             flexDirection: 'column',
+            borderBottom: '1px solid',
+            borderTop: '1px solid',
+            borderColor: 'grey.400',
             gap: 4,
           }}
         >
@@ -47,6 +50,7 @@ export const Layout = () => {
           sx={{
             width: '22%',
             border: '1px solid',
+            borderRight: 'none',
             borderColor: 'grey.400',
           }}
         >
@@ -104,9 +108,12 @@ const LectureWithoutVideo = ({ lecture }: LectureWithoutVideoProps) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column',
+          gap: 2,
         }}
       >
-        <Typography>{lecture.name}</Typography>
+        <Typography variant="h5">{lecture.name}</Typography>
+        <Typography>This lecture does not have a video.</Typography>
       </Box>
     </VideoAreaLayout>
   );
