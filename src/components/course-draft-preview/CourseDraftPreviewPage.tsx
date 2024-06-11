@@ -4,9 +4,6 @@ import { Footer } from '../footer/Footer';
 import { Layout } from './Layout';
 import { CompanyLogo } from '../appbar/CompanyLogo';
 
-// NOTE: App bar is temporarily
-// course management app bar
-
 export const CourseDraftPreviewPage = () => {
   useScrollToTop();
 
