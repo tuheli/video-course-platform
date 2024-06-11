@@ -218,7 +218,11 @@ const Lecture = ({
         )}
         {isSelectingContentType && (
           <Box onMouseDown={(event) => event.stopPropagation()}>
-            <SelectContentType />
+            <SelectContentType
+              courseDraftId={courseDraftId}
+              sectionId={sectionId}
+              lectureId={lecture.id}
+            />
           </Box>
         )}
         {isBottomExtensionOpen && <BottomExtension />}

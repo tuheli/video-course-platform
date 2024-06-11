@@ -6,7 +6,13 @@ import { SelectVideo } from './SelectVideo';
 
 type ContentType = 'video';
 
-export const SelectContentType = () => {
+interface SelectContentTypeProps {
+  courseDraftId: string;
+  sectionId: string;
+  lectureId: string;
+}
+
+export const SelectContentType = (props: SelectContentTypeProps) => {
   const [activeContentType, setActiveContentType] =
     useState<ContentType | null>(null);
   const [isMouseOver, setIsMouseOver] = useState(false);
@@ -95,7 +101,7 @@ export const SelectContentType = () => {
         </Stack>
       ) : (
         <Box onMouseDown={(event) => event.stopPropagation()}>
-          {activeContentType === 'video' && <SelectVideo />}
+          {activeContentType === 'video' && <SelectVideo {...props} />}
         </Box>
       )}
     </>
