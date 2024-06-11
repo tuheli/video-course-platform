@@ -6,17 +6,10 @@ import {
   maxOfferDuration,
   secondPassed,
 } from '../../../features/specialOfferSlice';
+import { getDuration } from '../../../utils/numberFormatters';
 
 const formatDuration = (durationSeconds: number) => {
-  const date = new Date(0);
-  date.setSeconds(durationSeconds);
-
-  const isoString = date.toISOString();
-
-  // Cast to num to remove trailing zeroes
-  const hours = Number(isoString.substring(11, 13));
-  const minutes = Number(isoString.substring(14, 16));
-  const seconds = Number(isoString.substring(17, 19));
+  const { hours, minutes, seconds } = getDuration(durationSeconds);
 
   if (hours === 0 && minutes === 0) {
     return `${seconds}s`;
