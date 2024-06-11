@@ -35,8 +35,8 @@ export const Layout = () => {
             gap: 4,
           }}
         >
-          {currentLecture && currentLecture.videoUrl ? (
-            <VideoPlayer videoUrl={currentLecture.videoUrl} />
+          {currentLecture && currentLecture.video ? (
+            <VideoPlayer videoUrl={currentLecture.video.url} />
           ) : currentLecture ? (
             <LectureWithoutVideo lecture={currentLecture} />
           ) : (
@@ -121,8 +121,6 @@ const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
 
   useEffect(() => {
     if (!videoRef.current) return;
-    console.log('videoUrl', videoUrl);
-
     videoRef.current.load();
   }, [videoUrl]);
 
@@ -138,6 +136,7 @@ const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
           left: 0,
           width: '100%',
           height: '100%',
+          backgroundColor: 'currentcolor',
         }}
       >
         <source src={videoUrl} />
