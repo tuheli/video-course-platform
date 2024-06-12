@@ -16,7 +16,9 @@ declare module '@mui/material/styles/createPalette' {
     900: string;
   }
 
-  interface PaletteColor extends ColorRange {}
+  interface PaletteColor extends ColorRange {
+    extralight?: string;
+  }
 }
 
 export const brand = {
