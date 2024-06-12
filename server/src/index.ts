@@ -1,11 +1,15 @@
 import express from 'express';
 import { connectToDatabase } from './database';
+import cors from 'cors';
 
-const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const app = express();
+
+app.use(cors());
+
+app.get('/api/ping', (req, res) => {
+  res.json({ message: 'pong' });
 });
 
 const start = async () => {
