@@ -8,6 +8,7 @@ import meSlice from '../features/meSlice';
 import courseCreationSlice from '../features/courseCreationSlice';
 import courseDraftsSlice from '../features/courseDraftsSlice';
 import userPreferencesSlice from '../features/userPreferencesSlice';
+import { apiSlice } from '../features/apiSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,10 @@ export const store = configureStore({
     courseCreation: courseCreationSlice,
     courseDrafts: courseDraftsSlice,
     userPreferences: userPreferencesSlice,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(apiSlice.middleware);
   },
 });
 
