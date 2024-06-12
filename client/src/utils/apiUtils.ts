@@ -1,10 +1,19 @@
-export const isErrorWithMessage = (
-  error: unknown
-): error is { message: string } => {
+export const isDataWithMessage = (
+  data: unknown
+): data is { message: string } => {
   return (
-    typeof error === 'object' &&
-    error != null &&
-    'message' in error &&
-    typeof (error as any).message === 'string'
+    data != null &&
+    typeof data === 'object' &&
+    'message' in data &&
+    typeof data.message === 'string'
+  );
+};
+
+export const isObjectWithData = (obj: unknown): obj is { data: unknown } => {
+  return (
+    obj != null &&
+    typeof obj === 'object' &&
+    'data' in obj &&
+    typeof obj.data === 'object'
   );
 };
