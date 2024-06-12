@@ -2,9 +2,8 @@ import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import { TextInput } from './StyledTextInput';
 import { Link } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
-import { useAppDispatch } from '../../app/hooks';
-import { User, userAdded } from '../../features/usersSlice';
-import { signedIn } from '../../features/meSlice';
+import { SignupRequestBody, useSignupMutation } from '../../features/apiSlice';
+import { isDataWithMessage, isObjectWithData } from '../../utils/apiUtils';
 
 const minUsernameLength = 4;
 const minPasswordLength = 4;
@@ -74,9 +73,9 @@ interface SignUpFormEntries {
 
 export const SignUpForm = () => {
   const [forceShowValidator, setForceShowValidation] = useState(false);
-  const dispatch = useAppDispatch();
+  const [signup] = useSignupMutation();
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -87,8 +86,8 @@ export const SignUpForm = () => {
       return;
     }
 
-    const newUser: User = {
-      credentials: {
+    const signupRequestBody: SignupRequestBody = {
+      credentialsNotSafe: {
         email: entries.email,
         password: entries.password,
       },
@@ -96,8 +95,13 @@ export const SignUpForm = () => {
       receiveInsiderEmails: entries.checkbox,
     };
 
-    dispatch(userAdded(newUser));
-    dispatch(signedIn(newUser));
+    try {
+      await signup(signupRequestBody).unwrap();
+    } catch (error) {
+      if (!isObjectWithData(error)) return;
+      if (!isDataWithMessage(error.data)) return;
+      console.log(error.data.message);
+    }
   };
 
   const usernameValidator = {
