@@ -3,7 +3,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { reorderedSections } from '../../features/courseDraftsSlice';
 import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { Stack } from '@mui/material';
-import { AddSectionButton } from '../curriculum/section/AddSectionButton';
+import { AddSectionButton } from './section/AddSectionButton';
 import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import { MemoDraggableSection } from './section/DraggableSection';

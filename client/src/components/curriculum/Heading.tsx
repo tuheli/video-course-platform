@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import NoteOutlinedIcon from '@mui/icons-material/NoteOutlined';
-import { DeleteButton } from '../curriculum/DeleteButton';
-import { EditButton } from '../curriculum/EditButton';
+import { DeleteButton } from './DeleteButton';
+import { EditButton } from './EditButton';
 import { MouseEvent } from 'react';
 
 interface HeadingProps {
