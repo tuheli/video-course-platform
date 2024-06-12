@@ -13,7 +13,7 @@ import {
 // Localstorage max size is 5000 KB and it could
 // fill up without cleaning.
 
-// 3 paragraphs containing 10 lines of text
+// 3 paragraphs each containing 10 lines of text
 // seems to be around 5 KB. That could be reasonable
 // max size for a single lecture description.
 
