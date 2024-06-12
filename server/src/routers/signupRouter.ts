@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import e, { Router } from 'express';
 import bcypt from 'bcrypt';
 import { client } from '../database';
+import { errorName } from '../errorNames';
 
-interface CredentialsNotSafe {
+export interface CredentialsNotSafe {
   email: string;
   password: string;
 }
@@ -33,13 +34,13 @@ interface UserInDatabaseSafe {
 const toSignupRequestBody = (body: unknown): SignupRequestBody => {
   if (!body || typeof body !== 'object') {
     const error = new Error('Body is not an object.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (!('credentialsNotSafe' in body)) {
     const error = new Error('Credentials are missing.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
@@ -47,55 +48,55 @@ const toSignupRequestBody = (body: unknown): SignupRequestBody => {
 
   if (!credentials || typeof credentials !== 'object') {
     const error = new Error('Credentials is not an object.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (!('email' in credentials)) {
     const error = new Error('Email is missing.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (typeof credentials.email !== 'string') {
     const error = new Error('Email is not a string.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (!('password' in credentials)) {
     const error = new Error('Password is missing.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (typeof credentials.password !== 'string') {
     const error = new Error('Password is not a string.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (!('fullName' in body)) {
     const error = new Error('Full name is missing.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (typeof body.fullName !== 'string') {
     const error = new Error('Full name is not a string.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (!('receiveInsiderEmails' in body)) {
     const error = new Error('Receive insider emails is missing.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
   if (typeof body.receiveInsiderEmails !== 'boolean') {
     const error = new Error('Receive insider emails is not a boolean.');
-    error.name = 'ClientSentInvalidData';
+    error.name = errorName.clientSentInvalidData;
     throw error;
   }
 
@@ -107,8 +108,6 @@ const toSignupRequestBody = (body: unknown): SignupRequestBody => {
     fullName: body.fullName,
     receiveInsiderEmails: body.receiveInsiderEmails,
   };
-
-  console.log(validRequest);
 
   return validRequest;
 };
@@ -133,7 +132,7 @@ const createUser = async (
       const customError = new Error(
         `Failed to create user. Empty query result or row length is not 1.`
       );
-      customError.name = 'ErrorAtDatabase';
+      customError.name = errorName.errorAtDatabase;
       throw customError;
     }
 
@@ -149,22 +148,23 @@ const createUser = async (
     return userInDatabaseSafe;
   } catch (error) {
     if (!(error instanceof Error)) {
-      const customError = new Error(
+      const unknownError = new Error(
         `Unknown error at createUser. Error object: ${error}`
       );
-      customError.name = 'UnknownError';
-      throw customError;
+      unknownError.name = errorName.unknownError;
+      throw unknownError;
     }
 
-    if (error.name === 'ErrorAtDatabase') {
-      throw error;
+    if (error.name === errorName.errorAtDatabase) {
+      const forwardedError = new Error(error.message);
+      forwardedError.name = error.name;
+      throw forwardedError;
     }
 
     const customError = new Error(
       `Failed to create user. Error message: ${error.message}`
     );
-
-    customError.name = 'ErrorAtDatabase';
+    customError.name = errorName.errorAtDatabase;
     throw customError;
   }
 };
@@ -195,17 +195,17 @@ const getUserByEmail = async (
     return userInDatabaseSafe;
   } catch (error) {
     if (!(error instanceof Error)) {
-      const customError = new Error(
+      const unknownError = new Error(
         `Unknown error at getUser. Error object: ${error}`
       );
-      customError.name = 'UnknownError';
-      throw customError;
+      unknownError.name = errorName.unknownError;
+      throw unknownError;
     }
 
     const customError = new Error(
       `Failed to get user. Error message: ${error.message}`
     );
-    customError.name = 'ErrorAtDatabase';
+    customError.name = errorName.errorAtDatabase;
     throw customError;
   }
 };
@@ -213,7 +213,7 @@ const getUserByEmail = async (
 const router = Router();
 const saltRounds = 10;
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   try {
     const requestBody = toSignupRequestBody(req.body);
     const existingUser = await getUserByEmail(
@@ -239,7 +239,7 @@ router.post('/', async (req, res) => {
     const userInDatabaseSafe = await createUser(userForDatabase);
     return res.status(201).json(userInDatabaseSafe);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
