@@ -7,6 +7,7 @@ import { CourseCreationPage } from '../course-creation/CourseCreationPage';
 import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseGoalsPage';
 import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/ManageCourseCurriculumPage';
 import { CourseDraftPreviewPage } from '../course-draft-preview/CourseDraftPreviewPage';
+import { Logout } from '../logout/Logout';
 
 // NOTE: I have not yet implemented and probably
 // will not implement a customized landing / homepage
@@ -49,9 +50,13 @@ export const SignedInRoutes = () => {
         element={<CourseDraftPreviewPage />}
       />
 
+      {/** Logout route - signed out routes handle redirecting to landing page after logout */}
+      <Route path="/logout" element={<Logout />} />
+
       {/** Redirect routes leading to default route */}
       <Route path="/teaching" element={<Redirect to="/instructor" />} />
       <Route path="/signup" element={<Redirect to="/" />} />
+      <Route path="/login" element={<Redirect to="/" />} />
 
       {/** Not found route */}
       <Route path="*" element={<NotFoundPage />} />
