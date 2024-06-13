@@ -6,6 +6,7 @@ import { isDataWithMessage, isObjectWithData } from '../../utils/apiUtils';
 import { useAppDispatch } from '../../app/hooks';
 import { signedIn } from '../../features/meSlice';
 import { TextInput } from '../sign-up/StyledTextInput';
+import { notified } from '../../features/notificationSlice';
 
 const validateEmail = (email: string) => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -86,7 +87,7 @@ export const SignInForm = () => {
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
-      console.log(error.data.message);
+      dispatch(notified({ message: error.data.message, severity: 'warning' }));
     }
   };
 
