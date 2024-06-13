@@ -20,9 +20,8 @@ const AppAppBar = () => {
   const me = useAppSelector((state) => state.me.user);
   const location = useLocation();
 
-  const showTeachDropdown = !me && location.pathname !== '/teaching';
-
-  const showInstructorLink = Boolean(me);
+  const isTeachDropdownVisible = !me && location.pathname !== '/teaching';
+  const isInstructorLinkVisible = Boolean(me);
 
   return (
     <AppBar
@@ -72,8 +71,8 @@ const AppAppBar = () => {
               }}
             >
               <BusinessDropdown />
-              {showTeachDropdown && <TeachDropdown />}
-              {showInstructorLink && <InstructorLink />}
+              {isTeachDropdownVisible && <TeachDropdown />}
+              {isInstructorLinkVisible && <InstructorLink />}
               <CartDropdownOpener />
             </Stack>
             <Stack
