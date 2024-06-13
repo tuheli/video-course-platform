@@ -4,7 +4,7 @@ import { getSortedCopy } from '../components/drag-and-drop-v2/utils';
 import { ICurriculumSection } from '../features/courseDraftsSlice';
 
 export const useCurriculumFromParams = (forcedCourseId: string = '') => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const myEmail = useAppSelector((state) => state.me.user?.email);
 
   const courseIdFromParams = useParams().courseId;
   const courseId = forcedCourseId || courseIdFromParams;

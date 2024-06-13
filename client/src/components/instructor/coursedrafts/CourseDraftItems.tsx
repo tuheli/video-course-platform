@@ -2,7 +2,7 @@ import { useAppSelector } from '../../../app/hooks';
 import { CourseDraftItem } from './CourseDraftItem';
 
 export const CourseDraftItems = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const myEmail = useAppSelector((state) => state.me.user?.email);
   const courseDrafts = useAppSelector((state) => state.courseDrafts);
 
   const myCourseDrafts = courseDrafts.filter(

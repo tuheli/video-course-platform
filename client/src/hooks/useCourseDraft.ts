@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../app/hooks';
 
 export const useCourseDraft = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.credentials.email);
+  const myEmail = useAppSelector((state) => state.me.user?.email);
 
   const { courseId } = useParams();
 
