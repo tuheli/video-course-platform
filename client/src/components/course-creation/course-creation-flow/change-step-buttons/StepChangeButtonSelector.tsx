@@ -10,10 +10,9 @@ export const StepChangeButtonSelector = () => {
     (state) => state.courseCreation
   );
 
-  const showPreviousButton = currentStep > 1;
-  const showContinueButton = currentStep < totalSteps;
-  const showFinishCourseCreationButton = currentStep === totalSteps;
-
+  const isPreviousButtonVisible = currentStep > 1;
+  const isContinueButtonVisible = currentStep < totalSteps;
+  const isFinishButtonVisible = currentStep === totalSteps;
   const isAbleToContinueOrFinish = isAbleToContinue(currentStep, steps);
 
   return (
@@ -28,20 +27,22 @@ export const StepChangeButtonSelector = () => {
           justifyContent: 'center',
         }}
       >
-        {showPreviousButton && <PreviousStepButton currentStep={currentStep} />}
+        {isPreviousButtonVisible && (
+          <PreviousStepButton currentStep={currentStep} />
+        )}
         <div
           style={{
-            flexGrow: showPreviousButton ? 1 : 0,
+            flexGrow: isPreviousButtonVisible ? 1 : 0,
             transition: 'flex-grow 0.5s',
           }}
         />
-        {showContinueButton && (
+        {isContinueButtonVisible && (
           <ContinueStepButton
             currentStep={currentStep}
             isAbleToContinue={isAbleToContinueOrFinish}
           />
         )}
-        {showFinishCourseCreationButton && (
+        {isFinishButtonVisible && (
           <FinishCourseCreationButton
             isAbleToFinish={isAbleToContinueOrFinish}
           />
