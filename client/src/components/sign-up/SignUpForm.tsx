@@ -2,8 +2,14 @@ import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import { TextInput } from './StyledTextInput';
 import { Link } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
-import { SignupRequestBody, useSignupMutation } from '../../features/apiSlice';
+import {
+  SignupRequestBody,
+  useSigninMutation,
+  useSignupMutation,
+} from '../../features/apiSlice';
 import { isDataWithMessage, isObjectWithData } from '../../utils/apiUtils';
+import { useAppDispatch } from '../../app/hooks';
+import { signedIn } from '../../features/meSlice';
 
 const minUsernameLength = 4;
 const minPasswordLength = 4;
@@ -74,6 +80,8 @@ interface SignUpFormEntries {
 export const SignUpForm = () => {
   const [forceShowValidator, setForceShowValidation] = useState(false);
   const [signup] = useSignupMutation();
+  const [signin] = useSigninMutation();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,6 +105,12 @@ export const SignUpForm = () => {
 
     try {
       await signup(signupRequestBody).unwrap();
+
+      const signInResponse = await signin({
+        credentialsNotSafe: signupRequestBody.credentialsNotSafe,
+      }).unwrap();
+
+      dispatch(signedIn(signInResponse));
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
@@ -126,7 +140,7 @@ export const SignUpForm = () => {
     <Paper
       sx={{
         position: 'relative',
-        maxWidth: 400,
+        width: 400,
         p: 2,
       }}
     >
