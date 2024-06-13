@@ -6,13 +6,17 @@ import { PaletteMode, createTheme } from '@mui/material';
 import { SignedOutRoutes } from './components/routes/SignedOutRoutes';
 import { useAppSelector } from './app/hooks';
 import { SignedInRoutes } from './components/routes/SignedInRoutes';
+import { useLocalStorageLogin } from './hooks/useLocalStorageLogin';
 
 // NOTE: Import css baseline high enough to prevent mui error
 
 const App = () => {
   const signedInUser = useAppSelector((state) => state.me.user);
   const [themeMode] = useState<PaletteMode>('light');
+  const { isLocalStorageLoginComplete } = useLocalStorageLogin();
   const theme = createTheme(getTheme(themeMode));
+
+  if (!isLocalStorageLoginComplete) return null;
 
   return (
     <ThemeProvider theme={theme}>
