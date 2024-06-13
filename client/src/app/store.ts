@@ -8,6 +8,7 @@ import meSlice from '../features/meSlice';
 import courseCreationSlice from '../features/courseCreationSlice';
 import courseDraftsSlice from '../features/courseDraftsSlice';
 import userPreferencesSlice from '../features/userPreferencesSlice';
+import notificationSlice from '../features/notificationSlice';
 import { apiSlice } from '../features/apiSlice';
 
 export const store = configureStore({
@@ -21,6 +22,7 @@ export const store = configureStore({
     courseCreation: courseCreationSlice,
     courseDrafts: courseDraftsSlice,
     userPreferences: userPreferencesSlice,
+    notification: notificationSlice,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
