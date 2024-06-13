@@ -4,13 +4,14 @@ import { getSortedCopy } from '../components/drag-and-drop-v2/utils';
 import { ICurriculumSection } from '../features/courseDraftsSlice';
 
 export const useCurriculumFromParams = (forcedCourseId: string = '') => {
-  const myEmail = useAppSelector((state) => state.me.user?.email);
+  const signedInUser = useAppSelector((state) => state.me.user);
 
   const courseIdFromParams = useParams().courseId;
   const courseId = forcedCourseId || courseIdFromParams;
 
   const courseDraft = useAppSelector((state) => state.courseDrafts).find(
-    ({ id, creatorEmail }) => id === courseId && creatorEmail === myEmail
+    ({ id, creatorEmail }) =>
+      id === courseId && creatorEmail === signedInUser?.email
   );
 
   if (!courseDraft) {

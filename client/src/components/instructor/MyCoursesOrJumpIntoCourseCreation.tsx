@@ -3,11 +3,11 @@ import { JumpIntoCourseCreation } from '../course-creation/JumpIntoCourseCreatio
 import { MyCourses } from './MyCourses';
 
 export const MyCoursesOrJumpIntoCourseCreation = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.email);
+  const signedInUser = useAppSelector((state) => state.me.user);
 
   const isMyCoursesVisible =
     useAppSelector((state) => state.courseDrafts).filter(
-      ({ creatorEmail }) => myEmail === creatorEmail
+      ({ creatorEmail }) => signedInUser?.email === creatorEmail
     ).length > 0;
 
   return (

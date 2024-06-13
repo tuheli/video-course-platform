@@ -17,11 +17,12 @@ import { UserAvatarDropdown } from '../dropdowns/dropdown-singe-item/user-avatar
 const itemGap = 2;
 
 const AppAppBar = () => {
-  const me = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.me.user);
   const location = useLocation();
 
-  const isTeachDropdownVisible = !me && location.pathname !== '/teaching';
-  const isInstructorLinkVisible = Boolean(me);
+  const isTeachDropdownVisible =
+    !signedInUser && location.pathname !== '/teaching';
+  const isInstructorLinkVisible = Boolean(signedInUser);
 
   return (
     <AppBar
@@ -82,7 +83,7 @@ const AppAppBar = () => {
                 gap: itemGap,
               }}
             >
-              {me && (
+              {signedInUser && (
                 <UserAvatarDropdown
                   sx={{
                     width: 30,
@@ -91,7 +92,7 @@ const AppAppBar = () => {
                   }}
                 />
               )}
-              {!me && (
+              {!signedInUser && (
                 <>
                   <LoginButton />
                   <SignUpButton />

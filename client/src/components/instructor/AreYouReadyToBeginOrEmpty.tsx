@@ -3,11 +3,11 @@ import { useAppSelector } from '../../app/hooks';
 import { AreYouReadyToBegin } from './AreYouReadyToBegin';
 
 export const AreYouReadyToBeginOrEmpty = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.email);
+  const signedInUser = useAppSelector((state) => state.me.user);
 
   const isAreYouReadyToBeginVisible =
     useAppSelector((state) => state.courseDrafts).filter(
-      ({ creatorEmail }) => myEmail === creatorEmail
+      ({ creatorEmail }) => signedInUser?.email === creatorEmail
     ).length === 0;
 
   return (

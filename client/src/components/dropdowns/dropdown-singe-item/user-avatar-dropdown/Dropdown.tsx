@@ -10,9 +10,9 @@ export const menuItemPadding = 2;
 export const menuItemHeight = 40;
 
 export const Dropdown = () => {
-  const me = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.me.user);
 
-  if (!me) return null;
+  if (!signedInUser) return null;
 
   return (
     <Box
@@ -35,7 +35,10 @@ export const Dropdown = () => {
             flexDirection: 'column',
           }}
         >
-          <UserDetailsLink fullName={me.fullName} email={me.email} />
+          <UserDetailsLink
+            fullName={signedInUser.fullName}
+            email={signedInUser.email}
+          />
           <Stack
             sx={{
               flexDirection: 'column',

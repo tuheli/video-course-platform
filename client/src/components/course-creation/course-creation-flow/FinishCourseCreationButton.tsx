@@ -14,7 +14,7 @@ interface FinishCourseCreationButtonProps {
 export const FinishCourseCreationButton = ({
   isAbleToFinish,
 }: FinishCourseCreationButtonProps) => {
-  const creatorEmail = useAppSelector((state) => state.me.user?.email);
+  const signedInUser = useAppSelector((state) => state.me.user);
   const { step1, step2, step3, step4 } = useAppSelector(
     (state) => state.courseCreation.steps
   );
@@ -27,7 +27,7 @@ export const FinishCourseCreationButton = ({
     }
 
     if (
-      !creatorEmail ||
+      !signedInUser ||
       !step1.courseType ||
       !step2.title ||
       !step3.category ||
@@ -37,7 +37,7 @@ export const FinishCourseCreationButton = ({
     }
 
     const newEntry: NewCourseDraftEntry = {
-      creatorEmail,
+      creatorEmail: signedInUser.email,
       courseType: step1.courseType,
       courseTitle: step2.title,
       courseCategory: step3.category,

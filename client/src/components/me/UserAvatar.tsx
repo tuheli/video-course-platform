@@ -33,9 +33,11 @@ export interface UserAvatarProps {
 }
 
 export const UserAvatar = ({ sx }: UserAvatarProps) => {
-  const me = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.me.user);
 
-  const avatarLetters = me ? getAvatarLetters(me.fullName) : {};
+  const avatarLetters = signedInUser
+    ? getAvatarLetters(signedInUser.fullName)
+    : {};
 
   return (
     <Box

@@ -2,16 +2,16 @@ import { useAppSelector } from '../../../app/hooks';
 import { CourseDraftItem } from './CourseDraftItem';
 
 export const CourseDraftItems = () => {
-  const myEmail = useAppSelector((state) => state.me.user?.email);
+  const signedInUser = useAppSelector((state) => state.me.user);
   const courseDrafts = useAppSelector((state) => state.courseDrafts);
 
-  const myCourseDrafts = courseDrafts.filter(
-    ({ creatorEmail }) => creatorEmail === myEmail
+  const signedInUsersCourseDrafts = courseDrafts.filter(
+    ({ creatorEmail }) => creatorEmail === signedInUser?.email
   );
 
   return (
     <>
-      {myCourseDrafts.map((courseDraft) => (
+      {signedInUsersCourseDrafts.map((courseDraft) => (
         <CourseDraftItem key={courseDraft.id} courseDraft={courseDraft} />
       ))}
     </>
