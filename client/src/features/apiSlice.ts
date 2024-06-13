@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-interface CredentialsNotSafe {
+export interface CredentialsNotSafe {
   email: string;
   password: string;
 }
@@ -16,7 +16,7 @@ export interface SignInRequestBody {
 }
 
 interface UserInDatabaseSafe {
-  id: string;
+  id: number;
   email: string;
   fullName: string;
   receiveInsiderEmails: boolean;
@@ -25,6 +25,65 @@ interface UserInDatabaseSafe {
 export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
   authenticationToken: string;
 }
+
+export const toUserInDatabaseSafeWithToken = (
+  data: unknown
+): UserInDatabaseSafeWithToken | null => {
+  if (!data || typeof data !== 'object') {
+    return null;
+  }
+
+  if (!('id' in data)) {
+    return null;
+  }
+
+  if (typeof data.id !== 'number') {
+    return null;
+  }
+
+  if (!('email' in data)) {
+    return null;
+  }
+
+  if (!data.email || typeof data.email !== 'string') {
+    return null;
+  }
+
+  if (!('fullName' in data)) {
+    return null;
+  }
+
+  if (!data.fullName || typeof data.fullName !== 'string') {
+    return null;
+  }
+
+  if (!('receiveInsiderEmails' in data)) {
+    return null;
+  }
+
+  if (typeof data.receiveInsiderEmails !== 'boolean') {
+    return null;
+  }
+
+  if (!('authenticationToken' in data)) {
+    return null;
+  }
+
+  if (
+    !data.authenticationToken ||
+    typeof data.authenticationToken !== 'string'
+  ) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    email: data.email,
+    fullName: data.fullName,
+    receiveInsiderEmails: data.receiveInsiderEmails,
+    authenticationToken: data.authenticationToken,
+  };
+};
 
 export const apiSlice = createApi({
   reducerPath: 'api',
