@@ -190,6 +190,7 @@ export const SignUpForm = () => {
             sx={{
               display: 'flex',
               gap: 1,
+              my: 1,
             }}
           >
             <div>
@@ -264,7 +265,7 @@ export const SignUpForm = () => {
         >
           Already have an account?{' '}
           <Link
-            to="/"
+            to="/login"
             style={{
               textDecoration: 'none',
             }}
