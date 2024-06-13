@@ -91,7 +91,7 @@ router.post('/', async (req, res, next) => {
     );
 
     if (!userInDatabaseNotSafe) {
-      return res.status(400).json({ error: 'Email is not in use.' });
+      return res.status(400).json({ message: 'Email is already in use.' });
     }
 
     const isPasswordCorrect = await bcypt.compare(
@@ -100,7 +100,7 @@ router.post('/', async (req, res, next) => {
     );
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ error: 'Password is incorrect.' });
+      return res.status(401).json({ message: 'Password is incorrect.' });
     }
 
     const userInDatabaseSafe: UserInDatabaseSafe = {
