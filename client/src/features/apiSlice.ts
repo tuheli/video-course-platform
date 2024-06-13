@@ -11,11 +11,19 @@ export interface SignupRequestBody {
   receiveInsiderEmails: boolean;
 }
 
+export interface SignInRequestBody {
+  credentialsNotSafe: CredentialsNotSafe;
+}
+
 interface UserInDatabaseSafe {
   id: string;
   email: string;
   fullName: string;
   receiveInsiderEmails: boolean;
+}
+
+export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
+  authenticationToken: string;
 }
 
 export const apiSlice = createApi({
@@ -32,7 +40,14 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    signin: builder.mutation<UserInDatabaseSafeWithToken, SignInRequestBody>({
+      query: (body) => ({
+        url: 'signin',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { usePingQuery, useSignupMutation } = apiSlice;
+export const { usePingQuery, useSignupMutation, useSigninMutation } = apiSlice;
