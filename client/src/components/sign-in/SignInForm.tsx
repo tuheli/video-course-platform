@@ -1,16 +1,11 @@
-import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
-import { SignInRequestBody, useSigninMutation } from '../../features/apiSlice';
+import { CredentialsNotSafe, useSigninMutation } from '../../features/apiSlice';
 import { isDataWithMessage, isObjectWithData } from '../../utils/apiUtils';
 import { useAppDispatch } from '../../app/hooks';
 import { signedIn } from '../../features/meSlice';
 import { TextInput } from '../sign-up/StyledTextInput';
-
-interface SignInFormEntries {
-  email: string;
-  password: string;
-}
 
 const validateEmail = (email: string) => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -18,27 +13,44 @@ const validateEmail = (email: string) => {
   return isValid;
 };
 
-const parseSignUpFormEntries = (data: FormData): SignInFormEntries | null => {
-  const entries = Object.fromEntries(data.entries());
+const validatePassword = (password: string) => {
+  const isValid = password.length > 0;
+  return isValid;
+};
 
-  const email = entries['email'];
-
-  if (!email || typeof email !== 'string' || !validateEmail(email)) {
+export const toCredentialsNotSafe = (
+  data: unknown
+): CredentialsNotSafe | null => {
+  if (!data || typeof data !== 'object') {
     return null;
   }
 
-  const password = entries['password'];
-
-  if (!password || typeof password !== 'string') {
+  if (!('email' in data)) {
     return null;
   }
 
-  const signInFormEntries: SignInFormEntries = {
-    email,
-    password,
+  if (
+    !data.email ||
+    typeof data.email !== 'string' ||
+    !validateEmail(data.email)
+  ) {
+    return null;
+  }
+
+  if (!('password' in data)) {
+    return null;
+  }
+
+  if (!data.password || typeof data.password !== 'string') {
+    return null;
+  }
+
+  const credentialsNotSafe = {
+    email: data.email,
+    password: data.password,
   };
 
-  return signInFormEntries;
+  return credentialsNotSafe;
 };
 
 export const SignInForm = () => {
@@ -50,26 +62,27 @@ export const SignInForm = () => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    const entries = parseSignUpFormEntries(data);
+    const formEntries = Object.fromEntries(data.entries());
 
-    if (entries === null) {
+    const credentialsNotSafe = toCredentialsNotSafe(formEntries);
+
+    if (credentialsNotSafe === null) {
       setForceShowValidation(true);
       return;
     }
 
-    const signInRequestBody: SignInRequestBody = {
-      credentialsNotSafe: {
-        email: entries.email,
-        password: entries.password,
-      },
-    };
-
     try {
       const signInResponse = await signin({
-        credentialsNotSafe: signInRequestBody.credentialsNotSafe,
+        credentialsNotSafe,
       }).unwrap();
 
-      dispatch(signedIn(signInResponse));
+      const isStayLoggedInChecked = data.get('stay-logged-in-on-this-device');
+      const signedInPayload = {
+        ...signInResponse,
+        staySignedIn: isStayLoggedInChecked === 'on',
+      };
+
+      dispatch(signedIn(signedInPayload));
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
@@ -80,6 +93,12 @@ export const SignInForm = () => {
   const emailValidator = {
     validate: validateEmail,
     invalidMessage: 'Invalid email address',
+    forceShowValidator,
+  };
+
+  const passwordValidator = {
+    validate: validatePassword,
+    invalidMessage: 'Please enter a password',
     forceShowValidator,
   };
 
@@ -118,7 +137,26 @@ export const SignInForm = () => {
             name="email"
             validator={emailValidator}
           />
-          <TextInput placeholder="Password" name="password" type="password" />
+          <TextInput
+            placeholder="Password"
+            name="password"
+            type="password"
+            validator={passwordValidator}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              my: 1,
+            }}
+          >
+            <div>
+              <input type="checkbox" name="stay-logged-in-on-this-device" />
+            </div>
+            <label htmlFor="stay-logged-in-on-this-device">
+              Stay logged in on this device
+            </label>
+          </Box>
           <Button variant="contained" color="secondary" type="submit">
             Log in
           </Button>
@@ -161,7 +199,7 @@ export const SignInForm = () => {
           >
             Don't have an account?{' '}
             <Link
-              to="/"
+              to="/signup"
               style={{
                 textDecoration: 'none',
               }}
