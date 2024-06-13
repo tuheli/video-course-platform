@@ -35,10 +35,7 @@ export const Dropdown = () => {
             flexDirection: 'column',
           }}
         >
-          <UserDetailsLink
-            fullName={me.fullName}
-            email={me.credentials.email}
-          />
+          <UserDetailsLink fullName={me.fullName} email={me.email} />
           <Stack
             sx={{
               flexDirection: 'column',
@@ -83,7 +80,7 @@ export const Dropdown = () => {
             <LinkItem text="Edit profile" to="/" />
             <Divider sx={{ my: 1 }} />
             <LinkItem text="Help" to="/" />
-            <LinkItem text="Log out" to="/" />
+            <LinkItem text="Log out" to="/logout" />
             <Divider sx={{ mt: 1 }} />
             <BusinessLink />
           </Stack>
