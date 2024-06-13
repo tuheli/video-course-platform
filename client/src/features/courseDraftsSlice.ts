@@ -39,7 +39,7 @@ interface Enrollment {
 
 export interface CourseDraft {
   id: string;
-  creatorEmail: string; // Replaces id now before database exists
+  creatorEmail: string;
   courseType: CourseType;
   courseTitle: string;
   courseCategory: KnownCourseCategory;
