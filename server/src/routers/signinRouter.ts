@@ -100,7 +100,7 @@ router.post('/', async (req, res, next) => {
     );
 
     if (!isPasswordCorrect) {
-      return res.status(400).json({ error: 'Password is incorrect.' });
+      return res.status(401).json({ error: 'Password is incorrect.' });
     }
 
     const userInDatabaseSafe: UserInDatabaseSafe = {
