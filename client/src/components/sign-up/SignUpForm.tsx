@@ -10,6 +10,7 @@ import {
 import { isDataWithMessage, isObjectWithData } from '../../utils/apiUtils';
 import { useAppDispatch } from '../../app/hooks';
 import { signedIn } from '../../features/meSlice';
+import { notified } from '../../features/notificationSlice';
 
 const minUsernameLength = 4;
 const minPasswordLength = 4;
@@ -114,7 +115,7 @@ export const SignUpForm = () => {
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
-      console.log(error.data.message);
+      dispatch(notified({ message: error.data.message, severity: 'warning' }));
     }
   };
 
