@@ -1,5 +1,9 @@
 import { client } from '../database';
-import { UserForDatabase, UserInDatabaseSafe } from '../routers/signupRouter';
+import {
+  UserForDatabase,
+  UserInDatabaseNotSafe,
+  UserInDatabaseSafe,
+} from '../routers/signupRouter';
 import { errorName } from '../errorNames';
 
 export const createUser = async (
@@ -92,6 +96,48 @@ export const getUserByEmail = async (
 
     const customError = new Error(
       `Failed to get user. Error message: ${error.message}`
+    );
+    customError.name = errorName.errorAtDatabase;
+    throw customError;
+  }
+};
+
+export const getUserForSignIn = async (
+  email: string
+): Promise<UserInDatabaseNotSafe | null> => {
+  try {
+    const sqlText =
+      'SELECT id, email, full_name, receive_insider_emails, password_hash FROM users WHERE email = $1';
+
+    const values = [email];
+    const queryResult = await client.query(sqlText, values);
+
+    if (!queryResult || queryResult.rows.length !== 1) {
+      return null;
+    }
+
+    const databaseRow = queryResult.rows[0];
+
+    const userInDatabaseSafe = {
+      id: databaseRow.id,
+      email: databaseRow.email,
+      fullName: databaseRow.full_name,
+      passwordHash: databaseRow.password_hash,
+      receiveInsiderEmails: databaseRow.receive_insider_emails,
+    };
+
+    return userInDatabaseSafe;
+  } catch (error) {
+    if (!(error instanceof Error)) {
+      const unknownError = new Error(
+        `Unknown error at getUserForSignIn. Error object: ${error}`
+      );
+      unknownError.name = errorName.unknownError;
+      throw unknownError;
+    }
+
+    const customError = new Error(
+      `Error at getUserForSignIn. Error message: ${error.message}`
     );
     customError.name = errorName.errorAtDatabase;
     throw customError;
