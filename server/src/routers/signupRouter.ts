@@ -16,7 +16,7 @@ interface SignupRequestBody {
 }
 
 export interface UserInDatabaseNotSafe {
-  id: string;
+  id: number;
   email: string;
   passwordHash: string;
   fullName: string;
@@ -26,7 +26,7 @@ export interface UserInDatabaseNotSafe {
 export type UserForDatabase = Omit<UserInDatabaseNotSafe, 'id'>;
 
 export interface UserInDatabaseSafe {
-  id: string;
+  id: number;
   email: string;
   fullName: string;
   receiveInsiderEmails: boolean;
