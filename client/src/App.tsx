@@ -10,15 +10,15 @@ import { SignedInRoutes } from './components/routes/SignedInRoutes';
 // NOTE: Import css baseline high enough to prevent mui error
 
 const App = () => {
-  const me = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.me.user);
   const [themeMode] = useState<PaletteMode>('light');
   const theme = createTheme(getTheme(themeMode));
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {!me && <SignedOutRoutes />}
-      {me && <SignedInRoutes />}
+      {!signedInUser && <SignedOutRoutes />}
+      {signedInUser && <SignedInRoutes />}
     </ThemeProvider>
   );
 };
