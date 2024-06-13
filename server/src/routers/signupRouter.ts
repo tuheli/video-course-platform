@@ -15,7 +15,7 @@ interface SignupRequestBody {
   receiveInsiderEmails: boolean;
 }
 
-interface UserInDatabaseNotSafe {
+export interface UserInDatabaseNotSafe {
   id: string;
   email: string;
   passwordHash: string;
