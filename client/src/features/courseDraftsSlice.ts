@@ -100,6 +100,8 @@ export type NewCourseDraftEntry = Omit<
   | 'courseContent'
   | 'ratings'
   | 'enrollments'
+  | 'createdAt'
+  | 'language'
 >;
 
 interface ValidateTextWithIdArrayOptions {
@@ -503,6 +505,8 @@ const slice = createSlice({
         courseContent: getInitialCourseContent(),
         ratings: [],
         enrollments: [],
+        createdAt: new Date().toISOString(),
+        language: getLanguage('english'),
       };
       state.push(newCourseDraft);
     },
