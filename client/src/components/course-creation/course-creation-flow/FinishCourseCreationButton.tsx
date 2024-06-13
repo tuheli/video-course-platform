@@ -22,9 +22,7 @@ export const FinishCourseCreationButton = ({
   const navigage = useNavigate();
 
   const onClickFinish = () => {
-    if (!isAbleToFinish) {
-      return;
-    }
+    if (!isAbleToFinish) return;
 
     if (
       !signedInUser ||
