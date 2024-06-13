@@ -1,9 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { connectToDatabase } from './database';
 import cors from 'cors';
-import signupRouter from './routers/signupRouter';
+import { connectToDatabase } from './database';
 import { port } from './config';
 import { errorName } from './errorNames';
+import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
+import signupRouter from './routers/signupRouter';
+import signinRouter from './routers/signinRouter';
 
 const app = express();
 
@@ -11,10 +13,21 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/signup', signupRouter);
+app.use('/api/signin', signinRouter);
+
 app.get('/api/ping', (req, res) => {
   res.json({ message: 'pong' });
 });
+
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof TokenExpiredError) {
+    return res.status(401).json({ message: 'Token expired.' });
+  }
+
+  if (error instanceof JsonWebTokenError) {
+    return res.status(401).json({ message: 'Token malformed.' });
+  }
+
   if (!(error instanceof Error)) {
     console.log(
       'Error at errorhandler is not an instance of error. Error object:',
