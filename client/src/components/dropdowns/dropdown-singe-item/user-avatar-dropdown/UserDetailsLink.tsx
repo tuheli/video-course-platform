@@ -70,6 +70,7 @@ export const UserDetailsLink = ({ fullName, email }: UserDetailsLinkProps) => {
             variant="body2"
             sx={{
               color: 'text.secondary',
+              wordBreak: 'break-all',
             }}
           >
             {email}
