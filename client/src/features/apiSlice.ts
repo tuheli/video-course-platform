@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { NewCourseDraftEntry } from './courseDraftsSlice';
+import { RootState } from '../app/store';
 
 export interface CredentialsNotSafe {
   email: string;
@@ -15,6 +17,10 @@ export interface SignInRequestBody {
   credentialsNotSafe: CredentialsNotSafe;
 }
 
+interface CreateCourseDraftRequestBody {
+  newCourseDraftEntry: NewCourseDraftEntry;
+}
+
 interface UserInDatabaseSafe {
   id: number;
   email: string;
@@ -23,7 +29,7 @@ interface UserInDatabaseSafe {
 }
 
 export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
-  authenticationToken: string;
+  authorizationToken: string;
 }
 
 export const toUserInDatabaseSafeWithToken = (
@@ -65,14 +71,11 @@ export const toUserInDatabaseSafeWithToken = (
     return null;
   }
 
-  if (!('authenticationToken' in data)) {
+  if (!('authorizationToken' in data)) {
     return null;
   }
 
-  if (
-    !data.authenticationToken ||
-    typeof data.authenticationToken !== 'string'
-  ) {
+  if (!data.authorizationToken || typeof data.authorizationToken !== 'string') {
     return null;
   }
 
@@ -81,13 +84,25 @@ export const toUserInDatabaseSafeWithToken = (
     email: data.email,
     fullName: data.fullName,
     receiveInsiderEmails: data.receiveInsiderEmails,
-    authenticationToken: data.authenticationToken,
+    authorizationToken: data.authorizationToken,
   };
 };
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:3000/api/',
+    prepareHeaders: (headers, { getState }) => {
+      const authorizationToken = (getState() as RootState).me.user
+        ?.authorizationToken;
+
+      if (authorizationToken) {
+        headers.set('authorization', `Bearer ${authorizationToken}`);
+      }
+
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     ping: builder.query<string, void>({
       query: () => 'ping',
@@ -106,7 +121,19 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    createCourseDraft: builder.mutation<void, CreateCourseDraftRequestBody>({
+      query: (body) => ({
+        url: 'coursedrafts',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 });
 
-export const { usePingQuery, useSignupMutation, useSigninMutation } = apiSlice;
+export const {
+  usePingQuery,
+  useSignupMutation,
+  useSigninMutation,
+  useCreateCourseDraftMutation,
+} = apiSlice;
