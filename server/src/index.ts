@@ -7,6 +7,7 @@ import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import signupRouter from './routers/signupRouter';
 import signinRouter from './routers/signinRouter';
 import courseDraftsRouter from './routers/courseDraftsRouter';
+import validateAuthorizationTokenRouter from './routers/validateAuthorizationTokenRouter';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/signup', signupRouter);
 app.use('/api/signin', signinRouter);
 app.use('/api/coursedrafts', courseDraftsRouter);
+app.use('/api/validateauthorizationtoken', validateAuthorizationTokenRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof TokenExpiredError) {
