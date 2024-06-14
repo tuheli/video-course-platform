@@ -88,14 +88,55 @@ export const getUserByEmail = async (
   } catch (error) {
     if (!(error instanceof Error)) {
       const unknownError = new Error(
-        `Unknown error at getUser. Error object: ${error}`
+        `Unknown error at getUserByEmail. Error object: ${error}`
       );
       unknownError.name = errorName.unknownError;
       throw unknownError;
     }
 
     const customError = new Error(
-      `Failed to get user. Error message: ${error.message}`
+      `Failed to get user by email. Error message: ${error.message}`
+    );
+    customError.name = errorName.errorAtDatabase;
+    throw customError;
+  }
+};
+
+export const getUserById = async (
+  id: number | string
+): Promise<UserInDatabaseSafe | null> => {
+  try {
+    const sqlText =
+      'SELECT id, email, full_name, receive_insider_emails FROM users WHERE id = $1';
+
+    const values = [id];
+    const queryResult = await client.query(sqlText, values);
+
+    if (!queryResult || queryResult.rows.length !== 1) {
+      return null;
+    }
+
+    const databaseRow = queryResult.rows[0];
+
+    const userInDatabaseSafe = {
+      id: databaseRow.id,
+      email: databaseRow.email,
+      fullName: databaseRow.full_name,
+      receiveInsiderEmails: databaseRow.receive_insider_emails,
+    };
+
+    return userInDatabaseSafe;
+  } catch (error) {
+    if (!(error instanceof Error)) {
+      const unknownError = new Error(
+        `Unknown error at getUserById. Error object: ${error}`
+      );
+      unknownError.name = errorName.unknownError;
+      throw unknownError;
+    }
+
+    const customError = new Error(
+      `Failed to get user by id. Error message: ${error.message}`
     );
     customError.name = errorName.errorAtDatabase;
     throw customError;
