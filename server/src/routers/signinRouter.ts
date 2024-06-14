@@ -2,7 +2,7 @@ import { CredentialsNotSafe, UserInDatabaseSafe } from './signupRouter';
 import { Router } from 'express';
 import bcypt from 'bcrypt';
 import { errorName } from '../errorNames';
-import { getUserByEmail, getUserForSignIn } from '../queries/usersQueries';
+import { getUserForSignIn } from '../queries/usersQueries';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config';
 
@@ -10,7 +10,7 @@ interface SignInRequestBody {
   credentialsNotSafe: CredentialsNotSafe;
 }
 
-interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
+export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
   authorizationToken: string;
 }
 
