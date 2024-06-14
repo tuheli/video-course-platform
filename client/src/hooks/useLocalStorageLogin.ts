@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
-import { toUserInDatabaseSafeWithToken } from '../features/apiSlice';
+import {
+  toUserInDatabaseSafeWithToken,
+  useValidateAuthorizationTokenMutation,
+} from '../features/apiSlice';
 import { useAppDispatch } from '../app/hooks';
 import { signedIn } from '../features/meSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const useLocalStorageLogin = () => {
   const [isLocalStorageLoginComplete, setIsLocalStorageLoginComplete] =
     useState(false);
+  const [validateAuthorizationToken] = useValidateAuthorizationTokenMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const loginFromLocalStorage = async () => {
     const userFromLocalStorageString = localStorage.getItem('signedInUser');
@@ -21,11 +27,26 @@ export const useLocalStorageLogin = () => {
           userFromLocalStorageParsed
         );
 
-        if (userInDatabaseSafeWithToken !== null) {
-          dispatch(signedIn(userInDatabaseSafeWithToken));
+        if (userInDatabaseSafeWithToken === null) {
+          localStorage.removeItem('signedInUser');
+          navigate('/');
+          return;
         }
+
+        const validationPayload = await validateAuthorizationToken({
+          userInDatabaseSafeWithToken,
+        });
+
+        if (!validationPayload.data) {
+          localStorage.removeItem('signedInUser');
+          navigate('/');
+          return;
+        }
+
+        dispatch(signedIn(validationPayload.data));
       } catch (error) {
-        // Ignore error
+        localStorage.removeItem('signedInUser');
+        navigate('/');
       }
     }
   };
