@@ -87,7 +87,7 @@ export const SignInForm = () => {
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
-      dispatch(notified({ message: error.data.message, severity: 'warning' }));
+      dispatch(notified({ message: error.data.message, severity: 'info' }));
     }
   };
 
