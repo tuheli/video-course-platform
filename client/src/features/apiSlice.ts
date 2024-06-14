@@ -21,6 +21,10 @@ interface CreateCourseDraftRequestBody {
   newCourseDraftEntry: NewCourseDraftEntry;
 }
 
+interface ValidateAuthorizationTokenRequestBody {
+  userInDatabaseSafeWithToken: UserInDatabaseSafeWithToken;
+}
+
 interface UserInDatabaseSafe {
   id: number;
   email: string;
@@ -128,6 +132,19 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    validateAuthorizationToken: builder.mutation<
+      UserInDatabaseSafeWithToken,
+      ValidateAuthorizationTokenRequestBody
+    >({
+      query: (body) => ({
+        url: 'validateauthorizationtoken',
+        method: 'POST',
+        body,
+        headers: {
+          authorization: `Bearer ${body.userInDatabaseSafeWithToken.authorizationToken}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -136,4 +153,5 @@ export const {
   useSignupMutation,
   useSigninMutation,
   useCreateCourseDraftMutation,
+  useValidateAuthorizationTokenMutation,
 } = apiSlice;
