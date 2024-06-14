@@ -14,6 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE coursedrafts (
     id SERIAL PRIMARY KEY,
+    curriculum_id INTEGER REFERENCES curriculums(id) ON DELETE CASCADE,
     creator_email VARCHAR(255) NOT NULL,
     course_type known_course_type NOT NULL,
     course_title VARCHAR(60) NOT NULL,
@@ -27,7 +28,6 @@ CREATE TABLE coursedrafts (
 
 CREATE TABLE curriculums (
     id SERIAL PRIMARY KEY,
-    course_draft_id INTEGER REFERENCES coursedrafts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE curriculum_sections (
