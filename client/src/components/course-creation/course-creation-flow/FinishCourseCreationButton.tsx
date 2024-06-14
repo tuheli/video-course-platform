@@ -1,11 +1,11 @@
 import { Button } from '@mui/material';
 import { stepButtonWidth } from './change-step-buttons/common';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import {
-  NewCourseDraftEntry,
-  createdCourseDraft,
-} from '../../../features/courseDraftsSlice';
+import { NewCourseDraftEntry } from '../../../features/courseDraftsSlice';
 import { useNavigate } from 'react-router-dom';
+import { useCreateCourseDraftMutation } from '../../../features/apiSlice';
+import { isDataWithMessage, isObjectWithData } from '../../../utils/apiUtils';
+import { notified } from '../../../features/notificationSlice';
 
 interface FinishCourseCreationButtonProps {
   isAbleToFinish: boolean;
@@ -18,10 +18,11 @@ export const FinishCourseCreationButton = ({
   const { step1, step2, step3, step4 } = useAppSelector(
     (state) => state.courseCreation.steps
   );
+  const [createCourseDraft] = useCreateCourseDraftMutation();
   const dispatch = useAppDispatch();
   const navigage = useNavigate();
 
-  const onClickFinish = () => {
+  const onClickFinish = async () => {
     if (!isAbleToFinish) return;
 
     if (
@@ -42,8 +43,14 @@ export const FinishCourseCreationButton = ({
       creatorTimeAvailablePerWeek: step4.timeAvailablePerWeek,
     };
 
-    dispatch(createdCourseDraft(newEntry));
-    navigage('/instructor');
+    try {
+      await createCourseDraft({ newCourseDraftEntry: newEntry }).unwrap();
+      navigage('/instructor');
+    } catch (error) {
+      if (!isObjectWithData(error)) return;
+      if (!isDataWithMessage(error.data)) return;
+      dispatch(notified({ message: error.data.message, severity: 'info' }));
+    }
   };
 
   return (
