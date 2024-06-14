@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { userExtractor } from '../middleware';
 import { errorName } from '../errorNames';
+import { createCourseDraft } from '../queries/courseDraftQueries';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -86,11 +87,11 @@ const languages = {
   },
 } as const;
 
-type CourseType = 'course' | 'practice-test';
+export type CourseType = 'course' | 'practice-test';
 type Language = (typeof languages)[keyof typeof languages];
-type KnownCourseCategory =
+export type KnownCourseCategory =
   (typeof courseCategories)[keyof typeof courseCategories];
-type TimeAvailablePerWeek =
+export type TimeAvailablePerWeek =
   (typeof timeAvailablePerWeek)[keyof typeof timeAvailablePerWeek];
 
 // NOTE: These types must
@@ -158,8 +159,8 @@ interface Enrollment {
   enrollmentDate: string;
 }
 
-interface CourseDraft {
-  id: string;
+export interface CourseDraft {
+  id: number;
   creatorEmail: string;
   courseType: CourseType;
   courseTitle: string;
@@ -171,11 +172,11 @@ interface CourseDraft {
   ratings: Rating[];
   enrollments: Enrollment[];
   createdAt: string;
-  // NOTE: Language is not currently typed in database
-  language: Language;
+  // NOTE: Language is not currently typed
+  language: string;
 }
 
-type NewCourseDraftEntry = Omit<
+export type NewCourseDraftEntry = Omit<
   CourseDraft,
   | 'id'
   | 'isPublic'
@@ -319,21 +320,19 @@ const toCreateCourseDraftRequestBody = (
   }
 };
 
-const createCourseDraft = async (
-  newCourseDraftEntry: NewCourseDraftEntry
-) => {};
-
 const router = Router();
 
-router.post('/', userExtractor, (req, res, next) => {
+router.post('/', userExtractor, async (req, res, next) => {
   try {
     const createCourseDraftRequestBody = toCreateCourseDraftRequestBody(
       req.body
     );
 
-    return res.status(999).json({
-      message: 'User was extracted successfully and request was valid.',
-    });
+    const databaseResult = await createCourseDraft(
+      createCourseDraftRequestBody.newCourseDraftEntry
+    );
+
+    return res.status(201).json(databaseResult);
   } catch (error) {
     next(error);
   }
