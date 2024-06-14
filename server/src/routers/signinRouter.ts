@@ -11,7 +11,7 @@ interface SignInRequestBody {
 }
 
 interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
-  authenticationToken: string;
+  authorizationToken: string;
 }
 
 const toSignInRequestBody = (body: unknown): SignInRequestBody => {
@@ -114,7 +114,7 @@ router.post('/', async (req, res, next) => {
 
     const userInDatabaseSafeWithToken: UserInDatabaseSafeWithToken = {
       ...userInDatabaseSafe,
-      authenticationToken: token,
+      authorizationToken: token,
     };
 
     return res.status(200).json(userInDatabaseSafeWithToken);
