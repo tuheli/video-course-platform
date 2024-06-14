@@ -6,6 +6,7 @@ import { errorName } from './errorNames';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import signupRouter from './routers/signupRouter';
 import signinRouter from './routers/signinRouter';
+import courseDraftsRouter from './routers/courseDraftsRouter';
 
 const app = express();
 
@@ -14,10 +15,7 @@ app.use(express.json());
 
 app.use('/api/signup', signupRouter);
 app.use('/api/signin', signinRouter);
-
-app.get('/api/ping', (req, res) => {
-  res.json({ message: 'pong' });
-});
+app.use('/api/coursedrafts', courseDraftsRouter);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof TokenExpiredError) {
@@ -33,12 +31,12 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       'Error at errorhandler is not an instance of error. Error object:',
       error
     );
-    return res.status(500).json({ error: 'Something went wrong.' });
+    return res.status(500).json({ message: 'Something went wrong.' });
   }
 
   switch (error.name) {
     case errorName.errorMessageForClient:
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ message: error.message });
     case errorName.errorAtDatabase:
       console.log('Database error:', error);
       break;
@@ -56,7 +54,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       break;
   }
 
-  return res.status(500).json({ error: 'Something went wrong.' });
+  return res.status(500).json({ message: 'Something went wrong.' });
 });
 
 // NOTE: Dont catch potential errors
