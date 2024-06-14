@@ -43,7 +43,9 @@ export const userExtractor = async (
     const userInDatabaseSafe = await getUserById(decodedToken.id);
 
     if (!userInDatabaseSafe) {
-      return res.status(401).json({ message: 'User was not found.' });
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
     }
 
     req.user = userInDatabaseSafe;
