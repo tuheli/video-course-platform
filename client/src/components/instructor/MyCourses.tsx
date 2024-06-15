@@ -2,9 +2,14 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import { SearchYourCourses } from './SearchYourCourses';
 import { SelectCourseOrder } from './select-course-order/SelectCourseOrder';
 import { NewCourseButton } from './NewCourseButton';
-import { CourseDraftItems } from './coursedrafts/CourseDraftItems';
+import { CourseDraft } from '../../features/courseDraftsSlice';
+import { CourseDraftItem } from './coursedrafts/CourseDraftItem';
 
-export const MyCourses = () => {
+interface MyCoursesProps {
+  courseDrafts: CourseDraft[];
+}
+
+export const MyCourses = ({ courseDrafts }: MyCoursesProps) => {
   return (
     <Container>
       <Stack
@@ -30,7 +35,11 @@ export const MyCourses = () => {
             <NewCourseButton />
           </Box>
         </Stack>
-        <CourseDraftItems />
+        <>
+          {courseDrafts.map((courseDraft) => (
+            <CourseDraftItem key={courseDraft.id} courseDraft={courseDraft} />
+          ))}
+        </>
       </Stack>
     </Container>
   );
