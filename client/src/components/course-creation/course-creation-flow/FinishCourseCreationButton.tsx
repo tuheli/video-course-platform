@@ -36,6 +36,7 @@ export const FinishCourseCreationButton = ({
     }
 
     const newEntry: NewCourseDraftEntry = {
+      creatorId: signedInUser.id,
       creatorEmail: signedInUser.email,
       courseType: step1.courseType,
       courseTitle: step2.title,
