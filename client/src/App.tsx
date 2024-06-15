@@ -7,6 +7,7 @@ import { SignedOutRoutes } from './components/routes/SignedOutRoutes';
 import { useAppSelector } from './app/hooks';
 import { SignedInRoutes } from './components/routes/SignedInRoutes';
 import { useLocalStorageLogin } from './hooks/useLocalStorageLogin';
+import { LoadingScreen } from './components/loadingscreen/LoadingScreen';
 
 // NOTE: Import css baseline high enough to prevent mui error
 
@@ -16,7 +17,9 @@ const App = () => {
   const { isLocalStorageLoginComplete } = useLocalStorageLogin();
   const theme = createTheme(getTheme(themeMode));
 
-  if (!isLocalStorageLoginComplete) return null;
+  if (!isLocalStorageLoginComplete) {
+    return <LoadingScreen />;
+  }
 
   return (
     <ThemeProvider theme={theme}>
