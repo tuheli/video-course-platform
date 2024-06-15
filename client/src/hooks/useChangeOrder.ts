@@ -1,6 +1,6 @@
 import { useAppDispatch } from '../app/hooks';
 import { store } from '../app/store';
-import { ItemWithOrderIndex } from '../components/drag-and-drop/utils';
+import { ItemWithOrderIndex } from '../components/drag-and-drop-v2/utils';
 import {
   CourseDraft,
   TextWithId,
