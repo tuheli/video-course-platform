@@ -10,6 +10,8 @@ export const createUser = async (
   userForDatabase: UserForDatabase
 ): Promise<UserInDatabaseSafe> => {
   try {
+    await client.query('BEGIN;');
+
     const sqlText =
       'INSERT INTO users (email, password_hash, full_name, receive_insider_emails) VALUES ($1, $2, $3, $4) RETURNING id, email, full_name, receive_insider_emails';
 
@@ -39,8 +41,12 @@ export const createUser = async (
       receiveInsiderEmails: databaseRow.receive_insider_emails,
     };
 
+    await client.query('COMMIT;');
+
     return userInDatabaseSafe;
   } catch (error) {
+    await client.query('ROLLBACK;');
+
     if (!(error instanceof Error)) {
       const unknownError = new Error(
         `Unknown error at createUser. Error object: ${error}`
