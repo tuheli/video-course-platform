@@ -1,19 +1,21 @@
-import { useAppSelector } from '../../app/hooks';
+import { useGetCourseDraftsQuery } from '../../features/apiSlice';
 import { JumpIntoCourseCreation } from '../course-creation/JumpIntoCourseCreation';
 import { MyCourses } from './MyCourses';
 
-export const MyCoursesOrJumpIntoCourseCreation = () => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+// TODO: Invalidate cache when a new course is created
 
-  const isMyCoursesVisible =
-    useAppSelector((state) => state.courseDrafts).filter(
-      ({ creatorEmail }) => signedInUser?.email === creatorEmail
-    ).length > 0;
+export const MyCoursesOrJumpIntoCourseCreation = () => {
+  const { data, isLoading } = useGetCourseDraftsQuery();
+
+  const isMyCoursesVisible = !isLoading && data && data.length > 0;
 
   return (
     <>
-      {isMyCoursesVisible && <MyCourses />}
-      {!isMyCoursesVisible && <JumpIntoCourseCreation />}
+      {isMyCoursesVisible ? (
+        <MyCourses courseDrafts={data} />
+      ) : (
+        <JumpIntoCourseCreation />
+      )}
     </>
   );
 };
