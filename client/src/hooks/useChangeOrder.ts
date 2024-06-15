@@ -1,6 +1,6 @@
 import { useAppDispatch } from '../app/hooks';
 import { store } from '../app/store';
-import { ItemWithOrderIndex } from '../components/drag-and-drop/utils';
+import { ItemWithOrderIndex } from '../components/drag-and-drop-v2/utils';
 import {
   CourseDraft,
   TextWithId,
@@ -50,7 +50,7 @@ export const useChangeOrder = (type: UpdateableCourseContentProperty) => {
     }
   };
 
-  const getOrderedItems = (courseDraftId: string) => {
+  const getOrderedItems = (courseDraftId: number) => {
     const allCourseDrafts = store.getState().courseDrafts;
     const courseDraft = allCourseDrafts.find(({ id }) => id === courseDraftId);
 

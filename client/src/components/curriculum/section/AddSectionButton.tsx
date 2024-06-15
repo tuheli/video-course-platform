@@ -3,7 +3,7 @@ import { addedCurriculumSection } from '../../../features/courseDraftsSlice';
 import { AddMoreButtonDarkVariant } from '../../manage-course-goals-page/AddMoreButtonDarkVariant';
 
 interface AddSectionButtonProps {
-  courseDraftId: string;
+  courseDraftId: number;
 }
 
 export const AddSectionButton = ({ courseDraftId }: AddSectionButtonProps) => {

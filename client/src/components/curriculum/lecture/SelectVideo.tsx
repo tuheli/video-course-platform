@@ -7,7 +7,7 @@ import { getAudioDuration } from '../utils';
 const StyledLabel = styled('label')({});
 
 interface SelectVideoProps {
-  courseDraftId: string;
+  courseDraftId: number;
   sectionId: string;
   lectureId: string;
 }

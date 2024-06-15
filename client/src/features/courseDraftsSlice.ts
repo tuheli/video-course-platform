@@ -38,7 +38,8 @@ interface Enrollment {
 }
 
 export interface CourseDraft {
-  id: string;
+  id: number;
+  creatorId: number;
   creatorEmail: string;
   courseType: CourseType;
   courseTitle: string;
@@ -320,7 +321,8 @@ const initialLanguage = getLanguage('english');
 
 const initialState: CourseDraft[] = [
   {
-    id: '1',
+    id: 1,
+    creatorId: 1,
     creatorEmail: 'elias.test@gmail.com',
     courseType: 'course',
     courseTitle: 'Technical animation for modular video game characters',
@@ -418,7 +420,8 @@ const initialState: CourseDraft[] = [
     language: initialLanguage,
   },
   {
-    id: '2',
+    id: 2,
+    creatorId: 2,
     creatorEmail: 'alice.test@gmail.com',
     courseType: 'course',
     courseTitle: 'Marketing for small businesses',
@@ -459,7 +462,8 @@ const initialState: CourseDraft[] = [
     language: initialLanguage,
   },
   {
-    id: '3',
+    id: 3,
+    creatorId: 1,
     creatorEmail: 'elias.test@gmail.com',
     courseType: 'course',
     courseTitle: 'Another course for testing purposes',
@@ -474,7 +478,8 @@ const initialState: CourseDraft[] = [
     language: initialLanguage,
   },
   {
-    id: '4',
+    id: 4,
+    creatorId: 1,
     creatorEmail: 'elias.test@gmail.com',
     courseType: 'course',
     courseTitle:
@@ -496,7 +501,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     createdCourseDraft: (state, action: PayloadAction<NewCourseDraftEntry>) => {
-      const id = crypto.randomUUID();
+      const id = getRandomInt(1, 10_000_000);
       const newCourseDraft: CourseDraft = {
         ...action.payload,
         id,
@@ -513,7 +518,7 @@ const slice = createSlice({
     updatedText: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         itemId: string;
         newTextValue: string;
         type: UpdateableCourseContentProperty;
@@ -536,7 +541,7 @@ const slice = createSlice({
     reorderedItems: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         type: UpdateableCourseContentProperty;
         newState: TextWithId[];
       }>
@@ -553,7 +558,7 @@ const slice = createSlice({
     addedTextItem: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         type: UpdateableCourseContentProperty;
       }>
     ) => {
@@ -577,7 +582,7 @@ const slice = createSlice({
     deletedTextItem: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         textItemId: string;
         type: UpdateableCourseContentProperty;
       }>
@@ -599,7 +604,7 @@ const slice = createSlice({
     },
     addedCurriculumSection: (
       state,
-      action: PayloadAction<{ courseDraftId: string }>
+      action: PayloadAction<{ courseDraftId: number }>
     ) => {
       const courseDraft = state.find(
         ({ id }) => id === action.payload.courseDraftId
@@ -625,7 +630,7 @@ const slice = createSlice({
     deletedCurriculumSection: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
       }>
     ) => {
@@ -665,7 +670,7 @@ const slice = createSlice({
     updatedCurriculumSectionText: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
         newValue: string;
         type: UpdateableCurriculumSectionProperty;
@@ -688,7 +693,7 @@ const slice = createSlice({
     reorderedSections: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         newOrder: ItemWithOrderIndex[];
       }>
     ) => {
@@ -710,7 +715,7 @@ const slice = createSlice({
     addedLecture: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
         lectureTitle: string;
       }>
@@ -747,7 +752,7 @@ const slice = createSlice({
     updatedLecture: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
         lectureId: string;
         propertyName: 'name' | 'description';
@@ -777,7 +782,7 @@ const slice = createSlice({
     updatedVideo: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
         lectureId: string;
         url: string;
@@ -815,7 +820,7 @@ const slice = createSlice({
     deletedLecture: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         curriculumSectionId: string;
         lectureId: string;
       }>
@@ -852,7 +857,7 @@ const slice = createSlice({
     reorderedLectures: (
       state,
       action: PayloadAction<{
-        courseDraftId: string;
+        courseDraftId: number;
         sectionId: string;
         newOrder: ItemWithOrderIndex[];
       }>

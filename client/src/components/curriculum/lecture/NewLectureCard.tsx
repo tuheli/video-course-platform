@@ -7,7 +7,7 @@ import { InputFieldWithMaxCharacters } from '../../course-creation/course-creati
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
 
 interface NewLectureCardProps {
-  courseDraftId: string;
+  courseDraftId: number;
   curriculumSectionId: string;
   setEditingItemType: (type: EditableItemType | null) => void;
 }
