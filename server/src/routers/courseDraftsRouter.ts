@@ -4,6 +4,7 @@ import { errorName } from '../errorNames';
 import {
   createCourseDraft,
   getCourseDrafts,
+  updateCourseDraftCourseGoals,
 } from '../queries/courseDraftQueries';
 
 const timeAvailablePerWeek = {
@@ -121,6 +122,64 @@ export interface ReorderableTextArrayObject {
   items: TextWithId[];
 }
 
+const isUpdateableCourseContentProperty = (
+  key: unknown
+): key is UpdateableCourseContentProperty => {
+  return (
+    key === 'learningObjectives' ||
+    key === 'prerequisites' ||
+    key === 'intendedLearners'
+  );
+};
+
+// NOTE: Some id's are still strings
+// but all ids should be numbers
+const isTextWithId = (obj: unknown): obj is TextWithId => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
+
+  if (!('id' in obj) || typeof obj.id !== 'string') {
+    return false;
+  }
+
+  if (!('text' in obj) || typeof obj.text !== 'string') {
+    return false;
+  }
+
+  if (!('orderIndex' in obj) || typeof obj.orderIndex !== 'number') {
+    return false;
+  }
+
+  return true;
+};
+
+const isReorderableTextArrayObject = (
+  obj: unknown
+): obj is ReorderableTextArrayObject => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  }
+
+  if (!('type' in obj) || !isUpdateableCourseContentProperty(obj.type)) {
+    return false;
+  }
+
+  if (!('items' in obj) || !Array.isArray(obj.items)) {
+    return false;
+  }
+
+  if (obj.items.length > 0) {
+    obj.items.forEach((item) => {
+      if (!isTextWithId(item)) {
+        return false;
+      }
+    });
+  }
+
+  return true;
+};
+
 interface Lesson {
   id: string;
   name: string;
@@ -195,6 +254,68 @@ export type NewCourseDraftEntry = Omit<
 interface CreateCourseDraftRequestBody {
   newCourseDraftEntry: NewCourseDraftEntry;
 }
+
+export interface UpdateCourseGoalsRequestBody {
+  learningObjectives: ReorderableTextArrayObject;
+  prerequisites: ReorderableTextArrayObject;
+  intendedLearners: ReorderableTextArrayObject;
+}
+
+const toUpdateCourseGoalsRequestBody = (
+  courseDraftId: number,
+  body: unknown
+): UpdateCourseGoalsRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (isNaN(courseDraftId)) {
+    const error = new Error('courseDraftId is not a number.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (
+    !('learningObjectives' in body) ||
+    !isReorderableTextArrayObject(body.learningObjectives)
+  ) {
+    const error = new Error(
+      'learningObjectives is missing or its not a reorderable text array object.'
+    );
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (
+    !('prerequisites' in body) ||
+    !isReorderableTextArrayObject(body.prerequisites)
+  ) {
+    const error = new Error(
+      'prerequisites is missing or its not a reorderable text array object.'
+    );
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (
+    !('intendedLearners' in body) ||
+    !isReorderableTextArrayObject(body.intendedLearners)
+  ) {
+    const error = new Error(
+      'intendedLearners is missing or its not a reorderable text array object.'
+    );
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  return {
+    learningObjectives: body.learningObjectives,
+    prerequisites: body.prerequisites,
+    intendedLearners: body.intendedLearners,
+  };
+};
 
 const isKnownCourseCategory = (
   category: string
@@ -334,6 +455,192 @@ const toCreateCourseDraftRequestBody = (
   }
 };
 
+// const toUpdateCourseDraftRequestBody = (
+//   body: unknown
+// ): UpdateCourseDraftRequestBody => {
+//   if (!body || typeof body !== 'object') {
+//     const error = new Error('Request body is not an object.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('updateCourseDraftEntry' in body) ||
+//     typeof body.updateCourseDraftEntry !== 'object'
+//   ) {
+//     const error = new Error('Request body is missing updateCourseDraftEntry.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   const updateCourseDraftEntry = body.updateCourseDraftEntry;
+
+//   if (!updateCourseDraftEntry || typeof updateCourseDraftEntry !== 'object') {
+//     const error = new Error('updateCourseDraftEntry is not an object.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('creatorId' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.creatorId !== 'number'
+//   ) {
+//     const error = new Error('creatorId is missing or its not a number.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('creatorEmail' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.creatorEmail !== 'string' ||
+//     !isEmail(updateCourseDraftEntry.creatorEmail)
+//   ) {
+//     const error = new Error('creatorEmail is not a valid email.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('courseType' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.courseType !== 'string' ||
+//     !isKnownCourseType(updateCourseDraftEntry.courseType)
+//   ) {
+//     const error = new Error('courseType is not a valid course type.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('courseTitle' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.courseTitle !== 'string' ||
+//     updateCourseDraftEntry.courseTitle.length > 60
+//   ) {
+//     const error = new Error('courseTitle is not a string.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('courseCategory' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.courseCategory !== 'string' ||
+//     !isKnownCourseCategory(updateCourseDraftEntry.courseCategory)
+//   ) {
+//     const error = new Error('courseCategory is not a valid course category.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('creatorTimeAvailablePerWeek' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.creatorTimeAvailablePerWeek !== 'string' ||
+//     !isTimeAvailablePerWeek(updateCourseDraftEntry.creatorTimeAvailablePerWeek)
+//   ) {
+//     const error = new Error(
+//       'creatorTimeAvailablePerWeek is not a valid time available per week.'
+//     );
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('courseContent' in updateCourseDraftEntry) ||
+//     typeof updateCourseDraftEntry.courseContent !== 'object'
+//   ) {
+//     const error = new Error('courseContent is missing or its not an object.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   const courseContent = updateCourseDraftEntry.courseContent;
+
+//   if (!courseContent || typeof courseContent !== 'object') {
+//     const error = new Error('courseContent is not an object.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('learningObjectives' in courseContent) ||
+//     !Array.isArray(courseContent.learningObjectives)
+//   ) {
+//     const error = new Error(
+//       'learningObjectives is missing or its not an array.'
+//     );
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (!('prerequisites' in courseContent) || !Array.isArray(courseContent.prerequisites)) {
+//     const error = new Error('prerequisites is missing or its not an array.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (!('intendedLearners' in courseContent) || !Array.isArray(courseContent.intendedLearners)) {
+//     const error = new Error('intendedLearners is missing or its not an array.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (courseContent.learningObjectives.length > 0) {
+//     courseContent.learningObjectives.forEach((learningObjective: unknown) => {
+//       if (!isReorderableTextArrayObject(learningObjective)) {
+//         const error = new Error('learningObjectives is not an array of reorderable text array objects.');
+//         error.name = errorName.clientSentInvalidData;
+//         throw error;
+//       }
+//     });
+//   }
+
+//   if (courseContent.prerequisites.length > 0) {
+//     courseContent.prerequisites.forEach((prerequisite: unknown) => {
+//       if (!isReorderableTextArrayObject(prerequisite)) {
+//         const error = new Error('prerequisites is not an array of reorderable text array objects.');
+//         error.name = errorName.clientSentInvalidData;
+//         throw error;
+//       }
+//     });
+//   }
+
+//   if (courseContent.intendedLearners.length > 0) {
+//     courseContent.intendedLearners.forEach((intendedLearner: unknown) => {
+//       if (!isReorderableTextArrayObject(intendedLearner)) {
+//         const error = new Error('intendedLearners is not an array of reorderable text array objects.');
+//         error.name = errorName.clientSentInvalidData;
+//         throw error;
+//       }
+//     });
+//   }
+
+//   if (
+//     !('videoContentLengthSeconds' in courseContent) ||
+//     typeof courseContent.videoContentLengthSeconds !== 'number'
+//   ) {
+//     const error = new Error('videoContentLengthSeconds is missing or its not a number.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (
+//     !('curriculum' in courseContent) ||
+//     !Array.isArray(courseContent.curriculum)
+//   ) {
+//     const error = new Error('curriculum is missing or its not an array.');
+//     error.name = errorName.clientSentInvalidData;
+//     throw error;
+//   }
+
+//   if (courseContent.curriculum.length > 0) {
+//     courseContent.curriculum.forEach((curriculumSection: unknown) => {
+//       if (!isCurriculumSection(curriculumSection)) {
+//         const error = new Error('curriculum is not an array of curriculum sections.');
+//         error.name = errorName.clientSentInvalidData;
+//         throw error;
+//       }
+//     });
+//   }
+// };
+
 const router = Router();
 
 router.get('/', userExtractor, async (req, res, next) => {
@@ -366,6 +673,31 @@ router.post('/', userExtractor, async (req, res, next) => {
     );
 
     return res.status(201).json(databaseResult);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
+    }
+
+    const courseDraftId = parseInt(req.params.coursedraftid);
+    const updateCourseGoalsRequestBody = toUpdateCourseGoalsRequestBody(
+      courseDraftId,
+      req.body
+    );
+
+    await updateCourseDraftCourseGoals(
+      courseDraftId,
+      updateCourseGoalsRequestBody
+    );
+
+    return res.sendStatus(204);
   } catch (error) {
     next(error);
   }
