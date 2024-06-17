@@ -3,7 +3,7 @@ import LandingPage from '../landing-page/LandingPage';
 import { TeachWithUsPage } from '../teach-with-us-page/TeachWithUsPage';
 import { NotFoundPage } from '../not-found-page/NotFoundPage';
 import { SignUpPage } from '../sign-up/SignUpPage';
-import { Redirect } from '../redirect/Redirect';
+import { Redirect } from '../utility/Redirect';
 import { SignInPage } from '../sign-in/SignInPage';
 
 export const SignedOutRoutes = () => {

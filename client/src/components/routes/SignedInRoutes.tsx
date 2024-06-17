@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import LandingPage from '../landing-page/LandingPage';
 import { NotFoundPage } from '../not-found-page/NotFoundPage';
-import { Redirect } from '../redirect/Redirect';
+import { Redirect } from '../utility/Redirect';
 import { InstructorCoursesPage } from '../instructor/InstructorCoursesPage';
 import { CourseCreationPage } from '../course-creation/CourseCreationPage';
 import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseGoalsPage';
