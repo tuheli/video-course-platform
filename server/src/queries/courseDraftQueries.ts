@@ -7,6 +7,7 @@ import {
   NewCourseDraftEntry,
   TextWithId,
   TimeAvailablePerWeek,
+  UpdateCourseGoalsRequestBody,
 } from '../routers/courseDraftsRouter';
 
 // NOTE: The course draft returned is structured
@@ -139,6 +140,96 @@ export const createCourseDraft = async (
     );
     newError.name = errorName.errorAtDatabase;
     throw newError;
+  }
+};
+
+// NOTE: Instead of updating tables
+// maybe it is better to delete and insert.
+// The updates are done only on demand via saving.
+// The user might have deleted, added, reordered
+// and updated different texts which makes
+// updating quite complex. Instead
+// delete and insert can be very simple.
+
+export const updateCourseDraftCourseGoals = async (
+  courseDraftId: number,
+  updateRequest: UpdateCourseGoalsRequestBody
+): Promise<void> => {
+  try {
+    await client.query('BEGIN;');
+
+    // NOTE: Ownership needs to be checked.
+    const learningObjectivePromises =
+      updateRequest.learningObjectives.items.map((learningObjective) => {
+        const sqlText = `
+        UPDATE learning_objectives
+        SET 
+          learning_objective = $1,
+          order_index = $2
+        WHERE id = $3 AND course_draft_id = $4;
+      `;
+
+        const sqlValues = [
+          learningObjective.text,
+          learningObjective.orderIndex,
+          learningObjective.id,
+          courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      });
+
+    const intendedLearnerPromises = updateRequest.intendedLearners.items.map(
+      (intendedLearner) => {
+        const sqlText = `
+        UPDATE intended_learners
+        SET 
+          intended_learner = $1,
+          order_index = $2
+        WHERE id = $3 AND course_draft_id = $4;
+      `;
+
+        const sqlValues = [
+          intendedLearner.text,
+          intendedLearner.orderIndex,
+          intendedLearner.id,
+          courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      }
+    );
+
+    const prerequisitePromises = updateRequest.prerequisites.items.map(
+      (prerequisite) => {
+        const sqlText = `
+        UPDATE prerequisites
+        SET 
+          prerequisite = $1,
+          order_index = $2
+        WHERE id = $3 AND course_draft_id = $4;
+      `;
+
+        const sqlValues = [
+          prerequisite.text,
+          prerequisite.orderIndex,
+          prerequisite.id,
+          courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      }
+    );
+
+    await Promise.all(learningObjectivePromises);
+    await Promise.all(intendedLearnerPromises);
+    await Promise.all(prerequisitePromises);
+
+    await client.query('COMMIT;');
+    return;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
   }
 };
 
