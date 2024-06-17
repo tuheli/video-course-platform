@@ -316,185 +316,7 @@ export const isAbleToDeleteIntendedLearners = (courseDraft: CourseDraft) => {
   );
 };
 
-const initialCreatedAt = new Date().toISOString();
-const initialLanguage = getLanguage('english');
-
-const initialState: CourseDraft[] = [
-  {
-    id: 1,
-    creatorId: 1,
-    creatorEmail: 'elias.test@gmail.com',
-    courseType: 'course',
-    courseTitle: 'Technical animation for modular video game characters',
-    courseCategory: KnownCourseCategory.Development,
-    creatorTimeAvailablePerWeek: TimeAvailablePerWeek.IHaveLotsOfFlexibility,
-    isPublic: true,
-    isSubmissionProcessCompleted: false,
-    courseContent: {
-      learningObjectives: {
-        type: 'learningObjectives',
-        items: [
-          {
-            id: '1',
-            text: 'Student understands fbx file format and its use in game development',
-            orderIndex: 999, // Should be last
-          },
-          {
-            id: '2',
-            text: 'Student understands why rigs are used, what they are and what they do',
-            orderIndex: -1,
-          },
-          {
-            id: '3',
-            text: 'Student understands real-time animation functionalities in Unity and Unreal Engine',
-            orderIndex: -1,
-          },
-          {
-            id: '4',
-            text: 'Student is able to utilize real-time animation in Unity and Unreal Engine',
-            orderIndex: -1,
-          },
-          {
-            id: '5',
-            text: 'Student understands 3D spaces and can effectively utilize them in rig creation, modification and real-time animation',
-            orderIndex: -1,
-          },
-          {
-            id: '6',
-            text: 'Student understands the importance of non-destructive workflows in 3D animation',
-            orderIndex: -1,
-          },
-
-          {
-            id: '7',
-            text: 'Student is able to use and customize constraints applied to animation rigs',
-            orderIndex: -1,
-          },
-          {
-            id: '8',
-            text: 'Student is able to create a modular rig for any given 3D model',
-            orderIndex: -1,
-          },
-          {
-            id: '9',
-            text: 'Student understands export and import process of fbx files for Unity and Unreal Engine',
-            orderIndex: -1234, // Should be first
-          },
-        ],
-      },
-      prerequisites: {
-        type: 'prerequisites',
-        items: getTextWithIdArray(minPrerequisitesCount),
-      },
-      intendedLearners: {
-        type: 'intendedLearners',
-        items: [
-          {
-            id: '1',
-            text: 'Game developers',
-            orderIndex: -1,
-          },
-          {
-            id: '2',
-            text: '3D artists',
-            orderIndex: -1,
-          },
-          {
-            id: '3',
-            text: 'Animators',
-            orderIndex: -1,
-          },
-          {
-            id: '4',
-            text: 'Programmers',
-            orderIndex: -1,
-          },
-        ],
-      },
-      videoContentLengthSeconds: 158,
-      curriculum: getInitialCurriculum(),
-    },
-    ratings: [],
-    enrollments: [],
-    createdAt: initialCreatedAt,
-    language: initialLanguage,
-  },
-  {
-    id: 2,
-    creatorId: 2,
-    creatorEmail: 'alice.test@gmail.com',
-    courseType: 'course',
-    courseTitle: 'Marketing for small businesses',
-    courseCategory: KnownCourseCategory.Business,
-    creatorTimeAvailablePerWeek: TimeAvailablePerWeek.ImVeryBusy,
-    isPublic: true,
-    isSubmissionProcessCompleted: false,
-    courseContent: {
-      learningObjectives: {
-        type: 'learningObjectives',
-        items: getTextWithIdArray(minLearningObjectivesCount),
-      },
-      prerequisites: {
-        type: 'prerequisites',
-        items: getTextWithIdArray(minPrerequisitesCount),
-      },
-      intendedLearners: {
-        type: 'intendedLearners',
-        items: [
-          {
-            id: '1',
-            text: 'Small business owners',
-            orderIndex: -1,
-          },
-          {
-            id: '2',
-            text: 'Entrepreneurs',
-            orderIndex: -1,
-          },
-        ],
-      },
-      videoContentLengthSeconds: 0,
-      curriculum: getInitialCurriculum(),
-    },
-    ratings: [],
-    enrollments: [],
-    createdAt: initialCreatedAt,
-    language: initialLanguage,
-  },
-  {
-    id: 3,
-    creatorId: 1,
-    creatorEmail: 'elias.test@gmail.com',
-    courseType: 'course',
-    courseTitle: 'Another course for testing purposes',
-    courseCategory: KnownCourseCategory.Design,
-    creatorTimeAvailablePerWeek: TimeAvailablePerWeek.IHaveLotsOfFlexibility,
-    isPublic: true,
-    isSubmissionProcessCompleted: false,
-    courseContent: getInitialCourseContent(),
-    ratings: [],
-    enrollments: [],
-    createdAt: initialCreatedAt,
-    language: initialLanguage,
-  },
-  {
-    id: 4,
-    creatorId: 1,
-    creatorEmail: 'elias.test@gmail.com',
-    courseType: 'course',
-    courseTitle:
-      'A Third Course for Testing Purposes very long title to cause typography being clamped at 3 lines',
-    courseCategory: KnownCourseCategory.Business,
-    creatorTimeAvailablePerWeek: TimeAvailablePerWeek.ImVeryBusy,
-    isPublic: true,
-    isSubmissionProcessCompleted: false,
-    courseContent: getInitialCourseContent(),
-    ratings: [],
-    enrollments: [],
-    createdAt: initialCreatedAt,
-    language: initialLanguage,
-  },
-];
+const initialState: CourseDraft[] = [];
 
 const slice = createSlice({
   name: 'courseDrafts',
@@ -883,6 +705,9 @@ const slice = createSlice({
         lecture.orderIndex = newOrderIndex;
       });
     },
+    fetchedCourseDrafts: (_, action: PayloadAction<CourseDraft[]>) => {
+      return action.payload;
+    },
   },
 });
 
@@ -901,5 +726,6 @@ export const {
   updatedVideo,
   deletedLecture,
   reorderedLectures,
+  fetchedCourseDrafts,
 } = slice.actions;
 export default slice.reducer;
