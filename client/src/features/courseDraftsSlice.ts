@@ -59,7 +59,7 @@ export interface TextWithId extends Reorderable {
   text: string;
 }
 
-interface ReorderableTextArrayObject {
+export interface ReorderableTextArrayObject {
   type: UpdateableCourseContentProperty;
   items: TextWithId[];
 }
