@@ -1,28 +1,39 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from './LightColoredRouterLink';
-import { useCourseDraft } from '../../hooks/useCourseDraft';
-import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteIntendedLearners } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
+import { useGetCourseDraftsQuery } from '../../features/apiSlice';
+import { useParams } from 'react-router-dom';
+
+const examplePlaceholderText =
+  'Example: Beginner Python developers curious about data science';
 
 export const WhoIsThisCourseFor = () => {
-  const courseDraft = useCourseDraft();
-  const intendedLearners = useOrderedCourseContent('intendedLearners');
+  const { data } = useGetCourseDraftsQuery();
+  const { courseId } = useParams();
   const { changeOrder } = useChangeOrder('intendedLearners');
 
-  const examplePlaceholderText =
-    'Example: Beginner Python developers curious about data science';
+  const courseIdAsNumber = Number(courseId);
+  const courseDraft =
+    courseId === undefined
+      ? undefined
+      : data?.find((courseDraft) => courseDraft.id === courseIdAsNumber);
 
   const changeIntendedLearnersOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
     changeOrder(newOrder, courseDraft);
   };
+
+  const sortedIntendedLearners =
+    courseDraft === undefined
+      ? []
+      : getSortedCopy(courseDraft.courseContent.intendedLearners.items);
 
   if (!courseDraft) return null;
 
@@ -50,7 +61,7 @@ export const WhoIsThisCourseFor = () => {
       </Typography>
       <DragAndDropContext.Provider
         value={{
-          itemsState: intendedLearners,
+          itemsState: sortedIntendedLearners,
           changeOrder: changeIntendedLearnersOrder,
         }}
       >
@@ -60,7 +71,7 @@ export const WhoIsThisCourseFor = () => {
               gap: 2,
             }}
           >
-            {intendedLearners.map((intendedLearnersItem) => {
+            {sortedIntendedLearners.map((intendedLearnersItem) => {
               return (
                 <MemoDraggable
                   key={intendedLearnersItem.id}
