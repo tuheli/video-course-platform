@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CourseDraft, NewCourseDraftEntry } from './courseDraftsSlice';
+import {
+  CourseDraft,
+  NewCourseDraftEntry,
+  ReorderableTextArrayObject,
+} from './courseDraftsSlice';
 import { RootState } from '../app/store';
 
 export interface CredentialsNotSafe {
@@ -37,6 +41,13 @@ export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
 }
 
 export type GetCourseDraftsFromDatabaseResult = CourseDraft[];
+
+export interface UpdateCourseGoalsRequestBody {
+  courseDraftId: number;
+  learningObjectives: ReorderableTextArrayObject;
+  prerequisites: ReorderableTextArrayObject;
+  intendedLearners: ReorderableTextArrayObject;
+}
 
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
@@ -136,6 +147,21 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    updateCourseDraftGoals: builder.mutation<
+      void,
+      UpdateCourseGoalsRequestBody
+    >({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/goals`,
+        method: 'PUT',
+        body: {
+          learningObjectives: body.learningObjectives,
+          prerequisites: body.prerequisites,
+          intendedLearners: body.intendedLearners,
+        },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
       query: () => `coursedrafts`,
       providesTags: ['CourseDrafts'],
@@ -161,6 +187,7 @@ export const {
   useSignupMutation,
   useSigninMutation,
   useCreateCourseDraftMutation,
+  useUpdateCourseDraftGoalsMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
 } = apiSlice;
