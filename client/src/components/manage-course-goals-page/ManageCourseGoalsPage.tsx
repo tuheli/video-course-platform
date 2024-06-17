@@ -8,41 +8,45 @@ import { WhatWillStudentsLearnInYourCourse } from './WhatWillStudentsLearnInYour
 import { WhatAreTheCoursePrerequisites } from './WhatAreTheCoursePrerequisites';
 import { WhoIsThisCourseFor } from './WhoIsThisCourseFor';
 import { Footer } from '../footer/Footer';
+import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
 
 export const ManageCourseGoalsPage = () => {
   useScrollToTop();
 
   return (
-    <Box
-      sx={{
-        flexDirection: 'column',
-        display: 'flex',
-        minHeight: '100vh',
-      }}
-    >
-      <CourseManagementAppBar />
+    <>
+      <FetchCourseDrafts />
       <Box
         sx={{
-          pt: 14,
-          pb: 8,
+          flexDirection: 'column',
+          display: 'flex',
+          minHeight: '100vh',
         }}
       >
-        <CourseManagementPageLayout heading={<Heading />}>
-          <Description />
-          <WhatWillStudentsLearnInYourCourse />
-          <WhatAreTheCoursePrerequisites />
-          <WhoIsThisCourseFor />
-        </CourseManagementPageLayout>
+        <CourseManagementAppBar />
+        <Box
+          sx={{
+            pt: 14,
+            pb: 8,
+          }}
+        >
+          <CourseManagementPageLayout heading={<Heading />}>
+            <Description />
+            <WhatWillStudentsLearnInYourCourse />
+            <WhatAreTheCoursePrerequisites />
+            <WhoIsThisCourseFor />
+          </CourseManagementPageLayout>
+        </Box>
+        <Box
+          sx={{
+            py: 4,
+            bgcolor: 'background.dark',
+            marginTop: 'auto',
+          }}
+        >
+          <Footer />
+        </Box>
       </Box>
-      <Box
-        sx={{
-          py: 4,
-          bgcolor: 'background.dark',
-          marginTop: 'auto',
-        }}
-      >
-        <Footer />
-      </Box>
-    </Box>
+    </>
   );
 };
