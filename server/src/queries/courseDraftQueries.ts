@@ -8,6 +8,11 @@ import {
   TimeAvailablePerWeek,
 } from '../routers/courseDraftsRouter';
 
+// NOTE: The course draft returned is structured
+// from the frontends perspective. For example,
+// in frontend a specific structure is used for
+// drag and drop reordering.
+
 interface CourseDraftInDatabase {
   id: number;
   creatorId: number;
@@ -75,11 +80,6 @@ export const createCourseDraft = async (
       createdAt: courseDraftRow.created_at,
     };
 
-    // NOTE: The course draft returned is structured
-    // from the frontends perspective. For example,
-    // in frontend the structure is used for
-    // drag and drop reordering.
-
     // NOTE: The asserted types are typed in
     // database. Hence they are asserted here and
     // not validated.
@@ -145,7 +145,6 @@ export const getCourseDrafts = async (
   userId: number
 ): Promise<CourseDraft[]> => {
   try {
-    // 1. Get course draft row
     const selectCourseDraftQueryText =
       'SELECT id, creator_id, creator_email, course_type, course_title, course_category, creator_time_available_per_week, is_public, is_submission_process_completed, language, created_at FROM coursedrafts WHERE creator_id = $1';
 
@@ -158,10 +157,6 @@ export const getCourseDrafts = async (
 
     const courseDraftRows = selectCourseDraftQueryResult.rows;
 
-    // NOTE: The structure is how the frontend
-    // needs the data.
-
-    // NOTE: Not fully implemented.
     const courseDrafts: CourseDraft[] = courseDraftRows.map((row) => {
       const courseDrafts: CourseDraft = {
         id: row.id,
