@@ -1,27 +1,38 @@
 import { Stack, Typography } from '@mui/material';
-import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
-import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
+import { useAppSelector } from '../../app/hooks';
+import { useParams } from 'react-router-dom';
+
+const examplePlaceholderText =
+  'Example: No programming experience needed. You will learn everything you need to know';
 
 export const WhatAreTheCoursePrerequisites = () => {
-  const courseDraft = useCourseDraft();
-  const prerequisites = useOrderedCourseContent('prerequisites');
+  const state = useAppSelector((state) => state.courseDrafts);
+  const { courseId } = useParams();
   const { changeOrder } = useChangeOrder('prerequisites');
 
-  const examplePlaceholderText =
-    'Example: No programming experience needed. You will learn everything you need to know';
+  const courseIdAsNumber = Number(courseId);
+  const courseDraft =
+    courseId === undefined
+      ? undefined
+      : state?.find((courseDraft) => courseDraft.id === courseIdAsNumber);
 
   const changePrerequisitesOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
     changeOrder(newOrder, courseDraft);
   };
+
+  const sortedPrerequisites =
+    courseDraft === undefined
+      ? []
+      : getSortedCopy(courseDraft.courseContent.prerequisites.items);
 
   if (!courseDraft) return null;
 
@@ -46,7 +57,7 @@ export const WhatAreTheCoursePrerequisites = () => {
       </Typography>
       <DragAndDropContext.Provider
         value={{
-          itemsState: prerequisites,
+          itemsState: sortedPrerequisites,
           changeOrder: changePrerequisitesOrder,
         }}
       >
@@ -56,7 +67,7 @@ export const WhatAreTheCoursePrerequisites = () => {
               gap: 2,
             }}
           >
-            {prerequisites.map((prerequisite) => {
+            {sortedPrerequisites.map((prerequisite) => {
               return (
                 <MemoDraggable
                   key={prerequisite.id}
