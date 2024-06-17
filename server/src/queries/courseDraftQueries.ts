@@ -5,7 +5,6 @@ import {
   CourseType,
   KnownCourseCategory,
   NewCourseDraftEntry,
-  ReorderableTextArrayObject,
   TextWithId,
   TimeAvailablePerWeek,
 } from '../routers/courseDraftsRouter';
@@ -146,29 +145,46 @@ export const createCourseDraft = async (
 export const getCourseDrafts = async (
   userId: number
 ): Promise<CourseDraft[]> => {
+  const lineToTextWithId = (lineFromDatabase: string) => {
+    const separator = ' ;sep; ';
+    const parts = lineFromDatabase.split(separator);
+
+    const textWithId: TextWithId = {
+      id: parts[0],
+      text: parts[1],
+      orderIndex: parseInt(parts[2]),
+    };
+
+    return textWithId;
+  };
+
   try {
     const selectCourseDraftQueryText = `
-    SELECT 
-    CD.id as course_draft_id,
-    array_agg (
-      LO.id || ' sep; ' || LO.learning_objective || ' sep; ' || LO.order_index
-      ORDER BY
-        LO.order_index
-      ) as learning_objectives, 
-    creator_id, 
-    creator_email, 
-    course_type, 
-    course_title, 
-    course_category, 
-    creator_time_available_per_week, 
-    is_public, 
-    is_submission_process_completed, 
-    language,
-    created_at
-    FROM coursedrafts CD
-    INNER JOIN learning_objectives LO ON LO.course_draft_id = CD.id
-    WHERE creator_id = $1
-    GROUP BY CD.id;
+      SELECT 
+      CD.id as course_draft_id,
+      array_agg (
+        DISTINCT
+        LO.id || ' ;sep; ' || LO.learning_objective || ' ;sep; ' || LO.order_index
+        ) as learning_objectives,
+      array_agg (
+        DISTINCT
+        IL.id || ' ;sep; ' || IL.intended_learner || ' ;sep; ' || IL.order_index
+        ) as intended_learners,
+      creator_id, 
+      creator_email, 
+      course_type, 
+      course_title, 
+      course_category, 
+      creator_time_available_per_week, 
+      is_public, 
+      is_submission_process_completed, 
+      language,
+      created_at
+      FROM coursedrafts CD
+      INNER JOIN learning_objectives LO ON LO.course_draft_id = CD.id
+      INNER JOIN intended_learners IL ON IL.course_draft_id = CD.id
+      WHERE creator_id = $1
+      GROUP BY CD.id;
     `;
 
     const selectCourseDraftQueryValues = [userId];
@@ -195,7 +211,9 @@ export const getCourseDrafts = async (
         courseContent: {
           curriculum: [],
           intendedLearners: {
-            items: [],
+            items: row.intended_learners.map((intendedLearner: any) => {
+              return lineToTextWithId(intendedLearner);
+            }),
             type: 'intendedLearners',
           },
           prerequisites: {
@@ -204,15 +222,7 @@ export const getCourseDrafts = async (
           },
           learningObjectives: {
             items: row.learning_objectives.map((learningObjective: any) => {
-              const learningObjectiveParts = learningObjective.split(' sep; ');
-
-              const learningObjectiveTextWithId: TextWithId = {
-                id: learningObjectiveParts[0],
-                text: learningObjectiveParts[1],
-                orderIndex: parseInt(learningObjectiveParts[2]),
-              };
-
-              return learningObjectiveTextWithId;
+              return lineToTextWithId(learningObjective);
             }),
             type: 'learningObjectives',
           },
