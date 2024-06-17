@@ -111,7 +111,13 @@ export const SignUpForm = () => {
         credentialsNotSafe: signupRequestBody.credentialsNotSafe,
       }).unwrap();
 
-      dispatch(signedIn(signInResponse));
+      const isStayLoggedInChecked = data.get('stay-logged-in-on-this-device');
+      const signedInPayload = {
+        ...signInResponse,
+        staySignedIn: isStayLoggedInChecked === 'on',
+      };
+
+      dispatch(signedIn(signedInPayload));
     } catch (error) {
       if (!isObjectWithData(error)) return;
       if (!isDataWithMessage(error.data)) return;
@@ -191,7 +197,7 @@ export const SignUpForm = () => {
             sx={{
               display: 'flex',
               gap: 1,
-              my: 1,
+              mt: 1,
             }}
           >
             <div>
@@ -201,6 +207,20 @@ export const SignUpForm = () => {
               I want to get the most out of my experience, by receiving emails
               with insider tips, motivation, special updates and promotions
               reserved for instructors.
+            </label>
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              mb: 1,
+            }}
+          >
+            <div>
+              <input type="checkbox" name="stay-logged-in-on-this-device" />
+            </div>
+            <label htmlFor="stay-logged-in-on-this-device">
+              Stay logged in on this device
             </label>
           </Box>
           <Button variant="contained" color="secondary" type="submit">
