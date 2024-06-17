@@ -8,14 +8,14 @@ import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
-import { useGetCourseDraftsQuery } from '../../features/apiSlice';
 import { useParams } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
 
 const examplePlaceholderText =
   'Example: Define the roles and responsibilities of a project manager';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
-  const { data } = useGetCourseDraftsQuery();
+  const state = useAppSelector((state) => state.courseDrafts);
   const { courseId } = useParams();
   const { changeOrder } = useChangeOrder('learningObjectives');
 
@@ -23,7 +23,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
   const courseDraft =
     courseId === undefined
       ? undefined
-      : data?.find((courseDraft) => courseDraft.id === courseIdAsNumber);
+      : state?.find((courseDraft) => courseDraft.id === courseIdAsNumber);
 
   const changeLearningObjectivesOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
