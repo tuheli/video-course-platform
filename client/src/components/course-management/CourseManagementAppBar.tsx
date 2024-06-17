@@ -4,6 +4,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useUpdateCourseDraftGoalsMutation } from '../../features/apiSlice';
 
 const itemGap = 2;
 
@@ -34,9 +35,11 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 export const CourseManagementAppBar = () => {
   const { courseId } = useParams();
   const location = useLocation();
+  const [updateCourseDraftGoals] = useUpdateCourseDraftGoalsMutation();
 
+  const courseIdAsNumber = Number(courseId);
   const course = useAppSelector((state) => state.courseDrafts).find(
-    ({ id }) => id === courseId
+    ({ id }) => id === courseIdAsNumber
   );
 
   const courseContent = course?.courseContent;
@@ -49,6 +52,23 @@ export const CourseManagementAppBar = () => {
 
   const isSaveButtonVisible = location.pathname.endsWith('/goals');
   const isPreviewButtonVisible = location.pathname.endsWith('/curriculum');
+
+  const onClickSave = async () => {
+    if (!course) return;
+
+    try {
+      const requestBody = {
+        courseDraftId: course.id,
+        learningObjectives: course.courseContent.learningObjectives,
+        prerequisites: course.courseContent.prerequisites,
+        intendedLearners: course.courseContent.intendedLearners,
+      };
+
+      await updateCourseDraftGoals(requestBody).unwrap();
+    } catch (error) {
+      // To be updated
+    }
+  };
 
   return (
     <AppBar
@@ -140,6 +160,7 @@ export const CourseManagementAppBar = () => {
             >
               {isSaveButtonVisible && (
                 <Button
+                  onClick={onClickSave}
                   variant="outlined"
                   sx={{
                     minWidth: 80,
