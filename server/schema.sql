@@ -12,8 +12,13 @@ CREATE TABLE users (
     receive_insider_emails BOOLEAN NOT NULL
 );
 
+CREATE TABLE curriculums (
+    id SERIAL PRIMARY KEY
+);
+
 CREATE TABLE coursedrafts (
     id SERIAL PRIMARY KEY,
+    creator_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     curriculum_id INTEGER REFERENCES curriculums(id) ON DELETE CASCADE,
     creator_email VARCHAR(255) NOT NULL,
     course_type known_course_type NOT NULL,
@@ -24,10 +29,6 @@ CREATE TABLE coursedrafts (
     is_submission_process_completed BOOLEAN NOT NULL DEFAULT FALSE,
     language VARCHAR(60) NOT NULL,
     created_at TIMESTAMP NOT NULL
-);
-
-CREATE TABLE curriculums (
-    id SERIAL PRIMARY KEY,
 );
 
 CREATE TABLE curriculum_sections (
@@ -61,7 +62,6 @@ CREATE TABLE course_enrollments (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     enrollment_date TIMESTAMP NOT NULL
 );
-
 
 CREATE TABLE learning_objectives (
     id SERIAL PRIMARY KEY,

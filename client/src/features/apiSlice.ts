@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { NewCourseDraftEntry } from './courseDraftsSlice';
+import { CourseDraft, NewCourseDraftEntry } from './courseDraftsSlice';
 import { RootState } from '../app/store';
 
 export interface CredentialsNotSafe {
@@ -35,6 +35,8 @@ interface UserInDatabaseSafe {
 export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
   authorizationToken: string;
 }
+
+export type GetCourseDraftsFromDatabaseResult = CourseDraft[];
 
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
@@ -94,6 +96,7 @@ export const toUserInDatabaseSafeWithToken = (
 
 export const apiSlice = createApi({
   reducerPath: 'api',
+  tagTypes: ['CourseDrafts'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000/api/',
     prepareHeaders: (headers, { getState }) => {
@@ -131,6 +134,11 @@ export const apiSlice = createApi({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
+    getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
+      query: () => `coursedrafts`,
+      providesTags: ['CourseDrafts'],
     }),
     validateAuthorizationToken: builder.mutation<
       UserInDatabaseSafeWithToken,
@@ -154,4 +162,5 @@ export const {
   useSigninMutation,
   useCreateCourseDraftMutation,
   useValidateAuthorizationTokenMutation,
+  useGetCourseDraftsQuery,
 } = apiSlice;

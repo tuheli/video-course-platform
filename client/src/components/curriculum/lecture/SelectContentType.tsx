@@ -7,7 +7,7 @@ import { SelectVideo } from './SelectVideo';
 type ContentType = 'video';
 
 interface SelectContentTypeProps {
-  courseDraftId: string;
+  courseDraftId: number;
   sectionId: string;
   lectureId: string;
 }

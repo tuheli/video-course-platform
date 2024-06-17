@@ -50,7 +50,7 @@ export const useChangeOrder = (type: UpdateableCourseContentProperty) => {
     }
   };
 
-  const getOrderedItems = (courseDraftId: string) => {
+  const getOrderedItems = (courseDraftId: number) => {
     const allCourseDrafts = store.getState().courseDrafts;
     const courseDraft = allCourseDrafts.find(({ id }) => id === courseDraftId);
 

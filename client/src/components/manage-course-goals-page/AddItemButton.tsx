@@ -6,7 +6,7 @@ import {
 import { AddMoreButton } from './AddMoreButton';
 
 interface AddItemButtonProps {
-  courseDraftId: string;
+  courseDraftId: number;
   type: UpdateableCourseContentProperty;
 }
 

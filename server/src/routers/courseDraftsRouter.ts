@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { userExtractor } from '../middleware';
 import { errorName } from '../errorNames';
-import { createCourseDraft } from '../queries/courseDraftQueries';
+import {
+  createCourseDraft,
+  getCourseDrafts,
+} from '../queries/courseDraftQueries';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -161,6 +164,7 @@ interface Enrollment {
 
 export interface CourseDraft {
   id: number;
+  creatorId: number;
   creatorEmail: string;
   courseType: CourseType;
   courseTitle: string;
@@ -246,6 +250,15 @@ const toCreateCourseDraftRequestBody = (
     }
 
     if (
+      !('creatorId' in newCourseDraftEntry) ||
+      typeof newCourseDraftEntry.creatorId !== 'number'
+    ) {
+      const error = new Error('creatorId is missing or its not a number.');
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
+
+    if (
       !('creatorEmail' in newCourseDraftEntry) ||
       typeof newCourseDraftEntry.creatorEmail !== 'string' ||
       !isEmail(newCourseDraftEntry.creatorEmail)
@@ -298,6 +311,7 @@ const toCreateCourseDraftRequestBody = (
     }
 
     const validNewCourseDraftEntry: NewCourseDraftEntry = {
+      creatorId: newCourseDraftEntry.creatorId,
       creatorEmail: newCourseDraftEntry.creatorEmail,
       courseCategory: newCourseDraftEntry.courseCategory,
       courseTitle: newCourseDraftEntry.courseTitle,
@@ -321,6 +335,25 @@ const toCreateCourseDraftRequestBody = (
 };
 
 const router = Router();
+
+router.get('/', userExtractor, async (req, res, next) => {
+  try {
+    // NOTE: This should not happen after user
+    // extractor middleware but its added for
+    // typescript.
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
+    }
+
+    const courseDraftFromDatabaseResult = await getCourseDrafts(req.user.id);
+
+    return res.status(200).json(courseDraftFromDatabaseResult);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.post('/', userExtractor, async (req, res, next) => {
   try {

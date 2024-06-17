@@ -24,7 +24,7 @@ import { MemoDraggableLecture } from '../lecture/DraggableLecture';
 import { MemoDraghandle } from '../../drag-and-drop-v2/Draghandle';
 
 export interface SectionProps {
-  courseDraftId: string;
+  courseDraftId: number;
   curriculumSection: ICurriculumSection;
   index: number;
 }

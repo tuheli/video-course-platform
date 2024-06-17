@@ -14,45 +14,41 @@ export const useLocalStorageLogin = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const loginFromLocalStorage = async () => {
+  const loginFromLocalStorage = async (): Promise<boolean> => {
     const userFromLocalStorageString = localStorage.getItem('signedInUser');
 
-    if (userFromLocalStorageString) {
-      try {
-        const userFromLocalStorageParsed = JSON.parse(
-          userFromLocalStorageString
-        );
+    if (!userFromLocalStorageString) return false;
 
-        const userInDatabaseSafeWithToken = toUserInDatabaseSafeWithToken(
-          userFromLocalStorageParsed
-        );
+    try {
+      const userFromLocalStorageParsed = JSON.parse(userFromLocalStorageString);
 
-        if (userInDatabaseSafeWithToken === null) {
-          localStorage.removeItem('signedInUser');
-          navigate('/');
-          return;
-        }
+      const userInDatabaseSafeWithToken = toUserInDatabaseSafeWithToken(
+        userFromLocalStorageParsed
+      );
 
-        const validationPayload = await validateAuthorizationToken({
-          userInDatabaseSafeWithToken,
-        });
+      if (userInDatabaseSafeWithToken === null) return false;
 
-        if (!validationPayload.data) {
-          localStorage.removeItem('signedInUser');
-          navigate('/');
-          return;
-        }
+      const validationPayload = await validateAuthorizationToken({
+        userInDatabaseSafeWithToken,
+      });
 
-        dispatch(signedIn(validationPayload.data));
-      } catch (error) {
-        localStorage.removeItem('signedInUser');
-        navigate('/');
-      }
+      if (!validationPayload.data) return false;
+
+      dispatch(signedIn(validationPayload.data));
+      return true;
+    } catch (error) {
+      return false;
     }
   };
 
   const asyncLocalStorageLogin = async () => {
-    await loginFromLocalStorage();
+    const isLoginSuccessful = await loginFromLocalStorage();
+
+    if (!isLoginSuccessful) {
+      localStorage.removeItem('signedInUser');
+      navigate('/');
+    }
+
     setIsLocalStorageLoginComplete(true);
   };
 

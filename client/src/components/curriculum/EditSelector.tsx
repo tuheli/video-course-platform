@@ -3,7 +3,7 @@ import { NewLectureCard } from './lecture/NewLectureCard';
 
 interface EditSelectorProps {
   activeEditType: EditableItemType | null;
-  courseDraftId: string;
+  courseDraftId: number;
   curriculumSectionId: string;
   setEditingItemType: (type: EditableItemType | null) => void;
 }
