@@ -111,12 +111,12 @@ interface Reorderable {
   orderIndex: number;
 }
 
-interface TextWithId extends Reorderable {
+export interface TextWithId extends Reorderable {
   id: string;
   text: string;
 }
 
-interface ReorderableTextArrayObject {
+export interface ReorderableTextArrayObject {
   type: UpdateableCourseContentProperty;
   items: TextWithId[];
 }
