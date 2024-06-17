@@ -1,28 +1,39 @@
 import { Stack, Typography } from '@mui/material';
 import { LightColoredRouterLink } from './LightColoredRouterLink';
-import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { DragAndDropContext } from '../../contexts/DragAndDropContext';
-import { useOrderedCourseContent } from '../../hooks/useOrderedCourseContent';
 import { useChangeOrder } from '../../hooks/useChangeOrder';
 import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteLearningObjective } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
+import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
+import { useGetCourseDraftsQuery } from '../../features/apiSlice';
+import { useParams } from 'react-router-dom';
+
+const examplePlaceholderText =
+  'Example: Define the roles and responsibilities of a project manager';
 
 export const WhatWillStudentsLearnInYourCourse = () => {
-  const courseDraft = useCourseDraft();
-  const learningObjectives = useOrderedCourseContent('learningObjectives');
+  const { data } = useGetCourseDraftsQuery();
+  const { courseId } = useParams();
   const { changeOrder } = useChangeOrder('learningObjectives');
 
-  const examplePlaceholderText =
-    'Example: Define the roles and responsibilities of a project manager';
+  const courseIdAsNumber = Number(courseId);
+  const courseDraft =
+    courseId === undefined
+      ? undefined
+      : data?.find((courseDraft) => courseDraft.id === courseIdAsNumber);
 
   const changeLearningObjectivesOrder = (newOrder: ItemWithOrderIndex[]) => {
     if (!courseDraft) return;
     changeOrder(newOrder, courseDraft);
   };
+
+  const sortedLearningObjectives =
+    courseDraft === undefined
+      ? []
+      : getSortedCopy(courseDraft.courseContent.learningObjectives.items);
 
   if (!courseDraft) return null;
 
@@ -49,7 +60,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
       </Typography>
       <DragAndDropContext.Provider
         value={{
-          itemsState: learningObjectives,
+          itemsState: sortedLearningObjectives,
           changeOrder: changeLearningObjectivesOrder,
         }}
       >
@@ -59,7 +70,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
               gap: 2,
             }}
           >
-            {learningObjectives.map((learningObjective) => {
+            {sortedLearningObjectives.map((learningObjective) => {
               return (
                 <MemoDraggable
                   key={learningObjective.id}
