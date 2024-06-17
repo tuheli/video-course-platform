@@ -6,22 +6,23 @@ import { removedNotification } from '../../features/notificationSlice';
 export const Notification = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { message, severity } = useAppSelector((state) => state.notification);
+  const [renderMessage, setRenderMessage] = useState('');
   const dispatch = useAppDispatch();
 
   const onClose = () => {
     setIsOpen(false);
+    dispatch(removedNotification());
   };
 
   useEffect(() => {
-    if (message) {
-      setIsOpen(true);
-    }
+    if (!message) return;
+    setRenderMessage(message);
+    setIsOpen(true);
   }, [message]);
 
   useEffect(() => {
-    setIsOpen(false);
     return () => {
-      dispatch(removedNotification());
+      onClose();
     };
   }, []);
 
@@ -38,7 +39,7 @@ export const Notification = () => {
           variant: 'filled',
         }}
       >
-        {message}
+        {renderMessage}
       </Alert>
     </Snackbar>
   );
