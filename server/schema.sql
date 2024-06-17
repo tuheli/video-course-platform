@@ -12,14 +12,9 @@ CREATE TABLE users (
     receive_insider_emails BOOLEAN NOT NULL
 );
 
-CREATE TABLE curriculums (
-    id SERIAL PRIMARY KEY
-);
-
 CREATE TABLE coursedrafts (
     id SERIAL PRIMARY KEY,
     creator_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    curriculum_id INTEGER REFERENCES curriculums(id) ON DELETE CASCADE,
     creator_email VARCHAR(255) NOT NULL,
     course_type known_course_type NOT NULL,
     course_title VARCHAR(60) NOT NULL,
@@ -33,7 +28,7 @@ CREATE TABLE coursedrafts (
 
 CREATE TABLE curriculum_sections (
     id SERIAL PRIMARY KEY,
-    curriculum_id INTEGER REFERENCES curriculums(id) ON DELETE CASCADE,
+    course_draft_id INTEGER REFERENCES coursedrafts(id) ON DELETE CASCADE,
     title VARCHAR(160) NOT NULL,
     learning_objective VARCHAR(160) NOT NULL,
     order_index INTEGER NOT NULL
@@ -90,6 +85,5 @@ CREATE TABLE course_contents (
     learning_objectives INTEGER REFERENCES learning_objectives(id) ON DELETE CASCADE,
     prerequisites INTEGER REFERENCES prerequisites(id) ON DELETE CASCADE,
     intended_learners INTEGER REFERENCES intended_learners(id) ON DELETE CASCADE,
-    curriculum INTEGER REFERENCES curriculums(id) ON DELETE CASCADE,
     video_content_length_seconds INTEGER NOT NULL
 );
