@@ -21,6 +21,7 @@ export const Notification = () => {
   }, [message]);
 
   useEffect(() => {
+    setIsOpen(false);
     return () => {
       onClose();
     };

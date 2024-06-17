@@ -98,6 +98,11 @@ export const SignInForm = () => {
 
       dispatch(signedIn(signedInPayload));
     } catch (error) {
+      if (isObjectWithData(error) && isDataWithMessage(error.data)) {
+        dispatch(notified({ message: error.data.message, severity: 'info' }));
+        return;
+      }
+
       if (isFetchBaseQueryError(error)) {
         dispatch(
           notified({
@@ -105,12 +110,7 @@ export const SignInForm = () => {
             severity: 'error',
           })
         );
-        return;
       }
-
-      if (!isObjectWithData(error)) return;
-      if (!isDataWithMessage(error.data)) return;
-      dispatch(notified({ message: error.data.message, severity: 'info' }));
     }
   };
 
