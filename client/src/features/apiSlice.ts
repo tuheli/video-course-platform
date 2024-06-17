@@ -96,6 +96,7 @@ export const toUserInDatabaseSafeWithToken = (
 
 export const apiSlice = createApi({
   reducerPath: 'api',
+  tagTypes: ['CourseDrafts'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000/api/',
     prepareHeaders: (headers, { getState }) => {
@@ -133,9 +134,11 @@ export const apiSlice = createApi({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['CourseDrafts'],
     }),
     getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
       query: () => `coursedrafts`,
+      providesTags: ['CourseDrafts'],
     }),
     validateAuthorizationToken: builder.mutation<
       UserInDatabaseSafeWithToken,
