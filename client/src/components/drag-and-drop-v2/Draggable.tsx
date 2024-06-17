@@ -189,10 +189,7 @@ const Draggable = ({
       const rect = item.getBoundingClientRect();
       const id = item.id;
       const yPosition =
-        id === dataId
-          ? // ? mousePosition.current.y! + mouseOffset.current.y! + rect.height / 2
-            mousePosition.current.y!
-          : rect.top + rect.height / 2;
+        id === dataId ? mousePosition.current.y! : rect.top + rect.height / 2;
 
       return {
         id,
