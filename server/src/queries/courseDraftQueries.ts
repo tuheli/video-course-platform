@@ -158,33 +158,47 @@ export const getCourseDrafts = async (
     return textWithId;
   };
 
+  // NOTE: Is the separator okay to use?
   try {
     const selectCourseDraftQueryText = `
       SELECT 
-      CD.id as course_draft_id,
-      array_agg (
-        DISTINCT
-        LO.id || ' ;sep; ' || LO.learning_objective || ' ;sep; ' || LO.order_index
-        ) as learning_objectives,
-      array_agg (
-        DISTINCT
-        IL.id || ' ;sep; ' || IL.intended_learner || ' ;sep; ' || IL.order_index
-        ) as intended_learners,
-      creator_id, 
-      creator_email, 
-      course_type, 
-      course_title, 
-      course_category, 
-      creator_time_available_per_week, 
-      is_public, 
-      is_submission_process_completed, 
-      language,
-      created_at
+        CD.id as course_draft_id,
+        COALESCE(LO.learning_objectives, '{}') as learning_objectives,
+        COALESCE(IL.intended_learners, '{}') as intended_learners,
+        COALESCE(PR.prerequisites, '{}') as prerequisites,
+        CD.creator_id, 
+        CD.creator_email, 
+        CD.course_type,
+        CD.course_title, 
+        CD.course_category, 
+        CD.creator_time_available_per_week, 
+        CD.is_public, 
+        CD.is_submission_process_completed, 
+        CD.language,
+        CD.created_at
       FROM coursedrafts CD
-      INNER JOIN learning_objectives LO ON LO.course_draft_id = CD.id
-      INNER JOIN intended_learners IL ON IL.course_draft_id = CD.id
-      WHERE creator_id = $1
-      GROUP BY CD.id;
+      LEFT JOIN (
+        SELECT 
+          course_draft_id, 
+          array_agg(DISTINCT id || ' ;sep; ' || learning_objective || ' ;sep; ' || order_index) as learning_objectives
+        FROM learning_objectives
+        GROUP BY course_draft_id
+      ) LO ON CD.id = LO.course_draft_id
+      LEFT JOIN (
+        SELECT 
+          course_draft_id, 
+          array_agg(DISTINCT id || ' ;sep; ' || intended_learner || ' ;sep; ' || order_index) as intended_learners
+        FROM intended_learners
+        GROUP BY course_draft_id
+      ) IL ON CD.id = IL.course_draft_id
+      LEFT JOIN (
+        SELECT 
+          course_draft_id, 
+          array_agg(DISTINCT id || ' ;sep; ' || prerequisite || ' ;sep; ' || order_index) as prerequisites
+        FROM prerequisites
+        GROUP BY course_draft_id
+      ) PR ON CD.id = PR.course_draft_id
+      WHERE CD.creator_id = $1;
     `;
 
     const selectCourseDraftQueryValues = [userId];
@@ -217,7 +231,9 @@ export const getCourseDrafts = async (
             type: 'intendedLearners',
           },
           prerequisites: {
-            items: [],
+            items: row.prerequisites.map((prerequisite: any) => {
+              return lineToTextWithId(prerequisite);
+            }),
             type: 'prerequisites',
           },
           learningObjectives: {
