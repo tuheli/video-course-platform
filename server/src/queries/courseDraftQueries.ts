@@ -11,7 +11,6 @@ import {
 interface CourseDraftInDatabase {
   id: number;
   creatorId: number;
-  curriculumId: number;
   creatorEmail: string;
   courseType: string;
   courseTitle: string;
@@ -23,47 +22,17 @@ interface CourseDraftInDatabase {
   createdAt: string;
 }
 
-interface CurriculumInDatabase {
-  id: number;
-}
-
-type GetCourseDraftFromDatabaseResult = Omit<
-  CourseDraftInDatabase,
-  'id' | 'curriculumId'
->;
-
 export const createCourseDraft = async (
   newCourseDraftEntry: NewCourseDraftEntry
 ): Promise<CourseDraft> => {
   try {
     await client.query('BEGIN;');
 
-    // 1. Row for curriculum
-    const sqlCurriculumText =
-      'INSERT INTO curriculums DEFAULT VALUES RETURNING id;';
-    const curriculumQueryResult = await client.query(sqlCurriculumText);
-
-    if (curriculumQueryResult.rowCount !== 1) {
-      const error = new Error(
-        'Returned row count is not 1 at create curriculum query.'
-      );
-      error.name = errorName.errorAtDatabase;
-      throw error;
-    }
-
-    const curriculumRow = curriculumQueryResult.rows[0];
-
-    const curriculumInDatabase: CurriculumInDatabase = {
-      id: curriculumRow.id,
-    };
-
-    // 2. Row for course draft
     const sqlCourseDraftText =
-      'INSERT INTO coursedrafts (creator_id, curriculum_id, creator_email, course_type, course_title, course_category, creator_time_available_per_week, is_public, is_submission_process_completed, language, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id, creator_id, creator_email, course_type, course_title, course_category, creator_time_available_per_week, is_public, is_submission_process_completed, language, created_at;';
+      'INSERT INTO coursedrafts (creator_id, creator_email, course_type, course_title, course_category, creator_time_available_per_week, is_public, is_submission_process_completed, language, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id, creator_id, creator_email, course_type, course_title, course_category, creator_time_available_per_week, is_public, is_submission_process_completed, language, created_at;';
 
     const sqlCourseDraftValues = [
       newCourseDraftEntry.creatorId,
-      curriculumInDatabase.id,
       newCourseDraftEntry.creatorEmail,
       newCourseDraftEntry.courseType,
       newCourseDraftEntry.courseTitle,
@@ -92,7 +61,6 @@ export const createCourseDraft = async (
 
     const createdCourseDraftInDatabase: CourseDraftInDatabase = {
       id: courseDraftRow.id,
-      curriculumId: curriculumInDatabase.id,
       creatorId: courseDraftRow.creator_id,
       creatorEmail: courseDraftRow.creator_email,
       courseType: courseDraftRow.course_type,
