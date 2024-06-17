@@ -19,8 +19,8 @@ const slice = createSlice({
       state.severity = action.payload.severity;
       state.message = action.payload.message;
     },
-    removedNotification: () => {
-      return initialState;
+    removedNotification: (state) => {
+      state.message = '';
     },
   },
 });
