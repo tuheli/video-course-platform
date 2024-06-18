@@ -1,6 +1,7 @@
 import { CircularProgress, Stack } from '@mui/material';
 import { useAppDispatch } from '../../app/hooks';
 import {
+  useCreateIntendedLearnerMutation,
   useCreateLearningObjectiveMutation,
   useCreatePrerequisiteMutation,
 } from '../../features/apiSlice';
@@ -27,6 +28,7 @@ export const AddItemButton = ({
   const [isProcessingRequest, setIsProcessingRequest] = useState(false);
   const [createLearningObjective] = useCreateLearningObjectiveMutation();
   const [createPrerequisite] = useCreatePrerequisiteMutation();
+  const [createIntendedLearner] = useCreateIntendedLearnerMutation();
   const { saveCourseDraftGoals } = useSaveCourseDraftGoals();
   const dispatch = useAppDispatch();
 
@@ -47,6 +49,14 @@ export const AddItemButton = ({
           await createPrerequisite({
             courseDraftId: courseDraft.id,
             prerequisite: '',
+            orderIndex,
+          }).unwrap();
+          break;
+        case 'intendedLearners':
+          await saveCourseDraftGoals(courseDraft);
+          await createIntendedLearner({
+            courseDraftId: courseDraft.id,
+            intendedLearner: '',
             orderIndex,
           }).unwrap();
           break;
