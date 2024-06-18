@@ -941,10 +941,11 @@ router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
       req.body
     );
 
-    await updateCourseDraftCourseGoals(
+    await updateCourseDraftCourseGoals({
       courseDraftId,
-      updateCourseGoalsRequestBody
-    );
+      userId: req.user.id,
+      updateRequest: updateCourseGoalsRequestBody,
+    });
 
     return res.sendStatus(204);
   } catch (error) {
