@@ -34,6 +34,11 @@ interface DeletePrerequisiteParams {
   userId: number;
 }
 
+interface DeleteIntendedLearnerParams {
+  intendedLearnerId: number;
+  userId: number;
+}
+
 interface GetCourseDraftParams {
   userId: number;
   courseDraftId: number;
@@ -249,6 +254,49 @@ export const createPrerequisite = async (
   }
 };
 
+export const createIntendedLearner = async (
+  params: CreatePrerequisiteParams
+): Promise<TextWithId> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+    INSERT INTO intended_learners (course_draft_id, intended_learner, order_index)
+    VALUES ((SELECT id FROM coursedrafts WHERE id = $1 AND creator_id = $2), $3, $4) RETURNING id, course_draft_id, intended_learner, order_index;
+    `;
+
+    const sqlValues = [
+      params.courseDraftId,
+      params.userId,
+      params.text,
+      params.orderIndex,
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      const error = new Error(
+        'Returned row count is not 1 at create intended learner query.'
+      );
+      error.name = errorName.errorAtDatabase;
+      throw error;
+    }
+
+    const createdRow = queryResult.rows[0];
+    const createdIntendedLearner: TextWithId = {
+      id: createdRow.id,
+      text: createdRow.intended_learner,
+      orderIndex: createdRow.order_index,
+    };
+
+    await client.query('COMMIT;');
+    return createdIntendedLearner;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
 export const deleteLearningObjective = async (
   params: DeleteLearningObjectiveParams
 ) => {
@@ -294,6 +342,32 @@ export const deletePrerequisite = async (params: DeletePrerequisiteParams) => {
       );
     `;
     const sqlValues = [params.prerequisiteId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteIntendedLearner = async (
+  params: DeleteIntendedLearnerParams
+) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM intended_learners
+      WHERE id = $1
+      AND id IN (
+        SELECT intended_learners.id
+        FROM intended_learners
+        JOIN coursedrafts
+        ON intended_learners.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.intendedLearnerId, params.userId];
     await client.query(sqlText, sqlValues);
     await client.query('COMMIT;');
   } catch (error) {
