@@ -4,7 +4,9 @@ import { errorName } from '../errorNames';
 import {
   createCourseDraft,
   createLearningObjective,
+  createPrerequisite,
   deleteLearningObjective,
+  deletePrerequisite,
   getCourseDraft,
   getCourseDrafts,
   updateCourseDraftCourseGoals,
@@ -263,6 +265,11 @@ export interface CreateLearningObjectiveRequestBody {
   orderIndex: number;
 }
 
+export interface CreatePrerequisiteRequestBody {
+  prerequisite: string;
+  orderIndex: number;
+}
+
 export interface UpdateCourseGoalsRequestBody {
   learningObjectives: ReorderableTextArrayObject;
   prerequisites: ReorderableTextArrayObject;
@@ -297,6 +304,35 @@ const toCreateLearningObjectiveRequestBody = (
 
   return {
     learningObjective: body.learningObjective,
+    orderIndex: body.orderIndex,
+  };
+};
+
+const toCreatePrerequisiteRequestBody = (
+  body: unknown
+): CreatePrerequisiteRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('prerequisite' in body) || typeof body.prerequisite !== 'string') {
+    const error = new Error(
+      'learningObjective is missing or its not a string.'
+    );
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('orderIndex' in body) || typeof body.orderIndex !== 'number') {
+    const error = new Error('orderIndex is missing or its not a number.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  return {
+    prerequisite: body.prerequisite,
     orderIndex: body.orderIndex,
   };
 };
@@ -763,6 +799,52 @@ router.post(
   }
 );
 
+router.post(
+  '/:coursedraftid/goals/prerequisites',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const createPrerequisiteRequestBody = toCreatePrerequisiteRequestBody(
+        req.body
+      );
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const courseDraftInDatabase = await getCourseDraft({
+        userId: req.user.id,
+        courseDraftId,
+      });
+
+      const isCourseDraftInDatabase = courseDraftInDatabase !== null;
+
+      if (!isCourseDraftInDatabase) {
+        return res.status(404).json({ message: 'Course draft was not found.' });
+      }
+
+      const createdPrerequisite = await createPrerequisite({
+        userId: req.user.id,
+        courseDraftId,
+        text: createPrerequisiteRequestBody.prerequisite,
+        orderIndex: createPrerequisiteRequestBody.orderIndex,
+      });
+
+      return res.status(201).json(createdPrerequisite);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
   try {
     if (!req.user) {
@@ -818,6 +900,40 @@ router.delete(
       await deleteLearningObjective({
         userId: req.user.id,
         learningObjectiveId,
+      });
+      return res.status(200).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  '/:coursedraftid/goals/prerequisites/:prerequisiteid',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const prerequisiteId = parseInt(req.params.prerequisiteid);
+
+      if (isNaN(prerequisiteId)) {
+        return res.status(400).json({ message: 'Invalid prerequisite id.' });
+      }
+
+      await deletePrerequisite({
+        userId: req.user.id,
+        prerequisiteId,
       });
       return res.status(200).end();
     } catch (error) {
