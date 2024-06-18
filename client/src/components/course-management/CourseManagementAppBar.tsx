@@ -4,7 +4,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useUpdateCourseDraftGoalsMutation } from '../../features/apiSlice';
+import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
 
 const itemGap = 2;
 
@@ -35,15 +35,15 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 export const CourseManagementAppBar = () => {
   const { courseId } = useParams();
   const location = useLocation();
-  const [updateCourseDraftGoals] = useUpdateCourseDraftGoalsMutation();
 
   const courseIdAsNumber = Number(courseId);
   const course = useAppSelector((state) => state.courseDrafts).find(
     ({ id }) => id === courseIdAsNumber
   );
 
-  const courseContent = course?.courseContent;
+  const { saveCourseDraftGoals } = useSaveCourseDraftGoals();
 
+  const courseContent = course?.courseContent;
   const videoContentUploadedText = courseContent
     ? formatVideoContentUploadedDuration(
         courseContent.videoContentLengthSeconds
@@ -55,18 +55,10 @@ export const CourseManagementAppBar = () => {
 
   const onClickSave = async () => {
     if (!course) return;
-
     try {
-      const requestBody = {
-        courseDraftId: course.id,
-        learningObjectives: course.courseContent.learningObjectives,
-        prerequisites: course.courseContent.prerequisites,
-        intendedLearners: course.courseContent.intendedLearners,
-      };
-
-      await updateCourseDraftGoals(requestBody).unwrap();
+      await saveCourseDraftGoals(course);
     } catch (error) {
-      // To be updated
+      // Notify user on error
     }
   };
 
