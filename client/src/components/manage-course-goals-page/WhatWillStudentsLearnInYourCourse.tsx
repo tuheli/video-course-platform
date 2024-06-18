@@ -97,7 +97,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
         </Dropzone>
       </DragAndDropContext.Provider>
       <AddItemButton
-        courseDraftId={courseDraft.id}
+        courseDraft={courseDraft}
         type="learningObjectives"
         orderIndex={
           sortedLearningObjectives.length > 0

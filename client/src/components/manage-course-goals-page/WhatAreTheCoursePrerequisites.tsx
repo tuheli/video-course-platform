@@ -94,7 +94,7 @@ export const WhatAreTheCoursePrerequisites = () => {
         </Dropzone>
       </DragAndDropContext.Provider>
       <AddItemButton
-        courseDraftId={courseDraft.id}
+        courseDraft={courseDraft}
         type="prerequisites"
         orderIndex={
           sortedPrerequisites.length > 0
