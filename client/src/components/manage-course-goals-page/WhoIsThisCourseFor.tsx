@@ -80,7 +80,7 @@ export const WhoIsThisCourseFor = () => {
               return (
                 <MemoDraggable
                   key={intendedLearnersItem.id}
-                  dataId={intendedLearnersItem.id}
+                  dataId={`${intendedLearnersItem.id}`}
                   allowedDropzoneTag="intended-learners"
                   changeOrder={changeIntendedLearnersOrder}
                 >

@@ -76,7 +76,7 @@ export const WhatAreTheCoursePrerequisites = () => {
               return (
                 <MemoDraggable
                   key={prerequisite.id}
-                  dataId={prerequisite.id}
+                  dataId={`${prerequisite.id}`}
                   allowedDropzoneTag="course-prerequisite"
                   changeOrder={changePrerequisitesOrder}
                 >

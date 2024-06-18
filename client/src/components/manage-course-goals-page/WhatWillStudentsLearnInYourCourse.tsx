@@ -79,7 +79,7 @@ export const WhatWillStudentsLearnInYourCourse = () => {
               return (
                 <MemoDraggable
                   key={learningObjective.id}
-                  dataId={learningObjective.id}
+                  dataId={`${learningObjective.id}`}
                   allowedDropzoneTag="learning-objective"
                   changeOrder={changeLearningObjectivesOrder}
                 >
