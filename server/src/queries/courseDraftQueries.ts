@@ -3,6 +3,7 @@ import { errorName } from '../errorNames';
 import {
   CourseDraft,
   CourseType,
+  CreateLearningObjectiveRequestBody,
   KnownCourseCategory,
   NewCourseDraftEntry,
   TextWithId,
@@ -27,6 +28,11 @@ interface CourseDraftInDatabase {
   isSubmissionProcessCompleted: boolean;
   language: string;
   createdAt: string;
+}
+
+interface DeleteLearningObjectiveParams {
+  learningObjectiveId: number;
+  userId: number;
 }
 
 export const createCourseDraft = async (
@@ -151,6 +157,53 @@ export const createCourseDraft = async (
 // updating quite complex. Instead
 // delete and insert can be very simple.
 
+export const createLearningObjective = async (
+  userId: number,
+  createRequest: CreateLearningObjectiveRequestBody
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+
+    `;
+
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteLearningObjective = async (
+  params: DeleteLearningObjectiveParams
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+      DELETE
+      FROM learning_objectives
+      WHERE id = $1
+      AND id IN (
+        SELECT learning_objectives.id
+        FROM learning_objectives
+        JOIN coursedrafts
+        ON learning_objectives.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+
+    const sqlValues = [params.learningObjectiveId, params.userId];
+
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
 export const updateCourseDraftCourseGoals = async (
   courseDraftId: number,
   updateRequest: UpdateCourseGoalsRequestBody
@@ -158,16 +211,22 @@ export const updateCourseDraftCourseGoals = async (
   try {
     await client.query('BEGIN;');
 
-    // NOTE: Ownership needs to be checked.
     const learningObjectivePromises =
       updateRequest.learningObjectives.items.map((learningObjective) => {
         const sqlText = `
-        UPDATE learning_objectives
-        SET 
-          learning_objective = $1,
-          order_index = $2
-        WHERE id = $3 AND course_draft_id = $4;
-      `;
+          UPDATE learning_objectives
+          SET 
+            learning_objective = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT learning_objectives.id
+            FROM learning_objectives
+            JOIN coursedrafts
+            ON learning_objectives.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4
+          );
+        `;
 
         const sqlValues = [
           learningObjective.text,
@@ -182,12 +241,19 @@ export const updateCourseDraftCourseGoals = async (
     const intendedLearnerPromises = updateRequest.intendedLearners.items.map(
       (intendedLearner) => {
         const sqlText = `
-        UPDATE intended_learners
-        SET 
-          intended_learner = $1,
-          order_index = $2
-        WHERE id = $3 AND course_draft_id = $4;
-      `;
+          UPDATE intended_learners
+          SET 
+            intended_learner = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT intended_learners.id
+            FROM intended_learners
+            JOIN coursedrafts
+            ON intended_learners.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4
+          );
+        `;
 
         const sqlValues = [
           intendedLearner.text,
@@ -203,12 +269,19 @@ export const updateCourseDraftCourseGoals = async (
     const prerequisitePromises = updateRequest.prerequisites.items.map(
       (prerequisite) => {
         const sqlText = `
-        UPDATE prerequisites
-        SET 
-          prerequisite = $1,
-          order_index = $2
-        WHERE id = $3 AND course_draft_id = $4;
-      `;
+          UPDATE prerequisites
+          SET 
+            prerequisite = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT prerequisites.id
+            FROM prerequisites
+            JOIN coursedrafts
+            ON prerequisites.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4
+          );
+        `;
 
         const sqlValues = [
           prerequisite.text,
@@ -358,5 +431,58 @@ export const getCourseDrafts = async (
     );
     newError.name = errorName.errorAtDatabase;
     throw newError;
+  }
+};
+
+export const getCourseDraft = async (
+  userId: number,
+  courseDraftId: number
+): Promise<CourseDraftInDatabase | null> => {
+  try {
+    const sqlText = `
+      SELECT 
+      id, 
+      creator_id, 
+      creator_email, 
+      course_type, 
+      course_title, 
+      course_category, 
+      creator_time_available_per_week, 
+      is_public, 
+      is_submission_process_completed, 
+      language, 
+      created_at
+      FROM coursedrafts
+      WHERE id = $1 AND creator_id = $2;
+    `;
+
+    const sqlValues = [courseDraftId, userId];
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      return null;
+    }
+
+    const courseDraftRow = queryResult.rows[0];
+
+    const courseDraft: CourseDraftInDatabase = {
+      id: courseDraftRow.id,
+      creatorId: courseDraftRow.creator_id,
+      creatorEmail: courseDraftRow.creator_email,
+      courseType: courseDraftRow.course_type,
+      courseTitle: courseDraftRow.course_title,
+      courseCategory: courseDraftRow.course_category,
+      creatorTimeAvailablePerWeek:
+        courseDraftRow.creator_time_available_per_week,
+      isPublic: courseDraftRow.is_public,
+      isSubmissionProcessCompleted:
+        courseDraftRow.is_submission_process_completed,
+      language: courseDraftRow.language,
+      createdAt: courseDraftRow.created_at,
+    };
+
+    return courseDraft;
+  } catch (error) {
+    throw error;
   }
 };
