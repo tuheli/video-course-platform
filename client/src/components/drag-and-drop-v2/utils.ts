@@ -58,7 +58,9 @@ export const isOrderChanged = (
   return oldOrder.some((oldItem, index) => oldItem.id !== newOrder[index].id);
 };
 
-export function getSortedCopy<T extends { orderIndex: number }>(array: T[]) {
+export function getSortedByOrderIndexCopy<T extends { orderIndex: number }>(
+  array: T[]
+) {
   const copy = [...array];
   return copy.sort((a, b) => a.orderIndex - b.orderIndex);
 }
