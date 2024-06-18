@@ -44,6 +44,12 @@ interface GetCourseDraftParams {
   courseDraftId: number;
 }
 
+interface UpdateCourseDraftCourseGoalsParams {
+  userId: number;
+  courseDraftId: number;
+  updateRequest: UpdateCourseGoalsRequestBody;
+}
+
 interface CreateTextWithId {
   userId: number;
   courseDraftId: number;
@@ -377,11 +383,12 @@ export const deleteIntendedLearner = async (
 };
 
 export const updateCourseDraftCourseGoals = async (
-  courseDraftId: number,
-  updateRequest: UpdateCourseGoalsRequestBody
+  params: UpdateCourseDraftCourseGoalsParams
 ): Promise<void> => {
   try {
     await client.query('BEGIN;');
+
+    const { updateRequest } = params;
 
     const learningObjectivePromises =
       updateRequest.learningObjectives.items.map((learningObjective) => {
@@ -396,7 +403,7 @@ export const updateCourseDraftCourseGoals = async (
             FROM learning_objectives
             JOIN coursedrafts
             ON learning_objectives.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
           );
         `;
 
@@ -404,7 +411,8 @@ export const updateCourseDraftCourseGoals = async (
           learningObjective.text,
           learningObjective.orderIndex,
           learningObjective.id,
-          courseDraftId,
+          params.userId,
+          params.courseDraftId,
         ];
 
         return client.query(sqlText, sqlValues);
@@ -423,7 +431,7 @@ export const updateCourseDraftCourseGoals = async (
             FROM intended_learners
             JOIN coursedrafts
             ON intended_learners.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
           );
         `;
 
@@ -431,7 +439,8 @@ export const updateCourseDraftCourseGoals = async (
           intendedLearner.text,
           intendedLearner.orderIndex,
           intendedLearner.id,
-          courseDraftId,
+          params.userId,
+          params.courseDraftId,
         ];
 
         return client.query(sqlText, sqlValues);
@@ -451,7 +460,7 @@ export const updateCourseDraftCourseGoals = async (
             FROM prerequisites
             JOIN coursedrafts
             ON prerequisites.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
           );
         `;
 
@@ -459,7 +468,8 @@ export const updateCourseDraftCourseGoals = async (
           prerequisite.text,
           prerequisite.orderIndex,
           prerequisite.id,
-          courseDraftId,
+          params.userId,
+          params.courseDraftId,
         ];
 
         return client.query(sqlText, sqlValues);
