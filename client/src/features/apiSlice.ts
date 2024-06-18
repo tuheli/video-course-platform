@@ -3,6 +3,7 @@ import {
   CourseDraft,
   NewCourseDraftEntry,
   ReorderableTextArrayObject,
+  TextWithId,
 } from './courseDraftsSlice';
 import { RootState } from '../app/store';
 
@@ -47,6 +48,12 @@ export interface UpdateCourseGoalsRequestBody {
   learningObjectives: ReorderableTextArrayObject;
   prerequisites: ReorderableTextArrayObject;
   intendedLearners: ReorderableTextArrayObject;
+}
+
+export interface CreateLearningObjectiveRequestBody {
+  courseDraftId: number;
+  learningObjective: string;
+  orderIndex: number;
 }
 
 export const toUserInDatabaseSafeWithToken = (
@@ -147,6 +154,20 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    createLearningObjective: builder.mutation<
+      TextWithId,
+      CreateLearningObjectiveRequestBody
+    >({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/goals/learningobjectives`,
+        method: 'POST',
+        body: {
+          learningObjective: body.learningObjective,
+          orderIndex: body.orderIndex,
+        },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     updateCourseDraftGoals: builder.mutation<
       void,
       UpdateCourseGoalsRequestBody
@@ -159,6 +180,16 @@ export const apiSlice = createApi({
           prerequisites: body.prerequisites,
           intendedLearners: body.intendedLearners,
         },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
+    deleteLearningObjective: builder.mutation<
+      void,
+      { learningObjectiveId: number; courseDraftId: number }
+    >({
+      query: ({ courseDraftId, learningObjectiveId }) => ({
+        url: `coursedrafts/${courseDraftId}/goals/learningobjectives/${learningObjectiveId}`,
+        method: 'DELETE',
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
@@ -187,7 +218,9 @@ export const {
   useSignupMutation,
   useSigninMutation,
   useCreateCourseDraftMutation,
+  useCreateLearningObjectiveMutation,
   useUpdateCourseDraftGoalsMutation,
+  useDeleteLearningObjectiveMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
 } = apiSlice;
