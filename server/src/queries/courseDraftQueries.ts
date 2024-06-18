@@ -29,17 +29,25 @@ interface DeleteLearningObjectiveParams {
   userId: number;
 }
 
+interface DeletePrerequisiteParams {
+  prerequisiteId: number;
+  userId: number;
+}
+
 interface GetCourseDraftParams {
   userId: number;
   courseDraftId: number;
 }
 
-interface CreateLearningObjectiveParams {
+interface CreateTextWithId {
   userId: number;
   courseDraftId: number;
   text: string;
   orderIndex: number;
 }
+
+type CreatePrerequisiteParams = CreateTextWithId;
+type CreateLearningObjectiveParams = CreateTextWithId;
 
 export const createCourseDraft = async (
   newCourseDraftEntry: NewCourseDraftEntry
@@ -198,6 +206,49 @@ export const createLearningObjective = async (
   }
 };
 
+export const createPrerequisite = async (
+  params: CreatePrerequisiteParams
+): Promise<TextWithId> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+    INSERT INTO prerequisites (course_draft_id, prerequisite, order_index)
+    VALUES ((SELECT id FROM coursedrafts WHERE id = $1 AND creator_id = $2), $3, $4) RETURNING id, course_draft_id, prerequisite, order_index;
+    `;
+
+    const sqlValues = [
+      params.courseDraftId,
+      params.userId,
+      params.text,
+      params.orderIndex,
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      const error = new Error(
+        'Returned row count is not 1 at create prerequisite query.'
+      );
+      error.name = errorName.errorAtDatabase;
+      throw error;
+    }
+
+    const createdRow = queryResult.rows[0];
+    const createdPrerequisite: TextWithId = {
+      id: createdRow.id,
+      text: createdRow.learning_objective,
+      orderIndex: createdRow.order_index,
+    };
+
+    await client.query('COMMIT;');
+    return createdPrerequisite;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
 export const deleteLearningObjective = async (
   params: DeleteLearningObjectiveParams
 ) => {
@@ -219,6 +270,30 @@ export const deleteLearningObjective = async (
 
     const sqlValues = [params.learningObjectiveId, params.userId];
 
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deletePrerequisite = async (params: DeletePrerequisiteParams) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM prerequisites
+      WHERE id = $1
+      AND id IN (
+        SELECT prerequisites.id
+        FROM prerequisites
+        JOIN coursedrafts
+        ON prerequisites.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.prerequisiteId, params.userId];
     await client.query(sqlText, sqlValues);
     await client.query('COMMIT;');
   } catch (error) {
