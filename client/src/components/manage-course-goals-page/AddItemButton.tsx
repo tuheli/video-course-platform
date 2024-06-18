@@ -1,39 +1,77 @@
+import { CircularProgress, Stack } from '@mui/material';
 import { useAppDispatch } from '../../app/hooks';
-import { useCreateLearningObjectiveMutation } from '../../features/apiSlice';
 import {
+  useCreateLearningObjectiveMutation,
+  useCreatePrerequisiteMutation,
+} from '../../features/apiSlice';
+import {
+  CourseDraft,
   UpdateableCourseContentProperty,
   addedTextItem,
 } from '../../features/courseDraftsSlice';
+import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
 import { AddMoreButton } from './AddMoreButton';
+import { useState } from 'react';
 
 interface AddItemButtonProps {
-  courseDraftId: number;
+  courseDraft: CourseDraft;
   type: UpdateableCourseContentProperty;
   orderIndex: number;
 }
 
 export const AddItemButton = ({
-  courseDraftId,
+  courseDraft,
   type,
   orderIndex,
 }: AddItemButtonProps) => {
+  const [isProcessingRequest, setIsProcessingRequest] = useState(false);
   const [createLearningObjective] = useCreateLearningObjectiveMutation();
+  const [createPrerequisite] = useCreatePrerequisiteMutation();
+  const { saveCourseDraftGoals } = useSaveCourseDraftGoals();
   const dispatch = useAppDispatch();
 
   const onClick = async () => {
-    if (type === 'learningObjectives') {
-      try {
-        await createLearningObjective({
-          courseDraftId,
-          learningObjective: '',
-          orderIndex,
-        }).unwrap();
-      } catch (error) {}
-      return;
-    }
+    try {
+      setIsProcessingRequest(true);
+      switch (type) {
+        case 'learningObjectives':
+          await saveCourseDraftGoals(courseDraft);
+          await createLearningObjective({
+            courseDraftId: courseDraft.id,
+            learningObjective: '',
+            orderIndex,
+          }).unwrap();
+          break;
+        case 'prerequisites':
+          await saveCourseDraftGoals(courseDraft);
+          await createPrerequisite({
+            courseDraftId: courseDraft.id,
+            prerequisite: '',
+            orderIndex,
+          }).unwrap();
+          break;
+        default:
+          throw new Error('Unknown type of item to add.');
+      }
 
-    dispatch(addedTextItem({ courseDraftId, type }));
+      dispatch(addedTextItem({ courseDraftId: courseDraft.id, type }));
+      setIsProcessingRequest(false);
+    } catch (error) {
+      console.log('Error adding item:', error);
+      setIsProcessingRequest(false);
+    }
   };
 
-  return <AddMoreButton onClick={onClick} />;
+  return (
+    <Stack
+      sx={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
+      <AddMoreButton onClick={onClick} />
+      {isProcessingRequest && <CircularProgress size={18} />}
+    </Stack>
+  );
 };
