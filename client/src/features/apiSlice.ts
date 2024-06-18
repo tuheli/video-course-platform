@@ -62,6 +62,12 @@ export interface CreatePrerequisiteRequestBody {
   orderIndex: number;
 }
 
+export interface CreateIntendedLearnerRequestBody {
+  courseDraftId: number;
+  intendedLearner: string;
+  orderIndex: number;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -188,6 +194,20 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    createIntendedLearner: builder.mutation<
+      TextWithId,
+      CreateIntendedLearnerRequestBody
+    >({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/goals/intendedlearners`,
+        method: 'POST',
+        body: {
+          intendedLearner: body.intendedLearner,
+          orderIndex: body.orderIndex,
+        },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     updateCourseDraftGoals: builder.mutation<
       void,
       UpdateCourseGoalsRequestBody
@@ -223,6 +243,16 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    deleteIntendedLearner: builder.mutation<
+      void,
+      { intendedLearnerId: number; courseDraftId: number }
+    >({
+      query: ({ courseDraftId, intendedLearnerId }) => ({
+        url: `coursedrafts/${courseDraftId}/goals/intendedlearners/${intendedLearnerId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
       query: () => `coursedrafts`,
       providesTags: ['CourseDrafts'],
@@ -250,9 +280,11 @@ export const {
   useCreateCourseDraftMutation,
   useCreateLearningObjectiveMutation,
   useCreatePrerequisiteMutation,
+  useCreateIntendedLearnerMutation,
   useUpdateCourseDraftGoalsMutation,
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
+  useDeleteIntendedLearnerMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
 } = apiSlice;
