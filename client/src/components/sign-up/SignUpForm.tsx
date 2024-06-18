@@ -23,7 +23,7 @@ import {
 import { useAppDispatch } from '../../app/hooks';
 import { signedIn } from '../../features/meSlice';
 import { notified } from '../../features/notificationSlice';
-import { Notification } from '../notification/Notification';
+import { Notification } from '../utility/Notification';
 
 const minUsernameLength = 4;
 const minPasswordLength = 4;

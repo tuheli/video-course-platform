@@ -19,7 +19,7 @@ import { useAppDispatch } from '../../app/hooks';
 import { signedIn } from '../../features/meSlice';
 import { TextInput } from '../sign-up/StyledTextInput';
 import { notified } from '../../features/notificationSlice';
-import { Notification } from '../notification/Notification';
+import { Notification } from '../utility/Notification';
 
 const validateEmail = (email: string) => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

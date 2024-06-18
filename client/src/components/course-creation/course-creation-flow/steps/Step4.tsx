@@ -1,6 +1,6 @@
 import { Container, Stack, Typography } from '@mui/material';
 import { Step4Items } from './Step4Items';
-import { Notification } from '../../../notification/Notification';
+import { Notification } from '../../../utility/Notification';
 
 export const Step4 = () => {
   return (
