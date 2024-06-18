@@ -2,7 +2,8 @@ import { useUpdateCourseDraftGoalsMutation } from '../features/apiSlice';
 import { CourseDraft } from '../features/courseDraftsSlice';
 
 export const useSaveCourseDraftGoals = () => {
-  const [updateCourseDraftGoals] = useUpdateCourseDraftGoalsMutation();
+  const [updateCourseDraftGoals, { isLoading }] =
+    useUpdateCourseDraftGoalsMutation();
 
   const saveCourseDraftGoals = async (course: CourseDraft) => {
     try {
@@ -19,5 +20,5 @@ export const useSaveCourseDraftGoals = () => {
     }
   };
 
-  return { saveCourseDraftGoals };
+  return { saveCourseDraftGoals, isLoadingSave: isLoading };
 };
