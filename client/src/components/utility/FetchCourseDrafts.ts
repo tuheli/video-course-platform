@@ -13,6 +13,9 @@ import { fetchedCourseDrafts } from '../../features/courseDraftsSlice';
 // Also this approach helps to avoid
 // mixing the application and server logic.
 
+// NOTE: Maybe use custom hook instead of
+// jsx component?
+
 export const FetchCourseDrafts = () => {
   const { data } = useGetCourseDraftsQuery();
   const dispatch = useAppDispatch();
