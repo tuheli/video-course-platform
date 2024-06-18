@@ -55,7 +55,7 @@ export interface CourseDraft {
 }
 
 export interface TextWithId extends Reorderable {
-  id: string;
+  id: number;
   text: string;
 }
 
@@ -111,9 +111,9 @@ interface ValidateTextWithIdArrayOptions {
   minTextLength: number;
 }
 
-const minLearningObjectivesCount = 4;
-const minPrerequisitesCount = 1;
-const minIntendedLearnersCount = 1;
+const minLearningObjectivesCount = 0;
+const minPrerequisitesCount = 0;
+const minIntendedLearnersCount = 0;
 
 // NOTE: Used in wrapper functions to be more descriptive
 const validateTextWithIdArray = ({
@@ -214,7 +214,7 @@ export const getCourseDraftProgressValue = (courseDraft: CourseDraft) => {
 const getTextWithIdArray = (length: number): TextWithId[] => {
   return Array.from({ length }, (_, k) => {
     return {
-      id: `${k}`,
+      id: k,
       text: '',
       orderIndex: -1,
     };
@@ -341,7 +341,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        itemId: string;
+        itemId: number;
         newTextValue: string;
         type: UpdateableCourseContentProperty;
       }>
@@ -391,7 +391,7 @@ const slice = createSlice({
       if (!courseDraft) return;
 
       courseDraft.courseContent[action.payload.type].items.push({
-        id: crypto.randomUUID(),
+        id: getRandomInt(1, 10_000_000),
         text: '',
         orderIndex:
           Math.max(
@@ -405,7 +405,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        textItemId: string;
+        textItemId: number;
         type: UpdateableCourseContentProperty;
       }>
     ) => {
