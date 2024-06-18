@@ -1,4 +1,5 @@
 import { useAppDispatch } from '../../app/hooks';
+import { useCreateLearningObjectiveMutation } from '../../features/apiSlice';
 import {
   UpdateableCourseContentProperty,
   addedTextItem,
@@ -8,12 +9,29 @@ import { AddMoreButton } from './AddMoreButton';
 interface AddItemButtonProps {
   courseDraftId: number;
   type: UpdateableCourseContentProperty;
+  orderIndex: number;
 }
 
-export const AddItemButton = ({ courseDraftId, type }: AddItemButtonProps) => {
+export const AddItemButton = ({
+  courseDraftId,
+  type,
+  orderIndex,
+}: AddItemButtonProps) => {
+  const [createLearningObjective] = useCreateLearningObjectiveMutation();
   const dispatch = useAppDispatch();
 
-  const onClick = () => {
+  const onClick = async () => {
+    if (type === 'learningObjectives') {
+      try {
+        await createLearningObjective({
+          courseDraftId,
+          learningObjective: '',
+          orderIndex,
+        }).unwrap();
+      } catch (error) {}
+      return;
+    }
+
     dispatch(addedTextItem({ courseDraftId, type }));
   };
 
