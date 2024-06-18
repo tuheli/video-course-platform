@@ -3,8 +3,10 @@ import { userExtractor } from '../middleware';
 import { errorName } from '../errorNames';
 import {
   createCourseDraft,
+  createIntendedLearner,
   createLearningObjective,
   createPrerequisite,
+  deleteIntendedLearner,
   deleteLearningObjective,
   deletePrerequisite,
   getCourseDraft,
@@ -270,6 +272,11 @@ export interface CreatePrerequisiteRequestBody {
   orderIndex: number;
 }
 
+export interface CreateIntendedLearnerRequestBody {
+  intendedLearner: string;
+  orderIndex: number;
+}
+
 export interface UpdateCourseGoalsRequestBody {
   learningObjectives: ReorderableTextArrayObject;
   prerequisites: ReorderableTextArrayObject;
@@ -333,6 +340,36 @@ const toCreatePrerequisiteRequestBody = (
 
   return {
     prerequisite: body.prerequisite,
+    orderIndex: body.orderIndex,
+  };
+};
+
+const toCreateIntendedLearnerRequestBody = (
+  body: unknown
+): CreateIntendedLearnerRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (
+    !('intendedLearner' in body) ||
+    typeof body.intendedLearner !== 'string'
+  ) {
+    const error = new Error('intendedLearner is missing or its not a string.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('orderIndex' in body) || typeof body.orderIndex !== 'number') {
+    const error = new Error('orderIndex is missing or its not a number.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  return {
+    intendedLearner: body.intendedLearner,
     orderIndex: body.orderIndex,
   };
 };
@@ -845,6 +882,51 @@ router.post(
   }
 );
 
+router.post(
+  '/:coursedraftid/goals/intendedlearners',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const createIntendedLearnerRequestBody =
+        toCreateIntendedLearnerRequestBody(req.body);
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const courseDraftInDatabase = await getCourseDraft({
+        userId: req.user.id,
+        courseDraftId,
+      });
+
+      const isCourseDraftInDatabase = courseDraftInDatabase !== null;
+
+      if (!isCourseDraftInDatabase) {
+        return res.status(404).json({ message: 'Course draft was not found.' });
+      }
+
+      const createdIntendedLearner = await createIntendedLearner({
+        userId: req.user.id,
+        courseDraftId,
+        text: createIntendedLearnerRequestBody.intendedLearner,
+        orderIndex: createIntendedLearnerRequestBody.orderIndex,
+      });
+
+      return res.status(201).json(createdIntendedLearner);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
   try {
     if (!req.user) {
@@ -934,6 +1016,42 @@ router.delete(
       await deletePrerequisite({
         userId: req.user.id,
         prerequisiteId,
+      });
+      return res.status(200).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  '/:coursedraftid/goals/intendedlearners/:intendedlearnerid',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const intendedLearnerId = parseInt(req.params.intendedlearnerid);
+
+      if (isNaN(intendedLearnerId)) {
+        return res
+          .status(400)
+          .json({ message: 'Invalid intended learner id.' });
+      }
+
+      await deleteIntendedLearner({
+        userId: req.user.id,
+        intendedLearnerId,
       });
       return res.status(200).end();
     } catch (error) {
