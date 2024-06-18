@@ -11,7 +11,10 @@ import { Box, Stack } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { DeleteButton } from './DeleteButton';
 import { MemoDraghandle } from '../drag-and-drop-v2/Draghandle';
-import { useDeleteLearningObjectiveMutation } from '../../features/apiSlice';
+import {
+  useDeleteLearningObjectiveMutation,
+  useDeletePrerequisiteMutation,
+} from '../../features/apiSlice';
 import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
 
 interface EditableTextItemProps {
@@ -29,14 +32,15 @@ export const EditableTextItem = ({
   type,
   isAbleToDeleteItem,
 }: EditableTextItemProps) => {
+  const [isProcessingRequest, setIsProcessingRequest] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const [deleteLearningObjective, { isLoading }] =
-    useDeleteLearningObjectiveMutation();
-  const { saveCourseDraftGoals, isLoadingSave } = useSaveCourseDraftGoals();
+  const [deleteLearningObjective] = useDeleteLearningObjectiveMutation();
+  const [deletePrerequisite] = useDeletePrerequisiteMutation();
+  const { saveCourseDraftGoals } = useSaveCourseDraftGoals();
   const dispatch = useAppDispatch();
 
   const isAbleToDelete =
-    isAbleToDeleteItem(courseDraft) && !isLoading && !isLoadingSave;
+    isAbleToDeleteItem(courseDraft) && !isProcessingRequest;
 
   const placeholder = item.text.length > 0 ? item.text : examplePlaceholderText;
 
@@ -55,13 +59,19 @@ export const EditableTextItem = ({
     if (!isAbleToDelete) return;
 
     try {
+      setIsProcessingRequest(true);
       await saveCourseDraftGoals(courseDraft);
-
       switch (type) {
         case 'learningObjectives':
           await deleteLearningObjective({
             courseDraftId: courseDraft.id,
             learningObjectiveId: item.id,
+          }).unwrap();
+          break;
+        case 'prerequisites':
+          await deletePrerequisite({
+            courseDraftId: courseDraft.id,
+            prerequisiteId: item.id,
           }).unwrap();
           break;
         default:
@@ -75,8 +85,10 @@ export const EditableTextItem = ({
           type,
         })
       );
+      setIsProcessingRequest(false);
     } catch (error) {
       console.log('Error deleting item', error);
+      setIsProcessingRequest(false);
     }
   };
 
