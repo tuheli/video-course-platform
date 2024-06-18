@@ -92,7 +92,15 @@ export const WhoIsThisCourseFor = () => {
           </Stack>
         </Dropzone>
       </DragAndDropContext.Provider>
-      <AddItemButton courseDraftId={courseDraft.id} type="intendedLearners" />
+      <AddItemButton
+        courseDraftId={courseDraft.id}
+        type="intendedLearners"
+        orderIndex={
+          sortedIntendedLearners.length > 0
+            ? Math.max(...sortedIntendedLearners.map((p) => p.orderIndex)) + 1
+            : 0
+        }
+      />
     </Stack>
   );
 };

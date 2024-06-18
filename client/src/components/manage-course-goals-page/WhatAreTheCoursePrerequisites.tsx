@@ -88,7 +88,15 @@ export const WhatAreTheCoursePrerequisites = () => {
           </Stack>
         </Dropzone>
       </DragAndDropContext.Provider>
-      <AddItemButton courseDraftId={courseDraft.id} type="prerequisites" />
+      <AddItemButton
+        courseDraftId={courseDraft.id}
+        type="prerequisites"
+        orderIndex={
+          sortedPrerequisites.length > 0
+            ? Math.max(...sortedPrerequisites.map((p) => p.orderIndex)) + 1
+            : 0
+        }
+      />
     </Stack>
   );
 };

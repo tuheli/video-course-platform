@@ -91,7 +91,15 @@ export const WhatWillStudentsLearnInYourCourse = () => {
           </Stack>
         </Dropzone>
       </DragAndDropContext.Provider>
-      <AddItemButton courseDraftId={courseDraft.id} type="learningObjectives" />
+      <AddItemButton
+        courseDraftId={courseDraft.id}
+        type="learningObjectives"
+        orderIndex={
+          sortedLearningObjectives.length > 0
+            ? Math.max(...sortedLearningObjectives.map((p) => p.orderIndex)) + 1
+            : 0
+        }
+      />
     </Stack>
   );
 };
