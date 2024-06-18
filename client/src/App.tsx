@@ -7,7 +7,7 @@ import { SignedOutRoutes } from './components/routes/SignedOutRoutes';
 import { useAppSelector } from './app/hooks';
 import { SignedInRoutes } from './components/routes/SignedInRoutes';
 import { useLocalStorageLogin } from './hooks/useLocalStorageLogin';
-import { LoadingScreen } from './components/loadingscreen/LoadingScreen';
+import { LoadingScreen } from './components/utility/LoadingScreen';
 
 // NOTE: Import css baseline high enough to prevent mui error
 
