@@ -3,19 +3,12 @@ import { errorName } from '../errorNames';
 import {
   CourseDraft,
   CourseType,
-  CreateLearningObjectiveRequestBody,
   KnownCourseCategory,
   NewCourseDraftEntry,
-  ReorderableTextArrayObject,
   TextWithId,
   TimeAvailablePerWeek,
   UpdateCourseGoalsRequestBody,
 } from '../routers/courseDraftsRouter';
-
-// NOTE: The course draft returned is structured
-// from the frontends perspective. For example,
-// in frontend a specific structure is used for
-// drag and drop reordering.
 
 interface CourseDraftInDatabase {
   id: number;
@@ -161,14 +154,6 @@ export const createCourseDraft = async (
     throw newError;
   }
 };
-
-// NOTE: Instead of updating tables
-// maybe it is better to delete and insert.
-// The updates are done only on demand via saving.
-// The user might have deleted, added, reordered
-// and updated different texts which makes
-// updating quite complex. Instead
-// delete and insert can be very simple.
 
 export const createLearningObjective = async (
   params: CreateLearningObjectiveParams
