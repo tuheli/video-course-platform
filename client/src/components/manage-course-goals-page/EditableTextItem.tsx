@@ -11,6 +11,7 @@ import { Box, Stack } from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { DeleteButton } from './DeleteButton';
 import { MemoDraghandle } from '../drag-and-drop-v2/Draghandle';
+import { useDeleteLearningObjectiveMutation } from '../../features/apiSlice';
 
 interface EditableTextItemProps {
   examplePlaceholderText: string;
@@ -28,7 +29,7 @@ export const EditableTextItem = ({
   isAbleToDeleteItem,
 }: EditableTextItemProps) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
-
+  const [deleteLearningObjective] = useDeleteLearningObjectiveMutation();
   const dispatch = useAppDispatch();
 
   const isAbleToDelete = isAbleToDeleteItem(courseDraft);
@@ -45,8 +46,19 @@ export const EditableTextItem = ({
     );
   };
 
-  const onClickDeleteIcon = () => {
+  const onClickDeleteIcon = async () => {
     if (!isAbleToDelete) return;
+
+    if (type === 'learningObjectives') {
+      try {
+        await deleteLearningObjective({
+          courseDraftId: courseDraft.id,
+          learningObjectiveId: item.id,
+        }).unwrap();
+      } catch (error) {}
+      return;
+    }
+
     dispatch(
       deletedTextItem({
         courseDraftId: courseDraft.id,
