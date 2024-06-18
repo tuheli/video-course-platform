@@ -35,9 +35,9 @@ export const AddItemButton = ({
   const onClick = async () => {
     try {
       setIsProcessingRequest(true);
+      await saveCourseDraftGoals(courseDraft);
       switch (type) {
         case 'learningObjectives':
-          await saveCourseDraftGoals(courseDraft);
           await createLearningObjective({
             courseDraftId: courseDraft.id,
             learningObjective: '',
@@ -45,7 +45,6 @@ export const AddItemButton = ({
           }).unwrap();
           break;
         case 'prerequisites':
-          await saveCourseDraftGoals(courseDraft);
           await createPrerequisite({
             courseDraftId: courseDraft.id,
             prerequisite: '',
@@ -53,7 +52,6 @@ export const AddItemButton = ({
           }).unwrap();
           break;
         case 'intendedLearners':
-          await saveCourseDraftGoals(courseDraft);
           await createIntendedLearner({
             courseDraftId: courseDraft.id,
             intendedLearner: '',
