@@ -12,6 +12,7 @@ import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-
 import { DeleteButton } from './DeleteButton';
 import { MemoDraghandle } from '../drag-and-drop-v2/Draghandle';
 import {
+  useDeleteIntendedLearnerMutation,
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
 } from '../../features/apiSlice';
@@ -36,6 +37,7 @@ export const EditableTextItem = ({
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [deleteLearningObjective] = useDeleteLearningObjectiveMutation();
   const [deletePrerequisite] = useDeletePrerequisiteMutation();
+  const [deleteIntendedLearner] = useDeleteIntendedLearnerMutation();
   const { saveCourseDraftGoals } = useSaveCourseDraftGoals();
   const dispatch = useAppDispatch();
 
@@ -72,6 +74,12 @@ export const EditableTextItem = ({
           await deletePrerequisite({
             courseDraftId: courseDraft.id,
             prerequisiteId: item.id,
+          }).unwrap();
+          break;
+        case 'intendedLearners':
+          await deleteIntendedLearner({
+            courseDraftId: courseDraft.id,
+            intendedLearnerId: item.id,
           }).unwrap();
           break;
         default:
