@@ -5,7 +5,10 @@ import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeletePrerequisite } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
+import {
+  ItemWithOrderIndex,
+  getSortedByOrderIndexCopy,
+} from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
 import { useAppSelector } from '../../app/hooks';
 import { useParams } from 'react-router-dom';
@@ -32,7 +35,9 @@ export const WhatAreTheCoursePrerequisites = () => {
   const sortedPrerequisites =
     courseDraft === undefined
       ? []
-      : getSortedCopy(courseDraft.courseContent.prerequisites.items);
+      : getSortedByOrderIndexCopy(
+          courseDraft.courseContent.prerequisites.items
+        );
 
   if (!courseDraft) return null;
 

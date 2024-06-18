@@ -6,7 +6,10 @@ import { EditableTextItem } from './EditableTextItem';
 import { isAbleToDeleteIntendedLearners } from '../../features/courseDraftsSlice';
 import { AddItemButton } from './AddItemButton';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
-import { ItemWithOrderIndex, getSortedCopy } from '../drag-and-drop-v2/utils';
+import {
+  ItemWithOrderIndex,
+  getSortedByOrderIndexCopy,
+} from '../drag-and-drop-v2/utils';
 import { MemoDraggable } from '../drag-and-drop-v2/Draggable';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
@@ -33,7 +36,9 @@ export const WhoIsThisCourseFor = () => {
   const sortedIntendedLearners =
     courseDraft === undefined
       ? []
-      : getSortedCopy(courseDraft.courseContent.intendedLearners.items);
+      : getSortedByOrderIndexCopy(
+          courseDraft.courseContent.intendedLearners.items
+        );
 
   if (!courseDraft) return null;
 

@@ -7,7 +7,7 @@ import {
 } from '../../../features/courseDraftsSlice';
 import {
   ItemWithOrderIndex,
-  getSortedCopy,
+  getSortedByOrderIndexCopy,
 } from '../../drag-and-drop-v2/utils';
 import { Dropzone } from '../../drag-and-drop-v2/Dropzone';
 import { useAppDispatch } from '../../../app/hooks';
@@ -97,7 +97,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
     setIsHeadingIconsVisible(false);
   };
 
-  const sortedLectures = getSortedCopy(curriculumSection.lessons);
+  const sortedLectures = getSortedByOrderIndexCopy(curriculumSection.lessons);
 
   return (
     <Stack

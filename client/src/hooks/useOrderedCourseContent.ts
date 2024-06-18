@@ -1,4 +1,4 @@
-import { getSortedCopy } from '../components/drag-and-drop-v2/utils';
+import { getSortedByOrderIndexCopy } from '../components/drag-and-drop-v2/utils';
 import { UpdateableCourseContentProperty } from '../features/courseDraftsSlice';
 import { useCourseDraft } from './useCourseDraft';
 
@@ -9,5 +9,5 @@ export const useOrderedCourseContent = (
   if (!courseDraft) return [];
 
   const items = courseDraft.courseContent[type].items;
-  return getSortedCopy(items);
+  return getSortedByOrderIndexCopy(items);
 };
