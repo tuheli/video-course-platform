@@ -3,6 +3,9 @@ import { userExtractor } from '../middleware';
 import { errorName } from '../errorNames';
 import {
   createCourseDraft,
+  createLearningObjective,
+  deleteLearningObjective,
+  getCourseDraft,
   getCourseDrafts,
   updateCourseDraftCourseGoals,
 } from '../queries/courseDraftQueries';
@@ -255,11 +258,48 @@ interface CreateCourseDraftRequestBody {
   newCourseDraftEntry: NewCourseDraftEntry;
 }
 
+export interface CreateLearningObjectiveRequestBody {
+  learningObjective: string;
+  orderIndex: number;
+}
+
 export interface UpdateCourseGoalsRequestBody {
   learningObjectives: ReorderableTextArrayObject;
   prerequisites: ReorderableTextArrayObject;
   intendedLearners: ReorderableTextArrayObject;
 }
+
+const toCreateLearningObjectiveRequestBody = (
+  body: unknown
+): CreateLearningObjectiveRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (
+    !('learningObjective' in body) ||
+    typeof body.learningObjective !== 'string'
+  ) {
+    const error = new Error(
+      'learningObjective is missing or its not a string.'
+    );
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('orderIndex' in body) || typeof body.orderIndex !== 'number') {
+    const error = new Error('orderIndex is missing or its not a number.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  return {
+    learningObjective: body.learningObjective,
+    orderIndex: body.orderIndex,
+  };
+};
 
 const toUpdateCourseGoalsRequestBody = (
   courseDraftId: number,
@@ -678,6 +718,51 @@ router.post('/', userExtractor, async (req, res, next) => {
   }
 });
 
+router.post(
+  '/:coursedraftid/goals/learningobjectives',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const createLearningObjectiveRequestBody =
+        toCreateLearningObjectiveRequestBody(req.body);
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const courseDraftInDatabase = await getCourseDraft({
+        userId: req.user.id,
+        courseDraftId,
+      });
+
+      const isCourseDraftInDatabase = courseDraftInDatabase !== null;
+
+      if (!isCourseDraftInDatabase) {
+        return res.status(404).json({ message: 'Course draft was not found.' });
+      }
+
+      const createdLearningObjective = await createLearningObjective({
+        userId: req.user.id,
+        courseDraftId,
+        text: createLearningObjectiveRequestBody.learningObjective,
+        orderIndex: createLearningObjectiveRequestBody.orderIndex,
+      });
+
+      return res.status(201).json(createdLearningObjective);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
   try {
     if (!req.user) {
@@ -702,5 +787,43 @@ router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
     next(error);
   }
 });
+
+// NOTE: Course draft id is not needed here
+// but it is added for consistent routing.
+router.delete(
+  '/:coursedraftid/goals/learningobjectives/:learningobjectiveid',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+
+      if (isNaN(courseDraftId)) {
+        return res.status(400).json({ message: 'Invalid course draft id.' });
+      }
+
+      const learningObjectiveId = parseInt(req.params.learningobjectiveid);
+
+      if (isNaN(learningObjectiveId)) {
+        return res
+          .status(400)
+          .json({ message: 'Invalid learning objective id.' });
+      }
+
+      await deleteLearningObjective({
+        userId: req.user.id,
+        learningObjectiveId,
+      });
+      return res.status(200).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default router;
