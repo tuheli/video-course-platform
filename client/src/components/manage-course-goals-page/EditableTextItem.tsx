@@ -12,6 +12,7 @@ import { InputFieldWithMaxCharacters } from '../course-creation/course-creation-
 import { DeleteButton } from './DeleteButton';
 import { MemoDraghandle } from '../drag-and-drop-v2/Draghandle';
 import { useDeleteLearningObjectiveMutation } from '../../features/apiSlice';
+import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
 
 interface EditableTextItemProps {
   examplePlaceholderText: string;
@@ -29,10 +30,14 @@ export const EditableTextItem = ({
   isAbleToDeleteItem,
 }: EditableTextItemProps) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
-  const [deleteLearningObjective] = useDeleteLearningObjectiveMutation();
+  const [deleteLearningObjective, { isLoading }] =
+    useDeleteLearningObjectiveMutation();
+  const { saveCourseDraftGoals, isLoadingSave } = useSaveCourseDraftGoals();
   const dispatch = useAppDispatch();
 
-  const isAbleToDelete = isAbleToDeleteItem(courseDraft);
+  const isAbleToDelete =
+    isAbleToDeleteItem(courseDraft) && !isLoading && !isLoadingSave;
+
   const placeholder = item.text.length > 0 ? item.text : examplePlaceholderText;
 
   const onChangeInputField = (event: ChangeEvent<HTMLInputElement>) => {
@@ -49,23 +54,30 @@ export const EditableTextItem = ({
   const onClickDeleteIcon = async () => {
     if (!isAbleToDelete) return;
 
-    if (type === 'learningObjectives') {
-      try {
-        await deleteLearningObjective({
-          courseDraftId: courseDraft.id,
-          learningObjectiveId: item.id,
-        }).unwrap();
-      } catch (error) {}
-      return;
-    }
+    try {
+      await saveCourseDraftGoals(courseDraft);
 
-    dispatch(
-      deletedTextItem({
-        courseDraftId: courseDraft.id,
-        textItemId: item.id,
-        type,
-      })
-    );
+      switch (type) {
+        case 'learningObjectives':
+          await deleteLearningObjective({
+            courseDraftId: courseDraft.id,
+            learningObjectiveId: item.id,
+          }).unwrap();
+          break;
+        default:
+          throw new Error('Unknown type of item to delete');
+      }
+
+      dispatch(
+        deletedTextItem({
+          courseDraftId: courseDraft.id,
+          textItemId: item.id,
+          type,
+        })
+      );
+    } catch (error) {
+      console.log('Error deleting item', error);
+    }
   };
 
   const onMouseEnter = () => {
