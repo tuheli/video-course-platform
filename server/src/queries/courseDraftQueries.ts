@@ -6,6 +6,7 @@ import {
   CreateLearningObjectiveRequestBody,
   KnownCourseCategory,
   NewCourseDraftEntry,
+  ReorderableTextArrayObject,
   TextWithId,
   TimeAvailablePerWeek,
   UpdateCourseGoalsRequestBody,
@@ -33,6 +34,18 @@ interface CourseDraftInDatabase {
 interface DeleteLearningObjectiveParams {
   learningObjectiveId: number;
   userId: number;
+}
+
+interface GetCourseDraftParams {
+  userId: number;
+  courseDraftId: number;
+}
+
+interface CreateLearningObjectiveParams {
+  userId: number;
+  courseDraftId: number;
+  text: string;
+  orderIndex: number;
 }
 
 export const createCourseDraft = async (
@@ -158,17 +171,42 @@ export const createCourseDraft = async (
 // delete and insert can be very simple.
 
 export const createLearningObjective = async (
-  userId: number,
-  createRequest: CreateLearningObjectiveRequestBody
-) => {
+  params: CreateLearningObjectiveParams
+): Promise<TextWithId> => {
   try {
     await client.query('BEGIN;');
 
     const sqlText = `
-
+    INSERT INTO learning_objectives (course_draft_id, learning_objective, order_index)
+    VALUES ((SELECT id FROM coursedrafts WHERE id = $1 AND creator_id = $2), $3, $4) RETURNING id, course_draft_id, learning_objective, order_index;
     `;
 
+    const sqlValues = [
+      params.courseDraftId,
+      params.userId,
+      params.text,
+      params.orderIndex,
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      const error = new Error(
+        'Returned row count is not 1 at create learning objective query.'
+      );
+      error.name = errorName.errorAtDatabase;
+      throw error;
+    }
+
+    const createdRow = queryResult.rows[0];
+    const createdLearningObjective: TextWithId = {
+      id: createdRow.id,
+      text: createdRow.learning_objective,
+      orderIndex: createdRow.order_index,
+    };
+
     await client.query('COMMIT;');
+    return createdLearningObjective;
   } catch (error) {
     await client.query('ROLLBACK;');
     throw error;
@@ -435,8 +473,7 @@ export const getCourseDrafts = async (
 };
 
 export const getCourseDraft = async (
-  userId: number,
-  courseDraftId: number
+  params: GetCourseDraftParams
 ): Promise<CourseDraftInDatabase | null> => {
   try {
     const sqlText = `
@@ -456,7 +493,7 @@ export const getCourseDraft = async (
       WHERE id = $1 AND creator_id = $2;
     `;
 
-    const sqlValues = [courseDraftId, userId];
+    const sqlValues = [params.courseDraftId, params.userId];
     const queryResult = await client.query(sqlText, sqlValues);
 
     if (queryResult.rowCount !== 1) {
