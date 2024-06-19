@@ -3,7 +3,7 @@ export interface ItemWithOrderIndex {
   orderIndex: number;
 }
 
-export function giveItemsOrderIndicies<T extends { id: string }>(
+export function giveItemsOrderIndicies<T extends { id: number }>(
   oldOrder: T[],
   newOrder: T[]
 ): ItemWithOrderIndex[] {
@@ -52,8 +52,8 @@ export const getAbsolutePosition = (element: HTMLElement) => {
 };
 
 export const isOrderChanged = (
-  oldOrder: Array<{ id: string }>,
-  newOrder: Array<{ id: string }>
+  oldOrder: Array<{ id: number }>,
+  newOrder: Array<{ id: number }>
 ) => {
   return oldOrder.some((oldItem, index) => oldItem.id !== newOrder[index].id);
 };
