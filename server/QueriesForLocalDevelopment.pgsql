@@ -1,5 +1,7 @@
 --- This query returns course drafts for a given user id ---
 --- Note that you can also run parts of the query by selecting only a portion of it ---
+--- This query is in use on the server ---
+--- Note that the separators for the array items are different on the function in use and need to be updated ---
 
 SELECT 
   CD.id as course_draft_id,
