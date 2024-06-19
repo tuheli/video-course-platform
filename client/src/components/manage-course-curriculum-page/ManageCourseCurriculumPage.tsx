@@ -6,43 +6,47 @@ import { CourseManagementPageLayout } from '../course-management/CourseManagemen
 import { Footer } from '../footer/Footer';
 import { Description } from './Description';
 import { Curriculum } from '../curriculum/Curriculum';
+import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
 
 export const ManageCourseCurriculumPage = () => {
   useScrollToTop();
 
   return (
-    <Box
-      sx={{
-        flexDirection: 'column',
-        display: 'flex',
-        // Always show scrollbar with + 1px
-        // preventing undesired horizontal movement
-        // when scrollbar appears with more content
-        // being added to the page
-        minHeight: 'calc(100vh + 1px)',
-      }}
-    >
-      <CourseManagementAppBar />
+    <>
+      <FetchCourseDrafts />
       <Box
         sx={{
-          pt: 14,
-          pb: 8,
+          flexDirection: 'column',
+          display: 'flex',
+          // Always show scrollbar with + 1px
+          // preventing undesired horizontal movement
+          // when scrollbar appears with more content
+          // being added to the page
+          minHeight: 'calc(100vh + 1px)',
         }}
       >
-        <CourseManagementPageLayout heading={<Heading />}>
-          <Description />
-          <Curriculum />
-        </CourseManagementPageLayout>
+        <CourseManagementAppBar />
+        <Box
+          sx={{
+            pt: 14,
+            pb: 8,
+          }}
+        >
+          <CourseManagementPageLayout heading={<Heading />}>
+            <Description />
+            <Curriculum />
+          </CourseManagementPageLayout>
+        </Box>
+        <Box
+          sx={{
+            py: 4,
+            bgcolor: 'background.dark',
+            marginTop: 'auto',
+          }}
+        >
+          <Footer />
+        </Box>
       </Box>
-      <Box
-        sx={{
-          py: 4,
-          bgcolor: 'background.dark',
-          marginTop: 'auto',
-        }}
-      >
-        <Footer />
-      </Box>
-    </Box>
+    </>
   );
 };
