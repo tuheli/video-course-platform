@@ -1,30 +1,40 @@
 import { useCallback } from 'react';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { reorderedSections } from '../../features/courseDraftsSlice';
-import { useCurriculumFromParams } from '../../hooks/useCurriculum';
 import { Stack } from '@mui/material';
 import { AddSectionButton } from './section/AddSectionButton';
 import { ItemWithOrderIndex } from '../drag-and-drop-v2/utils';
 import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import { MemoDraggableSection } from './section/DraggableSection';
+import { useParams } from 'react-router-dom';
 
 interface CurriculumProps {
-  forcedCourseId?: string;
+  forcedCourseId?: string | number;
 }
 
 export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
-  const { curriculum, courseDraft, courseDraftId } =
-    useCurriculumFromParams(forcedCourseId);
-
+  const courseDrafts = useAppSelector((state) => state.courseDrafts);
+  const { courseId } = useParams();
   const dispatch = useCallback(useAppDispatch(), []);
+
+  const courseIdAsNumber = Number(courseId);
+  const courseDraft = !isNaN(courseIdAsNumber)
+    ? courseDrafts.find(({ id }) => id === courseIdAsNumber)
+    : null;
 
   const changeOrder = useCallback(
     (newOrder: ItemWithOrderIndex[]) => {
-      if (!courseDraftId) return;
-      dispatch(reorderedSections({ courseDraftId, newOrder }));
+      if (!courseDraft) return;
+      dispatch(reorderedSections({ courseDraftId: courseDraft.id, newOrder }));
     },
-    [courseDraftId, dispatch]
+    [courseDraft, dispatch]
   );
+
+  const curriculum = !courseDraft
+    ? []
+    : [...courseDraft.courseContent.curriculum].sort(
+        (a, b) => a.orderIndex - b.orderIndex
+      );
 
   if (!courseDraft) return null;
 
@@ -43,7 +53,7 @@ export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
               changeOrder={changeOrder}
               courseDraftId={courseDraft.id}
               curriculumSection={curriculumSection}
-              dataId={curriculumSection.id}
+              dataId={`${curriculumSection.id}`}
               index={index}
             />
           ))}
