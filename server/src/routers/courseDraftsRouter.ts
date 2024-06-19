@@ -198,7 +198,7 @@ interface Lesson {
   };
 }
 
-interface ICurriculumSection {
+export interface ICurriculumSection {
   id: string;
   title: string;
   learningObjective: string;
