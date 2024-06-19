@@ -3,6 +3,7 @@ import { errorName } from '../errorNames';
 import {
   CourseDraft,
   CourseType,
+  ICurriculumSection,
   KnownCourseCategory,
   NewCourseDraftEntry,
   TextWithId,
@@ -505,13 +506,17 @@ export const getCourseDrafts = async (
   };
 
   // NOTE: Is the separator okay to use?
+  // NOTE: Likely not. What if user has entered
+  // the separator in the text. It would
+  // break the parsing.
   try {
     const selectCourseDraftQueryText = `
       SELECT 
         CD.id as course_draft_id,
-        COALESCE(LO.learning_objectives, '{}') as learning_objectives,
-        COALESCE(IL.intended_learners, '{}') as intended_learners,
-        COALESCE(PR.prerequisites, '{}') as prerequisites,
+        COALESCE(LO.learning_objectives, '{}') AS learning_objectives,
+        COALESCE(IL.intended_learners, '{}') AS intended_learners,
+        COALESCE(PR.prerequisites, '{}') AS prerequisites,
+        COALESCE(sections, '{}') AS curriculum_sections,
         CD.creator_id, 
         CD.creator_email, 
         CD.course_type,
@@ -524,26 +529,51 @@ export const getCourseDrafts = async (
         CD.created_at
       FROM coursedrafts CD
       LEFT JOIN (
-        SELECT 
-          course_draft_id, 
-          array_agg(DISTINCT id || ' ;sep; ' || learning_objective || ' ;sep; ' || order_index) as learning_objectives
+        SELECT course_draft_id, 
+          array_agg(DISTINCT id || ' ;sep; ' || learning_objective || ' ;sep; ' || order_index) AS learning_objectives
         FROM learning_objectives
         GROUP BY course_draft_id
       ) LO ON CD.id = LO.course_draft_id
       LEFT JOIN (
         SELECT 
           course_draft_id, 
-          array_agg(DISTINCT id || ' ;sep; ' || intended_learner || ' ;sep; ' || order_index) as intended_learners
+          array_agg(DISTINCT id || ' ;sep; ' || intended_learner || ' ;sep; ' || order_index) AS intended_learners
         FROM intended_learners
         GROUP BY course_draft_id
       ) IL ON CD.id = IL.course_draft_id
       LEFT JOIN (
         SELECT 
           course_draft_id, 
-          array_agg(DISTINCT id || ' ;sep; ' || prerequisite || ' ;sep; ' || order_index) as prerequisites
+          array_agg(DISTINCT id || ' ;sep; ' || prerequisite || ' ;sep; ' || order_index) AS prerequisites
         FROM prerequisites
         GROUP BY course_draft_id
       ) PR ON CD.id = PR.course_draft_id
+      LEFT JOIN (
+        SELECT
+          course_draft_id,
+          array_agg(
+            json_build_object(
+              'section_id', section_id,
+              'title', title,
+              'learning_objective', learning_objective,
+              'order_index', order_index,
+              'lessons', lessons
+            )
+          ) AS sections
+        FROM
+          (SELECT 
+            curriculum_sections.id as section_id,
+            curriculum_sections.course_draft_id,
+            curriculum_sections.title,
+            curriculum_sections.learning_objective,
+            curriculum_sections.order_index,
+            array_agg(lessons.id || ' ;sep; ' || lessons.curriculum_section_id || ' ;sep; ' || lessons.name || ' ;sep; ' || lessons.description) AS lessons
+          FROM curriculum_sections
+          LEFT JOIN lessons ON curriculum_sections.id = lessons.curriculum_section_id
+          GROUP BY curriculum_sections.id
+        ) AS section_details
+        GROUP BY course_draft_id
+      ) SEC ON CD.id = SEC.course_draft_id
       WHERE CD.creator_id = $1;
     `;
 
@@ -569,7 +599,26 @@ export const getCourseDrafts = async (
         isSubmissionProcessCompleted: row.is_submission_process_completed,
         language: row.language,
         courseContent: {
-          curriculum: [],
+          curriculum: row.curriculum_sections.map((curriculumSection: any) => {
+            const separator = ' ;sep; ';
+            const section: ICurriculumSection = {
+              id: curriculumSection['section_id'],
+              title: curriculumSection['title'],
+              learningObjective: curriculumSection['learning_objective'],
+              orderIndex: curriculumSection['order_index'],
+              lessons: curriculumSection['lessons'].map((lesson: any) => {
+                const parts = lesson.split(separator);
+                return {
+                  id: parseInt(parts[0]),
+                  curriculumSectionId: parseInt(parts[1]),
+                  name: parts[2],
+                  description: parts[3],
+                };
+              }),
+            };
+
+            return section;
+          }),
           intendedLearners: {
             items: row.intended_learners.map((intendedLearner: any) => {
               return lineToTextWithId(intendedLearner);
