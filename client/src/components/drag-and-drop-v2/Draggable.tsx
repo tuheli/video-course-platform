@@ -7,7 +7,7 @@ import {
 import { DraggableProps } from './types';
 
 interface Reorderable {
-  id: string;
+  id: number;
   yPosition: number;
 }
 
@@ -192,7 +192,7 @@ const Draggable = ({
         id === dataId ? mousePosition.current.y! : rect.top + rect.height / 2;
 
       return {
-        id,
+        id: Number(id),
         yPosition,
       };
     });
