@@ -39,9 +39,9 @@ CREATE TABLE lessons (
     curriculum_section_id INTEGER REFERENCES curriculum_sections(id) ON DELETE CASCADE,
     name VARCHAR(60) NOT NULL,
     order_index INTEGER NOT NULL,
-    description VARCHAR(2000) NOT NULL,
-    video_url TEXT NOT NULL,
-    video_length_seconds INTEGER NOT NULL
+    description VARCHAR(2000),
+    video_url TEXT,
+    video_length_seconds INTEGER
 );
 
 CREATE TABLE course_ratings (
