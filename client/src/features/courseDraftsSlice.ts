@@ -76,7 +76,7 @@ export interface Lesson {
 }
 
 export interface ICurriculumSection {
-  id: string;
+  id: number;
   title: string;
   learningObjective: string;
   orderIndex: number;
@@ -257,7 +257,7 @@ const getInitialCurriculum = () => {
 
   const sections: ICurriculumSection[] = [
     {
-      id: crypto.randomUUID(),
+      id: getRandomInt(1, 10_000_000),
       title: 'Introduction',
       learningObjective: '',
       orderIndex: -1,
@@ -435,7 +435,7 @@ const slice = createSlice({
       if (!courseDraft) return;
 
       const newSection: ICurriculumSection = {
-        id: crypto.randomUUID(),
+        id: getRandomInt(1, 10_000_000),
         title: 'New Section',
         learningObjective: '',
         orderIndex:
@@ -453,7 +453,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
       }>
     ) => {
       const courseDraft = state.find(
@@ -493,7 +493,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
         newValue: string;
         type: UpdateableCurriculumSectionProperty;
       }>
@@ -538,7 +538,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
         lectureTitle: string;
       }>
     ) => {
@@ -575,7 +575,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
         lectureId: string;
         propertyName: 'name' | 'description';
         newValue: string;
@@ -605,7 +605,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
         lectureId: string;
         url: string;
         lengthSeconds: number;
@@ -643,7 +643,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        curriculumSectionId: string;
+        curriculumSectionId: number;
         lectureId: string;
       }>
     ) => {
@@ -680,7 +680,7 @@ const slice = createSlice({
       state,
       action: PayloadAction<{
         courseDraftId: number;
-        sectionId: string;
+        sectionId: number;
         newOrder: ItemWithOrderIndex[];
       }>
     ) => {
