@@ -3,6 +3,7 @@ import { userExtractor } from '../middleware';
 import { errorName } from '../errorNames';
 import {
   createCourseDraft,
+  createCurriculumSection,
   createIntendedLearner,
   createLearningObjective,
   createPrerequisite,
@@ -691,6 +692,26 @@ router.post('/', userExtractor, async (req, res, next) => {
     next(error);
   }
 });
+
+router.post(
+  '/:coursedraftid/sections',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+      await createCurriculumSection({ courseDraftId, userId: req.user.id });
+      return res.sendStatus(201);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.post(
   '/:coursedraftid/goals/learningobjectives',
