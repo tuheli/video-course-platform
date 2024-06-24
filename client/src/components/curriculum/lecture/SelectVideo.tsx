@@ -8,8 +8,8 @@ const StyledLabel = styled('label')({});
 
 interface SelectVideoProps {
   courseDraftId: number;
-  sectionId: string;
-  lectureId: string;
+  sectionId: number;
+  lectureId: number;
 }
 
 // NOTE: Mock timer to change upload status.

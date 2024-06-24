@@ -8,8 +8,8 @@ type ContentType = 'video';
 
 interface SelectContentTypeProps {
   courseDraftId: number;
-  sectionId: string;
-  lectureId: string;
+  sectionId: number;
+  lectureId: number;
 }
 
 export const SelectContentType = (props: SelectContentTypeProps) => {

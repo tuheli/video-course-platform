@@ -19,7 +19,7 @@ const DraggableLecture = ({
 }: DraggableLectureProps) => {
   return (
     <MemoDraggable
-      dataId={lecture.id}
+      dataId={`${lecture.id}`}
       allowedDropzoneTag={allowedDropzoneTag}
       key={lecture.id}
       changeOrder={changeOrder}

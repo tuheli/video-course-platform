@@ -4,5 +4,5 @@ export interface LectureProps {
   lecture: Lesson;
   index: number;
   courseDraftId: number;
-  sectionId: string;
+  sectionId: number;
 }

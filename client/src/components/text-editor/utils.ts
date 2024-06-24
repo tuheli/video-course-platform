@@ -88,7 +88,7 @@ export const isMarkActive = (editor: Editor, markPropertyName: MarkType) => {
 export const getLectureDescriptionLocalStorageKey = (
   courseDraftId: number,
   sectionId: number,
-  lectureId: string
+  lectureId: number
 ) => {
   return `ld_${courseDraftId}_${sectionId}_${lectureId}`;
 };

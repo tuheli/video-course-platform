@@ -38,7 +38,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
   const [isSelectionVisible, setIsSelectionVisible] = useState(false);
   const dispatch = useAppDispatch();
 
-  const changeOrder = (newOrder: ItemWithOrderIndex[]) => {
+  const changeLecturesOrder = (newOrder: ItemWithOrderIndex[]) => {
     dispatch(
       reorderedLectures({
         courseDraftId,
@@ -209,7 +209,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
                   index={index}
                   lecture={lecture}
                   sectionId={curriculumSection.id}
-                  changeOrder={changeOrder}
+                  changeOrder={changeLecturesOrder}
                   key={lecture.id}
                 />
               );
@@ -308,7 +308,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
           <EditSelector
             activeEditType={activeEditType}
             courseDraftId={courseDraftId}
-            curriculumSectionId={curriculumSection.id}
+            curriculumSectionId={`${curriculumSection.id}`}
             setEditingItemType={setActiveEditType}
           />
         </Box>

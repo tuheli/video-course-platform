@@ -65,7 +65,7 @@ export interface ReorderableTextArrayObject {
 }
 
 export interface Lesson {
-  id: string;
+  id: number;
   name: string;
   orderIndex: number;
   description: string;
@@ -263,7 +263,7 @@ const getInitialCurriculum = () => {
       orderIndex: -1,
       lessons: [
         {
-          id: crypto.randomUUID(),
+          id: getRandomInt(0, 10_000_000),
           name: 'Course Introduction',
           orderIndex: -1,
           description: '',
@@ -555,7 +555,7 @@ const slice = createSlice({
       if (!section) return;
 
       section.lessons.push({
-        id: crypto.randomUUID(),
+        id: getRandomInt(0, 10_000_000),
         name: action.payload.lectureTitle,
         orderIndex:
           section.lessons.length > 0
@@ -576,7 +576,7 @@ const slice = createSlice({
       action: PayloadAction<{
         courseDraftId: number;
         curriculumSectionId: number;
-        lectureId: string;
+        lectureId: number;
         propertyName: 'name' | 'description';
         newValue: string;
       }>
@@ -606,7 +606,7 @@ const slice = createSlice({
       action: PayloadAction<{
         courseDraftId: number;
         curriculumSectionId: number;
-        lectureId: string;
+        lectureId: number;
         url: string;
         lengthSeconds: number;
       }>
@@ -644,7 +644,7 @@ const slice = createSlice({
       action: PayloadAction<{
         courseDraftId: number;
         curriculumSectionId: number;
-        lectureId: string;
+        lectureId: number;
       }>
     ) => {
       const courseDraft = state.find(
