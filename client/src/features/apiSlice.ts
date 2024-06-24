@@ -76,6 +76,10 @@ export interface CreateIntendedLearnerRequestBody {
   orderIndex: number;
 }
 
+export interface CreateCurriculumSectionRequest {
+  courseDraftId: number;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -216,6 +220,16 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    createCurriculumSection: builder.mutation<
+      void,
+      CreateCurriculumSectionRequest
+    >({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/sections`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     updateCourseDraftGoals: builder.mutation<
       void,
       UpdateCourseGoalsRequestBody
@@ -299,6 +313,7 @@ export const {
   useSignupMutation,
   useSigninMutation,
   useCreateCourseDraftMutation,
+  useCreateCurriculumSectionMutation,
   useCreateLearningObjectiveMutation,
   useCreatePrerequisiteMutation,
   useCreateIntendedLearnerMutation,
