@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
   CourseDraft,
+  ICurriculumSection,
   NewCourseDraftEntry,
   ReorderableTextArrayObject,
   TextWithId,
@@ -50,9 +51,11 @@ export interface UpdateCourseGoalsRequestBody {
   intendedLearners: ReorderableTextArrayObject;
 }
 
-interface UpdateCurriculumSectionsOrderIndiciesRequest {
+type ICurriculumSectionUpdateEntry = Omit<ICurriculumSection, 'lessons'>;
+
+export interface UpdateCurriculumSectionsRequest {
   courseDraftId: number;
-  entries: Array<{ id: number; newOrderIndex: number }>;
+  entries: ICurriculumSectionUpdateEntry[];
 }
 
 export interface CreateLearningObjectiveRequestBody {
@@ -228,9 +231,9 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
-    updateCurriculumSectionsOrderIndicies: builder.mutation<
+    updateCurriculumSections: builder.mutation<
       void,
-      UpdateCurriculumSectionsOrderIndiciesRequest
+      UpdateCurriculumSectionsRequest
     >({
       query: (body) => ({
         url: `coursedrafts/${body.courseDraftId}/curriculum/sections/order`,
@@ -300,7 +303,7 @@ export const {
   useCreatePrerequisiteMutation,
   useCreateIntendedLearnerMutation,
   useUpdateCourseDraftGoalsMutation,
-  useUpdateCurriculumSectionsOrderIndiciesMutation,
+  useUpdateCurriculumSectionsMutation,
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
   useDeleteIntendedLearnerMutation,

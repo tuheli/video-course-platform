@@ -5,7 +5,7 @@ import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
-import { useUpdateCurriculumSectionsOrderIndiciesMutation } from '../../features/apiSlice';
+import { useUpdateCurriculumSectionsMutation } from '../../features/apiSlice';
 import { store } from '../../app/store';
 
 const itemGap = 2;
@@ -35,8 +35,7 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 };
 
 export const CourseManagementAppBar = () => {
-  const [updateSectionsOnServer] =
-    useUpdateCurriculumSectionsOrderIndiciesMutation();
+  const [updateCurriculumSections] = useUpdateCurriculumSectionsMutation();
   const { courseId } = useParams();
   const location = useLocation();
 
@@ -77,15 +76,20 @@ export const CourseManagementAppBar = () => {
       if (!courseDraft) return;
 
       const entries = courseDraft.courseContent.curriculum.map(
-        ({ id, orderIndex }) => {
+        ({ id, title, learningObjective, orderIndex }) => {
           return {
             id,
-            newOrderIndex: orderIndex,
+            title,
+            learningObjective,
+            orderIndex,
           };
         }
       );
 
-      await updateSectionsOnServer({ courseDraftId: courseDraft.id, entries });
+      await updateCurriculumSections({
+        courseDraftId: courseDraft.id,
+        entries,
+      });
     } catch (error) {
       // Notify user on error
     }
