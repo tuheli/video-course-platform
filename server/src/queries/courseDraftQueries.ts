@@ -9,7 +9,7 @@ import {
   TextWithId,
   TimeAvailablePerWeek,
   UpdateCourseGoalsRequestBody,
-  UpdateCurriculumSectionsOrderIndiciesRequestBody,
+  UpdateCurriculumSectionsRequestBody,
 } from '../routers/courseDraftsRouter';
 
 interface CourseDraftInDatabase {
@@ -59,10 +59,10 @@ interface CreateTextWithId {
   orderIndex: number;
 }
 
-interface UpdateCurriculumSectionsOrderIndexesParams {
+interface UpdateCurriculumSectionsParams {
   userId: number;
   courseDraftId: number;
-  requestBody: UpdateCurriculumSectionsOrderIndiciesRequestBody;
+  requestBody: UpdateCurriculumSectionsRequestBody;
 }
 
 type CreatePrerequisiteParams = CreateTextWithId;
@@ -494,37 +494,44 @@ export const updateCourseDraftCourseGoals = async (
   }
 };
 
-export const updateCurriculumSectionsOrderIndicies = async (
-  params: UpdateCurriculumSectionsOrderIndexesParams
+export const updateCurriculumSections = async (
+  params: UpdateCurriculumSectionsParams
 ) => {
   try {
     await client.query('BEGIN;');
 
     const { requestBody } = params;
 
-    const sqlPromises = requestBody.entries.map(({ id, newOrderIndex }) => {
-      const sqlText = `
+    const sqlPromises = requestBody.entries.map(
+      ({ id, title, learningObjective, orderIndex }) => {
+        const sqlText = `
         UPDATE curriculum_sections
-        SET order_index = $1
-        WHERE id = $2
+        SET 
+          title = $1,
+          learning_objective = $2,
+          order_index = $3
+        WHERE id = $4
         AND id IN (
           SELECT curriculum_sections.id
           FROM curriculum_sections
           JOIN coursedrafts
           ON coursedrafts.id = curriculum_sections.course_draft_id
-          WHERE coursedrafts.creator_id = $3 AND coursedrafts.id = $4
+          WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
         );
       `;
 
-      const sqlValues = [
-        newOrderIndex,
-        id,
-        params.userId,
-        params.courseDraftId,
-      ];
+        const sqlValues = [
+          title,
+          learningObjective,
+          orderIndex,
+          id,
+          params.userId,
+          params.courseDraftId,
+        ];
 
-      return client.query(sqlText, sqlValues);
-    });
+        return client.query(sqlText, sqlValues);
+      }
+    );
 
     await Promise.all(sqlPromises);
     await client.query('COMMIT;');
