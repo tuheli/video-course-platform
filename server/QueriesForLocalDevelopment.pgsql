@@ -71,7 +71,7 @@ WHERE CD.creator_id = 1;
 --- The rest of the file are inserts which can be used to initialize the database with some users, coursedrafts, curriculum_sections and lessons. All of the inserts are meant to be executed in one go. ---
 
 INSERT INTO users (email, full_name, password_hash, receive_insider_emails)
-VALUES ('elias.testi@gmail.com', 'Elias Testington', 'password', true);
+VALUES ('elias.testi@gmail.com', 'Elias Testington', '$2b$10$L/z4TTiOcr0nzaWT5TuYb.tb4CwVmMLteMdiNLB.pThjW35uLrp6S', true);
 
 INSERT INTO coursedrafts (
   creator_id,
@@ -399,7 +399,7 @@ INSERT INTO curriculum_sections (
 );
 
 INSERT INTO users (email, full_name, password_hash, receive_insider_emails)
-VALUES ('anna.testi@gmail.com', 'Anna Koivunen', 'password', false);
+VALUES ('anna.testi@gmail.com', 'Anna Koivunen', '$2b$10$L/z4TTiOcr0nzaWT5TuYb.tb4CwVmMLteMdiNLB.pThjW35uLrp6S', false);
 
 INSERT INTO coursedrafts (
   creator_id,
@@ -487,7 +487,7 @@ INSERT INTO curriculum_sections (
 
 
 INSERT INTO users (email, full_name, password_hash, receive_insider_emails)
-VALUES ('jaakko.testi@gmail.com', 'Jaakko Mäntylä', 'password', true);
+VALUES ('jaakko.testi@gmail.com', 'Jaakko Mäntylä', '$2b$10$L/z4TTiOcr0nzaWT5TuYb.tb4CwVmMLteMdiNLB.pThjW35uLrp6S', true);
 
 INSERT INTO coursedrafts (
   creator_id,
@@ -514,4 +514,4 @@ INSERT INTO coursedrafts (
 );
 
 INSERT INTO users (email, full_name, password_hash, receive_insider_emails)
-VALUES ('kalle.testi@gmail.com', 'Kalle Hakala', 'password', true);
+VALUES ('kalle.testi@gmail.com', 'Kalle Hakala', '$2b$10$L/z4TTiOcr0nzaWT5TuYb.tb4CwVmMLteMdiNLB.pThjW35uLrp6S', true);
