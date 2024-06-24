@@ -50,6 +50,11 @@ export interface UpdateCourseGoalsRequestBody {
   intendedLearners: ReorderableTextArrayObject;
 }
 
+interface UpdateCurriculumSectionsOrderIndiciesRequest {
+  courseDraftId: number;
+  entries: Array<{ id: number; newOrderIndex: number }>;
+}
+
 export interface CreateLearningObjectiveRequestBody {
   courseDraftId: number;
   learningObjective: string;
@@ -223,6 +228,19 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    updateCurriculumSectionsOrderIndicies: builder.mutation<
+      void,
+      UpdateCurriculumSectionsOrderIndiciesRequest
+    >({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/curriculum/sections/order`,
+        method: 'PUT',
+        body: {
+          entries: body.entries,
+        },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     deleteLearningObjective: builder.mutation<
       void,
       { learningObjectiveId: number; courseDraftId: number }
@@ -282,6 +300,7 @@ export const {
   useCreatePrerequisiteMutation,
   useCreateIntendedLearnerMutation,
   useUpdateCourseDraftGoalsMutation,
+  useUpdateCurriculumSectionsOrderIndiciesMutation,
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
   useDeleteIntendedLearnerMutation,
