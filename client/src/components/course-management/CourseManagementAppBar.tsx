@@ -5,6 +5,8 @@ import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
+import { useUpdateCurriculumSectionsOrderIndiciesMutation } from '../../features/apiSlice';
+import { store } from '../../app/store';
 
 const itemGap = 2;
 
@@ -33,6 +35,8 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 };
 
 export const CourseManagementAppBar = () => {
+  const [updateSectionsOnServer] =
+    useUpdateCurriculumSectionsOrderIndiciesMutation();
   const { courseId } = useParams();
   const location = useLocation();
 
@@ -50,13 +54,38 @@ export const CourseManagementAppBar = () => {
       )
     : '0min';
 
-  const isSaveButtonVisible = location.pathname.endsWith('/goals');
+  const isSaveGoalsButtonVisible = location.pathname.endsWith('/goals');
   const isPreviewButtonVisible = location.pathname.endsWith('/curriculum');
+  const isSaveCurriculumButtonVisible =
+    location.pathname.endsWith('/curriculum');
 
-  const onClickSave = async () => {
+  const onClickSaveCourseGoals = async () => {
     if (!course) return;
     try {
       await saveCourseDraftGoals(course);
+    } catch (error) {
+      // Notify user on error
+    }
+  };
+
+  const onClickSaveCurriculum = async () => {
+    if (!course) return;
+    try {
+      const courseDraft = store
+        .getState()
+        .courseDrafts.find(({ id }) => id === course.id);
+      if (!courseDraft) return;
+
+      const entries = courseDraft.courseContent.curriculum.map(
+        ({ id, orderIndex }) => {
+          return {
+            id,
+            newOrderIndex: orderIndex,
+          };
+        }
+      );
+
+      await updateSectionsOnServer({ courseDraftId: courseDraft.id, entries });
     } catch (error) {
       // Notify user on error
     }
@@ -150,9 +179,20 @@ export const CourseManagementAppBar = () => {
                 gap: itemGap,
               }}
             >
-              {isSaveButtonVisible && (
+              {isSaveGoalsButtonVisible && (
                 <Button
-                  onClick={onClickSave}
+                  onClick={onClickSaveCourseGoals}
+                  variant="outlined"
+                  sx={{
+                    minWidth: 80,
+                  }}
+                >
+                  Save
+                </Button>
+              )}
+              {isSaveCurriculumButtonVisible && (
+                <Button
+                  onClick={onClickSaveCurriculum}
                   variant="outlined"
                   sx={{
                     minWidth: 80,
