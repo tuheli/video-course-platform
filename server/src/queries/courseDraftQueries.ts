@@ -9,6 +9,7 @@ import {
   TextWithId,
   TimeAvailablePerWeek,
   UpdateCourseGoalsRequestBody,
+  UpdateCurriculumSectionsOrderIndiciesRequestBody,
 } from '../routers/courseDraftsRouter';
 
 interface CourseDraftInDatabase {
@@ -56,6 +57,12 @@ interface CreateTextWithId {
   courseDraftId: number;
   text: string;
   orderIndex: number;
+}
+
+interface UpdateCurriculumSectionsOrderIndexesParams {
+  userId: number;
+  courseDraftId: number;
+  requestBody: UpdateCurriculumSectionsOrderIndiciesRequestBody;
 }
 
 type CreatePrerequisiteParams = CreateTextWithId;
@@ -480,9 +487,47 @@ export const updateCourseDraftCourseGoals = async (
     await Promise.all(learningObjectivePromises);
     await Promise.all(intendedLearnerPromises);
     await Promise.all(prerequisitePromises);
-
     await client.query('COMMIT;');
-    return;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const updateCurriculumSectionsOrderIndicies = async (
+  params: UpdateCurriculumSectionsOrderIndexesParams
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const { requestBody } = params;
+
+    const sqlPromises = requestBody.entries.map(({ id, newOrderIndex }) => {
+      const sqlText = `
+        UPDATE curriculum_sections
+        SET order_index = $1
+        WHERE id = $2
+        AND id IN (
+          SELECT curriculum_sections.id
+          FROM curriculum_sections
+          JOIN coursedrafts
+          ON coursedrafts.id = curriculum_sections.course_draft_id
+          WHERE coursedrafts.creator_id = $3 AND coursedrafts.id = $4
+        );
+      `;
+
+      const sqlValues = [
+        newOrderIndex,
+        id,
+        params.userId,
+        params.courseDraftId,
+      ];
+
+      return client.query(sqlText, sqlValues);
+    });
+
+    await Promise.all(sqlPromises);
+    await client.query('COMMIT;');
   } catch (error) {
     await client.query('ROLLBACK;');
     throw error;
