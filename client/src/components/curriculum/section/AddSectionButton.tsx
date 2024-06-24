@@ -1,5 +1,4 @@
-import { useAppDispatch } from '../../../app/hooks';
-import { addedCurriculumSection } from '../../../features/courseDraftsSlice';
+import { useCreateCurriculumSectionMutation } from '../../../features/apiSlice';
 import { AddMoreButtonDarkVariant } from '../../manage-course-goals-page/AddMoreButtonDarkVariant';
 
 interface AddSectionButtonProps {
@@ -7,10 +6,14 @@ interface AddSectionButtonProps {
 }
 
 export const AddSectionButton = ({ courseDraftId }: AddSectionButtonProps) => {
-  const dispatch = useAppDispatch();
+  const [createCurriculumSection] = useCreateCurriculumSectionMutation();
 
-  const onClick = () => {
-    dispatch(addedCurriculumSection({ courseDraftId }));
+  const onClick = async () => {
+    try {
+      await createCurriculumSection({ courseDraftId });
+    } catch (error) {
+      console.log('error creating section', error);
+    }
   };
 
   return <AddMoreButtonDarkVariant text="Section" onClick={onClick} />;
