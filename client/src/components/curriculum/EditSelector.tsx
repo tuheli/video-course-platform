@@ -4,7 +4,7 @@ import { NewLectureCard } from './lecture/NewLectureCard';
 interface EditSelectorProps {
   activeEditType: EditableItemType | null;
   courseDraftId: number;
-  curriculumSectionId: string;
+  curriculumSectionId: number;
   setEditingItemType: (type: EditableItemType | null) => void;
 }
 

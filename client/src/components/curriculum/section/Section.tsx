@@ -308,7 +308,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
           <EditSelector
             activeEditType={activeEditType}
             courseDraftId={courseDraftId}
-            curriculumSectionId={`${curriculumSection.id}`}
+            curriculumSectionId={curriculumSection.id}
             setEditingItemType={setActiveEditType}
           />
         </Box>

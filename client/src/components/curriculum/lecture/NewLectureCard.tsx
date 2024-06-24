@@ -8,7 +8,7 @@ import { SaveAndCancelButton } from '../SaveAndCancelButton';
 
 interface NewLectureCardProps {
   courseDraftId: number;
-  curriculumSectionId: string;
+  curriculumSectionId: number;
   setEditingItemType: (type: EditableItemType | null) => void;
 }
 
