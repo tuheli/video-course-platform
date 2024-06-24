@@ -12,6 +12,7 @@ import {
   getCourseDraft,
   getCourseDrafts,
   updateCourseDraftCourseGoals,
+  updateCurriculumSectionsOrderIndicies,
 } from '../queries/courseDraftQueries';
 
 const timeAvailablePerWeek = {
@@ -281,6 +282,10 @@ export interface UpdateCourseGoalsRequestBody {
   learningObjectives: ReorderableTextArrayObject;
   prerequisites: ReorderableTextArrayObject;
   intendedLearners: ReorderableTextArrayObject;
+}
+
+export interface UpdateCurriculumSectionsOrderIndiciesRequestBody {
+  entries: Array<{ id: number; newOrderIndex: number }>;
 }
 
 const toCreateLearningObjectiveRequestBody = (
@@ -566,6 +571,69 @@ const toCreateCourseDraftRequestBody = (
 
     throw error;
   }
+};
+
+const toUpdateCurriculumSectionsOrderIndiciesRequestBody = (
+  body: unknown
+): UpdateCurriculumSectionsOrderIndiciesRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('entries' in body)) {
+    const error = new Error('Body is missing entries property.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  const entries = body.entries;
+
+  if (!Array.isArray(entries)) {
+    const error = new Error('Entries is not an array.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  const validEntries: Array<{ id: number; newOrderIndex: number }> =
+    entries.map((entry) => {
+      if (!entry || typeof entry !== 'object') {
+        const error = new Error('Entry is missing or its not an object.');
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (!('id' in entry) || typeof entry.id !== 'number') {
+        const error = new Error(
+          'Id is missing from entry or its not a number.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (
+        !('newOrderIndex' in entry) ||
+        typeof entry.newOrderIndex !== 'number'
+      ) {
+        const error = new Error(
+          'New order index is missing from entry or its not a number.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      return {
+        id: entry.id,
+        newOrderIndex: entry.newOrderIndex,
+      };
+    });
+
+  const validRequest: UpdateCurriculumSectionsOrderIndiciesRequestBody = {
+    entries: validEntries,
+  };
+
+  return validRequest;
 };
 
 // const toUpdateCourseDraftRequestBody = (
@@ -952,6 +1020,34 @@ router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
     next(error);
   }
 });
+
+router.put(
+  '/:coursedraftid/curriculum/sections/order',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const courseDraftId = parseInt(req.params.coursedraftid);
+      const updateCurriculumSectionsOrderIndiciesRequestBody =
+        toUpdateCurriculumSectionsOrderIndiciesRequestBody(req.body);
+
+      await updateCurriculumSectionsOrderIndicies({
+        userId: req.user.id,
+        courseDraftId,
+        requestBody: updateCurriculumSectionsOrderIndiciesRequestBody,
+      });
+
+      return res.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // NOTE: Course draft id is not needed here
 // but it is added for consistent routing.
