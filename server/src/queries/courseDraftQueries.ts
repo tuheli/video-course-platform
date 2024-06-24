@@ -65,6 +65,11 @@ interface UpdateCurriculumSectionsParams {
   requestBody: UpdateCurriculumSectionsRequestBody;
 }
 
+interface CreateCurriculumSectionParams {
+  courseDraftId: number;
+  userId: number;
+}
+
 type CreatePrerequisiteParams = CreateTextWithId;
 type CreateLearningObjectiveParams = CreateTextWithId;
 
@@ -179,6 +184,50 @@ export const createCourseDraft = async (
     );
     newError.name = errorName.errorAtDatabase;
     throw newError;
+  }
+};
+
+export const createCurriculumSection = async (
+  params: CreateCurriculumSectionParams
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const { courseDraftId, userId } = params;
+
+    const sqlText = `
+      INSERT INTO curriculum_sections (
+        course_draft_id,
+        title,
+        learning_objective,
+        order_index
+      )
+      VALUES (
+        (
+          SELECT id
+          FROM coursedrafts
+          WHERE id = $1 AND creator_id = $2
+        ),
+        'Untitled Section',
+        '',
+        COALESCE (
+          (
+            SELECT MAX(order_index + 1)
+            FROM curriculum_sections
+            WHERE course_draft_id = $1
+          ),
+          1
+        )
+      )
+    `;
+
+    const sqlValues = [courseDraftId, userId];
+
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
   }
 };
 
@@ -613,13 +662,19 @@ export const getCourseDrafts = async (
             )
           ) AS sections
         FROM
-          (SELECT 
-            curriculum_sections.id as section_id,
-            curriculum_sections.course_draft_id,
-            curriculum_sections.title,
-            curriculum_sections.learning_objective,
-            curriculum_sections.order_index,
-            array_agg(lessons.id || ' ;sep; ' || lessons.curriculum_section_id || ' ;sep; ' || lessons.name || ' ;sep; ' || lessons.description) AS lessons
+          (
+            SELECT 
+              curriculum_sections.id as section_id,
+              curriculum_sections.course_draft_id,
+              curriculum_sections.title,
+              curriculum_sections.learning_objective,
+              curriculum_sections.order_index,
+              array_remove(array_agg(
+                lessons.id || ' ;sep; ' || 
+                lessons.curriculum_section_id || ' ;sep; ' || 
+                lessons.name || ' ;sep; ' || 
+                lessons.description
+              ), NULL) AS lessons
           FROM curriculum_sections
           LEFT JOIN lessons ON curriculum_sections.id = lessons.curriculum_section_id
           GROUP BY curriculum_sections.id
