@@ -12,7 +12,7 @@ import {
   getCourseDraft,
   getCourseDrafts,
   updateCourseDraftCourseGoals,
-  updateCurriculumSectionsOrderIndicies,
+  updateCurriculumSections,
 } from '../queries/courseDraftQueries';
 
 const timeAvailablePerWeek = {
@@ -284,8 +284,10 @@ export interface UpdateCourseGoalsRequestBody {
   intendedLearners: ReorderableTextArrayObject;
 }
 
-export interface UpdateCurriculumSectionsOrderIndiciesRequestBody {
-  entries: Array<{ id: number; newOrderIndex: number }>;
+type ICurriculumSectionUpdateEntry = Omit<ICurriculumSection, 'lessons'>;
+
+export interface UpdateCurriculumSectionsRequestBody {
+  entries: ICurriculumSectionUpdateEntry[];
 }
 
 const toCreateLearningObjectiveRequestBody = (
@@ -573,9 +575,9 @@ const toCreateCourseDraftRequestBody = (
   }
 };
 
-const toUpdateCurriculumSectionsOrderIndiciesRequestBody = (
+const toUpdateCurriculumSectionsRequestBody = (
   body: unknown
-): UpdateCurriculumSectionsOrderIndiciesRequestBody => {
+): UpdateCurriculumSectionsRequestBody => {
   if (!body || typeof body !== 'object') {
     const error = new Error('Request body is not an object.');
     error.name = errorName.clientSentInvalidData;
@@ -596,40 +598,57 @@ const toUpdateCurriculumSectionsOrderIndiciesRequestBody = (
     throw error;
   }
 
-  const validEntries: Array<{ id: number; newOrderIndex: number }> =
-    entries.map((entry) => {
-      if (!entry || typeof entry !== 'object') {
-        const error = new Error('Entry is missing or its not an object.');
-        error.name = errorName.clientSentInvalidData;
-        throw error;
-      }
+  const validEntries: ICurriculumSectionUpdateEntry[] = entries.map((entry) => {
+    if (!entry || typeof entry !== 'object') {
+      const error = new Error('Entry is missing or its not an object.');
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
 
-      if (!('id' in entry) || typeof entry.id !== 'number') {
-        const error = new Error(
-          'Id is missing from entry or its not a number.'
-        );
-        error.name = errorName.clientSentInvalidData;
-        throw error;
-      }
+    if (!('id' in entry) || typeof entry.id !== 'number') {
+      const error = new Error('Id is missing from entry or its not a number.');
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
 
-      if (
-        !('newOrderIndex' in entry) ||
-        typeof entry.newOrderIndex !== 'number'
-      ) {
-        const error = new Error(
-          'New order index is missing from entry or its not a number.'
-        );
-        error.name = errorName.clientSentInvalidData;
-        throw error;
-      }
+    if (!('title' in entry) || typeof entry.title !== 'string') {
+      const error = new Error(
+        'Title is missing from entry or its not a number.'
+      );
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
 
-      return {
-        id: entry.id,
-        newOrderIndex: entry.newOrderIndex,
-      };
-    });
+    if (
+      !('learningObjective' in entry) ||
+      typeof entry.learningObjective !== 'string'
+    ) {
+      const error = new Error(
+        'Learning objective is missing from entry or its not a string.'
+      );
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
 
-  const validRequest: UpdateCurriculumSectionsOrderIndiciesRequestBody = {
+    if (!('orderIndex' in entry) || typeof entry.orderIndex !== 'number') {
+      const error = new Error(
+        'Order index is missing from entry or its not a number.'
+      );
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
+
+    const validEntry: ICurriculumSectionUpdateEntry = {
+      id: entry.id,
+      title: entry.title,
+      learningObjective: entry.learningObjective,
+      orderIndex: entry.orderIndex,
+    };
+
+    return validEntry;
+  });
+
+  const validRequest: UpdateCurriculumSectionsRequestBody = {
     entries: validEntries,
   };
 
@@ -1034,9 +1053,9 @@ router.put(
 
       const courseDraftId = parseInt(req.params.coursedraftid);
       const updateCurriculumSectionsOrderIndiciesRequestBody =
-        toUpdateCurriculumSectionsOrderIndiciesRequestBody(req.body);
+        toUpdateCurriculumSectionsRequestBody(req.body);
 
-      await updateCurriculumSectionsOrderIndicies({
+      await updateCurriculumSections({
         userId: req.user.id,
         courseDraftId,
         requestBody: updateCurriculumSectionsOrderIndiciesRequestBody,
