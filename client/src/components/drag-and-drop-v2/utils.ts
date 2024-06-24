@@ -1,5 +1,5 @@
 export interface ItemWithOrderIndex {
-  id: string | number;
+  id: number;
   orderIndex: number;
 }
 
