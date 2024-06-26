@@ -82,6 +82,11 @@ interface DeleteLessonParams {
   userId: number;
 }
 
+interface DeleteSectionParams {
+  sectionId: number;
+  userId: number;
+}
+
 type CreatePrerequisiteParams = CreateTextWithId;
 type CreateLearningObjectiveParams = CreateTextWithId;
 
@@ -518,6 +523,30 @@ export const deleteLesson = async (params: DeleteLessonParams) => {
       );
     `;
     const sqlValues = [params.lessonId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteSection = async (params: DeleteSectionParams) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM curriculum_sections
+      WHERE id = $1
+      AND id IN (
+        SELECT curriculum_sections.id
+        FROM curriculum_sections
+        JOIN coursedrafts
+        ON curriculum_sections.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.sectionId, params.userId];
     await client.query(sqlText, sqlValues);
     await client.query('COMMIT;');
   } catch (error) {
