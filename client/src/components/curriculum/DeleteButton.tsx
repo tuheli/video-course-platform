@@ -2,10 +2,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/material';
 
 interface DeleteButtonProps {
+  isProcessingDeleteRequest?: boolean;
   onClick: () => void;
 }
 
-export const DeleteButton = ({ onClick }: DeleteButtonProps) => {
+export const DeleteButton = ({
+  isProcessingDeleteRequest,
+  onClick,
+}: DeleteButtonProps) => {
   return (
     <Box
       onMouseDown={(event) => event.stopPropagation()}
@@ -15,7 +19,7 @@ export const DeleteButton = ({ onClick }: DeleteButtonProps) => {
         alignItems: 'center',
         justifyContent: 'center',
         '&:hover': {
-          cursor: 'pointer',
+          cursor: isProcessingDeleteRequest ? 'not-allowed' : 'pointer',
         },
       }}
     >
