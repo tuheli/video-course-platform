@@ -1,11 +1,9 @@
 import { createContext } from 'react';
 
 interface DragAndDropContextState {
-  itemsState: Array<{ id: string | number }>;
+  itemsState: Array<{ id: number }>;
   isSomethingDragged?: boolean;
-  changeOrder: (
-    newOrder: Array<{ id: string | number; orderIndex: number }>
-  ) => void;
+  changeOrder: (newOrder: Array<{ id: number; orderIndex: number }>) => void;
   setIsSomethingDragged?: (isSomethingDragged: boolean) => void;
 }
 
