@@ -145,7 +145,9 @@ const isUpdateableCourseContentProperty = (
 };
 
 // NOTE: Some id's are still strings
-// but all ids should be numbers
+// but all ids should be numbers. Correct
+// id types are especially important for
+// reordering draggable items in frontend.
 const isTextWithId = (obj: unknown): obj is TextWithId => {
   if (!obj || typeof obj !== 'object') {
     return false;
