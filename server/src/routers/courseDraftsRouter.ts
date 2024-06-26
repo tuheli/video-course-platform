@@ -198,7 +198,10 @@ export interface Lesson {
   id: number;
   name: string;
   orderIndex: number;
-  description: string;
+  // NOTE: Description is not currently checked
+  // Its type should be custom Descendant[] which
+  // is a type from slatejs.
+  description: any;
   video?: {
     url: string;
     lengthSeconds: number;
