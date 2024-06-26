@@ -104,9 +104,11 @@ export const saveToLocalStorage = (key: string, value: Descendant[]) => {
   localStorage.setItem(key, stringValue);
 };
 
-export const getStateFromLocalStorageOrDefault = (
+// NOTE: The output should be carefully type checked.
+// Wrong types will crash slate editor.
+export const getParsedSlateEditorStateFromLocalStorageOrDefault = (
   key: string
-): Descendant[] => {
+): any[] => {
   const stringValue = localStorage.getItem(key);
 
   if (!stringValue) {
@@ -119,4 +121,22 @@ export const getStateFromLocalStorageOrDefault = (
   }
 
   return JSON.parse(stringValue);
+};
+
+export const getStringSlateEditorStateFromLocalStorageOrDefault = (
+  key: string
+): string => {
+  const stringValue = localStorage.getItem(key);
+  if (!stringValue) {
+    const defaultValue = JSON.stringify([
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ]);
+
+    return defaultValue;
+  } else {
+    return stringValue;
+  }
 };
