@@ -12,6 +12,7 @@ import {
   deleteLearningObjective,
   deleteLesson,
   deletePrerequisite,
+  deleteSection,
   getCourseDraft,
   getCourseDrafts,
   updateCourseDraftCourseGoals,
@@ -1000,13 +1001,13 @@ router.put(
       }
 
       const courseDraftId = parseInt(req.params.coursedraftid);
-      const updateCurriculumSectionsOrderIndiciesRequestBody =
+      const updateCurriculumSectionsRequestBody =
         toUpdateCurriculumSectionsRequestBody(req.body);
 
       await updateCurriculumSections({
         userId: req.user.id,
         courseDraftId,
-        requestBody: updateCurriculumSectionsOrderIndiciesRequestBody,
+        requestBody: updateCurriculumSectionsRequestBody,
       });
 
       return res.sendStatus(204);
@@ -1143,6 +1144,31 @@ router.delete(
       });
 
       return res.sendStatus(200);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  '/:coursedraftid/sections/:sectionid',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const sectionId = parseInt(req.params.sectionid);
+
+      await deleteSection({
+        userId: req.user.id,
+        sectionId,
+      });
+
+      return res.send(200).end();
     } catch (error) {
       next(error);
     }
