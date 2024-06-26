@@ -10,6 +10,7 @@ import {
   createPrerequisite,
   deleteIntendedLearner,
   deleteLearningObjective,
+  deleteLesson,
   deletePrerequisite,
   getCourseDraft,
   getCourseDrafts,
@@ -1117,6 +1118,31 @@ router.delete(
         intendedLearnerId,
       });
       return res.status(200).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  '/:coursedraftid/sections/:sectionid/lessons/:lessonid',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const lessonId = parseInt(req.params.lessonid);
+
+      await deleteLesson({
+        userId: req.user.id,
+        lessonId,
+      });
+
+      return res.sendStatus(200);
     } catch (error) {
       next(error);
     }
