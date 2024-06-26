@@ -1,10 +1,16 @@
 import { ChangeEvent, useState } from 'react';
-import { useAppDispatch } from '../../../app/hooks';
-import { addedLecture } from '../../../features/courseDraftsSlice';
 import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
-import { Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
-import { SaveAndCancelButton } from '../SaveAndCancelButton';
+import { useCreateLectureMutation } from '../../../features/apiSlice';
+import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
+import { store } from '../../../app/store';
 
 interface NewLectureCardProps {
   courseDraftId: number;
@@ -17,23 +23,38 @@ export const NewLectureCard = ({
   curriculumSectionId,
   setEditingItemType,
 }: NewLectureCardProps) => {
+  const [isProcessingRequest, setIsProcessingRequest] = useState(false);
   const [title, setTitle] = useState('');
-  const dispatch = useAppDispatch();
+  const [createLecture] = useCreateLectureMutation();
+  const { saveCurriculum } = useSaveCurriculum();
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
   };
 
-  const onClickAddLecture = () => {
-    dispatch(
-      addedLecture({
+  const onClickAddLecture = async () => {
+    setIsProcessingRequest(true);
+    try {
+      const courseDraft = store
+        .getState()
+        .courseDrafts.find(({ id }) => id === courseDraftId);
+
+      if (!courseDraft) {
+        throw new Error('Course draft not found');
+      }
+
+      await saveCurriculum(courseDraft);
+      await createLecture({
         courseDraftId,
         curriculumSectionId,
         lectureTitle: title,
-      })
-    );
-
-    setEditingItemType(null);
+      });
+      setEditingItemType(null);
+    } catch (error) {
+      // TODO: Notify user on error
+      console.log('error creating lecture', error);
+    }
+    setIsProcessingRequest(false);
   };
 
   const onClickCancel = () => {
@@ -79,11 +100,65 @@ export const NewLectureCard = ({
             }}
           />
         </Stack>
-        <SaveAndCancelButton
-          saveButtonText="Add New Lecture"
-          onClickCancel={onClickCancel}
-          onClickSave={onClickAddLecture}
-        />
+        <Stack
+          sx={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Stack
+            onMouseDown={(event) => event.stopPropagation()}
+            sx={{
+              flexDirection: 'row',
+              marginLeft: 'auto',
+              gap: 1,
+            }}
+          >
+            <Button
+              onClick={onClickCancel}
+              variant="text"
+              color="primary"
+              sx={{
+                height: 32,
+                p: 1,
+                fontWeight: 600,
+                '&:hover': {
+                  color: 'text.primary',
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={onClickAddLecture}
+              variant="contained"
+              color="primary"
+              disabled={isProcessingRequest}
+              sx={{
+                height: 32,
+                minWidth: 132,
+                p: 1,
+                fontWeight: 600,
+                transition: 'none',
+              }}
+            >
+              {isProcessingRequest ? (
+                <Stack
+                  sx={{
+                    flexDirection: 'row',
+                    gap: 1,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Box>Adding</Box>
+                  <CircularProgress size={16} />
+                </Stack>
+              ) : (
+                'Add New Lecture'
+              )}
+            </Button>
+          </Stack>
+        </Stack>
       </Stack>
     </Stack>
   );
