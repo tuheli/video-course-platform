@@ -1,8 +1,5 @@
 import { ChangeEvent, memo, useState } from 'react';
-import {
-  deletedLecture,
-  updatedLecture,
-} from '../../../features/courseDraftsSlice';
+import { updatedLecture } from '../../../features/courseDraftsSlice';
 import { useAppDispatch } from '../../../app/hooks';
 import { LectureContext } from '../../../contexts/LectureContext';
 import { Box, Stack, Typography } from '@mui/material';
@@ -16,6 +13,7 @@ import { MemoDraghandle } from '../../drag-and-drop-v2/Draghandle';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { SelectContentType } from './SelectContentType';
+import { useDeleteLectureMutation } from '../../../features/apiSlice';
 
 const Lecture = ({
   lecture,
@@ -27,6 +25,9 @@ const Lecture = ({
   const [isBottomExtensionOpen, setIsBottomExtensionOpen] = useState(false);
   const [isHeadingIconsVisible, setIsHeadingIconsVisible] = useState(false);
   const [isSelectingContentType, setIsSelectingContentType] = useState(false);
+  const [isProcessingDeleteRequest, setIsProcessingDeleteRequest] =
+    useState(false);
+  const [deleteLecture] = useDeleteLectureMutation();
 
   const dispatch = useAppDispatch();
 
@@ -52,14 +53,21 @@ const Lecture = ({
     setIsEditingHeading(false);
   };
 
-  const onClickDeleteIcon = () => {
-    dispatch(
-      deletedLecture({
+  const onClickDeleteIcon = async () => {
+    if (isProcessingDeleteRequest) return;
+
+    setIsProcessingDeleteRequest(true);
+    try {
+      await deleteLecture({
         courseDraftId,
         curriculumSectionId: sectionId,
         lectureId: lecture.id,
-      })
-    );
+      });
+    } catch (error) {
+      // TODO: Notify user on error
+      console.log('Error deleting lecture:', error);
+    }
+    setIsProcessingDeleteRequest(false);
   };
 
   const onClickAddContent = () => {
@@ -151,6 +159,7 @@ const Lecture = ({
               itemName={'Lecture'}
               index={index}
               title={lecture.name}
+              isProcessingDeleteRequest={isProcessingDeleteRequest}
               setIsEditingHeading={setIsEditingHeading}
               onClickDeleteIcon={onClickDeleteIcon}
             />
