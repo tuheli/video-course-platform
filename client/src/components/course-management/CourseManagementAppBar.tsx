@@ -5,8 +5,8 @@ import { useAppSelector } from '../../app/hooks';
 import { LineClampedTypography } from '../broad-courses-selection/LineClampedTypography';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
-import { useUpdateCurriculumSectionsMutation } from '../../features/apiSlice';
 import { store } from '../../app/store';
+import { useSaveCurriculum } from '../../hooks/useSaveCurriculum';
 
 const itemGap = 2;
 
@@ -16,7 +16,7 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 
   const isoString = date.toISOString();
 
-  // Cast to num to remove trailing zeroes
+  // NOTE: Cast to num to remove trailing zeroes
   const hours = Number(isoString.substring(11, 13));
   const minutes = Number(isoString.substring(14, 16));
   const seconds = Number(isoString.substring(17, 19));
@@ -35,9 +35,9 @@ const formatVideoContentUploadedDuration = (durationSeconds: number) => {
 };
 
 export const CourseManagementAppBar = () => {
-  const [updateCurriculumSections] = useUpdateCurriculumSectionsMutation();
   const { courseId } = useParams();
   const location = useLocation();
+  const { saveCurriculum } = useSaveCurriculum();
 
   const courseIdAsNumber = Number(courseId);
   const course = useAppSelector((state) => state.courseDrafts).find(
@@ -63,7 +63,8 @@ export const CourseManagementAppBar = () => {
     try {
       await saveCourseDraftGoals(course);
     } catch (error) {
-      // Notify user on error
+      // TODO: Notify user on error
+      console.log('error saving course goals', error);
     }
   };
 
@@ -73,25 +74,13 @@ export const CourseManagementAppBar = () => {
       const courseDraft = store
         .getState()
         .courseDrafts.find(({ id }) => id === course.id);
+
       if (!courseDraft) return;
 
-      const entries = courseDraft.courseContent.curriculum.map(
-        ({ id, title, learningObjective, orderIndex }) => {
-          return {
-            id,
-            title,
-            learningObjective,
-            orderIndex,
-          };
-        }
-      );
-
-      await updateCurriculumSections({
-        courseDraftId: courseDraft.id,
-        entries,
-      });
+      await saveCurriculum(courseDraft);
     } catch (error) {
-      // Notify user on error
+      // TODO: Notify user on error
+      console.log('error updating curriculum sections', error);
     }
   };
 
