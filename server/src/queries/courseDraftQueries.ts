@@ -410,7 +410,7 @@ export const createLesson = async (
           FROM lessons
           WHERE curriculum_section_id = $1
       ), 1),
-      '',
+      '[{"type":"paragraph","children":[{"text":""}]}]',
       '',
       0
     )
@@ -698,7 +698,7 @@ export const updateCurriculumSections = async (
       }
     );
 
-    const sqlLessonPromises = requestBody.entries.map((section) => {
+    const sqlLessonPromises = requestBody.entries.flatMap((section) => {
       const lessonPromises = section.lessons.map((lesson) => {
         const sqlText = `
           UPDATE lessons
