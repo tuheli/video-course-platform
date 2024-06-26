@@ -10,6 +10,7 @@ interface HeadingProps {
   isTitleBold?: boolean;
   index: number;
   isHeadingIconsVisible: boolean;
+  isProcessingDeleteRequest?: boolean;
   setIsEditingHeading: (isVisible: boolean) => void;
   onClickDeleteIcon: () => void;
 }
@@ -20,6 +21,7 @@ export const Heading = ({
   isTitleBold,
   index,
   isHeadingIconsVisible,
+  isProcessingDeleteRequest,
   setIsEditingHeading,
   onClickDeleteIcon,
 }: HeadingProps) => {
@@ -75,7 +77,10 @@ export const Heading = ({
                 marginRight: 'auto',
               }}
             >
-              <DeleteButton onClick={onClickDeleteIcon} />
+              <DeleteButton
+                onClick={onClickDeleteIcon}
+                isProcessingDeleteRequest={isProcessingDeleteRequest}
+              />
             </Box>
           </>
         )}
