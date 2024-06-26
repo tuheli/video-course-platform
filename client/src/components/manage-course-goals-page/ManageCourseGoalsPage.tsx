@@ -9,9 +9,11 @@ import { WhatAreTheCoursePrerequisites } from './WhatAreTheCoursePrerequisites';
 import { WhoIsThisCourseFor } from './WhoIsThisCourseFor';
 import { Footer } from '../footer/Footer';
 import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
+import { useSaveCourseGoalsOnUnmount } from '../../hooks/useSaveCourseGoalsOnUnmount';
 
 export const ManageCourseGoalsPage = () => {
   useScrollToTop();
+  useSaveCourseGoalsOnUnmount();
 
   return (
     <>
