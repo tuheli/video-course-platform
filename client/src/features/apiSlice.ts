@@ -86,6 +86,12 @@ interface CreateLectureRequest {
   lectureTitle: string;
 }
 
+interface DeleteLectureRequest {
+  courseDraftId: number;
+  curriculumSectionId: number;
+  lectureId: number;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -304,6 +310,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    deleteLecture: builder.mutation<void, DeleteLectureRequest>({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/sections/${body.curriculumSectionId}/lessons/${body.lectureId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
       query: () => `coursedrafts`,
       providesTags: ['CourseDrafts'],
@@ -339,6 +352,7 @@ export const {
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
   useDeleteIntendedLearnerMutation,
+  useDeleteLectureMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
 } = apiSlice;
