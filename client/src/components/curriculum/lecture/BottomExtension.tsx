@@ -1,9 +1,11 @@
 import { Stack } from '@mui/material';
 import { AddMoreButtonDarkVariant } from '../../manage-course-goals-page/AddMoreButtonDarkVariant';
 import { useState } from 'react';
-import { DesctiptionEditor } from './DescriptionEditor';
+import { DescriptionEditorProps, DesctiptionEditor } from './DescriptionEditor';
 
-export const BottomExtension = () => {
+type BottomExtensionProps = Omit<DescriptionEditorProps, 'closeEditor'>;
+
+export const BottomExtension = (props: BottomExtensionProps) => {
   const [isDescriptionEditorVisible, setIsDescriptionEditorVisible] =
     useState(false);
 
@@ -38,7 +40,7 @@ export const BottomExtension = () => {
         />
       )}
       {isDescriptionEditorVisible && (
-        <DesctiptionEditor closeEditor={closeDescriptionEditor} />
+        <DesctiptionEditor closeEditor={closeDescriptionEditor} {...props} />
       )}
       <AddMoreButtonDarkVariant
         text="Resources"
