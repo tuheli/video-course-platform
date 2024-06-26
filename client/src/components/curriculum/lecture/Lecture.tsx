@@ -246,7 +246,13 @@ const Lecture = ({
             />
           </Box>
         )}
-        {isBottomExtensionOpen && <BottomExtension />}
+        {isBottomExtensionOpen && (
+          <BottomExtension
+            courseDraftId={courseDraftId}
+            sectionId={sectionId}
+            lectureId={lecture.id}
+          />
+        )}
       </Stack>
     </LectureContext.Provider>
   );
