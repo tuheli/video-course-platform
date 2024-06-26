@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../../app/hooks';
 import { useGetCourseDraftsQuery } from '../../features/apiSlice';
 import { fetchedCourseDrafts } from '../../features/courseDraftsSlice';
+import {
+  getLectureDescriptionLocalStorageKey,
+  saveToLocalStorage,
+} from '../text-editor/utils';
 
 // NOTE: The course drafts are customized
 // locally and saved in the Redux store.
@@ -23,6 +27,26 @@ export const FetchCourseDrafts = () => {
   useEffect(() => {
     if (!data) return;
     dispatch(fetchedCourseDrafts(data));
+
+    // Lesson description editor uses localstorage
+    // so we initialize the state into localstorage
+    // for the descriptions
+    data.forEach((courseDraft) => {
+      const curriculum = courseDraft.courseContent.curriculum;
+      curriculum.forEach((section) => {
+        const lessons = section.lessons;
+        lessons.forEach((lesson) => {
+          const localStorageKey = getLectureDescriptionLocalStorageKey(
+            courseDraft.id,
+            section.id,
+            lesson.id
+          );
+          const initialValue = lesson.description;
+          const parsedValue = JSON.parse(initialValue);
+          saveToLocalStorage(localStorageKey, parsedValue);
+        });
+      });
+    });
   }, [data, dispatch]);
 
   return null;
