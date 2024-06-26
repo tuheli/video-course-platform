@@ -5,6 +5,7 @@ import {
   CourseType,
   ICurriculumSection,
   KnownCourseCategory,
+  Lesson,
   NewCourseDraftEntry,
   TextWithId,
   TimeAvailablePerWeek,
@@ -68,6 +69,12 @@ interface UpdateCurriculumSectionsParams {
 interface CreateCurriculumSectionParams {
   courseDraftId: number;
   userId: number;
+}
+
+interface CreateLessonParams {
+  curriculumSectionId: number;
+  userId: number;
+  title: string;
 }
 
 type CreatePrerequisiteParams = CreateTextWithId;
@@ -360,6 +367,55 @@ export const createIntendedLearner = async (
   }
 };
 
+export const createLesson = async (
+  params: CreateLessonParams
+): Promise<void> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+    INSERT INTO lessons (
+      curriculum_section_id, 
+      name, 
+      order_index,
+      description,
+      video_url,
+      video_length_seconds
+    )
+    VALUES (
+      (
+        SELECT id
+        FROM curriculum_sections
+        WHERE id = $1
+        AND course_draft_id IN (
+          SELECT id
+          FROM coursedrafts
+          WHERE creator_id = $2
+        )
+      ),
+      $3,
+      COALESCE (
+        (
+          SELECT MAX(order_index + 1)
+          FROM lessons
+          WHERE curriculum_section_id = $1
+      ), 1),
+      '',
+      '',
+      0
+    )
+    `;
+
+    const sqlValues = [params.curriculumSectionId, params.userId, params.title];
+
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
 export const deleteLearningObjective = async (
   params: DeleteLearningObjectiveParams
 ) => {
@@ -551,7 +607,7 @@ export const updateCurriculumSections = async (
 
     const { requestBody } = params;
 
-    const sqlPromises = requestBody.entries.map(
+    const sqlSectionPromises = requestBody.entries.map(
       ({ id, title, learningObjective, orderIndex }) => {
         const sqlText = `
         UPDATE curriculum_sections
@@ -569,7 +625,7 @@ export const updateCurriculumSections = async (
         );
       `;
 
-        const sqlValues = [
+        const sqlSectionValues = [
           title,
           learningObjective,
           orderIndex,
@@ -578,11 +634,47 @@ export const updateCurriculumSections = async (
           params.courseDraftId,
         ];
 
-        return client.query(sqlText, sqlValues);
+        return client.query(sqlText, sqlSectionValues);
       }
     );
 
-    await Promise.all(sqlPromises);
+    const sqlLessonPromises = requestBody.entries.map((section) => {
+      const lessonPromises = section.lessons.map((lesson) => {
+        const sqlText = `
+          UPDATE lessons
+          SET 
+            name = $1,
+            description = $2,
+            order_index = $3
+          WHERE id = $4
+          AND id IN (
+            SELECT lessons.id
+            FROM lessons
+            JOIN curriculum_sections
+            ON curriculum_sections.id = lessons.curriculum_section_id
+            JOIN coursedrafts
+            ON coursedrafts.id = curriculum_sections.course_draft_id
+            WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
+          );
+        `;
+
+        const sqlValues = [
+          lesson.name,
+          lesson.description,
+          lesson.orderIndex,
+          lesson.id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      });
+
+      return lessonPromises;
+    });
+
+    await Promise.all(sqlSectionPromises);
+    await Promise.all(sqlLessonPromises);
     await client.query('COMMIT;');
   } catch (error) {
     await client.query('ROLLBACK;');
@@ -598,7 +690,7 @@ export const getCourseDrafts = async (
     const parts = lineFromDatabase.split(separator);
 
     const textWithId: TextWithId = {
-      id: parts[0],
+      id: parseInt(parts[0]),
       text: parts[1],
       orderIndex: parseInt(parts[2]),
     };
@@ -671,9 +763,11 @@ export const getCourseDrafts = async (
               curriculum_sections.order_index,
               array_remove(array_agg(
                 lessons.id || ' ;sep; ' || 
-                lessons.curriculum_section_id || ' ;sep; ' || 
                 lessons.name || ' ;sep; ' || 
-                lessons.description
+                lessons.description || ' ;sep; ' || 
+                lessons.order_index || ' ;sep; ' || 
+                lessons.video_url || ' ;sep; ' ||
+                lessons.video_length_seconds
               ), NULL) AS lessons
           FROM curriculum_sections
           LEFT JOIN lessons ON curriculum_sections.id = lessons.curriculum_section_id
@@ -713,14 +807,19 @@ export const getCourseDrafts = async (
               title: curriculumSection['title'],
               learningObjective: curriculumSection['learning_objective'],
               orderIndex: curriculumSection['order_index'],
-              lessons: curriculumSection['lessons'].map((lesson: any) => {
-                const parts = lesson.split(separator);
-                return {
+              lessons: curriculumSection['lessons'].map((lessonRow: any) => {
+                const parts = lessonRow.split(separator);
+                const lesson: Lesson = {
                   id: parseInt(parts[0]),
-                  curriculumSectionId: parseInt(parts[1]),
-                  name: parts[2],
-                  description: parts[3],
+                  name: parts[1],
+                  description: parts[2],
+                  orderIndex: parseInt(parts[3]),
+                  video: {
+                    url: parts[4],
+                    lengthSeconds: parseInt(parts[5]),
+                  },
                 };
+                return lesson;
               }),
             };
 

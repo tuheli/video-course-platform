@@ -6,6 +6,7 @@ import {
   createCurriculumSection,
   createIntendedLearner,
   createLearningObjective,
+  createLesson,
   createPrerequisite,
   deleteIntendedLearner,
   deleteLearningObjective,
@@ -122,7 +123,7 @@ interface Reorderable {
 }
 
 export interface TextWithId extends Reorderable {
-  id: string;
+  id: number;
   text: string;
 }
 
@@ -189,8 +190,8 @@ const isReorderableTextArrayObject = (
   return true;
 };
 
-interface Lesson {
-  id: string;
+export interface Lesson {
+  id: number;
   name: string;
   orderIndex: number;
   description: string;
@@ -201,7 +202,7 @@ interface Lesson {
 }
 
 export interface ICurriculumSection {
-  id: string;
+  id: number;
   title: string;
   learningObjective: string;
   orderIndex: number;
@@ -285,10 +286,14 @@ export interface UpdateCourseGoalsRequestBody {
   intendedLearners: ReorderableTextArrayObject;
 }
 
-type ICurriculumSectionUpdateEntry = Omit<ICurriculumSection, 'lessons'>;
+type ICurriculumSectionUpdateEntry = ICurriculumSection;
 
 export interface UpdateCurriculumSectionsRequestBody {
   entries: ICurriculumSectionUpdateEntry[];
+}
+
+interface CreateLectureRequestBody {
+  title: string;
 }
 
 const toCreateLearningObjectiveRequestBody = (
@@ -639,11 +644,74 @@ const toUpdateCurriculumSectionsRequestBody = (
       throw error;
     }
 
+    if (!('lessons' in entry) || !Array.isArray(entry.lessons)) {
+      const error = new Error(
+        'Lessons is missing from entry or its not an array.'
+      );
+      error.name = errorName.clientSentInvalidData;
+      throw error;
+    }
+
+    const entryLessons: unknown[] = entry.lessons;
+
+    const validLessons = entryLessons.map((lesson) => {
+      if (!lesson || typeof lesson !== 'object') {
+        const error = new Error('Lesson is missing or its not an object.');
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (!('id' in lesson) || typeof lesson.id !== 'number') {
+        const error = new Error(
+          'Id is missing from lesson or its not a number.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (!('name' in lesson) || typeof lesson.name !== 'string') {
+        const error = new Error(
+          'Name is missing from lesson or its not a string.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (!('orderIndex' in lesson) || typeof lesson.orderIndex !== 'number') {
+        const error = new Error(
+          'Order index is missing from lesson or its not a number.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      if (
+        !('description' in lesson) ||
+        typeof lesson.description !== 'string'
+      ) {
+        const error = new Error(
+          'Description is missing from lesson or its not a string.'
+        );
+        error.name = errorName.clientSentInvalidData;
+        throw error;
+      }
+
+      const validLesson: Omit<Lesson, 'video'> = {
+        id: lesson.id,
+        name: lesson.name,
+        orderIndex: lesson.orderIndex,
+        description: lesson.description,
+      };
+
+      return validLesson;
+    });
+
     const validEntry: ICurriculumSectionUpdateEntry = {
       id: entry.id,
       title: entry.title,
       learningObjective: entry.learningObjective,
       orderIndex: entry.orderIndex,
+      lessons: validLessons,
     };
 
     return validEntry;
@@ -654,6 +722,24 @@ const toUpdateCurriculumSectionsRequestBody = (
   };
 
   return validRequest;
+};
+
+const toCreateLectureRequestBody = (
+  body: unknown
+): CreateLectureRequestBody => {
+  if (!body || typeof body !== 'object') {
+    const error = new Error('Request body is not an object.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  if (!('title' in body) || typeof body.title !== 'string') {
+    const error = new Error('Lecture title is missing or its not a string.');
+    error.name = errorName.clientSentInvalidData;
+    throw error;
+  }
+
+  return { title: body.title };
 };
 
 const router = Router();
@@ -706,6 +792,32 @@ router.post(
 
       const courseDraftId = parseInt(req.params.coursedraftid);
       await createCurriculumSection({ courseDraftId, userId: req.user.id });
+      return res.sendStatus(201);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/:coursedraftid/sections/:sectionid/lessons',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const sectionId = parseInt(req.params.sectionid);
+      const requestBody = toCreateLectureRequestBody(req.body);
+
+      await createLesson({
+        curriculumSectionId: sectionId,
+        userId: req.user.id,
+        title: requestBody.title,
+      });
       return res.sendStatus(201);
     } catch (error) {
       next(error);
@@ -876,7 +988,7 @@ router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
 });
 
 router.put(
-  '/:coursedraftid/curriculum/sections/order',
+  '/:coursedraftid/curriculum/sections/',
   userExtractor,
   async (req, res, next) => {
     try {

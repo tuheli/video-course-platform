@@ -51,7 +51,7 @@ export interface UpdateCourseGoalsRequestBody {
   intendedLearners: ReorderableTextArrayObject;
 }
 
-type ICurriculumSectionUpdateEntry = Omit<ICurriculumSection, 'lessons'>;
+type ICurriculumSectionUpdateEntry = ICurriculumSection;
 
 export interface UpdateCurriculumSectionsRequest {
   courseDraftId: number;
@@ -78,6 +78,12 @@ export interface CreateIntendedLearnerRequestBody {
 
 export interface CreateCurriculumSectionRequest {
   courseDraftId: number;
+}
+
+interface CreateLectureRequest {
+  courseDraftId: number;
+  curriculumSectionId: number;
+  lectureTitle: string;
 }
 
 export const toUserInDatabaseSafeWithToken = (
@@ -230,6 +236,16 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    createLecture: builder.mutation<void, CreateLectureRequest>({
+      query: (body) => ({
+        url: `coursedrafts/${body.courseDraftId}/sections/${body.curriculumSectionId}/lessons`,
+        method: 'POST',
+        body: {
+          title: body.lectureTitle,
+        },
+      }),
+      invalidatesTags: ['CourseDrafts'],
+    }),
     updateCourseDraftGoals: builder.mutation<
       void,
       UpdateCourseGoalsRequestBody
@@ -250,7 +266,7 @@ export const apiSlice = createApi({
       UpdateCurriculumSectionsRequest
     >({
       query: (body) => ({
-        url: `coursedrafts/${body.courseDraftId}/curriculum/sections/order`,
+        url: `coursedrafts/${body.courseDraftId}/curriculum/sections`,
         method: 'PUT',
         body: {
           entries: body.entries,
@@ -317,6 +333,7 @@ export const {
   useCreateLearningObjectiveMutation,
   useCreatePrerequisiteMutation,
   useCreateIntendedLearnerMutation,
+  useCreateLectureMutation,
   useUpdateCourseDraftGoalsMutation,
   useUpdateCurriculumSectionsMutation,
   useDeleteLearningObjectiveMutation,
