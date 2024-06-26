@@ -1053,7 +1053,8 @@ router.delete(
         userId: req.user.id,
         learningObjectiveId,
       });
-      return res.status(200).end();
+
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
@@ -1087,7 +1088,8 @@ router.delete(
         userId: req.user.id,
         prerequisiteId,
       });
-      return res.status(200).end();
+
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
@@ -1123,7 +1125,8 @@ router.delete(
         userId: req.user.id,
         intendedLearnerId,
       });
-      return res.status(200).end();
+
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
@@ -1148,7 +1151,7 @@ router.delete(
         lessonId,
       });
 
-      return res.sendStatus(200);
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
@@ -1173,7 +1176,7 @@ router.delete(
         sectionId,
       });
 
-      return res.send(200).end();
+      return res.sendStatus(204);
     } catch (error) {
       next(error);
     }
