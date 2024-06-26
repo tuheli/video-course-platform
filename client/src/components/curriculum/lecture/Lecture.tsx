@@ -74,7 +74,7 @@ const Lecture = ({
         courseDraftId,
         curriculumSectionId: sectionId,
         lectureId: lecture.id,
-      });
+      }).unwrap();
     } catch (error) {
       // TODO: Notify user on error
       console.log('Error deleting lecture:', error);
