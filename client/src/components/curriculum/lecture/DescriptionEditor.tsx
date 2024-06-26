@@ -1,37 +1,41 @@
 import { Stack, Typography } from '@mui/material';
 import { TextEditor } from '../../text-editor/TextEditor';
 import { Descendant } from 'slate';
-import { useLectureContext } from '../../../hooks/useLectureContext';
-import { useCurriculumSectionContext } from '../../../hooks/useCurriculumSectionContext';
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
 import {
   getLectureDescriptionLocalStorageKey,
-  getStateFromLocalStorageOrDefault,
+  getParsedSlateEditorStateFromLocalStorageOrDefault,
   saveToLocalStorage,
 } from '../../text-editor/utils';
 
 const placeholder =
   'Add a description. Include what students will be able to do after completing the lecture.';
 
-interface DescriptionEditorProps {
+export interface DescriptionEditorProps {
+  courseDraftId: number;
+  sectionId: number;
+  lectureId: number;
   closeEditor: () => void;
 }
 
-export const DesctiptionEditor = ({ closeEditor }: DescriptionEditorProps) => {
-  const { lecture } = useLectureContext();
-  const { courseDraftId, curriculumSection } = useCurriculumSectionContext();
-
+export const DesctiptionEditor = ({
+  courseDraftId,
+  sectionId,
+  lectureId,
+  closeEditor,
+}: DescriptionEditorProps) => {
   const localStorageKey = getLectureDescriptionLocalStorageKey(
     courseDraftId,
-    curriculumSection.id,
-    lecture.id
+    sectionId,
+    lectureId
   );
 
   const onChange = (value: Descendant[]) => {
     saveToLocalStorage(localStorageKey, value);
   };
 
-  const initialValue = getStateFromLocalStorageOrDefault(localStorageKey);
+  const initialValue =
+    getParsedSlateEditorStateFromLocalStorageOrDefault(localStorageKey);
 
   return (
     <Stack
