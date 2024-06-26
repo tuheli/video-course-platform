@@ -7,15 +7,19 @@ import { Footer } from '../footer/Footer';
 import { Description } from './Description';
 import { Curriculum } from '../curriculum/Curriculum';
 import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
-import { useSaveCurriculumOnUnmount } from '../../hooks/useSaveCurriculumOnUnmount';
+import { SaveCurriculumOnUnmount } from '../utility/SaveCurriculumOnUnmount';
+
+// NOTE: With strict mode on,
+// curriculum save on unmount is called
+// on initial render, not only on unmount.
 
 export const ManageCourseCurriculumPage = () => {
   useScrollToTop();
-  useSaveCurriculumOnUnmount();
 
   return (
     <>
       <FetchCourseDrafts />
+      <SaveCurriculumOnUnmount />
       <Box
         sx={{
           flexDirection: 'column',
