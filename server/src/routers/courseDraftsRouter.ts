@@ -18,6 +18,7 @@ import {
   updateCourseDraftCourseGoals,
   updateCurriculumSections,
 } from '../queries/courseDraftQueries';
+import multer from 'multer';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -749,6 +750,16 @@ const toCreateLectureRequestBody = (
   return { title: body.title };
 };
 
+const megaByte = Math.pow(1024, 2);
+const maxFileBytes = 50 * megaByte;
+
+const videoMulter = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: maxFileBytes,
+  },
+}).fields([{ name: 'video', maxCount: 1 }]);
+
 const router = Router();
 
 router.get('/', userExtractor, async (req, res, next) => {
@@ -965,6 +976,61 @@ router.post(
     } catch (error) {
       next(error);
     }
+  }
+);
+
+router.post(
+  '/:coursedraftid/sections/:sectionid/lessons/:lessonid/video',
+  userExtractor,
+  async (req, res, next) => {
+    // NOTE: There is no validation to
+    // check if the client sent malicious
+    // data. Really the the files would be
+    // sent to some cloud provider and store
+    // urls in the database.
+
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
+    }
+
+    req.on('close', () => {
+      if (!req.complete) {
+        console.log('Video upload was aborted by client.');
+      }
+    });
+
+    videoMulter(req, res, async (error) => {
+      if (error instanceof multer.MulterError) {
+        if (error.code === 'LIMIT_FILE_SIZE') {
+          return res.status(413).json({
+            message: `File size exeeds the limit of ${maxFileBytes} bytes.`,
+          });
+        } else if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+          return res.status(400).json({
+            message: 'Unexpected field in the request.',
+          });
+        } else {
+          next(error);
+        }
+      } else if (error) {
+        next(error);
+      }
+
+      try {
+        const files = req.files as {
+          [fieldname: string]: Express.Multer.File[];
+        };
+        const videoFile = files.video[0];
+
+        console.log('Video file:', videoFile);
+
+        return res.sendStatus(999);
+      } catch (error) {
+        next(error);
+      }
+    });
   }
 );
 
