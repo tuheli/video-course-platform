@@ -7,9 +7,11 @@ import { Footer } from '../footer/Footer';
 import { Description } from './Description';
 import { Curriculum } from '../curriculum/Curriculum';
 import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
+import { useSaveCurriculumOnUnmount } from '../../hooks/useSaveCurriculumOnUnmount';
 
 export const ManageCourseCurriculumPage = () => {
   useScrollToTop();
+  useSaveCurriculumOnUnmount();
 
   return (
     <>
