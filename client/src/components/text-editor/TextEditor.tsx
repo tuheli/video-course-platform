@@ -7,7 +7,12 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { createEditor, Descendant, Transforms } from 'slate';
+import {
+  createEditor,
+  Descendant,
+  Transforms,
+  Element as SlateElement,
+} from 'slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from './Toolbar';
 import { HOTKEYS, isKnownHotkey } from './constants';
@@ -17,6 +22,7 @@ import { Leaf } from './Leaf';
 import { BlockButton } from './buttons/BlockButton';
 import { MarkButton } from './buttons/MarkButton';
 import { Divider, Stack } from '@mui/material';
+import { CustomElement } from './types';
 
 interface TextEditorProps {
   placeholder: string;
@@ -47,20 +53,32 @@ export const TextEditor = ({
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   const focusEditor = () => {
-    // Focus at the beginning of the editor instead
-    // of the end. I think its nicer ux
-    // since the screen will do a sudden
-    // jump to the end if there is a lot of text.
     try {
       const childCount = editor.children.length;
       if (childCount === 0) return;
 
+      let path = [0];
+      let searchElement = editor.children[0] as CustomElement;
+
+      // Find the first leaf ie. first
+      // thing that contains text.
+      while (searchElement.children && searchElement.children.length > 0) {
+        const firstChild = searchElement.children[0];
+        path.push(0);
+        if (SlateElement.isElement(firstChild)) {
+          searchElement = firstChild;
+        } else {
+          break;
+        }
+      }
+
       Transforms.select(editor, {
-        offset: 0,
-        path: [0, 0],
+        anchor: { path, offset: 0 },
+        focus: { path, offset: 0 },
       });
     } catch (error) {
-      // Ignore the error
+      // NOTE: Error is not caught!
+      // Error here will crash the app.
     }
   };
 
