@@ -97,6 +97,13 @@ interface DeleteSectionRequest {
   sectionId: number;
 }
 
+interface UploadVideoRequest {
+  courseDraftId: number;
+  sectionId: number;
+  lectureId: number;
+  videoFile: File;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -346,6 +353,18 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    uploadVideo: builder.mutation<void, UploadVideoRequest>({
+      query: ({ videoFile, courseDraftId, sectionId, lectureId }) => {
+        const formData = new FormData();
+        formData.append('video', videoFile, videoFile.name);
+        return {
+          url: `coursedrafts/${courseDraftId}/sections/${sectionId}/lessons/${lectureId}/video`,
+          method: 'POST',
+          body: formData,
+          formData: true,
+        };
+      },
+    }),
   }),
 });
 
@@ -368,4 +387,5 @@ export const {
   useDeleteSectionMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
+  useUploadVideoMutation,
 } = apiSlice;
