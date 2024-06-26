@@ -1,8 +1,6 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
-import { useAppDispatch } from '../../../app/hooks';
-import { updatedVideo } from '../../../features/courseDraftsSlice';
-import { getAudioDuration } from '../utils';
+import { useUploadVideoMutation } from '../../../features/apiSlice';
 
 const StyledLabel = styled('label')({});
 
@@ -23,7 +21,7 @@ export const SelectVideo = ({
   const [file, setFile] = useState<File | null>(null);
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const uploadTimeoutRef = useRef<number | null>(null);
-  const dispatch = useCallback(useAppDispatch(), []);
+  const [uploadVideo] = useUploadVideoMutation();
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -38,23 +36,18 @@ export const SelectVideo = ({
   const finishUpload = async (file: File) => {
     const newVideoUrl = URL.createObjectURL(file);
     try {
-      const duration = await getAudioDuration(file);
-
-      dispatch(
-        updatedVideo({
-          courseDraftId,
-          curriculumSectionId: sectionId,
-          lectureId,
-          url: newVideoUrl,
-          lengthSeconds: duration,
-        })
-      );
-
+      await uploadVideo({
+        courseDraftId,
+        sectionId,
+        lectureId,
+        videoFile: file,
+      }).unwrap();
       setIsUploadComplete(true);
     } catch (error) {
       // Ignore error
       // Maybe popup notification to user
       URL.revokeObjectURL(newVideoUrl);
+      console.log('Error uploading video:', error);
     }
   };
 
