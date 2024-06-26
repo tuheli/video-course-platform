@@ -30,9 +30,12 @@ export type TextBlockType =
   | 'list-item'
   | 'numbered-list';
 
+// NOTE: Im not too comfortable with slate yet
+// so there might be some issues with
+// typing.
 export type CustomElement = {
   type: TextBlockType;
-  children: CustomText[];
+  children: CustomText[] | CustomElement[];
   align?: Alignment;
 };
 
