@@ -14,6 +14,8 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { SelectContentType } from './SelectContentType';
 import { useDeleteLectureMutation } from '../../../features/apiSlice';
+import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
+import { store } from '../../../app/store';
 
 const Lecture = ({
   lecture,
@@ -28,6 +30,7 @@ const Lecture = ({
   const [isProcessingDeleteRequest, setIsProcessingDeleteRequest] =
     useState(false);
   const [deleteLecture] = useDeleteLectureMutation();
+  const { saveCurriculum } = useSaveCurriculum();
 
   const dispatch = useAppDispatch();
 
@@ -58,6 +61,15 @@ const Lecture = ({
 
     setIsProcessingDeleteRequest(true);
     try {
+      const courseDraft = store
+        .getState()
+        .courseDrafts.find(({ id }) => id === courseDraftId);
+
+      if (!courseDraft) {
+        throw new Error('Course draft not found');
+      }
+
+      await saveCurriculum(courseDraft);
       await deleteLecture({
         courseDraftId,
         curriculumSectionId: sectionId,
