@@ -113,11 +113,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   1,
   'What is programming?',
-  'A brief introduction to programming',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -125,24 +129,32 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   1,
   'Why programming?',
-  'The importance of programming in the modern world',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   1,
   'How to get started?',
-  'How to get started with programming',
-  2
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  2,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -161,11 +173,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   2,
   'What are variables?',
-  'A brief introduction to variables',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -173,12 +189,16 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   2,
   'How to use variables?',
-  'How to use variables in programming',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -197,11 +217,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   3,
   'What are loops?',
-  'A brief introduction to loops',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -209,12 +233,16 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   3,
   'How to use loops?',
-  'How to use loops in programming',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -233,11 +261,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   4,
   'What are functions?',
-  'A brief introduction to functions',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -282,11 +314,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   5,
   'What is machine learning?',
-  'A brief introduction to machine learning',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -294,24 +330,32 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   5,
   'Why machine learning?',
-  'The importance of machine learning in the modern world',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   5,
   'How to get started?',
-  'How to get started with machine learning',
-  2
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  2,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -330,11 +374,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   6,
   'What is data?',
-  'A brief introduction to data',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -342,12 +390,16 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   6,
   'How to use data?',
-  'How to use data in machine learning',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -366,11 +418,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   7,
   'What are algorithms?',
-  'A brief introduction to algorithms',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -378,12 +434,16 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   7,
   'How to use algorithms?',
-  'How to use algorithms in machine learning',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
@@ -441,11 +501,15 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   8,
   'What is design?',
-  'A brief introduction to design',
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  0,
+  ' ',
   0
 );
 
@@ -453,24 +517,32 @@ INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   8,
   'Why design?',
-  'The importance of design in the modern world',
-  1
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  1,
+  ' ',
+  0
 );
 
 INSERT INTO lessons (
   curriculum_section_id,
   name,
   description,
-  order_index
+  order_index,
+  video_url,
+  video_length_seconds
 ) VALUES (
   8,
   'How to get started?',
-  'How to get started with design',
-  2
+  '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
+  2,
+  ' ',
+  0
 );
 
 INSERT INTO curriculum_sections (
