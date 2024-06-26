@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import {
   ICurriculumSection,
-  deletedCurriculumSection,
   reorderedLectures,
   updatedCurriculumSectionText,
 } from '../../../features/courseDraftsSlice';
@@ -22,6 +21,9 @@ import { EditSelector } from '../EditSelector';
 import { Heading } from '../Heading';
 import { MemoDraggableLecture } from '../lecture/DraggableLecture';
 import { MemoDraghandle } from '../../drag-and-drop-v2/Draghandle';
+import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
+import { store } from '../../../app/store';
+import { useDeleteSectionMutation } from '../../../features/apiSlice';
 
 export interface SectionProps {
   courseDraftId: number;
@@ -36,6 +38,10 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
     null
   );
   const [isSelectionVisible, setIsSelectionVisible] = useState(false);
+  const [isProcessingDeleteRequest, setIsProcessingDeleteRequest] =
+    useState(false);
+  const [deleteSection] = useDeleteSectionMutation();
+  const { saveCurriculum } = useSaveCurriculum();
   const dispatch = useAppDispatch();
 
   const changeLecturesOrder = (newOrder: ItemWithOrderIndex[]) => {
@@ -48,13 +54,30 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
     );
   };
 
-  const onClickDelete = () => {
-    dispatch(
-      deletedCurriculumSection({
+  const onClickDelete = async () => {
+    if (isProcessingDeleteRequest) return;
+    setIsProcessingDeleteRequest(true);
+
+    try {
+      const courseDraft = store
+        .getState()
+        .courseDrafts.find(({ id }) => id === courseDraftId);
+
+      if (!courseDraft) {
+        throw new Error('Course draft not found');
+      }
+
+      await saveCurriculum(courseDraft);
+      await deleteSection({
         courseDraftId,
-        curriculumSectionId: curriculumSection.id,
-      })
-    );
+        sectionId: curriculumSection.id,
+      }).unwrap();
+    } catch (error) {
+      // TODO: Notify user on error
+      console.log('Error deleting section: ', error);
+    }
+
+    setIsProcessingDeleteRequest(false);
   };
 
   const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -186,6 +209,7 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
             index={index}
             title={curriculumSection.title}
             isTitleBold={true}
+            isProcessingDeleteRequest={isProcessingDeleteRequest}
             setIsEditingHeading={setIsEditingHeading}
             onClickDeleteIcon={onClickDelete}
           />
