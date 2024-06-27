@@ -41,7 +41,8 @@ CREATE TABLE lessons (
     order_index INTEGER NOT NULL,
     description JSONB,
     video_url TEXT,
-    video_length_seconds INTEGER
+    video_length_seconds NUMERIC(10, 3),
+    video_size_in_bytes INTEGER
 );
 
 CREATE TABLE course_ratings (
