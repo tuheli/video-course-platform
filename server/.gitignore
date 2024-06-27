@@ -1,2 +1,5 @@
 node_modules/
 .env
+
+lesson-video-uploads/*
+!lesson-video-uploads/.gitkeep
