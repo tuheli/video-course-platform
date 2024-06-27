@@ -364,6 +364,7 @@ export const apiSlice = createApi({
           formData: true,
         };
       },
+      invalidatesTags: ['CourseDrafts'],
     }),
   }),
 });
