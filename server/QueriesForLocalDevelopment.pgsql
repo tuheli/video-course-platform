@@ -121,7 +121,7 @@ INSERT INTO lessons (
   'What is programming?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -137,7 +137,7 @@ INSERT INTO lessons (
   'Why programming?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -153,7 +153,7 @@ INSERT INTO lessons (
   'How to get started?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   2,
-  ' ',
+  '',
   0
 );
 
@@ -181,7 +181,7 @@ INSERT INTO lessons (
   'What are variables?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -197,7 +197,7 @@ INSERT INTO lessons (
   'How to use variables?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -225,7 +225,7 @@ INSERT INTO lessons (
   'What are loops?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -241,7 +241,7 @@ INSERT INTO lessons (
   'How to use loops?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -269,7 +269,7 @@ INSERT INTO lessons (
   'What are functions?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -322,7 +322,7 @@ INSERT INTO lessons (
   'What is machine learning?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -338,7 +338,7 @@ INSERT INTO lessons (
   'Why machine learning?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -354,7 +354,7 @@ INSERT INTO lessons (
   'How to get started?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   2,
-  ' ',
+  '',
   0
 );
 
@@ -382,7 +382,7 @@ INSERT INTO lessons (
   'What is data?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -398,7 +398,7 @@ INSERT INTO lessons (
   'How to use data?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -426,7 +426,7 @@ INSERT INTO lessons (
   'What are algorithms?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -442,7 +442,7 @@ INSERT INTO lessons (
   'How to use algorithms?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -509,7 +509,7 @@ INSERT INTO lessons (
   'What is design?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   0,
-  ' ',
+  '',
   0
 );
 
@@ -525,7 +525,7 @@ INSERT INTO lessons (
   'Why design?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   1,
-  ' ',
+  '',
   0
 );
 
@@ -541,7 +541,7 @@ INSERT INTO lessons (
   'How to get started?',
   '[{"type": "paragraph", "children": [{"text": "Hello World!"}]}]',
   2,
-  ' ',
+  '',
   0
 );
 
