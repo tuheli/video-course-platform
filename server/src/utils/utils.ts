@@ -8,9 +8,17 @@ const lastThreeBytesBuffer = Buffer.alloc(3);
 // NOTE: For reference on the mp4 file format:
 // https://www.cimarronsystems.com/wp-content/uploads/2017/04/Elements-of-the-H.264-VideoAAC-Audio-MP4-Movie-v2_0.pdf
 
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+
 // READ THIS DISCLAIMER: There are no security checks for
 // malicious data and this is only for
 // showcase purposes on a local trusted device.
+
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+// ------------------------------------------------------------
 
 // This is a modified version of
 // https://gist.github.com/Elements-/cf063254730cd754599e
