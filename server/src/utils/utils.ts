@@ -26,6 +26,18 @@ const lastThreeBytesBuffer = Buffer.alloc(3);
 // on my windows computer. Hence the function searches
 // for the mvhd atom through the whole file in chunks.
 
+// The idea is to read a portion of the file at a time.
+// Then the last 3 bytes of the previous chunk are
+// added to the beginning of the next chunk to ensure
+// that the mvhd atom is not split between two chunks.
+
+// For example if we read 100 bytes at a time and the
+// mvhd atom is 4 bytes long we could have the following
+// situation:
+// chunk 1: 'mvh'
+// chunk 2: 'd'
+// In this case the mvhd atom would not be found from either.
+
 export const getAudioLength = async (
   filePath: string
 ): Promise<number | undefined> => {
