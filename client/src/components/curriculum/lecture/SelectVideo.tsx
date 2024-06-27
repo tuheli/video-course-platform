@@ -1,6 +1,8 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
 import { useUploadVideoMutation } from '../../../features/apiSlice';
+import { useAppSelector } from '../../../app/hooks';
+import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
 
 const StyledLabel = styled('label')({});
 
@@ -10,18 +12,39 @@ interface SelectVideoProps {
   lectureId: number;
 }
 
-// NOTE: Mock timer to change upload status.
-const mockUploadDelay = 2000;
-
 export const SelectVideo = ({
   courseDraftId,
   sectionId,
   lectureId,
 }: SelectVideoProps) => {
   const [file, setFile] = useState<File | null>(null);
-  const [isUploadComplete, setIsUploadComplete] = useState(false);
-  const uploadTimeoutRef = useRef<number | null>(null);
+  const [isReplacingFile, setIsReplacingFile] = useState(false);
+  const courseDrafts = useAppSelector((state) => state.courseDrafts);
+  const { saveCurriculum } = useSaveCurriculum();
   const [uploadVideo] = useUploadVideoMutation();
+
+  const lesson = courseDrafts
+    .find(({ id }) => id === courseDraftId)
+    ?.courseContent.curriculum.find(({ id }) => id === sectionId)
+    ?.lessons.find(({ id }) => id === lectureId);
+
+  const displayData = isReplacingFile
+    ? null
+    : lesson && lesson.video && lesson.video.url
+      ? {
+          fileName: lesson.video.url,
+          type: 'video/mp4',
+          date: new Date().toLocaleDateString(),
+          status: 'Uploaded',
+        }
+      : file
+        ? {
+            fileName: file.name,
+            type: file.type,
+            date: new Date().toLocaleDateString(),
+            status: 'Processing',
+          }
+        : null;
 
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -31,50 +54,46 @@ export const SelectVideo = ({
 
   const onClickReplace = () => {
     setFile(null);
+    setIsReplacingFile(true);
   };
 
   const finishUpload = async (file: File) => {
-    const newVideoUrl = URL.createObjectURL(file);
+    setIsReplacingFile(false);
     try {
+      const courseDraft = courseDrafts.find(({ id }) => id === courseDraftId);
+      if (!courseDraft) {
+        throw new Error('Course draft was not found.');
+      }
+      await saveCurriculum(courseDraft);
       await uploadVideo({
         courseDraftId,
         sectionId,
         lectureId,
         videoFile: file,
       }).unwrap();
-      setIsUploadComplete(true);
     } catch (error) {
       // Ignore error
       // Maybe popup notification to user
-      URL.revokeObjectURL(newVideoUrl);
       console.log('Error uploading video:', error);
     }
   };
 
   useEffect(() => {
-    if (file === null) {
-      setIsUploadComplete(false);
-      return;
-    }
-
-    uploadTimeoutRef.current = setTimeout(() => {
-      if (file === null) return;
-      finishUpload(file);
-    }, mockUploadDelay);
-
-    return () => {
-      // NOTE: Unmount just cancels the upload for now.
-      // Maybe web workers for background upload.
-      if (uploadTimeoutRef.current !== null) {
-        clearTimeout(uploadTimeoutRef.current);
-        uploadTimeoutRef.current = null;
-      }
-    };
+    if (file === null) return;
+    finishUpload(file);
   }, [file]);
+
+  // TODO: Instead of checking if locally selected
+  // file is null check if the lesson contains
+  // information about a video file already uploaded.
+
+  // Then instead of file === null create an
+  // object which contains the necessary data
+  // for displaying the video information.
 
   return (
     <>
-      {file === null ? (
+      {displayData === null ? (
         <Stack
           sx={{
             flexDirection: 'column',
@@ -272,7 +291,7 @@ export const SelectVideo = ({
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {file?.name}
+                  {displayData?.fileName}
                 </Typography>
               </Box>
               <Box
@@ -280,16 +299,14 @@ export const SelectVideo = ({
                   width: '25%',
                 }}
               >
-                <Typography>{file?.type}</Typography>
+                <Typography>{displayData?.type}</Typography>
               </Box>
               <Box
                 sx={{
                   width: '25%',
                 }}
               >
-                <Typography>
-                  {isUploadComplete ? 'Uploaded' : 'Processing'}
-                </Typography>
+                <Typography>{displayData.status}</Typography>
               </Box>
               <Box
                 sx={{
@@ -321,7 +338,7 @@ export const SelectVideo = ({
                 gap: 0.5,
               }}
             >
-              {isUploadComplete ? (
+              {displayData.status === 'Uploaded' ? (
                 <>
                   <Typography
                     component="span"
