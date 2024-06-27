@@ -17,8 +17,10 @@ import {
   getCourseDrafts,
   updateCourseDraftCourseGoals,
   updateCurriculumSections,
+  updateLessonVideo,
 } from '../queries/courseDraftQueries';
 import multer from 'multer';
+import { getAudioLength } from '../utils/utils';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -760,6 +762,18 @@ const videoMulter = multer({
   },
 }).fields([{ name: 'video', maxCount: 1 }]);
 
+const videoMulterDiskStorage = multer({
+  storage: multer.diskStorage({
+    destination: 'lesson-video-uploads/',
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    },
+  }),
+  limits: {
+    fileSize: maxFileBytes,
+  },
+}).fields([{ name: 'video', maxCount: 1 }]);
+
 const router = Router();
 
 router.get('/', userExtractor, async (req, res, next) => {
@@ -979,13 +993,17 @@ router.post(
   }
 );
 
+// NOTE: Should be put router since
+// it updates the resource in database?
+// Altough this is basically creating
+// the video... hmm...
 router.post(
   '/:coursedraftid/sections/:sectionid/lessons/:lessonid/video',
   userExtractor,
   async (req, res, next) => {
     // NOTE: There is no validation to
     // check if the client sent malicious
-    // data. Really the the files would be
+    // data. Really the the files should be
     // sent to some cloud provider and store
     // urls in the database.
 
@@ -1001,7 +1019,7 @@ router.post(
       }
     });
 
-    videoMulter(req, res, async (error) => {
+    videoMulterDiskStorage(req, res, async (error) => {
       if (error instanceof multer.MulterError) {
         if (error.code === 'LIMIT_FILE_SIZE') {
           return res.status(413).json({
@@ -1019,14 +1037,38 @@ router.post(
       }
 
       try {
+        if (!req.user) {
+          return res
+            .status(401)
+            .json({ message: 'User was not found. Please sign in.' });
+        }
+
         const files = req.files as {
           [fieldname: string]: Express.Multer.File[];
         };
         const videoFile = files.video[0];
+        const audioLength = await getAudioLength(videoFile.path);
 
-        console.log('Video file:', videoFile);
+        if (audioLength === undefined) {
+          return res.status(400).json({
+            message:
+              'Invalid video file. Could not read audio length. Is the file in mp4 file format?',
+          });
+        }
 
-        return res.sendStatus(999);
+        // TODO: Make some secret filename for the
+        // video file and store it in the database
+        // instead of using the filename.
+
+        const videoUploadResult = await updateLessonVideo({
+          lessonId: parseInt(req.params.lessonid),
+          userId: req.user.id,
+          videoLengthSeconds: audioLength,
+          videoUrl: videoFile.path,
+          videoSizeInBytes: videoFile.size,
+        });
+
+        return res.status(200).json(videoUploadResult);
       } catch (error) {
         next(error);
       }
