@@ -90,6 +90,20 @@ interface DeleteSectionParams {
 type CreatePrerequisiteParams = CreateTextWithId;
 type CreateLearningObjectiveParams = CreateTextWithId;
 
+interface UpdateLessonVideoParams {
+  lessonId: number;
+  userId: number;
+  videoUrl: string;
+  videoLengthSeconds: number;
+  videoSizeInBytes: number;
+}
+
+interface UpdateLessonReturnValue {
+  videoFileName: string;
+  videoSizeInBytes: number;
+  videoLengthSeconds: number;
+}
+
 export const createCourseDraft = async (
   newCourseDraftEntry: NewCourseDraftEntry
 ): Promise<CourseDraft> => {
@@ -413,7 +427,7 @@ export const createLesson = async (
       '[{"type":"paragraph","children":[{"text":""}]}]',
       '',
       0
-    )
+    );
     `;
 
     const sqlValues = [params.curriculumSectionId, params.userId, params.title];
@@ -736,6 +750,56 @@ export const updateCurriculumSections = async (
     await Promise.all(sqlSectionPromises);
     await Promise.all(sqlLessonPromises);
     await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const updateLessonVideo = async (
+  params: UpdateLessonVideoParams
+): Promise<UpdateLessonReturnValue> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+      UPDATE lessons
+      SET 
+        video_url = $1,
+        video_length_seconds = $2,
+        video_size_in_bytes = $3
+      WHERE id = $4
+      AND id IN (
+        SELECT lessons.id
+        FROM lessons
+        JOIN curriculum_sections
+        ON curriculum_sections.id = lessons.curriculum_section_id
+        JOIN coursedrafts
+        ON coursedrafts.id = curriculum_sections.course_draft_id
+        WHERE coursedrafts.creator_id = $5
+      )
+      RETURNING video_url, video_length_seconds, video_size_in_bytes;
+    `;
+
+    const sqlValues = [
+      params.videoUrl,
+      params.videoLengthSeconds,
+      params.videoSizeInBytes,
+      params.lessonId,
+      params.userId,
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+    const row = queryResult.rows[0];
+
+    const returnValue: UpdateLessonReturnValue = {
+      videoFileName: row.video_url,
+      videoSizeInBytes: row.video_size_in_bytes,
+      videoLengthSeconds: row.video_length_seconds,
+    };
+
+    await client.query('COMMIT;');
+    return returnValue;
   } catch (error) {
     await client.query('ROLLBACK;');
     throw error;
