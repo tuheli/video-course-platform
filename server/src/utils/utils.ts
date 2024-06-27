@@ -1,12 +1,8 @@
 import fs from 'fs/promises';
 
-const chunkSize = Math.pow(1024, 2);
-const header = Buffer.from('mvhd');
-const buffer = Buffer.alloc(chunkSize);
-const lastThreeBytesBuffer = Buffer.alloc(3);
-
 // NOTE: For reference on the mp4 file format:
 // https://www.cimarronsystems.com/wp-content/uploads/2017/04/Elements-of-the-H.264-VideoAAC-Audio-MP4-Movie-v2_0.pdf
+// Check that for what is movie header atom (mvhd).
 
 // ------------------------------------------------------------
 // ------------------------------------------------------------
@@ -34,15 +30,21 @@ const lastThreeBytesBuffer = Buffer.alloc(3);
 // For example if we read 100 bytes at a time and the
 // mvhd atom is 4 bytes long we could have the following
 // situation:
-// chunk 1: 'mvh'
-// chunk 2: 'd'
+// chunk 1: '...mvh'
+// chunk 2: 'd...'
 // In this case the mvhd atom would not be found from either.
+
+const chunkSize = Math.pow(1024, 2);
+const header = Buffer.from('mvhd');
 
 export const getAudioLength = async (
   filePath: string
 ): Promise<number | undefined> => {
   const fileHandle = await fs.open(filePath, 'r');
   const { size } = await fileHandle.stat();
+
+  const buffer = Buffer.alloc(chunkSize);
+  const lastThreeBytesBuffer = Buffer.alloc(3);
 
   let isMvhdAtomFound = false;
   let headerIndex = -1;
@@ -59,10 +61,7 @@ export const getAudioLength = async (
       headerIndex = buffer.indexOf(header);
 
       isMvhdAtomFound = headerIndex !== -1;
-
       if (isMvhdAtomFound) {
-        buffer.fill(0);
-        lastThreeBytesBuffer.fill(0);
         break;
       }
 
@@ -82,6 +81,19 @@ export const getAudioLength = async (
   const timeScale = buffer.readUInt32BE(start);
   const duration = buffer.readUInt32BE(start + 4);
   const audioLength = Math.floor((duration / timeScale) * 1000) / 1000;
-  console.log(buffer, header, start, timeScale, duration, audioLength);
+
+  const logObject = {
+    buffer,
+    header,
+    start,
+    timeScale,
+    duration,
+    audioLength,
+  };
+
+  console.log(logObject);
+
+  buffer.fill(0);
+  lastThreeBytesBuffer.fill(0);
   return audioLength;
 };
