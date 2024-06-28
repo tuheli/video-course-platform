@@ -104,6 +104,14 @@ interface UploadVideoRequest {
   videoFile: File;
 }
 
+interface CreateVideostreamTokenRequest {
+  lectureId: number;
+}
+
+interface GetVideostreamTokenResult {
+  token: string;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -340,6 +348,16 @@ export const apiSlice = createApi({
       query: () => `coursedrafts`,
       providesTags: ['CourseDrafts'],
     }),
+    createLessonVideostreamToken: builder.mutation<
+      GetVideostreamTokenResult,
+      CreateVideostreamTokenRequest
+    >({
+      query: (body) => ({
+        url: `/coursedrafts/videostream/signedurl`,
+        method: 'POST',
+        body,
+      }),
+    }),
     validateAuthorizationToken: builder.mutation<
       UserInDatabaseSafeWithToken,
       ValidateAuthorizationTokenRequestBody
@@ -388,5 +406,6 @@ export const {
   useDeleteSectionMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
+  useCreateLessonVideostreamTokenMutation,
   useUploadVideoMutation,
 } = apiSlice;
