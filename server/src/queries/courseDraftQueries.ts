@@ -104,6 +104,34 @@ interface UpdateLessonReturnValue {
   videoLengthSeconds: number;
 }
 
+interface GetVideoUriParams {
+  lessonId: number;
+}
+
+interface CreateVideoUrlTokenParams {
+  userId: number;
+  lessonId: number;
+  token: string;
+}
+
+interface CreateVideoUrlTokenResult {
+  lessonId: number;
+  token: string;
+}
+
+interface GetVideoUrlTokenParams {
+  token: string;
+}
+
+interface GetVideoUrlTokenResult {
+  id: number;
+  userId: number;
+  lessonId: number;
+  token: string;
+  usageCount: number;
+  createdAt: string;
+}
+
 export const createCourseDraft = async (
   newCourseDraftEntry: NewCourseDraftEntry
 ): Promise<CourseDraft> => {
@@ -436,6 +464,104 @@ export const createLesson = async (
     await client.query('COMMIT;');
   } catch (error) {
     await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const createVideoUrlToken = async (
+  params: CreateVideoUrlTokenParams
+): Promise<CreateVideoUrlTokenResult | null> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+      INSERT INTO presigned_video_urls (
+        user_id, 
+        lesson_id, 
+        token, 
+        created_at
+      )
+      VALUES (
+        (
+          SELECT id
+          FROM users
+          WHERE id = $1
+        ), 
+        (
+          SELECT id
+          FROM lessons
+          WHERE id = $2
+        ),
+        $3, 
+        $4
+      )
+      RETURNING 
+        lesson_id, 
+        token;
+    `;
+
+    const sqlValues = [
+      params.userId,
+      params.lessonId,
+      params.token,
+      new Date().toISOString(),
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    const row = queryResult.rows[0];
+
+    if (!row) return null;
+
+    const returnValue: CreateVideoUrlTokenResult = {
+      lessonId: row.lesson_id,
+      token: row.token,
+    };
+
+    await client.query('COMMIT;');
+    return returnValue;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const getVideoUrlToken = async (
+  params: GetVideoUrlTokenParams
+): Promise<GetVideoUrlTokenResult | null> => {
+  try {
+    const sqlText = `
+      SELECT 
+        id, 
+        user_id, 
+        lesson_id, 
+        token, 
+        usage_count, 
+        created_at
+      FROM presigned_video_urls
+      WHERE token = $1;
+    `;
+
+    const sqlValues = [params.token];
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      return null;
+    }
+
+    const row = queryResult.rows[0];
+
+    const returnValue: GetVideoUrlTokenResult = {
+      id: row.id,
+      userId: row.user_id,
+      lessonId: row.lesson_id,
+      token: row.token,
+      usageCount: row.usage_count,
+      createdAt: row.created_at,
+    };
+
+    return returnValue;
+  } catch (error) {
     throw error;
   }
 };
@@ -1042,6 +1168,36 @@ export const getCourseDraft = async (
     };
 
     return courseDraft;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getVideoPath = async (
+  params: GetVideoUriParams
+): Promise<string | undefined> => {
+  try {
+    const sqlText = `
+      SELECT video_url
+      FROM lessons
+      WHERE lessons.id = $1;
+    `;
+
+    const sqlValues = [params.lessonId];
+    const queryResult = await client.query(sqlText, sqlValues);
+
+    if (queryResult.rowCount !== 1) {
+      return undefined;
+    }
+
+    const row = queryResult.rows[0];
+
+    if (row.video_url === '') {
+      return undefined;
+    }
+
+    const videoPath = row.video_url;
+    return videoPath;
   } catch (error) {
     throw error;
   }
