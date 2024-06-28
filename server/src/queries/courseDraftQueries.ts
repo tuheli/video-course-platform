@@ -932,6 +932,8 @@ export const updateLessonVideo = async (
   }
 };
 
+// TODO: Review and fix potential issues
+// with the array aggregations.
 export const getCourseDrafts = async (
   userId: number
 ): Promise<CourseDraft[]> => {
