@@ -3,7 +3,6 @@ import { Lesson } from '../../features/courseDraftsSlice';
 import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
-import { getSortedByOrderIndexCopy } from '../drag-and-drop-v2/utils';
 import { Overview } from './Overview';
 import { LectureWithoutVideo } from './LectureWithoutVideo';
 import { VideoPlayer } from './VideoPlayer';
@@ -14,16 +13,14 @@ export const Layout = () => {
   const courseDraft = useCourseDraft();
   const [currentLecture, setCurrentLecture] = useState<Lesson | null>(null);
 
-  const curriculum = courseDraft
-    ? getSortedByOrderIndexCopy(courseDraft.courseContent.curriculum)
-    : [];
+  const curriculum = !courseDraft
+    ? []
+    : [...courseDraft.courseContent.curriculum].sort(
+        (a, b) => a.orderIndex - b.orderIndex
+      );
 
   useEffect(() => {
     if (!courseDraft) return;
-
-    const curriculum = getSortedByOrderIndexCopy(
-      courseDraft.courseContent.curriculum
-    );
     if (curriculum.length === 0) return;
 
     const firstLecture = curriculum[0].lessons[0];
@@ -57,7 +54,7 @@ export const Layout = () => {
             }}
           >
             {currentLecture && currentLecture.video ? (
-              <VideoPlayer videoUrl={currentLecture.video.url} />
+              <VideoPlayer currentLecture={currentLecture} />
             ) : currentLecture ? (
               <LectureWithoutVideo lecture={currentLecture} />
             ) : (
