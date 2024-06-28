@@ -88,3 +88,12 @@ CREATE TABLE course_contents (
     intended_learners INTEGER REFERENCES intended_learners(id) ON DELETE CASCADE,
     video_content_length_seconds INTEGER NOT NULL
 );
+
+CREATE TABLE presigned_video_urls (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    lesson_id INTEGER REFERENCES lessons(id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    usage_count INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL
+);
