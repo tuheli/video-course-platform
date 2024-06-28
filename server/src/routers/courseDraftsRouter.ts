@@ -8,6 +8,7 @@ import {
   createLearningObjective,
   createLesson,
   createPrerequisite,
+  createVideoUrlToken,
   deleteIntendedLearner,
   deleteLearningObjective,
   deleteLesson,
@@ -15,12 +16,16 @@ import {
   deleteSection,
   getCourseDraft,
   getCourseDrafts,
+  getVideoPath,
+  getVideoUrlToken,
   updateCourseDraftCourseGoals,
   updateCurriculumSections,
   updateLessonVideo,
 } from '../queries/courseDraftQueries';
 import multer from 'multer';
 import { getAudioLength } from '../utils/utils';
+import fs from 'fs';
+import crypto from 'crypto';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -795,6 +800,67 @@ router.get('/', userExtractor, async (req, res, next) => {
   }
 });
 
+router.get('/videostream/:lessonid', async (req, res, next) => {
+  try {
+    const lessonId = parseInt(req.params.lessonid);
+    if (isNaN(lessonId)) {
+      return res.status(400).json({ message: 'Invalid lesson id.' });
+    }
+
+    const token = req.query.token;
+    if (!token || typeof token !== 'string') {
+      return res.status(401).json({ message: 'Token is missing.' });
+    }
+
+    const tokenInformationInDatabase = await getVideoUrlToken({
+      token,
+    });
+
+    // NOTE: How to also check the user
+    // is the creator of the token in a
+    // good way?
+    // In client side the video takes
+    // url as a prop as sends token as
+    // query param.
+
+    const isValidRequest =
+      tokenInformationInDatabase !== null &&
+      tokenInformationInDatabase.token === token &&
+      tokenInformationInDatabase.lessonId === lessonId;
+
+    if (!isValidRequest) {
+      return res.status(401).json({ message: 'Invalid token.' });
+    }
+
+    const videoPath = await getVideoPath({ lessonId });
+
+    if (!videoPath) {
+      return res.status(404).json({ message: 'Video was not found.' });
+    }
+
+    // Streaming code is from
+    // https://www.geeksforgeeks.org/how-to-build-video-streaming-application-using-node-js/
+
+    const range = req.headers.range;
+    const videoSize = fs.statSync(videoPath).size;
+    const chunkSize = Math.pow(1024, 2);
+    const start = Number(range?.replace(/\D/g, ''));
+    const end = Math.min(start + chunkSize, videoSize - 1);
+    const contentLength = end - start + 1;
+    const headers = {
+      'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': contentLength,
+      'Content-Type': 'video/mp4',
+    };
+    res.writeHead(206, headers);
+    const stream = fs.createReadStream(videoPath, { start, end });
+    stream.pipe(res);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/', userExtractor, async (req, res, next) => {
   try {
     const createCourseDraftRequestBody = toCreateCourseDraftRequestBody(
@@ -1075,6 +1141,36 @@ router.post(
     });
   }
 );
+
+router.post('/videostream/signedurl', userExtractor, async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
+    }
+
+    const randomString = crypto.randomBytes(16).toString('hex');
+    const lessonId = parseInt(req.body.lectureId);
+    const userId = req.user.id;
+
+    const queryResult = await createVideoUrlToken({
+      lessonId,
+      userId,
+      token: randomString,
+    });
+
+    if (!queryResult) {
+      return res
+        .status(500)
+        .json({ message: 'Failed to create video url token.' });
+    }
+
+    return res.status(200).json({ token: queryResult.token });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
   try {
