@@ -1,13 +1,16 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import cors from 'cors';
 import { connectToDatabase } from './database';
 import { port } from './config';
-import { errorName } from './errorNames';
-import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import signupRouter from './routers/signupRouter';
 import signinRouter from './routers/signinRouter';
 import courseDraftsRouter from './routers/courseDraftsRouter';
 import validateAuthorizationTokenRouter from './routers/validateAuthorizationTokenRouter';
+import { errorHandler } from './middleware';
+import path from 'path';
+
+const relativeDistPath = '../dist';
+const absoluteDistPath = path.join(__dirname, relativeDistPath);
 
 const app = express();
 
@@ -19,45 +22,15 @@ app.use('/api/signin', signinRouter);
 app.use('/api/coursedrafts', courseDraftsRouter);
 app.use('/api/validateauthorizationtoken', validateAuthorizationTokenRouter);
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  if (error instanceof TokenExpiredError) {
-    return res.status(401).json({ message: 'Token expired.' });
+app.get('/*', (req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(404).json({ message: 'Unknown endpoint.' });
+  } else {
+    return res.sendFile(absoluteDistPath + '/index.html');
   }
-
-  if (error instanceof JsonWebTokenError) {
-    return res.status(401).json({ message: 'Token malformed.' });
-  }
-
-  if (!(error instanceof Error)) {
-    console.log(
-      'Error at errorhandler is not an instance of error. Error object:',
-      error
-    );
-    return res.status(500).json({ message: 'Something went wrong.' });
-  }
-
-  switch (error.name) {
-    case errorName.errorMessageForClient:
-      return res.status(400).json({ message: error.message });
-    case errorName.errorAtDatabase:
-      console.log('Database error:', error);
-      break;
-    case errorName.missingEnvironmentVariable:
-      console.log('Missing environment variable:', error);
-      break;
-    case errorName.clientSentInvalidData:
-      console.log('Client sent invalid data:', error);
-      break;
-    case errorName.unknownError:
-      console.log('Unknown error:', error);
-      break;
-    default:
-      console.log('Unhandled error:', error);
-      break;
-  }
-
-  return res.status(500).json({ message: 'Something went wrong.' });
 });
+
+app.use(errorHandler);
 
 // NOTE: Dont catch potential errors
 // here. Let a potentially unhandled error
