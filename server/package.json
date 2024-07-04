@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "main": "./src/index.ts",
   "scripts": {
+    "start": "node ./out/src/index.js",
     "dev-windows": "set DEBUG=express:* & ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "build-client-windows": "rmdir /s /q .\\dist && cd ..\\client && rmdir /s /q .\\dist && npm run build && xcopy /e /i .\\dist ..\\server\\dist",
+    "build-client-mac": "rm -rf ./dist && cd ../client && rm -rf ./dist && npm run build && cp -r dist ../server",
+    "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Elias Tuhola",
