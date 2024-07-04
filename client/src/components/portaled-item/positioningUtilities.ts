@@ -124,6 +124,7 @@ export const getCenteredBottomPosition = (
 
 // NOTE: Dont delete
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore
 const getBottomRightPosition = (anchorElement: HTMLElement) => {
   const anchor = anchorElement.getBoundingClientRect();
 
@@ -137,6 +138,7 @@ const getBottomRightPosition = (anchorElement: HTMLElement) => {
 
 // NOTE: Dont delete
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore
 const getFlexDirectionForDirectionTriangle = (
   renderPosition: RenderPosition
 ) => {

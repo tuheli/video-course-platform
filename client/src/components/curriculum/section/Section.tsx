@@ -13,7 +13,6 @@ import { useAppDispatch } from '../../../app/hooks';
 import { ChangeEvent, memo, useState } from 'react';
 import { InputFieldWithMaxCharacters } from '../../course-creation/course-creation-flow/InputFieldWithMaxCharacters';
 import { SaveAndCancelButton } from '../SaveAndCancelButton';
-import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
 import AddIcon from '@mui/icons-material/Add';
 import { AddableItemOptionButton } from '../lecture/AddLectureButton';
 import { AddItemButton } from '../AddItemButton';
@@ -24,6 +23,8 @@ import { MemoDraghandle } from '../../drag-and-drop-v2/Draghandle';
 import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
 import { store } from '../../../app/store';
 import { useDeleteSectionMutation } from '../../../features/apiSlice';
+
+export type EditableItemType = 'addLecture';
 
 export interface SectionProps {
   courseDraftId: number;

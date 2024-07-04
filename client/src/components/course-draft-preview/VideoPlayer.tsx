@@ -10,7 +10,7 @@ interface VideoPlayerProps {
 export const VideoPlayer = ({ currentLecture }: VideoPlayerProps) => {
   const [src, setSrc] = useState<string>('');
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [createToken, { data }] = useCreateLessonVideostreamTokenMutation();
+  const [createToken] = useCreateLessonVideostreamTokenMutation();
 
   useEffect(() => {
     if (!videoRef.current) return;

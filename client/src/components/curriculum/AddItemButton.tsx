@@ -1,4 +1,3 @@
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 import { AddMoreButtonDarkVariant } from '../manage-course-goals-page/AddMoreButtonDarkVariant';
 
 interface AddItemButtonProps {
@@ -6,10 +5,7 @@ interface AddItemButtonProps {
 }
 
 export const AddItemButton = ({ setOptionsVisibility }: AddItemButtonProps) => {
-  const { setEditingItemType } = useCurriculumSectionContext();
-
   const onClick = () => {
-    setEditingItemType(undefined);
     setOptionsVisibility(true);
   };
 

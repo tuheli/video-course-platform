@@ -1,5 +1,5 @@
-import { EditableItemType } from '../../contexts/CurriculumSectionContext';
 import { NewLectureCard } from './lecture/NewLectureCard';
+import { EditableItemType } from './section/Section';
 
 interface EditSelectorProps {
   activeEditType: EditableItemType | null;

@@ -93,7 +93,7 @@ export const getLectureDescriptionLocalStorageKey = (
   return `ld_${courseDraftId}_${sectionId}_${lectureId}`;
 };
 
-export const getAllLectureDescriptionsKeys = (courseDraftId: string) => {
+export const getAllLectureDescriptionsKeys = (courseDraftId: number) => {
   return Object.keys(localStorage).filter((key) =>
     key.startsWith(`ld_${courseDraftId}`)
   );

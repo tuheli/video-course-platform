@@ -1,5 +1,4 @@
 import { Button, Stack } from '@mui/material';
-import { useCurriculumSectionContext } from '../../hooks/useCurriculumSectionContext';
 
 interface SaveAndCancelButtonProps {
   onClickCancel: () => void;
@@ -12,13 +11,6 @@ export const SaveAndCancelButton = ({
   onClickCancel,
   onClickSave,
 }: SaveAndCancelButtonProps) => {
-  const { setIsOptionsAnimationEnabled } = useCurriculumSectionContext();
-
-  const onClickCancelWithDisableOptionsAnimation = () => {
-    setIsOptionsAnimationEnabled(false);
-    onClickCancel();
-  };
-
   return (
     <Stack
       onMouseDown={(event) => event.stopPropagation()}
@@ -29,7 +21,7 @@ export const SaveAndCancelButton = ({
       }}
     >
       <Button
-        onClick={onClickCancelWithDisableOptionsAnimation}
+        onClick={onClickCancel}
         variant="text"
         color="primary"
         sx={{

@@ -1,5 +1,4 @@
 import { ChangeEvent, useState } from 'react';
-import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import { InputFieldWithMaxCharacters } from '../../course-creation/course-creati
 import { useCreateLectureMutation } from '../../../features/apiSlice';
 import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
 import { store } from '../../../app/store';
+import { EditableItemType } from '../section/Section';
 
 interface NewLectureCardProps {
   courseDraftId: number;

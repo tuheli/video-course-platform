@@ -1,5 +1,5 @@
-import { EditableItemType } from '../../../contexts/CurriculumSectionContext';
 import { AddMoreButton } from '../../manage-course-goals-page/AddMoreButton';
+import { EditableItemType } from '../section/Section';
 
 // NOTE: I added undefined as a type option
 // to show a few extra buttons which

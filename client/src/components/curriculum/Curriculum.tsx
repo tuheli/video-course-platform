@@ -8,11 +8,7 @@ import { Dropzone } from '../drag-and-drop-v2/Dropzone';
 import { MemoDraggableSection } from './section/DraggableSection';
 import { useParams } from 'react-router-dom';
 
-interface CurriculumProps {
-  forcedCourseId?: string | number;
-}
-
-export const Curriculum = ({ forcedCourseId }: CurriculumProps) => {
+export const Curriculum = () => {
   const courseDrafts = useAppSelector((state) => state.courseDrafts);
   const { courseId } = useParams();
   const dispatch = useCallback(useAppDispatch(), []);

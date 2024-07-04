@@ -6,5 +6,5 @@ interface LectureContextProps {
 }
 
 export const LectureContext = createContext<LectureContextProps>({
-  lecture: { id: '', name: '', orderIndex: -1 },
+  lecture: { id: 0, name: '', orderIndex: -1, description: '' },
 });
