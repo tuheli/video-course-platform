@@ -16,12 +16,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use('/', express.static(absoluteDistPath));
 app.use('/api/signup', signupRouter);
 app.use('/api/signin', signinRouter);
 app.use('/api/coursedrafts', courseDraftsRouter);
 app.use('/api/validateauthorizationtoken', validateAuthorizationTokenRouter);
-
 app.get('/*', (req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(404).json({ message: 'Unknown endpoint.' });
@@ -29,7 +28,6 @@ app.get('/*', (req, res) => {
     return res.sendFile(absoluteDistPath + '/index.html');
   }
 });
-
 app.use(errorHandler);
 
 // NOTE: Dont catch potential errors
