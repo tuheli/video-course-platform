@@ -5,3 +5,5 @@ out/
 
 lesson-video-uploads/*
 !lesson-video-uploads/.gitkeep
+
+eu-north-1-bundle.pem
