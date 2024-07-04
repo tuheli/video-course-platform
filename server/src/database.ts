@@ -1,8 +1,19 @@
 import { Client } from 'pg';
 import { databaseUrl } from './config';
 import { errorName } from './errorNames';
+import fs from 'fs';
+import path from 'path';
 
-const client = new Client(databaseUrl);
+const relativeCaPath = '../eu-north-1-bundle.pem';
+const absoluteCaPath = path.join(__dirname, relativeCaPath);
+
+const client = new Client({
+  connectionString: databaseUrl,
+  ssl: {
+    rejectUnauthorized: false,
+    ca: fs.readFileSync(absoluteCaPath).toString(),
+  },
+});
 
 const connectToDatabase = async () => {
   try {
