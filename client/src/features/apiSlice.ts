@@ -7,6 +7,7 @@ import {
   TextWithId,
 } from './courseDraftsSlice';
 import { RootState } from '../app/store';
+import { UploadParts } from '../components/utility/ChunkUploader';
 
 export interface CredentialsNotSafe {
   email: string;
@@ -430,9 +431,19 @@ export const apiSlice = createApi({
           body: body.part,
         };
       },
+      // @eslint-disable-next-line @typescript-eslint/no-unused-vars
       transformResponse: (response, meta) => {
         const ETag = meta?.response?.headers.get('ETag');
         return ETag ? { ETag: ETag.replace(/^"|"$/g, '') } : { ETag: '' };
+      },
+    }),
+    finishUpload: builder.mutation<void, UploadParts>({
+      query: (body) => {
+        return {
+          url: `coursedrafts/finishupload`,
+          method: 'POST',
+          body,
+        };
       },
     }),
   }),
@@ -480,4 +491,5 @@ export const {
   useUploadChunkMutation,
   useUploadPartMutation,
   useInitiateUploadMutation,
+  useFinishUploadMutation,
 } = apiSlice;
