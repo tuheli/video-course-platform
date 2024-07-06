@@ -900,21 +900,16 @@ router.post('/upload', async (req, res, next) => {
     });
 });
 
-router.get('/upload-initiate-test', async (req, res, next) => {
+router.post('/initiateupload', async (req, res, next) => {
   try {
-    const uploadInitiationResult = await initiateMultipartUpload();
+    const params = req.body;
+    const uploadInitiationResult = await initiateMultipartUpload(params);
 
     if (!uploadInitiationResult) {
       return res.status(500).json({ message: 'Failed to initiate upload.' });
     }
 
-    const databaseResult = await createMultipartUpload(uploadInitiationResult);
-
-    // client knows the part order, server
-    // creates presigned url for each part
-    // number and sends them back to client.
-
-    return res.status(200).json(databaseResult);
+    return res.status(200).json(uploadInitiationResult);
   } catch (error) {
     next(error);
   }

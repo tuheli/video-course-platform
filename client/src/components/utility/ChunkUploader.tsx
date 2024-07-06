@@ -1,12 +1,21 @@
 import { Container } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
-import { useUploadChunkMutation } from '../../features/apiSlice';
+import { ChangeEvent, useRef, useState } from 'react';
+import {
+  useInitiateUploadMutation,
+  useUploadPartMutation,
+} from '../../features/apiSlice';
+
+interface PartUploads {
+  uploadId: string;
+  parts: Map<number, { partNumber: number; ETag: string | undefined }>;
+}
 
 export const ChunkUploader = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [uploadChunk] = useUploadChunkMutation();
-  const chunkSize = Math.pow(1024, 2) * 5; // 5MB
-  const fileId = 1;
+  const [uploadPart] = useUploadPartMutation();
+  const [initiateUpload] = useInitiateUploadMutation();
+  const uploadedParts = useRef<PartUploads | null>(null);
+  const chunkSize = Math.pow(1024, 2) * 5; // 15MB
 
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -17,45 +26,63 @@ export const ChunkUploader = () => {
   const onClickUpload = async () => {
     if (!file) return;
     try {
-      const chunks = Math.ceil(file.size / chunkSize);
-      const chunksQueue = Array.from({ length: chunks }, (_, i) => i).reverse();
-      await sendNextChunk(file, chunksQueue, chunkSize, fileId);
-    } catch (error) {}
+      const partCount = Math.ceil(file.size / chunkSize);
+      const initiateResponse = await initiateUpload({ partCount });
+      if (!initiateResponse.data) {
+        throw new Error('No data in initiate response');
+      }
+      uploadedParts.current = {
+        uploadId: initiateResponse.data.uploadId,
+        parts: new Map(),
+      };
+      const chunksQueue = [
+        ...initiateResponse.data.partsWithUploadUrls,
+      ].reverse();
+      debugger;
+      await sendNextChunk(file, chunksQueue, chunkSize);
+    } catch (error) {
+      console.log('Error uploading file', error);
+    }
   };
 
   const sendNextChunk = async (
     file: File,
-    chunksQueue: number[],
-    chunkSize: number,
-    fileId: number
+    chunksQueue: Array<{ partNumber: number; uploadUrl: string }>,
+    chunkSize: number
   ) => {
     if (chunksQueue.length === 0) {
       console.log('All chunks uploaded');
       return;
     }
 
-    const chunkId = chunksQueue.pop();
+    const part = chunksQueue.pop();
 
-    if (chunkId === undefined) {
-      console.log('Chunk ID is undefined');
+    if (!part) {
+      console.log('No part in queue');
       return;
     }
 
-    const begin = chunkId * chunkSize;
+    const begin = (part.partNumber - 1) * chunkSize;
     const end = begin + chunkSize;
     const chunk = file.slice(begin, end);
 
     try {
-      await uploadChunk({
-        chunk,
-        chunkId,
-        fileId,
-        fileName: file.name,
-        fileSize: file.size,
+      const uploadResponse = await uploadPart({
+        part: chunk,
+        uploadUrl: part.uploadUrl,
       });
-      sendNextChunk(file, chunksQueue, chunkSize, fileId);
+
+      uploadedParts.current?.parts.set(part.partNumber, {
+        partNumber: part.partNumber,
+        ETag: uploadResponse.data?.ETag || undefined,
+      });
+
+      sendNextChunk(file, chunksQueue, chunkSize);
     } catch (error) {
-      console.log('Error uploading chunk');
+      console.log('Error uploading chunk', error);
+      // on error we probably
+      // want to push the part back
+      // for retrying
       // chunksQueue.push(chunkId);
     }
   };
@@ -79,3 +106,21 @@ export const ChunkUploader = () => {
     </Container>
   );
 };
+
+// const messageDigestBuffer = await chunk.arrayBuffer();
+// const messageDigestHashBuffer = await crypto.subtle.digest(
+//   'md5',
+//   messageDigestBuffer
+// );
+// const hashArray = Array.from(new Uint8Array(messageDigestHashBuffer));
+// const hashHex = hashArray
+//   .map((b) => b.toString(16).padStart(2, '0'))
+//   .join('');
+// const match = hashHex.match(/\w{2}/g);
+// if (!match) {
+//   console.log('Error hashing chunk');
+//   return;
+// }
+// const hashBase64 = btoa(
+//   match.map((b) => String.fromCharCode(parseInt(b, 16))).join('')
+// );

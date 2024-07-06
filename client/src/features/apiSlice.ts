@@ -408,8 +408,53 @@ export const apiSlice = createApi({
         };
       },
     }),
+    initiateUpload: builder.mutation<
+      InitiateMultipartUploadResponse,
+      InitiateMultipartUploadParams
+    >({
+      query: (body) => {
+        return {
+          url: `coursedrafts/initiateupload`,
+          method: 'POST',
+          body: {
+            partCount: body.partCount,
+          },
+        };
+      },
+    }),
+    uploadPart: builder.mutation<UploadPartResponse, UploadPartRequest>({
+      query: (body) => {
+        return {
+          url: body.uploadUrl,
+          method: 'PUT',
+          body: body.part,
+        };
+      },
+      transformResponse: (response, meta) => {
+        const ETag = meta?.response?.headers.get('ETag');
+        return ETag ? { ETag: ETag.replace(/^"|"$/g, '') } : { ETag: '' };
+      },
+    }),
   }),
 });
+
+interface UploadPartResponse {
+  ETag: string;
+}
+
+interface UploadPartRequest {
+  part: Blob;
+  uploadUrl: string;
+}
+
+interface InitiateMultipartUploadParams {
+  partCount: number;
+}
+
+interface InitiateMultipartUploadResponse {
+  uploadId: string;
+  partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
+}
 
 export const {
   usePingQuery,
@@ -433,4 +478,6 @@ export const {
   useCreateLessonVideostreamTokenMutation,
   useUploadVideoMutation,
   useUploadChunkMutation,
+  useUploadPartMutation,
+  useInitiateUploadMutation,
 } = apiSlice;
