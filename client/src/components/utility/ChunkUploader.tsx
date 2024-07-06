@@ -1,21 +1,23 @@
 import { Container } from '@mui/material';
 import { ChangeEvent, useRef, useState } from 'react';
 import {
+  useFinishUploadMutation,
   useInitiateUploadMutation,
   useUploadPartMutation,
 } from '../../features/apiSlice';
 
-interface PartUploads {
+export interface UploadParts {
   uploadId: string;
-  parts: Map<number, { partNumber: number; ETag: string | undefined }>;
+  parts: Array<{ partNumber: number; ETag: string | undefined }>;
 }
 
 export const ChunkUploader = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploadPart] = useUploadPartMutation();
   const [initiateUpload] = useInitiateUploadMutation();
-  const uploadedParts = useRef<PartUploads | null>(null);
-  const chunkSize = Math.pow(1024, 2) * 5; // 15MB
+  const [finishUpload] = useFinishUploadMutation();
+  const uploadedParts = useRef<UploadParts | null>(null);
+  const chunkSize = Math.pow(1024, 2) * 5; // 5MB
 
   const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -27,18 +29,21 @@ export const ChunkUploader = () => {
     if (!file) return;
     try {
       const partCount = Math.ceil(file.size / chunkSize);
+
       const initiateResponse = await initiateUpload({ partCount });
       if (!initiateResponse.data) {
         throw new Error('No data in initiate response');
       }
+
       uploadedParts.current = {
         uploadId: initiateResponse.data.uploadId,
-        parts: new Map(),
+        parts: [],
       };
+
       const chunksQueue = [
         ...initiateResponse.data.partsWithUploadUrls,
       ].reverse();
-      debugger;
+
       await sendNextChunk(file, chunksQueue, chunkSize);
     } catch (error) {
       console.log('Error uploading file', error);
@@ -52,6 +57,16 @@ export const ChunkUploader = () => {
   ) => {
     if (chunksQueue.length === 0) {
       console.log('All chunks uploaded');
+
+      if (!uploadedParts.current) {
+        throw new Error('No uploaded parts');
+      }
+
+      await finishUpload({
+        uploadId: uploadedParts.current.uploadId,
+        parts: uploadedParts.current.parts,
+      });
+
       return;
     }
 
@@ -72,7 +87,7 @@ export const ChunkUploader = () => {
         uploadUrl: part.uploadUrl,
       });
 
-      uploadedParts.current?.parts.set(part.partNumber, {
+      uploadedParts.current?.parts.push({
         partNumber: part.partNumber,
         ETag: uploadResponse.data?.ETag || undefined,
       });
