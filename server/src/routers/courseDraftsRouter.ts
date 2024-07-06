@@ -26,6 +26,8 @@ import multer from 'multer';
 import { getAudioLength } from '../utils/utils';
 import fs from 'fs';
 import crypto from 'crypto';
+import { initiateMultipartUpload } from '../aws-s3';
+import { createMultipartUpload } from '../queries/awsUploadQueries';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -856,6 +858,63 @@ router.get('/videostream/:lessonid', async (req, res, next) => {
     res.writeHead(206, headers);
     const stream = fs.createReadStream(videoPath, { start, end });
     stream.pipe(res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/upload', async (req, res, next) => {
+  const chunk: Uint8Array[] = [];
+  const uploadId = req.headers['x-upload-id'];
+  const chunkId = req.headers['x-chunk-id'];
+  const expectedChunkSize = Number(req.headers['x-chunk-size']);
+
+  console.log('starting to receive a chunk', {
+    uploadId,
+    chunkId,
+    expectedChunkSize,
+  });
+
+  if (isNaN(expectedChunkSize)) {
+    return res.status(400).json({ message: 'Invalid chunk size.' });
+  }
+
+  req
+    .on('data', (chunkPart) => {
+      console.log('received part of a chunk', chunkPart);
+      chunk.push(chunkPart);
+    })
+    .on('end', () => {
+      console.log('no more data for this chunk');
+      const completeChunk = Buffer.concat(chunk);
+
+      if (completeChunk.length !== expectedChunkSize) {
+        return res
+          .status(400)
+          .json({ message: 'Chunk was not of expected size.' });
+      } else {
+        console.log('chunk is of expected size');
+      }
+
+      res.end();
+    });
+});
+
+router.get('/upload-initiate-test', async (req, res, next) => {
+  try {
+    const uploadInitiationResult = await initiateMultipartUpload();
+
+    if (!uploadInitiationResult) {
+      return res.status(500).json({ message: 'Failed to initiate upload.' });
+    }
+
+    const databaseResult = await createMultipartUpload(uploadInitiationResult);
+
+    // client knows the part order, server
+    // creates presigned url for each part
+    // number and sends them back to client.
+
+    return res.status(200).json(databaseResult);
   } catch (error) {
     next(error);
   }

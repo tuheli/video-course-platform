@@ -112,6 +112,14 @@ interface GetVideostreamTokenResult {
   token: string;
 }
 
+interface UploadChunkRequest {
+  chunk: Blob;
+  chunkId: number;
+  fileId: number;
+  fileSize: number;
+  fileName: string;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -384,6 +392,22 @@ export const apiSlice = createApi({
       },
       invalidatesTags: ['CourseDrafts'],
     }),
+    uploadChunk: builder.mutation<void, UploadChunkRequest>({
+      query: ({ chunk, chunkId, fileId, fileSize, fileName }) => {
+        return {
+          url: `coursedrafts/upload`,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'x-chunk-id': chunkId.toString(),
+            'x-upload-id': fileId.toString(),
+            'x-chunk-size': chunk.size.toString(),
+          },
+          body: chunk,
+          cache: 'no-cache',
+        };
+      },
+    }),
   }),
 });
 
@@ -408,4 +432,5 @@ export const {
   useGetCourseDraftsQuery,
   useCreateLessonVideostreamTokenMutation,
   useUploadVideoMutation,
+  useUploadChunkMutation,
 } = apiSlice;
