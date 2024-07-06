@@ -26,8 +26,11 @@ import multer from 'multer';
 import { getAudioLength } from '../utils/utils';
 import fs from 'fs';
 import crypto from 'crypto';
-import { initiateMultipartUpload } from '../aws-s3';
-import { createMultipartUpload } from '../queries/awsUploadQueries';
+import { finishUpload, initiateMultipartUpload } from '../aws-s3';
+import {
+  createMultipartUpload,
+  getKeyByUploadId,
+} from '../queries/awsUploadQueries';
 
 const timeAvailablePerWeek = {
   imVeryBusy: '0-2 hours',
@@ -900,7 +903,7 @@ router.post('/upload', async (req, res, next) => {
     });
 });
 
-router.post('/initiateupload', async (req, res, next) => {
+router.post('/initiateupload', userExtractor, async (req, res, next) => {
   try {
     const params = req.body;
     const uploadInitiationResult = await initiateMultipartUpload(params);
@@ -910,6 +913,22 @@ router.post('/initiateupload', async (req, res, next) => {
     }
 
     return res.status(200).json(uploadInitiationResult);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/finishupload', userExtractor, async (req, res, next) => {
+  try {
+    const { uploadId, parts } = req.body;
+    const key = await getKeyByUploadId(uploadId);
+    const result = await finishUpload({ key, uploadId, parts });
+
+    // update database, the key is the video url
+    // when user wants to view video, send
+    // a presigned url generated using the key
+
+    return res.sendStatus(200);
   } catch (error) {
     next(error);
   }
