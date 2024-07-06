@@ -97,3 +97,12 @@ CREATE TABLE presigned_video_urls (
     usage_count INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP NOT NULL
 );
+
+CREATE TABLE aws_s3_multipart_uploads (
+    id SERIAL PRIMARY KEY,
+    upload_id TEXT NOT NULL,
+    key TEXT NOT NULL,
+    is_finished BOOLEAN NOT NULL DEFAULT FALSE,
+    expiration_time TIMESTAMP NOT NULL,
+    creation_time TIMESTAMP NOT NULL
+);
