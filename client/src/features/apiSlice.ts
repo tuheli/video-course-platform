@@ -121,6 +121,24 @@ interface UploadChunkRequest {
   fileName: string;
 }
 
+interface UploadPartResponse {
+  ETag: string;
+}
+
+interface UploadPartRequest {
+  part: Blob;
+  uploadUrl: string;
+}
+
+interface InitiateMultipartUploadParams {
+  partCount: number;
+}
+
+interface InitiateMultipartUploadResponse {
+  uploadId: string;
+  partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -448,24 +466,6 @@ export const apiSlice = createApi({
     }),
   }),
 });
-
-interface UploadPartResponse {
-  ETag: string;
-}
-
-interface UploadPartRequest {
-  part: Blob;
-  uploadUrl: string;
-}
-
-interface InitiateMultipartUploadParams {
-  partCount: number;
-}
-
-interface InitiateMultipartUploadResponse {
-  uploadId: string;
-  partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
-}
 
 export const {
   usePingQuery,
