@@ -3,6 +3,7 @@ import {
   CreateMultipartUploadCommand,
   CreateMultipartUploadCommandInput,
   UploadPartCommand,
+  CompleteMultipartUploadCommand,
 } from '@aws-sdk/client-s3';
 import {
   awsS3AccessKey,
@@ -11,6 +12,7 @@ import {
   awsS3SecretAccessKey,
 } from './config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { createMultipartUpload } from './queries/awsUploadQueries';
 
 const s3Client = new S3Client({
   region: awsS3bucketRegion,
@@ -35,66 +37,106 @@ interface InitiateMultipartUploadResponse {
   partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
 }
 
+interface FinishUploadParams {
+  key: string;
+  uploadId: string;
+  parts: Array<{ partNumber: number; ETag: string }>;
+}
+
 const getPresignedUrl = async (params: PresignUrlParams) => {
-  const key = crypto.randomUUID();
   const command: UploadPartCommand = new UploadPartCommand({
     Bucket: awsS3bucketName,
     PartNumber: params.partNumber,
     UploadId: params.uploadId,
     Key: params.multipartUploadKey,
   });
+
   const url = await getSignedUrl(s3Client, command, {
     expiresIn: 60 * 15, // 15 minutes
   });
+
   return url;
+};
+
+export const finishUpload = async (params: FinishUploadParams) => {
+  const command = new CompleteMultipartUploadCommand({
+    Bucket: awsS3bucketName,
+    Key: params.key,
+    UploadId: params.uploadId,
+    MultipartUpload: {
+      Parts: params.parts.map((part) => ({
+        ETag: part.ETag,
+        PartNumber: part.partNumber,
+      })),
+    },
+  });
+  const result = await s3Client.send(command);
+  return result;
 };
 
 export const initiateMultipartUpload = async (
   params: InitiateMultipartUploadParams
 ): Promise<InitiateMultipartUploadResponse | null> => {
-  const expirationTime = new Date(Date.now() + 1000 * 60 * 15); // 15 minutes
-  const multipartUploadKey = crypto.randomUUID();
-  const input: CreateMultipartUploadCommandInput = {
-    Bucket: awsS3bucketName,
-    Key: multipartUploadKey,
-    ContentType: 'video/*',
-    Expires: expirationTime,
-  };
+  try {
+    const expirationTime = new Date(Date.now() + 1000 * 60 * 15); // 15 minutes
+    const creationTime = new Date();
+    const multipartUploadKey = crypto.randomUUID() + '.mp4';
+    const input: CreateMultipartUploadCommandInput = {
+      Bucket: awsS3bucketName,
+      Key: multipartUploadKey,
+      ContentType: 'video/*',
+      Expires: expirationTime,
+    };
 
-  const getUploadIdCommand = new CreateMultipartUploadCommand(input);
-  const getUploadIdResponse = await s3Client.send(getUploadIdCommand);
+    const getUploadIdCommand = new CreateMultipartUploadCommand(input);
+    const getUploadIdResponse = await s3Client.send(getUploadIdCommand);
 
-  if (getUploadIdResponse.UploadId === undefined) {
+    if (getUploadIdResponse.UploadId === undefined) {
+      return null;
+    }
+
+    const partsWithUploadUrls: Array<{
+      partNumber: number;
+      uploadUrl: string;
+    }> = [];
+
+    const partCountMap = Array.from(
+      { length: params.partCount },
+      (_, i) => i + 1
+    );
+
+    const promises = partCountMap.map((partNumber) => {
+      const promise = new Promise<void>(async (resolve, reject) => {
+        try {
+          const presignedUrl = await getPresignedUrl({
+            partNumber,
+            uploadId: getUploadIdResponse.UploadId!,
+            multipartUploadKey,
+          });
+          partsWithUploadUrls.push({ partNumber, uploadUrl: presignedUrl });
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
+      return promise;
+    });
+
+    await Promise.all(promises);
+
+    await createMultipartUpload({
+      key: multipartUploadKey,
+      uploadId: getUploadIdResponse.UploadId!,
+      expirationTime: expirationTime.toISOString(),
+      creationTime: creationTime.toISOString(),
+    });
+
+    return {
+      uploadId: getUploadIdResponse.UploadId,
+      partsWithUploadUrls,
+    };
+  } catch (error) {
+    console.error(error);
     return null;
   }
-
-  const partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }> =
-    [];
-  const partCountMap = Array.from(
-    { length: params.partCount },
-    (_, i) => i + 1
-  );
-  const promises = partCountMap.map((partNumber) => {
-    const promise = new Promise<void>(async (resolve, reject) => {
-      try {
-        const presignedUrl = await getPresignedUrl({
-          partNumber,
-          uploadId: getUploadIdResponse.UploadId!,
-          multipartUploadKey,
-        });
-        partsWithUploadUrls.push({ partNumber, uploadUrl: presignedUrl });
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
-    return promise;
-  });
-
-  await Promise.all(promises);
-
-  return {
-    uploadId: getUploadIdResponse.UploadId,
-    partsWithUploadUrls,
-  };
 };
