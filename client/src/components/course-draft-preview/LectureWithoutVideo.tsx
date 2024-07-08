@@ -1,12 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import { Lesson } from '../../features/courseDraftsSlice';
 import { VideoAreaLayout } from './VideoAreaLayout';
 
-interface LectureWithoutVideoProps {
-  lecture: Lesson;
-}
-
-export const LectureWithoutVideo = ({ lecture }: LectureWithoutVideoProps) => {
+export const LectureWithoutVideo = () => {
   return (
     <VideoAreaLayout>
       <Box
@@ -23,7 +18,6 @@ export const LectureWithoutVideo = ({ lecture }: LectureWithoutVideoProps) => {
           gap: 2,
         }}
       >
-        <Typography variant="h5">{lecture.name}</Typography>
         <Typography>This lecture does not have a video.</Typography>
       </Box>
     </VideoAreaLayout>
