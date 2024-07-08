@@ -132,11 +132,18 @@ interface UploadPartRequest {
 
 interface InitiateMultipartUploadParams {
   partCount: number;
+  coursedraftId: number;
+  sectionId: number;
+  lectureId: number;
 }
 
 interface InitiateMultipartUploadResponse {
   uploadId: string;
   partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
+}
+
+interface GetVideoUrlResponse {
+  presignedUrl: string;
 }
 
 export const toUserInDatabaseSafeWithToken = (
@@ -200,7 +207,9 @@ export const apiSlice = createApi({
   tagTypes: ['CourseDrafts'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000/api/',
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers, { getState, endpoint }) => {
+      if (endpoint === 'uploadPart') return;
+
       const authorizationToken = (getState() as RootState).me.user
         ?.authorizationToken;
 
@@ -431,12 +440,13 @@ export const apiSlice = createApi({
       InitiateMultipartUploadResponse,
       InitiateMultipartUploadParams
     >({
-      query: (body) => {
+      query: ({ coursedraftId, sectionId, lectureId, partCount }) => {
         return {
-          url: `coursedrafts/initiateupload`,
+          // url: `coursedrafts/initiateupload`,
+          url: `/coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/initiatevideoupload`,
           method: 'POST',
           body: {
-            partCount: body.partCount,
+            partCount,
           },
         };
       },
@@ -461,6 +471,16 @@ export const apiSlice = createApi({
           url: `coursedrafts/finishupload`,
           method: 'POST',
           body,
+        };
+      },
+    }),
+    getVideoUrl: builder.query<
+      GetVideoUrlResponse,
+      { coursedraftId: number; sectionId: number; lectureId: number }
+    >({
+      query: ({ coursedraftId, sectionId, lectureId }) => {
+        return {
+          url: `coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/video/view`,
         };
       },
     }),
@@ -492,4 +512,5 @@ export const {
   useUploadPartMutation,
   useInitiateUploadMutation,
   useFinishUploadMutation,
+  useGetVideoUrlQuery,
 } = apiSlice;
