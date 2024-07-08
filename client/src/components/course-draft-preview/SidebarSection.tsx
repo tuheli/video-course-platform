@@ -1,15 +1,18 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { ICurriculumSection, Lesson } from '../../features/courseDraftsSlice';
+import { ICurriculumSection } from '../../features/courseDraftsSlice';
 import { useState } from 'react';
 import { BottomExtensionOpener } from '../curriculum/lecture/BottomExtensionOpener';
+import { VideoPreviewSelection } from './Layout';
 
 interface SidebarSectionProps {
+  coursedraftId: number;
   section: ICurriculumSection;
   index: number;
-  onClickLecture: (lecture: Lesson) => void;
+  onClickLecture: (state: VideoPreviewSelection) => void;
 }
 
 export const SidebarSection = ({
+  coursedraftId,
   section,
   index,
   onClickLecture,
@@ -61,7 +64,13 @@ export const SidebarSection = ({
             return (
               <Box
                 key={lesson.id}
-                onClick={() => onClickLecture(lesson)}
+                onClick={() =>
+                  onClickLecture({
+                    coursedraftId,
+                    sectionId: section.id,
+                    lectureId: lesson.id,
+                  })
+                }
                 sx={{
                   px: 2,
                   py: 0.5,
