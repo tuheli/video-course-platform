@@ -1,35 +1,33 @@
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { Lesson } from '../../features/courseDraftsSlice';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { Overview } from './Overview';
-import { LectureWithoutVideo } from './LectureWithoutVideo';
 import { VideoPlayer } from './VideoPlayer';
-import { VideoAreaLayout } from './VideoAreaLayout';
 import { SidebarSection } from './SidebarSection';
+import { LectureWithoutVideo } from './LectureWithoutVideo';
+
+export interface VideoPreviewSelection {
+  coursedraftId: number;
+  sectionId: number;
+  lectureId: number;
+}
 
 export const Layout = () => {
+  const [selectedState, setSelectedState] =
+    useState<VideoPreviewSelection | null>(null);
   const courseDraft = useCourseDraft();
-  const [currentLecture, setCurrentLecture] = useState<Lesson | null>(null);
-
   const curriculum = !courseDraft
     ? []
     : [...courseDraft.courseContent.curriculum].sort(
         (a, b) => a.orderIndex - b.orderIndex
       );
 
-  useEffect(() => {
-    if (!courseDraft) return;
-    if (curriculum.length === 0) return;
-
-    const firstLecture = curriculum[0].lessons[0];
-    setCurrentLecture(firstLecture);
-  }, []);
-
-  const onClickSidebarLecture = (lecture: Lesson) => {
-    setCurrentLecture(lecture);
+  const onClickSidebarLecture = (state: VideoPreviewSelection) => {
+    setSelectedState(state);
   };
+
+  if (!courseDraft) return null;
 
   return (
     <Container maxWidth={false} disableGutters>
@@ -53,12 +51,10 @@ export const Layout = () => {
               bgcolor: 'background.default',
             }}
           >
-            {currentLecture && currentLecture.video ? (
-              <VideoPlayer currentLecture={currentLecture} />
-            ) : currentLecture ? (
-              <LectureWithoutVideo lecture={currentLecture} />
+            {selectedState ? (
+              <VideoPlayer {...selectedState} />
             ) : (
-              <VideoAreaLayout />
+              <LectureWithoutVideo />
             )}
           </Box>
           <Stack
@@ -170,6 +166,7 @@ export const Layout = () => {
               return (
                 <Box key={section.id}>
                   <SidebarSection
+                    coursedraftId={courseDraft.id}
                     section={section}
                     index={index}
                     onClickLecture={onClickSidebarLecture}
