@@ -69,10 +69,10 @@ export interface Lesson {
   name: string;
   orderIndex: number;
   description: string;
-  video?: {
-    url: string;
-    lengthSeconds: number;
-  };
+  // video?: {
+  //   url: string;
+  //   lengthSeconds: number;
+  // };
 }
 
 export interface ICurriculumSection {
@@ -629,15 +629,20 @@ const slice = createSlice({
 
       if (!lecture) return;
 
-      // Release old url if it exists
-      if (lecture.video) {
-        URL.revokeObjectURL(lecture.video.url);
-      }
+      // NOTE: on internet branch video is not
+      // anymore in lesson interface
+      // videos get presigned url when
+      // user wants to view them
 
-      lecture.video = {
-        url: action.payload.url,
-        lengthSeconds: action.payload.lengthSeconds,
-      };
+      // Release old url if it exists
+      // if (lecture.video) {
+      //   URL.revokeObjectURL(lecture.video.url);
+      // }
+
+      // lecture.video = {
+      //   url: action.payload.url,
+      //   lengthSeconds: action.payload.lengthSeconds,
+      // };
     },
     deletedLecture: (
       state,
