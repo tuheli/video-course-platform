@@ -16,6 +16,7 @@ import {
   deleteSection,
   getCourseDraft,
   getCourseDrafts,
+  getCourseDraftsNew,
   getVideoPath,
   getVideoUrlToken,
   updateCourseDraftCourseGoals,
@@ -792,7 +793,7 @@ router.get('/', userExtractor, async (req, res, next) => {
         .json({ message: 'User was not found. Please sign in.' });
     }
 
-    const courseDraftFromDatabaseResult = await getCourseDrafts(req.user.id);
+    const courseDraftFromDatabaseResult = await getCourseDraftsNew(req.user.id);
 
     return res.status(200).json(courseDraftFromDatabaseResult);
   } catch (error) {
