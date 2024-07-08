@@ -7,7 +7,7 @@ import {
   TextWithId,
 } from './courseDraftsSlice';
 import { RootState } from '../app/store';
-import { UploadParts } from '../components/utility/ChunkUploader';
+import { UploadParts } from '../hooks/useChunkUpload';
 
 export interface CredentialsNotSafe {
   email: string;
