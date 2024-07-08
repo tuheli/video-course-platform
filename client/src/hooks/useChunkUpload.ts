@@ -1,38 +1,48 @@
-import { Container } from '@mui/material';
-import { ChangeEvent, useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
   useFinishUploadMutation,
   useInitiateUploadMutation,
   useUploadPartMutation,
-} from '../../features/apiSlice';
+} from '../features/apiSlice';
+import { isDataWithMessage, isObjectWithData } from '../utils/apiUtils';
 
 export interface UploadParts {
   uploadId: string;
   parts: Array<{ partNumber: number; ETag: string | undefined }>;
 }
 
-export const ChunkUploader = () => {
-  const [file, setFile] = useState<File | null>(null);
+export const useChunkUpload = () => {
   const [uploadPart] = useUploadPartMutation();
   const [initiateUpload] = useInitiateUploadMutation();
   const [finishUpload] = useFinishUploadMutation();
   const uploadedParts = useRef<UploadParts | null>(null);
   const chunkSize = Math.pow(1024, 2) * 5; // 5MB
 
-  const onChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
-    }
-  };
-
-  const onClickUpload = async () => {
-    if (!file) return;
+  const upload = async (
+    file: File,
+    coursedraftId: number,
+    sectionId: number,
+    lectureId: number
+  ) => {
     try {
       const partCount = Math.ceil(file.size / chunkSize);
 
-      const initiateResponse = await initiateUpload({ partCount });
-      if (!initiateResponse.data) {
-        throw new Error('No data in initiate response');
+      const initiateResponse = await initiateUpload({
+        partCount,
+        coursedraftId,
+        sectionId,
+        lectureId,
+      });
+
+      if (initiateResponse.error) {
+        if (
+          isObjectWithData(initiateResponse.error) &&
+          isDataWithMessage(initiateResponse.error.data)
+        ) {
+          throw new Error(initiateResponse.error.data.message);
+        } else {
+          throw new Error('Failed to initiate upload');
+        }
       }
 
       uploadedParts.current = {
@@ -46,7 +56,7 @@ export const ChunkUploader = () => {
 
       await sendNextChunk(file, chunksQueue, chunkSize);
     } catch (error) {
-      console.log('Error uploading file', error);
+      console.log(error);
     }
   };
 
@@ -102,40 +112,5 @@ export const ChunkUploader = () => {
     }
   };
 
-  return (
-    <Container
-      sx={{
-        py: 4,
-        mt: 16,
-        bgcolor: (theme) => theme.palette.background.paper,
-      }}
-    >
-      <div>Hello</div>
-      <input type="file" accept="video/*" onChange={onChangeFile} />
-      {file && (
-        <>
-          <div>{file.name}</div>
-          <button onClick={onClickUpload}>Upload</button>
-        </>
-      )}
-    </Container>
-  );
+  return { upload };
 };
-
-// const messageDigestBuffer = await chunk.arrayBuffer();
-// const messageDigestHashBuffer = await crypto.subtle.digest(
-//   'md5',
-//   messageDigestBuffer
-// );
-// const hashArray = Array.from(new Uint8Array(messageDigestHashBuffer));
-// const hashHex = hashArray
-//   .map((b) => b.toString(16).padStart(2, '0'))
-//   .join('');
-// const match = hashHex.match(/\w{2}/g);
-// if (!match) {
-//   console.log('Error hashing chunk');
-//   return;
-// }
-// const hashBase64 = btoa(
-//   match.map((b) => String.fromCharCode(parseInt(b, 16))).join('')
-// );
