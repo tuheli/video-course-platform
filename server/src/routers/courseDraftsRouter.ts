@@ -26,10 +26,16 @@ import multer from 'multer';
 import { getAudioLength } from '../utils/utils';
 import fs from 'fs';
 import crypto from 'crypto';
-import { finishUpload, initiateMultipartUpload } from '../aws-s3';
+import {
+  finishUpload,
+  getPresignedUrlForUploadedVideo,
+  initiateMultipartUpload,
+} from '../aws-s3';
 import {
   createMultipartUpload,
+  finishMultipartUpload,
   getKeyByUploadId,
+  getUploadedVideoKey,
 } from '../queries/awsUploadQueries';
 
 const timeAvailablePerWeek = {
@@ -866,6 +872,40 @@ router.get('/videostream/:lessonid', async (req, res, next) => {
   }
 });
 
+router.get(
+  '/:coursedraftid/sections/:sectionid/lessons/:lessonid/video/view',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
+
+      const coursedraftid = parseInt(req.params.coursedraftid);
+      const sectionid = parseInt(req.params.sectionid);
+      const lessonId = parseInt(req.params.lessonid);
+
+      if (isNaN(coursedraftid) || isNaN(sectionid) || isNaN(lessonId)) {
+        return res.status(404).json({ message: 'Invalid request.' });
+      }
+
+      const lessonKeyInAws = await getUploadedVideoKey(lessonId, req.user.id);
+
+      if (!lessonKeyInAws) {
+        return res.status(404).json({ message: 'Video was not found.' });
+      }
+
+      const presignedUrl =
+        await getPresignedUrlForUploadedVideo(lessonKeyInAws);
+      return res.status(200).json({ presignedUrl });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post('/upload', async (req, res, next) => {
   const chunk: Uint8Array[] = [];
   const uploadId = req.headers['x-upload-id'];
@@ -903,31 +943,47 @@ router.post('/upload', async (req, res, next) => {
     });
 });
 
-router.post('/initiateupload', userExtractor, async (req, res, next) => {
-  try {
-    const params = req.body;
-    const uploadInitiationResult = await initiateMultipartUpload(params);
+router.post(
+  '/:coursedraftid/sections/:sectionid/lessons/:lessonid/initiatevideoupload',
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: 'User was not found. Please sign in.' });
+      }
 
-    if (!uploadInitiationResult) {
-      return res.status(500).json({ message: 'Failed to initiate upload.' });
+      const lessonId = parseInt(req.params.lessonid);
+      const uploadInitiationResult = await initiateMultipartUpload(req.body);
+
+      await createMultipartUpload({
+        key: uploadInitiationResult.multipartUploadKey,
+        uploadId: uploadInitiationResult.uploadId,
+        userId: req.user.id,
+        lessonId,
+        expirationTime: uploadInitiationResult.expirationTime.toISOString(),
+        creationTime: uploadInitiationResult.creationTime.toISOString(),
+      });
+
+      return res.status(200).json(uploadInitiationResult);
+    } catch (error) {
+      next(error);
     }
-
-    return res.status(200).json(uploadInitiationResult);
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 router.post('/finishupload', userExtractor, async (req, res, next) => {
   try {
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: 'User was not found. Please sign in.' });
+    }
     const { uploadId, parts } = req.body;
     const key = await getKeyByUploadId(uploadId);
-    const result = await finishUpload({ key, uploadId, parts });
-
-    // update database, the key is the video url
-    // when user wants to view video, send
-    // a presigned url generated using the key
-
+    await finishUpload({ key, uploadId, parts });
+    await finishMultipartUpload({ uploadId, userId: req.user.id });
     return res.sendStatus(200);
   } catch (error) {
     next(error);
