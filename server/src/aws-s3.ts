@@ -4,6 +4,7 @@ import {
   CreateMultipartUploadCommandInput,
   UploadPartCommand,
   CompleteMultipartUploadCommand,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import {
   awsS3AccessKey,
@@ -12,7 +13,6 @@ import {
   awsS3SecretAccessKey,
 } from './config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { createMultipartUpload } from './queries/awsUploadQueries';
 
 const s3Client = new S3Client({
   region: awsS3bucketRegion,
@@ -32,9 +32,12 @@ interface InitiateMultipartUploadParams {
   partCount: number;
 }
 
-interface InitiateMultipartUploadResponse {
+interface InitiateMultipartUploadResult {
   uploadId: string;
   partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
+  multipartUploadKey: string;
+  expirationTime: Date;
+  creationTime: Date;
 }
 
 interface FinishUploadParams {
@@ -43,12 +46,25 @@ interface FinishUploadParams {
   parts: Array<{ partNumber: number; ETag: string }>;
 }
 
-const getPresignedUrl = async (params: PresignUrlParams) => {
+const getPresignedUrlForMultipartUpload = async (params: PresignUrlParams) => {
   const command: UploadPartCommand = new UploadPartCommand({
     Bucket: awsS3bucketName,
     PartNumber: params.partNumber,
     UploadId: params.uploadId,
     Key: params.multipartUploadKey,
+  });
+
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: 60 * 15, // 15 minutes
+  });
+
+  return url;
+};
+
+export const getPresignedUrlForUploadedVideo = async (key: string) => {
+  const command = new GetObjectCommand({
+    Bucket: awsS3bucketName,
+    Key: key,
   });
 
   const url = await getSignedUrl(s3Client, command, {
@@ -76,7 +92,7 @@ export const finishUpload = async (params: FinishUploadParams) => {
 
 export const initiateMultipartUpload = async (
   params: InitiateMultipartUploadParams
-): Promise<InitiateMultipartUploadResponse | null> => {
+): Promise<InitiateMultipartUploadResult> => {
   try {
     const expirationTime = new Date(Date.now() + 1000 * 60 * 15); // 15 minutes
     const creationTime = new Date();
@@ -92,7 +108,7 @@ export const initiateMultipartUpload = async (
     const getUploadIdResponse = await s3Client.send(getUploadIdCommand);
 
     if (getUploadIdResponse.UploadId === undefined) {
-      return null;
+      throw new Error('UploadId is undefined @initiateMultipartUpload');
     }
 
     const partsWithUploadUrls: Array<{
@@ -108,7 +124,7 @@ export const initiateMultipartUpload = async (
     const promises = partCountMap.map((partNumber) => {
       const promise = new Promise<void>(async (resolve, reject) => {
         try {
-          const presignedUrl = await getPresignedUrl({
+          const presignedUrl = await getPresignedUrlForMultipartUpload({
             partNumber,
             uploadId: getUploadIdResponse.UploadId!,
             multipartUploadKey,
@@ -124,19 +140,15 @@ export const initiateMultipartUpload = async (
 
     await Promise.all(promises);
 
-    await createMultipartUpload({
-      key: multipartUploadKey,
-      uploadId: getUploadIdResponse.UploadId!,
-      expirationTime: expirationTime.toISOString(),
-      creationTime: creationTime.toISOString(),
-    });
-
     return {
       uploadId: getUploadIdResponse.UploadId,
       partsWithUploadUrls,
+      multipartUploadKey,
+      expirationTime,
+      creationTime,
     };
   } catch (error) {
-    console.error(error);
-    return null;
+    (error as Error).message += ' @initiateMultipartUpload';
+    throw error;
   }
 };
