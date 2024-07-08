@@ -41,9 +41,9 @@ export const FetchCourseDrafts = () => {
             section.id,
             lesson.id
           );
-          const initialValue = lesson.description;
-          const parsedValue = JSON.parse(initialValue);
-          saveToLocalStorage(localStorageKey, parsedValue);
+          // description is now coming as json object
+          // so no parsing here
+          saveToLocalStorage(localStorageKey, lesson.description);
         });
       });
     });
