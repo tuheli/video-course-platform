@@ -206,7 +206,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   tagTypes: ['CourseDrafts'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/api/',
+    baseUrl: '/api',
     prepareHeaders: (headers, { getState, endpoint }) => {
       if (endpoint === 'uploadPart') return;
 
@@ -421,7 +421,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['CourseDrafts'],
     }),
     uploadChunk: builder.mutation<void, UploadChunkRequest>({
-      query: ({ chunk, chunkId, fileId, fileSize, fileName }) => {
+      query: ({ chunk, chunkId, fileId }) => {
         return {
           url: `coursedrafts/upload`,
           method: 'POST',
@@ -460,7 +460,7 @@ export const apiSlice = createApi({
         };
       },
       // @eslint-disable-next-line @typescript-eslint/no-unused-vars
-      transformResponse: (response, meta) => {
+      transformResponse: (_, meta) => {
         const ETag = meta?.response?.headers.get('ETag');
         return ETag ? { ETag: ETag.replace(/^"|"$/g, '') } : { ETag: '' };
       },
