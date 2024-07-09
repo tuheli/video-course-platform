@@ -13,9 +13,20 @@ const relativeDistPath =
   process.env.NODE_ENV === 'production' ? './' : '../dist';
 const absoluteDistPath = path.join(__dirname, relativeDistPath);
 
+const isCrossOriginAllowed = process.env.NODE_ENV !== 'production';
+
 const app = express();
 
-app.use(cors());
+if (isCrossOriginAllowed) {
+  app.use(cors());
+} else {
+  app.use(
+    cors({
+      origin: 'https://server-dawn-night-7149-video-course-platform.fly.dev',
+      optionsSuccessStatus: 200,
+    })
+  );
+}
 app.use(express.json());
 app.use('/', express.static(absoluteDistPath));
 app.use('/api/signup', signupRouter);
