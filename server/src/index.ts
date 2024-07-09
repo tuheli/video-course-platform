@@ -9,7 +9,8 @@ import validateAuthorizationTokenRouter from './routers/validateAuthorizationTok
 import { errorHandler } from './middleware';
 import path from 'path';
 
-const relativeDistPath = '../dist';
+const relativeDistPath =
+  process.env.NODE_ENV === 'production' ? './' : '../dist';
 const absoluteDistPath = path.join(__dirname, relativeDistPath);
 
 const app = express();
