@@ -1,8 +1,6 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
-import { useUploadVideoMutation } from '../../../features/apiSlice';
-import { useAppSelector } from '../../../app/hooks';
-import { useSaveCurriculum } from '../../../hooks/useSaveCurriculum';
+import { useChunkUpload } from '../../../hooks/useChunkUpload';
 
 const StyledLabel = styled('label')({});
 
@@ -19,36 +17,40 @@ export const SelectVideo = ({
 }: SelectVideoProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isReplacingFile, setIsReplacingFile] = useState(false);
-  const courseDrafts = useAppSelector((state) => state.courseDrafts);
-  const { saveCurriculum } = useSaveCurriculum();
-  const [uploadVideo] = useUploadVideoMutation();
-
-  const lesson = courseDrafts
-    .find(({ id }) => id === courseDraftId)
-    ?.courseContent.curriculum.find(({ id }) => id === sectionId)
-    ?.lessons.find(({ id }) => id === lectureId);
+  const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const { upload } = useChunkUpload();
 
   const displayData = isReplacingFile
     ? null
-    : lesson && lesson.video && lesson.video.url
+    : isUploadingFile
       ? {
-          fileName: lesson.video.url,
-          type: 'video/mp4',
+          fileName: file?.name,
+          type: file?.type,
+          status: 'Processing',
           date: new Date().toLocaleDateString(),
-          status: 'Uploaded',
         }
       : file
         ? {
             fileName: file.name,
             type: file.type,
+            status: 'Uploaded',
             date: new Date().toLocaleDateString(),
-            status: 'Processing',
           }
         : null;
 
-  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setFile(event.target.files[0]);
+      const file = event.target.files[0];
+      setFile(file);
+      setIsReplacingFile(false);
+      setIsUploadingFile(true);
+      try {
+        await upload(file, courseDraftId, sectionId, lectureId);
+        setIsUploadingFile(false);
+      } catch (error) {
+        console.error(error);
+        setIsUploadingFile(false);
+      }
     }
   };
 
@@ -56,40 +58,6 @@ export const SelectVideo = ({
     setFile(null);
     setIsReplacingFile(true);
   };
-
-  const finishUpload = async (file: File) => {
-    setIsReplacingFile(false);
-    try {
-      const courseDraft = courseDrafts.find(({ id }) => id === courseDraftId);
-      if (!courseDraft) {
-        throw new Error('Course draft was not found.');
-      }
-      await saveCurriculum(courseDraft);
-      await uploadVideo({
-        courseDraftId,
-        sectionId,
-        lectureId,
-        videoFile: file,
-      }).unwrap();
-    } catch (error) {
-      // Ignore error
-      // Maybe popup notification to user
-      console.log('Error uploading video:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (file === null) return;
-    finishUpload(file);
-  }, [file]);
-
-  // TODO: Instead of checking if locally selected
-  // file is null check if the lesson contains
-  // information about a video file already uploaded.
-
-  // Then instead of file === null create an
-  // object which contains the necessary data
-  // for displaying the video information.
 
   return (
     <>
