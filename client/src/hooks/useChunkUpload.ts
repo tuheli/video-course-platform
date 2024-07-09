@@ -16,7 +16,7 @@ export const useChunkUpload = () => {
   const [initiateUpload] = useInitiateUploadMutation();
   const [finishUpload] = useFinishUploadMutation();
   const uploadedParts = useRef<UploadParts | null>(null);
-  const chunkSize = Math.pow(1024, 2) * 5; // 5MB
+  const chunkSize = Math.pow(1024, 2) * 50; // 50MB
 
   const upload = async (
     file: File,
