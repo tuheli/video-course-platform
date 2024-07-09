@@ -1,0 +1,27 @@
+# Root level files
+.git
+.dockerignore
+Dockerfile
+README.md
+
+# Common for server and client folders
+**/node_modules
+**/.gitignore
+**/.gitattributes
+**/.gitignore
+**/.prettierignore
+**/.prettierrc
+**/.env
+**/dist
+
+# Server folder
+**/compose.yaml
+**/Dockerfile
+**/QueriesForLocalDevelopment.pgsql
+**/schema.sql
+**/.vscode
+**/out
+**/lesson-video-uploads
+
+# Client folder
+**/eslintrc.cjs
