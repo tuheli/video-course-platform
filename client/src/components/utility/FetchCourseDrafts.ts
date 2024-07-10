@@ -6,6 +6,7 @@ import {
   getLectureDescriptionLocalStorageKey,
   saveToLocalStorage,
 } from '../text-editor/utils';
+import { Descendant } from 'slate';
 
 // NOTE: The course drafts are customized
 // locally and saved in the Redux store.
@@ -41,9 +42,17 @@ export const FetchCourseDrafts = () => {
             section.id,
             lesson.id
           );
-          const initialValue = lesson.description;
-          const parsedValue = JSON.parse(initialValue);
-          saveToLocalStorage(localStorageKey, parsedValue);
+          // Now the descriptions come as json
+          // from the server and they are of type
+          // Descendant[]
+
+          // Last changes to this project just
+          // silencing typescript and not changing
+          // types.
+          saveToLocalStorage(
+            localStorageKey,
+            lesson.description as unknown as Descendant[]
+          );
         });
       });
     });
