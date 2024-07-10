@@ -18,6 +18,9 @@ export const SidebarSection = ({
   onClickLecture,
 }: SidebarSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const sortedLessons = [...section.lessons].sort(
+    (a, b) => a.orderIndex - b.orderIndex
+  );
 
   const onClick = () => {
     setIsExpanded((previousValue) => !previousValue);
@@ -60,7 +63,7 @@ export const SidebarSection = ({
             bgcolor: 'background.paper',
           }}
         >
-          {section.lessons.map((lesson, index) => {
+          {sortedLessons.map((lesson, index) => {
             return (
               <Box
                 key={lesson.id}
