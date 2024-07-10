@@ -22,7 +22,10 @@ export const useChunkUpload = () => {
     file: File,
     coursedraftId: number,
     sectionId: number,
-    lectureId: number
+    lectureId: number,
+    onUploadStarted: (totalChunkCount: number) => void,
+    onUploadFinished: () => void,
+    onChunkUploaded: (uploadedChunkCount: number) => void
   ) => {
     try {
       const partCount = Math.ceil(file.size / chunkSize);
@@ -54,7 +57,14 @@ export const useChunkUpload = () => {
         ...initiateResponse.data.partsWithUploadUrls,
       ].reverse();
 
-      await sendNextChunk(file, chunksQueue, chunkSize);
+      onUploadStarted(chunksQueue.length);
+      await sendNextChunk(
+        file,
+        chunksQueue,
+        chunkSize,
+        onUploadFinished,
+        onChunkUploaded
+      );
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +73,9 @@ export const useChunkUpload = () => {
   const sendNextChunk = async (
     file: File,
     chunksQueue: Array<{ partNumber: number; uploadUrl: string }>,
-    chunkSize: number
+    chunkSize: number,
+    onUploadFinished: () => void,
+    onChunkUploaded: (uploadedChunkCount: number) => void
   ) => {
     if (chunksQueue.length === 0) {
       console.log('All chunks uploaded');
@@ -77,6 +89,7 @@ export const useChunkUpload = () => {
         parts: uploadedParts.current.parts,
       });
 
+      onUploadFinished();
       return;
     }
 
@@ -102,7 +115,14 @@ export const useChunkUpload = () => {
         ETag: uploadResponse.data?.ETag || undefined,
       });
 
-      sendNextChunk(file, chunksQueue, chunkSize);
+      onChunkUploaded(uploadedParts.current?.parts.length || 0);
+      sendNextChunk(
+        file,
+        chunksQueue,
+        chunkSize,
+        onUploadFinished,
+        onChunkUploaded
+      );
     } catch (error) {
       console.log('Error uploading chunk', error);
       // on error we probably
