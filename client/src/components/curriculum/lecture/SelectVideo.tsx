@@ -18,6 +18,8 @@ export const SelectVideo = ({
   const [file, setFile] = useState<File | null>(null);
   const [isReplacingFile, setIsReplacingFile] = useState(false);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [totalChunkCount, setTotalChunkCount] = useState(0);
+  const [uploadedChunkCount, setUploadedChunkCount] = useState(0);
   const { upload } = useChunkUpload();
 
   const displayData = isReplacingFile
@@ -39,14 +41,34 @@ export const SelectVideo = ({
         : null;
 
   const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const onUploadFinished = () => {
+      setIsUploadingFile(false);
+    };
+
+    const onUploadStarted = (totalChunkCount: number) => {
+      setIsUploadingFile(true);
+      setTotalChunkCount(totalChunkCount);
+      setUploadedChunkCount(0);
+    };
+
+    const onChunkUploaded = (uploadedChunkCount: number) => {
+      setUploadedChunkCount(uploadedChunkCount);
+    };
+
     if (event.target.files) {
       const file = event.target.files[0];
       setFile(file);
       setIsReplacingFile(false);
-      setIsUploadingFile(true);
       try {
-        await upload(file, courseDraftId, sectionId, lectureId);
-        setIsUploadingFile(false);
+        await upload(
+          file,
+          courseDraftId,
+          sectionId,
+          lectureId,
+          onUploadStarted,
+          onUploadFinished,
+          onChunkUploaded
+        );
       } catch (error) {
         console.error(error);
         setIsUploadingFile(false);
@@ -333,8 +355,8 @@ export const SelectVideo = ({
                     Note:
                   </Typography>
                   <Typography component="span" variant="caption">
-                    This video is still being processed. We will send you an
-                    email when it is ready.
+                    This video is still being processed. Uploaded{' '}
+                    {uploadedChunkCount} of {totalChunkCount} chunks.
                   </Typography>
                 </>
               )}
