@@ -932,6 +932,187 @@ export const updateLessonVideo = async (
   }
 };
 
+export const getCourseDraftsNew = async (
+  userId: number
+): Promise<CourseDraft[]> => {
+  try {
+    const query = `
+      SELECT
+        coursedrafts.id,
+        coursedrafts.creator_id,
+        coursedrafts.creator_email,
+        coursedrafts.course_title,
+        coursedrafts.course_type,
+        coursedrafts.course_category,
+        coursedrafts.creator_time_available_per_week,
+        coursedrafts.is_public,
+        coursedrafts.is_submission_process_completed,
+        coursedrafts.language,
+        coursedrafts.created_at,
+        COALESCE(learning_objectives_json, '[]') AS learning_objectives,
+        COALESCE(intended_learners_json, '[]') AS intended_learners,
+        COALESCE(prerequisites_json, '[]') AS prerequisites,
+        COALESCE(sections, '[]') AS sections
+      FROM 
+        coursedrafts
+      LEFT JOIN (
+        SELECT
+          course_draft_id,
+          json_agg(
+            json_build_object(
+              'id', id,
+              'learning_objective', learning_objective,
+              'order_index', order_index
+            )
+          ) AS learning_objectives_json
+        FROM learning_objectives
+        GROUP BY course_draft_id
+      ) LO ON coursedrafts.id =  LO.course_draft_id
+      LEFT JOIN (
+        SELECT
+          course_draft_id,
+          json_agg(
+            json_build_object(
+              'id', id,
+              'intended_learner', intended_learner,
+              'order_index', order_index
+            )
+          ) AS intended_learners_json
+        FROM intended_learners
+        GROUP BY course_draft_id
+      ) IL ON coursedrafts.id =  IL.course_draft_id
+      LEFT JOIN (
+        SELECT
+          course_draft_id,
+          json_agg(
+            json_build_object(
+              'id', id,
+              'prerequisite', prerequisite,
+              'order_index', order_index
+            )
+          ) AS prerequisites_json
+        FROM prerequisites
+        GROUP BY course_draft_id
+      ) PR ON coursedrafts.id =  PR.course_draft_id
+      LEFT JOIN (
+        SELECT
+          course_draft_id,
+          json_agg(
+            json_build_object(
+              'section_id', section_id,
+              'title', title,
+              'learning_objective', learning_objective,
+              'order_index', order_index,
+              'lessons', COALESCE(lessons, '[]')
+            )
+          ) AS sections
+        FROM (
+          SELECT
+            curriculum_sections.id AS section_id,
+            curriculum_sections.course_draft_id,
+            curriculum_sections.title,
+            curriculum_sections.learning_objective,
+            curriculum_sections.order_index,
+            json_agg(
+              json_build_object(
+                'id', lessons.id,
+                'title', lessons.name,
+                'order_index', lessons.order_index,
+                'description', lessons.description
+              )
+            ) FILTER (WHERE lessons.id IS NOT NULL) AS lessons
+          FROM curriculum_sections
+          LEFT JOIN lessons ON curriculum_sections.id = lessons.curriculum_section_id
+          GROUP BY curriculum_sections.id
+        ) AS section_details
+        GROUP BY course_draft_id
+      ) SEC ON coursedrafts.id = SEC.course_draft_id
+      WHERE coursedrafts.creator_id = $1
+      ;
+    `;
+
+    const result = await client.query(query, [userId]);
+    const courseDrafts: CourseDraft[] = result.rows.map((row) => {
+      const courseDraft: CourseDraft = {
+        id: row.id,
+        creatorId: row.creator_id,
+        creatorEmail: row.creator_email,
+        courseType: row.course_type,
+        courseTitle: row.course_title,
+        courseCategory: row.course_category,
+        creatorTimeAvailablePerWeek: row.creator_time_available_per_week,
+        isPublic: row.is_public,
+        isSubmissionProcessCompleted: row.is_submission_process_completed,
+        language: row.language,
+        createdAt: row.created_at,
+        enrollments: [],
+        ratings: [],
+        courseContent: {
+          curriculum: row.sections.map((section: any) => {
+            const sectionObject: ICurriculumSection = {
+              id: section.section_id,
+              title: section.title,
+              learningObjective: section.learning_objective,
+              orderIndex: section.order_index,
+              lessons: section.lessons.map((lesson: any) => {
+                const lessonObject: Lesson = {
+                  id: lesson.id,
+                  name: lesson.title,
+                  orderIndex: lesson.order_index,
+                  description: lesson.description,
+                  video: {
+                    url: '',
+                    lengthSeconds: 0,
+                  },
+                };
+                return lessonObject;
+              }),
+            };
+            return sectionObject;
+          }),
+          intendedLearners: {
+            items: row.intended_learners.map((intendedLearner: any) => {
+              return {
+                id: intendedLearner.id,
+                text: intendedLearner.intended_learner,
+                orderIndex: intendedLearner.order_index,
+              };
+            }),
+            type: 'intendedLearners',
+          },
+          prerequisites: {
+            items: row.prerequisites.map((prerequisite: any) => {
+              return {
+                id: prerequisite.id,
+                text: prerequisite.prerequisite,
+                orderIndex: prerequisite.order_index,
+              };
+            }),
+            type: 'prerequisites',
+          },
+          learningObjectives: {
+            items: row.learning_objectives.map((learningObjective: any) => {
+              return {
+                id: learningObjective.id,
+                text: learningObjective.learning_objective,
+                orderIndex: learningObjective.order_index,
+              };
+            }),
+            type: 'learningObjectives',
+          },
+          videoContentLengthSeconds: 0,
+        },
+      };
+      return courseDraft;
+    });
+
+    return courseDrafts;
+  } catch (error) {
+    (error as Error).message += '@getCourseDraftsNew';
+    throw error;
+  }
+};
+
 // TODO: Review and fix potential issues
 // with the array aggregations.
 export const getCourseDrafts = async (
