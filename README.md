@@ -5,6 +5,8 @@ https://server-dawn-night-7149-video-course-platform.fly.dev/
 ### Lyhyt kuvaus sovelluksesta
 
 Sovelluksen avulla kirjautunut käyttäjä voi luoda videomateriaaliin perustuvia kursseja.
+Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web sovelluksesta.
+Linkki Udemyyn: https://www.udemy.com/
 
 ### Sovelluksen käyttöohje
 
