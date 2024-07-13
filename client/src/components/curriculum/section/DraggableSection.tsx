@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { DraggableProps } from '../../drag-and-drop-v2/types';
-import { MemoDraggable } from '../../drag-and-drop-v2/Draggable';
+import {
+  DraggableProps,
+  MemoDraggable,
+} from '../../drag-and-drop-v2/Draggable';
 import { MemoSection, SectionProps } from './Section';
 
 type DraggableSectionProps = Omit<SectionProps & DraggableProps, 'children'>;

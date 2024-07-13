@@ -2,9 +2,9 @@ import { memo, useEffect, useRef } from 'react';
 import {
   giveItemsOrderIndicies,
   isOrderChanged,
+  ItemWithOrderIndex,
   sortByYPosition,
 } from './utils';
-import { DraggableProps } from './types';
 
 interface Reorderable {
   id: number;
@@ -14,6 +14,13 @@ interface Reorderable {
 interface Position {
   x: number | null;
   y: number | null;
+}
+
+export interface DraggableProps {
+  dataId: string;
+  allowedDropzoneTag: string;
+  children: React.ReactNode;
+  changeOrder: (newOrder: ItemWithOrderIndex[]) => void;
 }
 
 const Draggable = ({

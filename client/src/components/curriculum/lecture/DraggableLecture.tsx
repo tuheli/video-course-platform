@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { MemoDraggable } from '../../drag-and-drop-v2/Draggable';
-import { DraggableProps } from '../../drag-and-drop-v2/types';
+import {
+  DraggableProps,
+  MemoDraggable,
+} from '../../drag-and-drop-v2/Draggable';
 import { LectureProps } from './types';
 import { MemoLecture } from './Lecture';
 
