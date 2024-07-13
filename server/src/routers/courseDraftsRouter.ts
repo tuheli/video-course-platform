@@ -856,7 +856,7 @@ router.post('/finishupload', userExtractor, async (req, res, next) => {
     const key = await getKeyByUploadId(uploadId);
     await finishUpload({ key, uploadId, parts });
     await finishMultipartUpload({ uploadId, userId: req.user.id });
-    return res.sendStatus(200);
+    return res.status(201).json({ message: 'Video upload was successful.' });
   } catch (error) {
     next(error);
   }
