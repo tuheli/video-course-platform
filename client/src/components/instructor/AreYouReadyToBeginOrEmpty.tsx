@@ -3,7 +3,7 @@ import { useAppSelector } from '../../app/hooks';
 import { AreYouReadyToBegin } from './AreYouReadyToBegin';
 
 export const AreYouReadyToBeginOrEmpty = () => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
 
   const isAreYouReadyToBeginVisible =
     useAppSelector((state) => state.courseDrafts).filter(

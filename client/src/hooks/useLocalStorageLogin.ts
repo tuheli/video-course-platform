@@ -4,7 +4,7 @@ import {
   useValidateAuthorizationTokenMutation,
 } from '../features/apiSlice';
 import { useAppDispatch } from '../app/hooks';
-import { signedIn } from '../features/meSlice';
+import { signedIn } from '../features/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const useLocalStorageLogin = () => {

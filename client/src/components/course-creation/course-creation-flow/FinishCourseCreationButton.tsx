@@ -14,7 +14,7 @@ interface FinishCourseCreationButtonProps {
 export const FinishCourseCreationButton = ({
   isAbleToFinish,
 }: FinishCourseCreationButtonProps) => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
   const { step1, step2, step3, step4 } = useAppSelector(
     (state) => state.courseCreation.steps
   );

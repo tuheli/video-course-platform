@@ -33,7 +33,7 @@ export interface UserAvatarProps {
 }
 
 export const UserAvatar = ({ sx }: UserAvatarProps) => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
 
   const avatarLetters = signedInUser
     ? getAvatarLetters(signedInUser.fullName)

@@ -10,7 +10,7 @@ export const menuItemPadding = 2;
 export const menuItemHeight = 40;
 
 export const Dropdown = () => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
 
   if (!signedInUser) return null;
 

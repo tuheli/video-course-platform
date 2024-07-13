@@ -12,7 +12,7 @@ import { LoadingScreen } from './components/utility/LoadingScreen';
 // NOTE: Import css baseline high enough to prevent mui error
 
 const App = () => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
   const [themeMode] = useState<PaletteMode>('light');
   const { isLocalStorageLoginComplete } = useLocalStorageLogin();
   const theme = createTheme(getTheme(themeMode));

@@ -187,7 +187,7 @@ export const apiSlice = createApi({
     prepareHeaders: (headers, { getState, endpoint }) => {
       if (endpoint === 'uploadPart') return;
 
-      const authorizationToken = (getState() as RootState).me.user
+      const authorizationToken = (getState() as RootState).userState.user
         ?.authorizationToken;
 
       if (authorizationToken) {

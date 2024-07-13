@@ -3,12 +3,12 @@ import specialOfferSlice from '../features/specialOfferSlice';
 import cartSlice from '../features/cartSlice';
 import favoritesSlice from '../features/favoritesSlice';
 import languageSlice from '../features/languageSlice';
-import meSlice from '../features/meSlice';
 import courseCreationSlice from '../features/courseCreationSlice';
 import courseDraftsSlice from '../features/courseDraftsSlice';
 import userPreferencesSlice from '../features/userPreferencesSlice';
 import notificationSlice from '../features/notificationSlice';
 import { apiSlice } from '../features/apiSlice';
+import userSlice from '../features/userSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,7 +16,7 @@ export const store = configureStore({
     cart: cartSlice,
     favorites: favoritesSlice,
     language: languageSlice,
-    me: meSlice,
+    userState: userSlice,
     courseCreation: courseCreationSlice,
     courseDrafts: courseDraftsSlice,
     userPreferences: userPreferencesSlice,

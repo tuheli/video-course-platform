@@ -17,7 +17,7 @@ import { UserAvatarDropdown } from '../dropdowns/dropdown-singe-item/user-avatar
 const itemGap = 2;
 
 const AppAppBar = () => {
-  const signedInUser = useAppSelector((state) => state.me.user);
+  const signedInUser = useAppSelector((state) => state.userState.user);
   const location = useLocation();
 
   const isTeachDropdownVisible =

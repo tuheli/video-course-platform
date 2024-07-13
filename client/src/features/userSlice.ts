@@ -27,7 +27,7 @@ const removeSignedInUserFromLocalStorage = () => {
 };
 
 const slice = createSlice({
-  name: 'me',
+  name: 'userState',
   initialState,
   reducers: {
     signedIn: (state, action: PayloadAction<SignedInPayload>) => {

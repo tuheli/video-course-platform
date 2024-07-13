@@ -21,7 +21,7 @@ import {
   isObjectWithData,
 } from '../../utils/apiUtils';
 import { useAppDispatch } from '../../app/hooks';
-import { signedIn } from '../../features/meSlice';
+import { signedIn } from '../../features/userSlice';
 import { notified } from '../../features/notificationSlice';
 import { Notification } from '../utility/Notification';
 
