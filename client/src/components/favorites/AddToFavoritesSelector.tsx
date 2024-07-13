@@ -7,9 +7,15 @@ interface AddToFavoritesSelectorProps {
   item: AddableToFavorites;
 }
 
-// NOTE: If the user is not logged in they cant add to favorites -> favorites will be stored in server. Instead the user is navigated to the login page
+// NOTE: If the user is not logged in they
+// cant add to favorites -> favorites will be
+// stored in server. Instead the user is navigated
+// to the login page
 
-// NOTE: User state management is not yet done so adding to favorites in redux is allowed
+// NOTE: User state management is not yet done so
+// adding to favorites in redux is allowed
+
+// NOTE: I did not implement favorites in the server
 
 const isUserLoggedIn = false;
 

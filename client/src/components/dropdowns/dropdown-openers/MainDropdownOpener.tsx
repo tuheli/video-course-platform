@@ -13,7 +13,8 @@ export interface OpenerProps {
 
 type RenderComponentType = ComponentType<OpenerProps>;
 
-// NOTE: Force open is only for developing purposes to keep a dropdown open.
+// NOTE: Force open is only for developing purposes
+// to keep a dropdown open.
 
 interface MainDropdownOpenerProps {
   RenderComponent: RenderComponentType;

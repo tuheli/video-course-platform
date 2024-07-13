@@ -10,7 +10,6 @@ export const Dropdown = () => {
       sx={{
         width: 240,
         bgcolor: 'transparent',
-        // animation: 'fadeIn 0.2s',
       }}
     >
       <Paper
@@ -28,6 +27,7 @@ export const Dropdown = () => {
             flexDirection: 'column',
             padding: 0,
             margin: 0,
+            paddingLeft: 8,
           }}
         >
           {menuItemsData.map((menuItem, index) => {

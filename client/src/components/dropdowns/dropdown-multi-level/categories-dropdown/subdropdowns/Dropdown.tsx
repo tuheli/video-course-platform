@@ -17,6 +17,7 @@ export const Dropdown = ({ menuItem }: { menuItem: MenuItem }) => {
           listStyleType: 'none',
           padding: 0,
           margin: 0,
+          paddingLeft: 8,
         }}
       >
         {menuItem.submenu?.map((submenu, index) => {

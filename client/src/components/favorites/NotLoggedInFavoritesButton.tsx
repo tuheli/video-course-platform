@@ -2,7 +2,8 @@ import { IconButton } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { favoritesButtonSx } from './common';
 
-// TODO: Remove the active animation when the onClick navigation is implemented
+// TODO: Remove the active animation when the
+// onClick navigation is implemented
 
 export const NotLoggedInFavoritesButton = () => {
   const onClickFavoriteIcon = () => {};
