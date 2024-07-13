@@ -2,6 +2,30 @@ import { ThemeOptions, alpha } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import { PaletteMode } from '@mui/material';
 
+// NOTE: There are some unused overrides.
+// Also dark mode is not really implemented even
+// though some of the overrides concern dark mode.
+// That is because this file was originally from
+// material ui examples and I modified it during
+// development also leaving the initial overrides
+// into the file for quick referencing on how to
+// modify the theme.
+
+// Some thoughts on material ui:
+
+// One thing to note about material ui is
+// that there seems to be or is some inheritance
+// between the components. Therefore for example
+// overriding paper component can affect app bar.
+// Personally I now think mui is best used as a
+// design system rather than as a component
+// library. Trying to use and customize the ready
+// made components for a custom design would be and
+// is difficult whereas the base system (theme, sx,
+// and styled) is powerful and flexible. Material ui
+// is also quite complex even though it is advertised
+// as an easy solution for ui creation.
+
 declare module '@mui/material/styles/createPalette' {
   interface ColorRange {
     50: string;
@@ -330,14 +354,6 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
         },
         styleOverrides: {
           root: {
-            // boxSizing: 'border-box',
-            // transition: 'all 100ms ease-in',
-            '&:focus-visible': {
-              // boxShadow: 'none',
-            },
-            '&:focus': {
-              // boxShadow: 'none',
-            },
             '&:hover': {
               color: 'text.primary',
             },
@@ -562,7 +578,6 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
       MuiMenuItem: {
         styleOverrides: {
           root: ({ theme }) => ({
-            // borderRadius: '99px',
             color: gray[900],
             fontWeight: 300,
             ...(theme.palette.mode === 'dark' && {
@@ -571,7 +586,6 @@ export default function getTheme(mode: PaletteMode): ThemeOptions {
           }),
         },
       },
-      // NOTE: App bar inherits paper.
       MuiPaper: {
         styleOverrides: {
           root: ({ theme }) => ({
