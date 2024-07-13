@@ -7,19 +7,36 @@ interface AvatarLetters {
 }
 
 const getAvatarLetters = (fullName: string): AvatarLetters => {
-  const names = fullName.split(' ');
+  try {
+    const names = fullName.split(' ');
 
-  if (names.length === 1) {
-    return {
-      firstLetter: names[0][0].toUpperCase(),
-    };
-  }
+    if (names.length === 1) {
+      return {
+        firstLetter: names[0][0].toUpperCase(),
+      };
+    }
 
-  if (names.length > 1) {
-    return {
-      firstLetter: names[0][0].toUpperCase(),
-      secondLetter: names[names.length - 1][0],
-    };
+    if (names.length > 1) {
+      return {
+        firstLetter: names[0][0].toUpperCase(),
+        secondLetter: names[names.length - 1][0],
+      };
+    }
+  } catch (error) {
+    // client gave a bad name
+    // TODO: actual name validation
+
+    // Try again if there would be something to show
+    // on the avatar icon instead of a plain black circle
+    try {
+      const character = fullName[0];
+      return {
+        firstLetter: character,
+        secondLetter: undefined,
+      };
+    } catch (error) {
+      // ignore error
+    }
   }
 
   return {
@@ -55,8 +72,8 @@ export const UserAvatar = ({ sx }: UserAvatarProps) => {
           ...sx,
         }}
       >
-        {avatarLetters.firstLetter}
-        {avatarLetters.secondLetter}
+        {avatarLetters.firstLetter || ''}
+        {avatarLetters.secondLetter || ''}
       </Avatar>
     </Box>
   );
