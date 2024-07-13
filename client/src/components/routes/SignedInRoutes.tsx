@@ -9,10 +9,9 @@ import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/Man
 import { CourseDraftPreviewPage } from '../course-draft-preview/CourseDraftPreviewPage';
 import { Logout } from '../logout/Logout';
 
-// NOTE: I have not yet implemented and probably
-// will not implement a customized landing / homepage
-// for a signed in user to stay within a reasonable
-// scope for this project.
+// NOTE: I didnt create a different
+// front page for logged in users which
+// there is in Udemy.
 
 export const SignedInRoutes = () => {
   return (

@@ -9,6 +9,7 @@ export interface Section {
   howWeHelp: string;
   imageUrl: string;
 }
+
 interface SectionProps {
   section: Section;
 }

@@ -12,7 +12,12 @@ import { useDisableScrollbar } from '../../hooks/useDisableScrollbar';
 import { SelectLanguageButton } from './SelectLanguageButton';
 import { languages } from '../../features/languageSlice';
 
-// NOTE: Dont use mui Fade animation wrapper component with this modal. This component uses custom hook to disable scrollbar and set padding while modal is open. Otherwise the Fade animations and scrollbar enable/disable hook effects would need to be happening in sync.
+// NOTE: Dont use mui Fade animation wrapper component
+// with this modal. This component uses custom hook
+// to disable scrollbar and set padding while modal
+// is open. Otherwise the Fade animations and scrollbar
+// enable/disable hook effects would need to be happening
+// in sync.
 
 interface SelectLanguageModalProps {
   isOpen: boolean;

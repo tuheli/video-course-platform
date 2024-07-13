@@ -5,7 +5,11 @@ import { ArrowRight } from '../slick-arrows/ArrowRight';
 import { ArrowLeft } from '../slick-arrows/ArrowLeft';
 import { getReviews } from '../../../data/reviewsData';
 
-// NOTE: For some reason padding y in the outer box causes a minor visual glitch where the link text moves few pixels up when hovered for the first time. Fixed it by moving the padding up to the landing page and out of this component.
+// NOTE: For some reason padding y in the outer box
+// causes a minor visual glitch where the link text
+// moves few pixels up when hovered for the first time.
+// Fixed it by moving the padding up to the landing page
+// and out of this component.
 
 export const LearnerPositiveReviews = () => {
   const reviews = getReviews();

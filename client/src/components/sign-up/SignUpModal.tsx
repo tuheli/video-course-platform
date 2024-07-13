@@ -3,7 +3,9 @@ import { useDisableScrollbar } from '../../hooks/useDisableScrollbar';
 import { SignUpForm } from './SignUpForm';
 import CloseIcon from '@mui/icons-material/Close';
 
-// NOTE: The sign up form submission signs in the user on success which will cause the routes to change. Therefore no need to handle modal closing etc.
+// NOTE: The sign up form submission signs in the
+// user on success which will cause the routes to
+// change. Therefore no need to handle modal closing etc.
 
 interface SignUpFormModalProps {
   isOpen: boolean;
