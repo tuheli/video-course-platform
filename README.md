@@ -9,6 +9,16 @@ Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web s
 Linkki Udemyyn: https://www.udemy.com/. Sovelluksen UI soveltuu vähintään noin 1100px leveään
 ikkunaan.
 
+### Sovelluksen demovideo
+
+Demovideo löytyy inceptionmaisesti sovelluksesta itsestään "easter egg" linkistä.
+Etusivun footerissa linkki nimeltä About us navigoi demovideoon.
+Suosittelen katsomaan videon 2x nopeudella. Isomman videon uploadaus videossa
+kestää hieman niin voit siinä kohtaa skipatakkin vähän eteenpäin.
+
+Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
+ja klikkaamalla etusivun alhaalla footerista about us.
+
 ### Sovelluksen käyttöohje / toiminnot
 
 1. Voit luoda tilin sovellukseen 3 eri paikasta: etusivun yläpalkin sign up napista, /teaching sivun bannerin get started napista tai /teaching sivun alhaalta get started napista. Tilin luontisähköpostin ei tarvi olla aito sähköposti.
@@ -122,7 +132,8 @@ ainakin uploadin hallittu peruuttaminen, keskeyttäminen ja jatkaminen sekä
 jo ladatun videon näyttäminen valikossa, josta lähetetään uusi luentovideo.
 
 Videoiden uploadausprosessi olisi hyvä erottaa web workereihin kokonaan
-irti UI:sta ja react komponenteista.
+irti UI:sta ja react komponenteista. Tällä hetkellä UI:hin sidottu uploadaus
+voi aiheuttaa ongelmia, kuten edellä mainittu UI:n viivästetty päivitys.
 
 Luennon osiota (section) ei voi vaihtaa. Mietin kyllä tämän tekoa alun alkaen drag and dropiin
 liittyen, koska se on tärkeä toiminnallisuus. Nykyisellä drag and drop systeemillä toiminnon
