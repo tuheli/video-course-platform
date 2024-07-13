@@ -1,6 +1,5 @@
 import './css/slickSlider.css';
 import './css/dropdownFadeInAnimation.css';
-import './css/borderAnimationStyle.css';
 import './css/closeIconRollAnimation.css';
 import './css/closeIconMoveAnimation.css';
 import './css/opacityAnimation.css';
