@@ -1,6 +1,8 @@
 import { ChangeEvent, useState } from 'react';
 import { Box, Divider, Stack, Typography, styled } from '@mui/material';
 import { useChunkUpload } from '../../../hooks/useChunkUpload';
+import { useAppDispatch } from '../../../app/hooks';
+import { notified } from '../../../features/notificationSlice';
 
 const StyledLabel = styled('label')({});
 
@@ -18,31 +20,50 @@ export const SelectVideo = ({
   const [file, setFile] = useState<File | null>(null);
   const [isReplacingFile, setIsReplacingFile] = useState(false);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
+  const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
   const [totalChunkCount, setTotalChunkCount] = useState(0);
   const [uploadedChunkCount, setUploadedChunkCount] = useState(0);
   const { upload } = useChunkUpload();
+  const dispatch = useAppDispatch();
 
-  const displayData = isReplacingFile
-    ? null
-    : isUploadingFile
-      ? {
-          fileName: file?.name,
-          type: file?.type,
-          status: 'Processing',
-          date: new Date().toLocaleDateString(),
-        }
-      : file
-        ? {
-            fileName: file.name,
-            type: file.type,
-            status: 'Uploaded',
-            date: new Date().toLocaleDateString(),
-          }
-        : null;
+  const isSuccessDataVisible = isUploadSuccessful && !isReplacingFile;
+  const isProcessingDataVisible =
+    !isSuccessDataVisible && isUploadingFile && !isReplacingFile;
+  const isAnyDisplayDataVisible =
+    isSuccessDataVisible || isProcessingDataVisible;
+
+  const fileName = file?.name;
+  const type = file?.type;
+  const dateNow = new Date().toLocaleDateString();
+
+  const successDisplayData = {
+    fileName,
+    type,
+    status: 'Uploaded',
+    date: dateNow,
+  };
+
+  const processingDisplayData = {
+    fileName,
+    type,
+    status: 'Processing',
+    date: dateNow,
+  };
+
+  const displayData = isSuccessDataVisible
+    ? successDisplayData
+    : processingDisplayData;
+
+  // NOTE: The upload does not stop when the
+  // component is unmounted. Also upload abort
+  // is not implemented.
 
   const onFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const onUploadFinished = () => {
       setIsUploadingFile(false);
+      setIsUploadSuccessful(true);
+      setTotalChunkCount(0);
+      setUploadedChunkCount(0);
     };
 
     const onUploadStarted = (totalChunkCount: number) => {
@@ -58,7 +79,11 @@ export const SelectVideo = ({
     if (event.target.files) {
       const file = event.target.files[0];
       setFile(file);
+      setIsUploadSuccessful(false);
       setIsReplacingFile(false);
+      console.log(
+        '@selectvideo calling upload from select video because of file change'
+      );
       try {
         await upload(
           file,
@@ -69,9 +94,19 @@ export const SelectVideo = ({
           onUploadFinished,
           onChunkUploaded
         );
+        console.log('@selectvideo upload was finished at select video');
       } catch (error) {
-        console.error(error);
         setIsUploadingFile(false);
+        setIsUploadSuccessful(false);
+        setFile(null);
+        dispatch(
+          notified({
+            message:
+              'An error occurred while uploading video. Please try again later.',
+            severity: 'error',
+          })
+        );
+        console.log('@selectvideo error while uploading video');
       }
     }
   };
@@ -83,7 +118,7 @@ export const SelectVideo = ({
 
   return (
     <>
-      {displayData === null ? (
+      {!isAnyDisplayDataVisible && (
         <Stack
           sx={{
             flexDirection: 'column',
@@ -189,7 +224,8 @@ export const SelectVideo = ({
             </Typography>
           </Stack>
         </Stack>
-      ) : (
+      )}
+      {isAnyDisplayDataVisible && (
         <>
           <Stack
             sx={{
