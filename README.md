@@ -6,11 +6,38 @@ https://server-dawn-night-7149-video-course-platform.fly.dev/
 
 Sovelluksen avulla kirjautunut käyttäjä voi luoda videomateriaaliin perustuvia kursseja.
 Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web sovelluksesta.
-Linkki Udemyyn: https://www.udemy.com/
+Linkki Udemyyn: https://www.udemy.com/. Sovelluksen UI soveltuu vähintään noin 1100px leveään
+ikkunaan.
 
-### Sovelluksen käyttöohje
+### Sovelluksen käyttöohje / toiminnot
 
-LISÄÄ VIDEO TÄHÄN ! ! !
+1. Voit luoda tilin sovellukseen 3 eri paikasta: etusivun yläpalkin sign up napista, /teaching sivun bannerin get started napista tai /teaching sivun alhaalta get started napista. Tilin luontisähköpostin ei tarvi olla aito sähköposti.
+
+2. Onnistuneen tilin luonnin jälkeen sovellus kirjaa sinut sisään ja ohjaa etusivulle. Jos tilin teossa valitsit "Stay logged in on this device" sovellus kirjaa sinut myös jatkossa sisään kun lataat sovelluksen.
+
+3. Kirjautuneena sovellukseen voit navigoida etusivun yläpakista "Instructor" sivulle napista instructor.
+
+4. Instructor sivulla on ylhäällä ja alhaalla nappi create your course, josta painamalla pääset kurssin luontisivulle.
+
+5. Kurssin luontisivu on 4 vaiheinen ja se ohjaa sinua eteenpäin kysymyksillä. Pääset etenemään sekä palaamaan edelliseen kohtaan sivun alhaalla olevista napeista continue ja previous.
+
+6. Kun olet kurssin luonnin viimeisessä vaiheessa ja valinnat on tehty, voit luoda kurssin napista create course.
+
+7. Kurssin luonti ohjaa sinut takaisin instructor sivulle, jossa näet luomasi kurssit.
+
+8. Pääset kurssin muokkaussivulle painamalla kurssikorttia.
+
+9. Kurssin muokkaussivuja on kaksi: intended learners sekä curriculum. Muokkaussivuston osion voit valita muokkaussivun vasemmasta sivupalkista kohdista intended learners tai curriculum. Napit course structure ja film & edit ovat vain UI:n täytteenä ja johtavat sinut page not found sivulle.
+
+10. Intended learners muokkaussivustolla voit lisätä kurssille tekstiin perustuvia itemeitä, joiden tarkoituksena on kertoa mitä kurssilla oppii, millaisia edellytyksiä kurssilla pärjäämiselle on sekä kenelle kurssi on tarkoitettu. Itemeitä voi uudelleenjärjestää hiirellä kun hiiri on itemin oikeassa reunassa "hampurilaisiconin" kohdalla.
+
+11. Curriculum muokkaussivusto on sovelluksen keskeisin paikka. Siellä voit lisätä kurssille itemeitä, joita ovat osio (section) ja lecture (luento). Osion voit luoda napista + section. Osioihin voit luoda luentoja painamalla + curriculum item. Voit uudelleenjärjestää osioita ja luentoja vetämällä niitä hiirellä sopivasta kohtaa.
+
+12. Voit lisätä luentoihin kuvauksen ja videon. Kuvausta pääset muokkaamaan tekstieditorilla, avaamalla ensin muokkausvaihtoehdot luennon otsakkeen oikeasta reunasta pienestä nuolesta alaspäin. Videon voit lisätä painamalla luennon kohdalta nappia + content.
+
+13. Pääset tarkastelemaan lukujärjestystä muokkaussivun yläpalkista napista preview.
+
+14. Preview sivulla voit oikeasta sivupalkista valita luennon, jolloin näet videomateriaalin, mikäli luento sisältää videon.
 
 ### Työaikakirjanpito
 
@@ -79,6 +106,25 @@ Työtuntien yhteenlaskettu määrä on 307 tuntia.
 | 7.7.  | 0    | -                                                                                    |
 | 8.7.  | 4    | Videoiden katsominen pilvestä                                                        |
 | 9.7.  | 8    | Sovelluksen docker kuvan teko, sovellus nettiin (fly io)                             |
+
+### Huomioita
+
+Muutama keskeinen tunnettu asia ja bugi, joita en korjannut ajankäytön puitteissa:
+
+Videon uploadaamisen aikana uusien itemien lisäys lukujärjestykseen ei johda
+välittömään lukujärjestyksen päivitykseen frontendissä. Kyseisessä tilanteessa
+UI päivittyy vasta kun uploadaus on valmis.
+
+Videoiden uploadaamiseen liittyviä tärkeitä ei-ilmepentoituja asioita ovat
+ainakin uploadin hallittu peruuttaminen, keskeyttäminen ja jatkaminen sekä
+jo ladatun videon näyttäminen valikossa, josta lähetetään uusi luentovideo.
+
+Videoiden uploadausprosessi olisi hyvä erottaa web workereihin kokonaan
+irti UI:sta ja react komponenteista.
+
+Luennon osiota (section) ei voi vaihtaa. Mietin kyllä tämän tekoa alun alkaen drag and dropiin
+liittyen, koska se on tärkeä toiminnallisuus. Nykyisellä drag and drop systeemillä toiminnon
+toteuttamisen pitäisi onnistua kohtuullisin muutoksin. Tällöin olisi varmaan hyödyksi muuttaa myös tietokantaa siten, että luentojen järjestysnumerot ovat lukujärjestyskohtaisia, eivätkä osakohtaisia (section).
 
 ### Kuvia sovelluksesta
 
