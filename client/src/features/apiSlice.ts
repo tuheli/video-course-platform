@@ -282,6 +282,70 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    initiateUpload: builder.mutation<
+      InitiateMultipartUploadResponse,
+      InitiateMultipartUploadParams
+    >({
+      query: ({ coursedraftId, sectionId, lectureId, partCount }) => {
+        return {
+          url: `/coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/initiatevideoupload`,
+          method: 'POST',
+          body: {
+            partCount,
+          },
+        };
+      },
+    }),
+    uploadPart: builder.mutation<UploadPartResponse, UploadPartRequest>({
+      query: (body) => {
+        return {
+          url: body.uploadUrl,
+          method: 'PUT',
+          body: body.part,
+        };
+      },
+      // @eslint-disable-next-line @typescript-eslint/no-unused-vars
+      transformResponse: (_, meta) => {
+        const ETag = meta?.response?.headers.get('ETag');
+        return ETag ? { ETag: ETag.replace(/^"|"$/g, '') } : { ETag: '' };
+      },
+    }),
+    finishUpload: builder.mutation<void, UploadParts>({
+      query: (body) => {
+        return {
+          url: `coursedrafts/finishupload`,
+          method: 'POST',
+          body,
+        };
+      },
+    }),
+    getVideoUrl: builder.query<
+      GetVideoUrlResponse,
+      { coursedraftId: number; sectionId: number; lectureId: number }
+    >({
+      query: ({ coursedraftId, sectionId, lectureId }) => {
+        return {
+          url: `coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/video/view`,
+        };
+      },
+    }),
+    getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
+      query: () => `coursedrafts`,
+      providesTags: ['CourseDrafts'],
+    }),
+    validateAuthorizationToken: builder.mutation<
+      UserInDatabaseSafeWithToken,
+      ValidateAuthorizationTokenRequestBody
+    >({
+      query: (body) => ({
+        url: 'validateauthorizationtoken',
+        method: 'POST',
+        body,
+        headers: {
+          authorization: `Bearer ${body.userInDatabaseSafeWithToken.authorizationToken}`,
+        },
+      }),
+    }),
     updateCourseDraftGoals: builder.mutation<
       void,
       UpdateCourseGoalsRequestBody
@@ -354,70 +418,6 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
-    getCourseDrafts: builder.query<GetCourseDraftsFromDatabaseResult, void>({
-      query: () => `coursedrafts`,
-      providesTags: ['CourseDrafts'],
-    }),
-    validateAuthorizationToken: builder.mutation<
-      UserInDatabaseSafeWithToken,
-      ValidateAuthorizationTokenRequestBody
-    >({
-      query: (body) => ({
-        url: 'validateauthorizationtoken',
-        method: 'POST',
-        body,
-        headers: {
-          authorization: `Bearer ${body.userInDatabaseSafeWithToken.authorizationToken}`,
-        },
-      }),
-    }),
-    initiateUpload: builder.mutation<
-      InitiateMultipartUploadResponse,
-      InitiateMultipartUploadParams
-    >({
-      query: ({ coursedraftId, sectionId, lectureId, partCount }) => {
-        return {
-          url: `/coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/initiatevideoupload`,
-          method: 'POST',
-          body: {
-            partCount,
-          },
-        };
-      },
-    }),
-    uploadPart: builder.mutation<UploadPartResponse, UploadPartRequest>({
-      query: (body) => {
-        return {
-          url: body.uploadUrl,
-          method: 'PUT',
-          body: body.part,
-        };
-      },
-      // @eslint-disable-next-line @typescript-eslint/no-unused-vars
-      transformResponse: (_, meta) => {
-        const ETag = meta?.response?.headers.get('ETag');
-        return ETag ? { ETag: ETag.replace(/^"|"$/g, '') } : { ETag: '' };
-      },
-    }),
-    finishUpload: builder.mutation<void, UploadParts>({
-      query: (body) => {
-        return {
-          url: `coursedrafts/finishupload`,
-          method: 'POST',
-          body,
-        };
-      },
-    }),
-    getVideoUrl: builder.query<
-      GetVideoUrlResponse,
-      { coursedraftId: number; sectionId: number; lectureId: number }
-    >({
-      query: ({ coursedraftId, sectionId, lectureId }) => {
-        return {
-          url: `coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/video/view`,
-        };
-      },
-    }),
   }),
 });
 
@@ -430,17 +430,17 @@ export const {
   useCreatePrerequisiteMutation,
   useCreateIntendedLearnerMutation,
   useCreateLectureMutation,
+  useInitiateUploadMutation,
+  useFinishUploadMutation,
+  useGetCourseDraftsQuery,
+  useGetVideoUrlQuery,
+  useValidateAuthorizationTokenMutation,
   useUpdateCourseDraftGoalsMutation,
   useUpdateCurriculumSectionsMutation,
+  useUploadPartMutation,
   useDeleteLearningObjectiveMutation,
   useDeletePrerequisiteMutation,
   useDeleteIntendedLearnerMutation,
   useDeleteLectureMutation,
   useDeleteSectionMutation,
-  useValidateAuthorizationTokenMutation,
-  useGetCourseDraftsQuery,
-  useUploadPartMutation,
-  useInitiateUploadMutation,
-  useFinishUploadMutation,
-  useGetVideoUrlQuery,
 } = apiSlice;
