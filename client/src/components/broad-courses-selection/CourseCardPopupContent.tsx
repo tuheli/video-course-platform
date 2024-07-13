@@ -6,10 +6,7 @@ import { DotSeparatedSpan } from './DotSeparatedSpan';
 import CheckIcon from '@mui/icons-material/Check';
 import { AddToCartButtonSelector } from '../cart/AddToCartButtonSelector';
 import { AddToFavoritesSelector } from '../favorites/AddToFavoritesSelector';
-import { RightPointingTriangle } from '../direction-triangles/RightPointingTriangle';
 import { usePortaledItemContext } from '../../hooks/usePortaledItemContext';
-import { LeftPointingTriangle } from '../direction-triangles/LeftPointingTriangle';
-import { UpPointingTriangle } from '../direction-triangles/UpPointingTriangle';
 
 interface CourseCardPopupContentProps {
   courseItem: Course;
@@ -46,8 +43,6 @@ export const CourseCardPopupContent = ({
           flexDirection: renderPosition === 'below' ? 'column' : 'row',
         }}
       >
-        {renderPosition === 'below' && <UpPointingTriangle />}
-        {renderPosition === 'right' && <LeftPointingTriangle />}
         <Paper>
           <Stack
             sx={{
@@ -133,7 +128,6 @@ export const CourseCardPopupContent = ({
             </Stack>
           </Stack>
         </Paper>
-        {renderPosition === 'left' && <RightPointingTriangle />}
       </Stack>
     </Box>
   );
