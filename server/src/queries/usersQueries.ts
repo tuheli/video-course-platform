@@ -3,7 +3,7 @@ import {
   UserForDatabase,
   UserInDatabaseNotSafe,
   UserInDatabaseSafe,
-} from '../routers/signupRouter';
+} from '../types';
 import { errorName } from '../errorNames';
 
 export const createUser = async (

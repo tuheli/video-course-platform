@@ -1,14 +1,11 @@
 import { Router } from 'express';
 import { userExtractor } from '../middleware';
-import { UserInDatabaseSafeWithToken } from './signinRouter';
+import { UserInDatabaseSafeWithToken } from '../types';
 
 const router = Router();
 
 router.post('/', userExtractor, (req, res, next) => {
   try {
-    // NOTE: This should not happen since
-    // user extractor was called first.
-    // But typescript does not know that.
     if (!req.user || !req.authorizationToken) {
       return res
         .status(401)

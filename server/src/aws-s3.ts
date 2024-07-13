@@ -13,6 +13,12 @@ import {
   awsS3SecretAccessKey,
 } from './config';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import {
+  PresignUrlParams,
+  FinishUploadParams,
+  InitiateMultipartUploadParams,
+  InitiateMultipartUploadResult,
+} from './types';
 
 const s3Client = new S3Client({
   region: awsS3bucketRegion,
@@ -21,58 +27,6 @@ const s3Client = new S3Client({
     secretAccessKey: awsS3SecretAccessKey!,
   },
 });
-
-interface PresignUrlParams {
-  uploadId: string;
-  multipartUploadKey: string;
-  partNumber: number;
-}
-
-interface InitiateMultipartUploadParams {
-  partCount: number;
-}
-
-interface InitiateMultipartUploadResult {
-  uploadId: string;
-  partsWithUploadUrls: Array<{ partNumber: number; uploadUrl: string }>;
-  multipartUploadKey: string;
-  expirationTime: Date;
-  creationTime: Date;
-}
-
-interface FinishUploadParams {
-  key: string;
-  uploadId: string;
-  parts: Array<{ partNumber: number; ETag: string }>;
-}
-
-const getPresignedUrlForMultipartUpload = async (params: PresignUrlParams) => {
-  const command: UploadPartCommand = new UploadPartCommand({
-    Bucket: awsS3bucketName,
-    PartNumber: params.partNumber,
-    UploadId: params.uploadId,
-    Key: params.multipartUploadKey,
-  });
-
-  const url = await getSignedUrl(s3Client, command, {
-    expiresIn: 60 * 15, // 15 minutes
-  });
-
-  return url;
-};
-
-export const getPresignedUrlForUploadedVideo = async (key: string) => {
-  const command = new GetObjectCommand({
-    Bucket: awsS3bucketName,
-    Key: key,
-  });
-
-  const url = await getSignedUrl(s3Client, command, {
-    expiresIn: 60 * 15, // 15 minutes
-  });
-
-  return url;
-};
 
 export const finishUpload = async (params: FinishUploadParams) => {
   const command = new CompleteMultipartUploadCommand({
@@ -151,4 +105,32 @@ export const initiateMultipartUpload = async (
     (error as Error).message += ' @initiateMultipartUpload';
     throw error;
   }
+};
+
+const getPresignedUrlForMultipartUpload = async (params: PresignUrlParams) => {
+  const command: UploadPartCommand = new UploadPartCommand({
+    Bucket: awsS3bucketName,
+    PartNumber: params.partNumber,
+    UploadId: params.uploadId,
+    Key: params.multipartUploadKey,
+  });
+
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: 60 * 15, // 15 minutes
+  });
+
+  return url;
+};
+
+export const getPresignedUrlForUploadedVideo = async (key: string) => {
+  const command = new GetObjectCommand({
+    Bucket: awsS3bucketName,
+    Key: key,
+  });
+
+  const url = await getSignedUrl(s3Client, command, {
+    expiresIn: 60 * 15, // 15 minutes
+  });
+
+  return url;
 };

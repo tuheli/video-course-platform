@@ -1,4 +1,4 @@
-import { UserInDatabaseSafe } from './src/routers/signupRouter';
+import { UserInDatabaseSafe } from './src/types';
 
 declare global {
   namespace Express {

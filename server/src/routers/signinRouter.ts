@@ -1,79 +1,12 @@
-import { CredentialsNotSafe, UserInDatabaseSafe } from './signupRouter';
+import { UserInDatabaseSafe } from '../types';
 import { Router } from 'express';
 import bcypt from 'bcrypt';
 import { errorName } from '../errorNames';
 import { getUserForSignIn } from '../queries/usersQueries';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config';
-
-interface SignInRequestBody {
-  credentialsNotSafe: CredentialsNotSafe;
-}
-
-export interface UserInDatabaseSafeWithToken extends UserInDatabaseSafe {
-  authorizationToken: string;
-}
-
-const toSignInRequestBody = (body: unknown): SignInRequestBody => {
-  if (!body || typeof body !== 'object') {
-    const error = new Error('Body is not an object.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  if (!('credentialsNotSafe' in body)) {
-    const error = new Error('CredentialsNotSafe is missing.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  const credentialsNotSafe = body.credentialsNotSafe;
-
-  if (!credentialsNotSafe || typeof credentialsNotSafe !== 'object') {
-    const error = new Error('CredentialsNotSafe is not an object.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  if (!('email' in credentialsNotSafe)) {
-    const error = new Error('Email is missing.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  if (
-    !credentialsNotSafe.email ||
-    typeof credentialsNotSafe.email !== 'string'
-  ) {
-    const error = new Error('Email is not a string.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  if (!('password' in credentialsNotSafe)) {
-    const error = new Error('Password is missing.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  if (
-    !credentialsNotSafe.password ||
-    typeof credentialsNotSafe.password !== 'string'
-  ) {
-    const error = new Error('Property password is not a string.');
-    error.name = errorName.clientSentInvalidData;
-    throw error;
-  }
-
-  const validSignInRequestBody: SignInRequestBody = {
-    credentialsNotSafe: {
-      email: credentialsNotSafe.email,
-      password: credentialsNotSafe.password,
-    },
-  };
-
-  return validSignInRequestBody;
-};
+import { UserInDatabaseSafeWithToken } from '../types';
+import { toSignInRequestBody } from '../type-guards-and-parsers';
 
 const router = Router();
 

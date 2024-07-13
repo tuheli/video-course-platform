@@ -2,135 +2,32 @@ import { client } from '../database';
 import { errorName } from '../errorNames';
 import {
   CourseDraft,
-  CourseType,
+  CourseDraftInDatabase,
+  CreateCurriculumSectionParams,
+  CreateLearningObjectiveParams,
+  CreateLessonParams,
+  CreatePrerequisiteParams,
+  DeleteIntendedLearnerParams,
+  DeleteLearningObjectiveParams,
+  DeleteLessonParams,
+  DeletePrerequisiteParams,
+  DeleteSectionParams,
+  GetCourseDraftParams,
+  GetVideoUriParams,
   ICurriculumSection,
-  KnownCourseCategory,
   Lesson,
   NewCourseDraftEntry,
+  UpdateCourseDraftCourseGoalsParams,
+  UpdateCurriculumSectionsParams,
+  UpdateLessonReturnValue,
+  UpdateLessonVideoParams,
+} from '../types';
+import {
+  CourseType,
+  KnownCourseCategory,
   TextWithId,
   TimeAvailablePerWeek,
-  UpdateCourseGoalsRequestBody,
-  UpdateCurriculumSectionsRequestBody,
-} from '../routers/courseDraftsRouter';
-
-interface CourseDraftInDatabase {
-  id: number;
-  creatorId: number;
-  creatorEmail: string;
-  courseType: string;
-  courseTitle: string;
-  courseCategory: string;
-  creatorTimeAvailablePerWeek: string;
-  isPublic: boolean;
-  isSubmissionProcessCompleted: boolean;
-  language: string;
-  createdAt: string;
-}
-
-interface DeleteLearningObjectiveParams {
-  learningObjectiveId: number;
-  userId: number;
-}
-
-interface DeletePrerequisiteParams {
-  prerequisiteId: number;
-  userId: number;
-}
-
-interface DeleteIntendedLearnerParams {
-  intendedLearnerId: number;
-  userId: number;
-}
-
-interface GetCourseDraftParams {
-  userId: number;
-  courseDraftId: number;
-}
-
-interface UpdateCourseDraftCourseGoalsParams {
-  userId: number;
-  courseDraftId: number;
-  updateRequest: UpdateCourseGoalsRequestBody;
-}
-
-interface CreateTextWithId {
-  userId: number;
-  courseDraftId: number;
-  text: string;
-  orderIndex: number;
-}
-
-interface UpdateCurriculumSectionsParams {
-  userId: number;
-  courseDraftId: number;
-  requestBody: UpdateCurriculumSectionsRequestBody;
-}
-
-interface CreateCurriculumSectionParams {
-  courseDraftId: number;
-  userId: number;
-}
-
-interface CreateLessonParams {
-  curriculumSectionId: number;
-  userId: number;
-  title: string;
-}
-
-interface DeleteLessonParams {
-  lessonId: number;
-  userId: number;
-}
-
-interface DeleteSectionParams {
-  sectionId: number;
-  userId: number;
-}
-
-type CreatePrerequisiteParams = CreateTextWithId;
-type CreateLearningObjectiveParams = CreateTextWithId;
-
-interface UpdateLessonVideoParams {
-  lessonId: number;
-  userId: number;
-  videoUrl: string;
-  videoLengthSeconds: number;
-  videoSizeInBytes: number;
-}
-
-interface UpdateLessonReturnValue {
-  videoFileName: string;
-  videoSizeInBytes: number;
-  videoLengthSeconds: number;
-}
-
-interface GetVideoUriParams {
-  lessonId: number;
-}
-
-interface CreateVideoUrlTokenParams {
-  userId: number;
-  lessonId: number;
-  token: string;
-}
-
-interface CreateVideoUrlTokenResult {
-  lessonId: number;
-  token: string;
-}
-
-interface GetVideoUrlTokenParams {
-  token: string;
-}
-
-interface GetVideoUrlTokenResult {
-  id: number;
-  userId: number;
-  lessonId: number;
-  token: string;
-  usageCount: number;
-  createdAt: string;
-}
+} from '../types';
 
 export const createCourseDraft = async (
   newCourseDraftEntry: NewCourseDraftEntry
@@ -468,372 +365,6 @@ export const createLesson = async (
   }
 };
 
-export const deleteLearningObjective = async (
-  params: DeleteLearningObjectiveParams
-) => {
-  try {
-    await client.query('BEGIN;');
-
-    const sqlText = `
-      DELETE
-      FROM learning_objectives
-      WHERE id = $1
-      AND id IN (
-        SELECT learning_objectives.id
-        FROM learning_objectives
-        JOIN coursedrafts
-        ON learning_objectives.course_draft_id = coursedrafts.id
-        WHERE coursedrafts.creator_id = $2
-      );
-    `;
-
-    const sqlValues = [params.learningObjectiveId, params.userId];
-
-    await client.query(sqlText, sqlValues);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const deletePrerequisite = async (params: DeletePrerequisiteParams) => {
-  try {
-    await client.query('BEGIN;');
-    const sqlText = `
-      DELETE
-      FROM prerequisites
-      WHERE id = $1
-      AND id IN (
-        SELECT prerequisites.id
-        FROM prerequisites
-        JOIN coursedrafts
-        ON prerequisites.course_draft_id = coursedrafts.id
-        WHERE coursedrafts.creator_id = $2
-      );
-    `;
-    const sqlValues = [params.prerequisiteId, params.userId];
-    await client.query(sqlText, sqlValues);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const deleteIntendedLearner = async (
-  params: DeleteIntendedLearnerParams
-) => {
-  try {
-    await client.query('BEGIN;');
-    const sqlText = `
-      DELETE
-      FROM intended_learners
-      WHERE id = $1
-      AND id IN (
-        SELECT intended_learners.id
-        FROM intended_learners
-        JOIN coursedrafts
-        ON intended_learners.course_draft_id = coursedrafts.id
-        WHERE coursedrafts.creator_id = $2
-      );
-    `;
-    const sqlValues = [params.intendedLearnerId, params.userId];
-    await client.query(sqlText, sqlValues);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const deleteLesson = async (params: DeleteLessonParams) => {
-  try {
-    await client.query('BEGIN;');
-    const sqlText = `
-      DELETE
-      FROM lessons
-      WHERE id = $1
-      AND id IN (
-        SELECT lessons.id
-        FROM lessons
-        JOIN curriculum_sections
-        ON lessons.curriculum_section_id = curriculum_sections.id
-        JOIN coursedrafts
-        ON curriculum_sections.course_draft_id = coursedrafts.id
-        WHERE coursedrafts.creator_id = $2
-      );
-    `;
-    const sqlValues = [params.lessonId, params.userId];
-    await client.query(sqlText, sqlValues);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const deleteSection = async (params: DeleteSectionParams) => {
-  try {
-    await client.query('BEGIN;');
-    const sqlText = `
-      DELETE
-      FROM curriculum_sections
-      WHERE id = $1
-      AND id IN (
-        SELECT curriculum_sections.id
-        FROM curriculum_sections
-        JOIN coursedrafts
-        ON curriculum_sections.course_draft_id = coursedrafts.id
-        WHERE coursedrafts.creator_id = $2
-      );
-    `;
-    const sqlValues = [params.sectionId, params.userId];
-    await client.query(sqlText, sqlValues);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const updateCourseDraftCourseGoals = async (
-  params: UpdateCourseDraftCourseGoalsParams
-): Promise<void> => {
-  try {
-    await client.query('BEGIN;');
-
-    const { updateRequest } = params;
-
-    const learningObjectivePromises =
-      updateRequest.learningObjectives.items.map((learningObjective) => {
-        const sqlText = `
-          UPDATE learning_objectives
-          SET 
-            learning_objective = $1,
-            order_index = $2
-          WHERE id = $3
-          AND id IN (
-            SELECT learning_objectives.id
-            FROM learning_objectives
-            JOIN coursedrafts
-            ON learning_objectives.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
-          );
-        `;
-
-        const sqlValues = [
-          learningObjective.text,
-          learningObjective.orderIndex,
-          learningObjective.id,
-          params.userId,
-          params.courseDraftId,
-        ];
-
-        return client.query(sqlText, sqlValues);
-      });
-
-    const intendedLearnerPromises = updateRequest.intendedLearners.items.map(
-      (intendedLearner) => {
-        const sqlText = `
-          UPDATE intended_learners
-          SET 
-            intended_learner = $1,
-            order_index = $2
-          WHERE id = $3
-          AND id IN (
-            SELECT intended_learners.id
-            FROM intended_learners
-            JOIN coursedrafts
-            ON intended_learners.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
-          );
-        `;
-
-        const sqlValues = [
-          intendedLearner.text,
-          intendedLearner.orderIndex,
-          intendedLearner.id,
-          params.userId,
-          params.courseDraftId,
-        ];
-
-        return client.query(sqlText, sqlValues);
-      }
-    );
-
-    const prerequisitePromises = updateRequest.prerequisites.items.map(
-      (prerequisite) => {
-        const sqlText = `
-          UPDATE prerequisites
-          SET 
-            prerequisite = $1,
-            order_index = $2
-          WHERE id = $3
-          AND id IN (
-            SELECT prerequisites.id
-            FROM prerequisites
-            JOIN coursedrafts
-            ON prerequisites.course_draft_id = coursedrafts.id
-            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
-          );
-        `;
-
-        const sqlValues = [
-          prerequisite.text,
-          prerequisite.orderIndex,
-          prerequisite.id,
-          params.userId,
-          params.courseDraftId,
-        ];
-
-        return client.query(sqlText, sqlValues);
-      }
-    );
-
-    await Promise.all(learningObjectivePromises);
-    await Promise.all(intendedLearnerPromises);
-    await Promise.all(prerequisitePromises);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const updateCurriculumSections = async (
-  params: UpdateCurriculumSectionsParams
-) => {
-  try {
-    await client.query('BEGIN;');
-
-    const { requestBody } = params;
-
-    const sqlSectionPromises = requestBody.entries.map(
-      ({ id, title, learningObjective, orderIndex }) => {
-        const sqlText = `
-        UPDATE curriculum_sections
-        SET 
-          title = $1,
-          learning_objective = $2,
-          order_index = $3
-        WHERE id = $4
-        AND id IN (
-          SELECT curriculum_sections.id
-          FROM curriculum_sections
-          JOIN coursedrafts
-          ON coursedrafts.id = curriculum_sections.course_draft_id
-          WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
-        );
-      `;
-
-        const sqlSectionValues = [
-          title,
-          learningObjective,
-          orderIndex,
-          id,
-          params.userId,
-          params.courseDraftId,
-        ];
-
-        return client.query(sqlText, sqlSectionValues);
-      }
-    );
-
-    const sqlLessonPromises = requestBody.entries.flatMap((section) => {
-      const lessonPromises = section.lessons.map((lesson) => {
-        const sqlText = `
-          UPDATE lessons
-          SET 
-            name = $1,
-            description = $2,
-            order_index = $3
-          WHERE id = $4
-          AND id IN (
-            SELECT lessons.id
-            FROM lessons
-            JOIN curriculum_sections
-            ON curriculum_sections.id = lessons.curriculum_section_id
-            JOIN coursedrafts
-            ON coursedrafts.id = curriculum_sections.course_draft_id
-            WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
-          );
-        `;
-
-        const sqlValues = [
-          lesson.name,
-          lesson.description,
-          lesson.orderIndex,
-          lesson.id,
-          params.userId,
-          params.courseDraftId,
-        ];
-
-        return client.query(sqlText, sqlValues);
-      });
-
-      return lessonPromises;
-    });
-
-    await Promise.all(sqlSectionPromises);
-    await Promise.all(sqlLessonPromises);
-    await client.query('COMMIT;');
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
-export const updateLessonVideo = async (
-  params: UpdateLessonVideoParams
-): Promise<UpdateLessonReturnValue> => {
-  try {
-    await client.query('BEGIN;');
-
-    const sqlText = `
-      UPDATE lessons
-      SET 
-        video_url = $1,
-        video_length_seconds = $2,
-        video_size_in_bytes = $3
-      WHERE id = $4
-      AND id IN (
-        SELECT lessons.id
-        FROM lessons
-        JOIN curriculum_sections
-        ON curriculum_sections.id = lessons.curriculum_section_id
-        JOIN coursedrafts
-        ON coursedrafts.id = curriculum_sections.course_draft_id
-        WHERE coursedrafts.creator_id = $5
-      )
-      RETURNING video_url, video_length_seconds, video_size_in_bytes;
-    `;
-
-    const sqlValues = [
-      params.videoUrl,
-      params.videoLengthSeconds,
-      params.videoSizeInBytes,
-      params.lessonId,
-      params.userId,
-    ];
-
-    const queryResult = await client.query(sqlText, sqlValues);
-    const row = queryResult.rows[0];
-
-    const returnValue: UpdateLessonReturnValue = {
-      videoFileName: row.video_url,
-      videoSizeInBytes: row.video_size_in_bytes,
-      videoLengthSeconds: row.video_length_seconds,
-    };
-
-    await client.query('COMMIT;');
-    return returnValue;
-  } catch (error) {
-    await client.query('ROLLBACK;');
-    throw error;
-  }
-};
-
 export const getCourseDrafts = async (
   userId: number
 ): Promise<CourseDraft[]> => {
@@ -1093,6 +624,372 @@ export const getVideoPath = async (
     const videoPath = row.video_url;
     return videoPath;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const updateCourseDraftCourseGoals = async (
+  params: UpdateCourseDraftCourseGoalsParams
+): Promise<void> => {
+  try {
+    await client.query('BEGIN;');
+
+    const { updateRequest } = params;
+
+    const learningObjectivePromises =
+      updateRequest.learningObjectives.items.map((learningObjective) => {
+        const sqlText = `
+          UPDATE learning_objectives
+          SET 
+            learning_objective = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT learning_objectives.id
+            FROM learning_objectives
+            JOIN coursedrafts
+            ON learning_objectives.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
+          );
+        `;
+
+        const sqlValues = [
+          learningObjective.text,
+          learningObjective.orderIndex,
+          learningObjective.id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      });
+
+    const intendedLearnerPromises = updateRequest.intendedLearners.items.map(
+      (intendedLearner) => {
+        const sqlText = `
+          UPDATE intended_learners
+          SET 
+            intended_learner = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT intended_learners.id
+            FROM intended_learners
+            JOIN coursedrafts
+            ON intended_learners.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
+          );
+        `;
+
+        const sqlValues = [
+          intendedLearner.text,
+          intendedLearner.orderIndex,
+          intendedLearner.id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      }
+    );
+
+    const prerequisitePromises = updateRequest.prerequisites.items.map(
+      (prerequisite) => {
+        const sqlText = `
+          UPDATE prerequisites
+          SET 
+            prerequisite = $1,
+            order_index = $2
+          WHERE id = $3
+          AND id IN (
+            SELECT prerequisites.id
+            FROM prerequisites
+            JOIN coursedrafts
+            ON prerequisites.course_draft_id = coursedrafts.id
+            WHERE coursedrafts.creator_id = $4 AND coursedrafts.id = $5
+          );
+        `;
+
+        const sqlValues = [
+          prerequisite.text,
+          prerequisite.orderIndex,
+          prerequisite.id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      }
+    );
+
+    await Promise.all(learningObjectivePromises);
+    await Promise.all(intendedLearnerPromises);
+    await Promise.all(prerequisitePromises);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const updateCurriculumSections = async (
+  params: UpdateCurriculumSectionsParams
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const { requestBody } = params;
+
+    const sqlSectionPromises = requestBody.entries.map(
+      ({ id, title, learningObjective, orderIndex }) => {
+        const sqlText = `
+        UPDATE curriculum_sections
+        SET 
+          title = $1,
+          learning_objective = $2,
+          order_index = $3
+        WHERE id = $4
+        AND id IN (
+          SELECT curriculum_sections.id
+          FROM curriculum_sections
+          JOIN coursedrafts
+          ON coursedrafts.id = curriculum_sections.course_draft_id
+          WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
+        );
+      `;
+
+        const sqlSectionValues = [
+          title,
+          learningObjective,
+          orderIndex,
+          id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlSectionValues);
+      }
+    );
+
+    const sqlLessonPromises = requestBody.entries.flatMap((section) => {
+      const lessonPromises = section.lessons.map((lesson) => {
+        const sqlText = `
+          UPDATE lessons
+          SET 
+            name = $1,
+            description = $2,
+            order_index = $3
+          WHERE id = $4
+          AND id IN (
+            SELECT lessons.id
+            FROM lessons
+            JOIN curriculum_sections
+            ON curriculum_sections.id = lessons.curriculum_section_id
+            JOIN coursedrafts
+            ON coursedrafts.id = curriculum_sections.course_draft_id
+            WHERE coursedrafts.creator_id = $5 AND coursedrafts.id = $6
+          );
+        `;
+
+        const sqlValues = [
+          lesson.name,
+          lesson.description,
+          lesson.orderIndex,
+          lesson.id,
+          params.userId,
+          params.courseDraftId,
+        ];
+
+        return client.query(sqlText, sqlValues);
+      });
+
+      return lessonPromises;
+    });
+
+    await Promise.all(sqlSectionPromises);
+    await Promise.all(sqlLessonPromises);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const updateLessonVideo = async (
+  params: UpdateLessonVideoParams
+): Promise<UpdateLessonReturnValue> => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+      UPDATE lessons
+      SET 
+        video_url = $1,
+        video_length_seconds = $2,
+        video_size_in_bytes = $3
+      WHERE id = $4
+      AND id IN (
+        SELECT lessons.id
+        FROM lessons
+        JOIN curriculum_sections
+        ON curriculum_sections.id = lessons.curriculum_section_id
+        JOIN coursedrafts
+        ON coursedrafts.id = curriculum_sections.course_draft_id
+        WHERE coursedrafts.creator_id = $5
+      )
+      RETURNING video_url, video_length_seconds, video_size_in_bytes;
+    `;
+
+    const sqlValues = [
+      params.videoUrl,
+      params.videoLengthSeconds,
+      params.videoSizeInBytes,
+      params.lessonId,
+      params.userId,
+    ];
+
+    const queryResult = await client.query(sqlText, sqlValues);
+    const row = queryResult.rows[0];
+
+    const returnValue: UpdateLessonReturnValue = {
+      videoFileName: row.video_url,
+      videoSizeInBytes: row.video_size_in_bytes,
+      videoLengthSeconds: row.video_length_seconds,
+    };
+
+    await client.query('COMMIT;');
+    return returnValue;
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteLearningObjective = async (
+  params: DeleteLearningObjectiveParams
+) => {
+  try {
+    await client.query('BEGIN;');
+
+    const sqlText = `
+      DELETE
+      FROM learning_objectives
+      WHERE id = $1
+      AND id IN (
+        SELECT learning_objectives.id
+        FROM learning_objectives
+        JOIN coursedrafts
+        ON learning_objectives.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+
+    const sqlValues = [params.learningObjectiveId, params.userId];
+
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deletePrerequisite = async (params: DeletePrerequisiteParams) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM prerequisites
+      WHERE id = $1
+      AND id IN (
+        SELECT prerequisites.id
+        FROM prerequisites
+        JOIN coursedrafts
+        ON prerequisites.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.prerequisiteId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteIntendedLearner = async (
+  params: DeleteIntendedLearnerParams
+) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM intended_learners
+      WHERE id = $1
+      AND id IN (
+        SELECT intended_learners.id
+        FROM intended_learners
+        JOIN coursedrafts
+        ON intended_learners.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.intendedLearnerId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteLesson = async (params: DeleteLessonParams) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM lessons
+      WHERE id = $1
+      AND id IN (
+        SELECT lessons.id
+        FROM lessons
+        JOIN curriculum_sections
+        ON lessons.curriculum_section_id = curriculum_sections.id
+        JOIN coursedrafts
+        ON curriculum_sections.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.lessonId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
+    throw error;
+  }
+};
+
+export const deleteSection = async (params: DeleteSectionParams) => {
+  try {
+    await client.query('BEGIN;');
+    const sqlText = `
+      DELETE
+      FROM curriculum_sections
+      WHERE id = $1
+      AND id IN (
+        SELECT curriculum_sections.id
+        FROM curriculum_sections
+        JOIN coursedrafts
+        ON curriculum_sections.course_draft_id = coursedrafts.id
+        WHERE coursedrafts.creator_id = $2
+      );
+    `;
+    const sqlValues = [params.sectionId, params.userId];
+    await client.query(sqlText, sqlValues);
+    await client.query('COMMIT;');
+  } catch (error) {
+    await client.query('ROLLBACK;');
     throw error;
   }
 };

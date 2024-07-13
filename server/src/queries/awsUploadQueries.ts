@@ -1,61 +1,8 @@
 import { client } from '../database';
-
-interface CreateMultipartUploadParams {
-  key: string;
-  uploadId: string;
-  userId: number;
-  lessonId: number;
-  expirationTime: string;
-  creationTime: string;
-}
-
-interface FinishMultipartUploadParams {
-  uploadId: string;
-  userId: number;
-}
-
-export const getUploadedVideoKey = async (
-  lessonId: number,
-  userId: number
-): Promise<string | null> => {
-  const query = `
-    SELECT key
-    FROM aws_s3_multipart_uploads
-    WHERE lesson_id = $1
-    AND user_id = $2
-    AND is_finished = true
-  ;`;
-
-  const values = [lessonId, userId];
-
-  try {
-    const result = await client.query(query, values);
-    if (result.rowCount === 0) return null;
-    return result.rows[0].key;
-  } catch (error) {
-    (error as Error).message += ' @getPresignedVideoUrl';
-    throw error;
-  }
-};
-
-export const getKeyByUploadId = async (uploadId: string): Promise<string> => {
-  const query = `
-    SELECT key
-    FROM aws_s3_multipart_uploads
-    WHERE upload_id = $1
-    LIMIT 1
-  `;
-
-  const values = [uploadId];
-
-  try {
-    const result = await client.query(query, values);
-    return result.rows[0].key;
-  } catch (error) {
-    (error as Error).message += ' @getKeyByUploadId';
-    throw error;
-  }
-};
+import {
+  FinishMultipartUploadParams,
+  CreateMultipartUploadParams,
+} from '../types';
 
 export const finishMultipartUpload = async (
   params: FinishMultipartUploadParams
@@ -142,6 +89,49 @@ export const createMultipartUpload = async (
   } catch (error) {
     await client.query('ROLLBACK');
     (error as Error).message += ' @createMultipartUpload';
+    throw error;
+  }
+};
+
+export const getUploadedVideoKey = async (
+  lessonId: number,
+  userId: number
+): Promise<string | null> => {
+  const query = `
+    SELECT key
+    FROM aws_s3_multipart_uploads
+    WHERE lesson_id = $1
+    AND user_id = $2
+    AND is_finished = true
+  ;`;
+
+  const values = [lessonId, userId];
+
+  try {
+    const result = await client.query(query, values);
+    if (result.rowCount === 0) return null;
+    return result.rows[0].key;
+  } catch (error) {
+    (error as Error).message += ' @getPresignedVideoUrl';
+    throw error;
+  }
+};
+
+export const getKeyByUploadId = async (uploadId: string): Promise<string> => {
+  const query = `
+    SELECT key
+    FROM aws_s3_multipart_uploads
+    WHERE upload_id = $1
+    LIMIT 1
+  `;
+
+  const values = [uploadId];
+
+  try {
+    const result = await client.query(query, values);
+    return result.rows[0].key;
+  } catch (error) {
+    (error as Error).message += ' @getKeyByUploadId';
     throw error;
   }
 };
