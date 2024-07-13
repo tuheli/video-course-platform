@@ -11,7 +11,8 @@ const initialState: InitialState = {
   items: [],
 };
 
-// TODO: Cart state should be stored in localstorage so non logged in users can have their cart saved
+// TODO: Cart state should be stored in local storage
+// so non logged in users can have their cart saved.
 
 const slice = createSlice({
   name: 'cart',

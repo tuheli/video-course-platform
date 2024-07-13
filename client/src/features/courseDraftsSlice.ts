@@ -69,10 +69,6 @@ export interface Lesson {
   name: string;
   orderIndex: number;
   description: string;
-  // video?: {
-  //   url: string;
-  //   lengthSeconds: number;
-  // };
 }
 
 export interface ICurriculumSection {
@@ -115,7 +111,7 @@ const minLearningObjectivesCount = 0;
 const minPrerequisitesCount = 0;
 const minIntendedLearnersCount = 0;
 
-// NOTE: Used in wrapper functions to be more descriptive
+// NOTE: Use only in wrapper functions.
 const validateTextWithIdArray = ({
   array,
   minElementCount,
@@ -232,29 +228,6 @@ const getReorderableTextArrayObject = (
 };
 
 const getInitialCurriculum = () => {
-  // const sectionCount = 100;
-  // const lectureCount = 10;
-
-  // const sections: ICurriculumSection[] = Array.from(
-  //   { length: sectionCount },
-  //   (_, k) => {
-  //     return {
-  //       id: crypto.randomUUID(),
-  //       title: `Section ${k + 1}`,
-  //       learningObjective: '',
-  //       orderIndex: k,
-  //       lessons: Array.from({ length: lectureCount }, (_, l) => {
-  //         return {
-  //           id: crypto.randomUUID(),
-  //           name: `Lecture ${l + 1}`,
-  //           orderIndex: l,
-  //           description: '',
-  //         };
-  //       }),
-  //     };
-  //   }
-  // );
-
   const sections: ICurriculumSection[] = [
     {
       id: getRandomInt(1, 10_000_000),

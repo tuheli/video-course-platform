@@ -98,29 +98,6 @@ interface DeleteSectionRequest {
   sectionId: number;
 }
 
-interface UploadVideoRequest {
-  courseDraftId: number;
-  sectionId: number;
-  lectureId: number;
-  videoFile: File;
-}
-
-interface CreateVideostreamTokenRequest {
-  lectureId: number;
-}
-
-interface GetVideostreamTokenResult {
-  token: string;
-}
-
-interface UploadChunkRequest {
-  chunk: Blob;
-  chunkId: number;
-  fileId: number;
-  fileSize: number;
-  fileName: string;
-}
-
 interface UploadPartResponse {
   ETag: string;
 }
@@ -221,9 +198,6 @@ export const apiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({
-    ping: builder.query<string, void>({
-      query: () => 'ping',
-    }),
     signup: builder.mutation<UserInDatabaseSafe, SignupRequestBody>({
       query: (body) => ({
         url: 'signup',
@@ -384,16 +358,6 @@ export const apiSlice = createApi({
       query: () => `coursedrafts`,
       providesTags: ['CourseDrafts'],
     }),
-    createLessonVideostreamToken: builder.mutation<
-      GetVideostreamTokenResult,
-      CreateVideostreamTokenRequest
-    >({
-      query: (body) => ({
-        url: `/coursedrafts/videostream/signedurl`,
-        method: 'POST',
-        body,
-      }),
-    }),
     validateAuthorizationToken: builder.mutation<
       UserInDatabaseSafeWithToken,
       ValidateAuthorizationTokenRequestBody
@@ -407,42 +371,12 @@ export const apiSlice = createApi({
         },
       }),
     }),
-    uploadVideo: builder.mutation<void, UploadVideoRequest>({
-      query: ({ videoFile, courseDraftId, sectionId, lectureId }) => {
-        const formData = new FormData();
-        formData.append('video', videoFile, videoFile.name);
-        return {
-          url: `coursedrafts/${courseDraftId}/sections/${sectionId}/lessons/${lectureId}/video`,
-          method: 'POST',
-          body: formData,
-          formData: true,
-        };
-      },
-      invalidatesTags: ['CourseDrafts'],
-    }),
-    uploadChunk: builder.mutation<void, UploadChunkRequest>({
-      query: ({ chunk, chunkId, fileId }) => {
-        return {
-          url: `coursedrafts/upload`,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/octet-stream',
-            'x-chunk-id': chunkId.toString(),
-            'x-upload-id': fileId.toString(),
-            'x-chunk-size': chunk.size.toString(),
-          },
-          body: chunk,
-          cache: 'no-cache',
-        };
-      },
-    }),
     initiateUpload: builder.mutation<
       InitiateMultipartUploadResponse,
       InitiateMultipartUploadParams
     >({
       query: ({ coursedraftId, sectionId, lectureId, partCount }) => {
         return {
-          // url: `coursedrafts/initiateupload`,
           url: `/coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/initiatevideoupload`,
           method: 'POST',
           body: {
@@ -488,7 +422,6 @@ export const apiSlice = createApi({
 });
 
 export const {
-  usePingQuery,
   useSignupMutation,
   useSigninMutation,
   useCreateCourseDraftMutation,
@@ -506,9 +439,6 @@ export const {
   useDeleteSectionMutation,
   useValidateAuthorizationTokenMutation,
   useGetCourseDraftsQuery,
-  useCreateLessonVideostreamTokenMutation,
-  useUploadVideoMutation,
-  useUploadChunkMutation,
   useUploadPartMutation,
   useInitiateUploadMutation,
   useFinishUploadMutation,
