@@ -8,6 +8,7 @@ import { Description } from './Description';
 import { Curriculum } from '../curriculum/Curriculum';
 import { FetchCourseDrafts } from '../utility/FetchCourseDrafts';
 import { SaveCurriculumOnUnmount } from '../utility/SaveCurriculumOnUnmount';
+import { Notification } from '../utility/Notification';
 
 // NOTE: With strict mode on,
 // curriculum save on unmount is called
@@ -20,6 +21,7 @@ export const ManageCourseCurriculumPage = () => {
     <>
       <FetchCourseDrafts />
       <SaveCurriculumOnUnmount />
+      <Notification />
       <Box
         sx={{
           flexDirection: 'column',
