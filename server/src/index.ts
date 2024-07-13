@@ -5,6 +5,7 @@ import { port } from './config';
 import signupRouter from './routers/signupRouter';
 import signinRouter from './routers/signinRouter';
 import courseDraftsRouter from './routers/courseDraftsRouter';
+import topSecretDemovideoRouter from './routers/topSecretDemovideoRouter';
 import validateAuthorizationTokenRouter from './routers/validateAuthorizationTokenRouter';
 import { errorHandler } from './middleware';
 import path from 'path';
@@ -32,6 +33,7 @@ app.use('/', express.static(absoluteDistPath));
 app.use('/api/signup', signupRouter);
 app.use('/api/signin', signinRouter);
 app.use('/api/coursedrafts', courseDraftsRouter);
+app.use('/api/topsecretdemovideo', topSecretDemovideoRouter);
 app.use('/api/validateauthorizationtoken', validateAuthorizationTokenRouter);
 app.get('/*', (req, res) => {
   if (req.originalUrl.startsWith('/api')) {

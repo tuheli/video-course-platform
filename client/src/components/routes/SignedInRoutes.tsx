@@ -8,6 +8,7 @@ import { ManageCourseGoalsPage } from '../manage-course-goals-page/ManageCourseG
 import { ManageCourseCurriculumPage } from '../manage-course-curriculum-page/ManageCourseCurriculumPage';
 import { CourseDraftPreviewPage } from '../course-draft-preview/CourseDraftPreviewPage';
 import { Logout } from '../logout/Logout';
+import { TopSecretDemovideoPage } from '../top-secret-demovideo/TopSecretDemovideoPage';
 
 // NOTE: I didnt create a different
 // front page for logged in users which
@@ -51,6 +52,9 @@ export const SignedInRoutes = () => {
 
       {/** Logout route - signed out routes handle redirecting to landing page after logout */}
       <Route path="/logout" element={<Logout />} />
+
+      {/** Top secret demovideo route */}
+      <Route path="/topsecretdemovideo" element={<TopSecretDemovideoPage />} />
 
       {/** Redirect routes leading to default route */}
       <Route path="/teaching" element={<Redirect to="/instructor" />} />

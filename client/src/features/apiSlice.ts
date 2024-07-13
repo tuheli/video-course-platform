@@ -123,6 +123,10 @@ interface GetVideoUrlResponse {
   presignedUrl: string;
 }
 
+interface TopSecretVideoUrlResponse {
+  presignedUrl: string;
+}
+
 export const toUserInDatabaseSafeWithToken = (
   data: unknown
 ): UserInDatabaseSafeWithToken | null => {
@@ -326,6 +330,7 @@ export const apiSlice = createApi({
       query: ({ coursedraftId, sectionId, lectureId }) => {
         return {
           url: `coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/video/view`,
+          cache: 'no-cache',
         };
       },
     }),
@@ -418,6 +423,14 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['CourseDrafts'],
     }),
+    getTopSecretDemovideo: builder.query<TopSecretVideoUrlResponse, void>({
+      query: () => {
+        return {
+          url: 'topsecretdemovideo',
+          cache: 'no-cache',
+        };
+      },
+    }),
   }),
 });
 
@@ -434,6 +447,7 @@ export const {
   useFinishUploadMutation,
   useGetCourseDraftsQuery,
   useGetVideoUrlQuery,
+  useGetTopSecretDemovideoQuery,
   useValidateAuthorizationTokenMutation,
   useUpdateCourseDraftGoalsMutation,
   useUpdateCurriculumSectionsMutation,

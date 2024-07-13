@@ -134,3 +134,21 @@ export const getPresignedUrlForUploadedVideo = async (key: string) => {
 
   return url;
 };
+
+export const getPresignedTopSecretDemovideoUrl = async (): Promise<string> => {
+  try {
+    const keyInAws = 'sovelluksen-demovideo.mov';
+    const command = new GetObjectCommand({
+      Bucket: awsS3bucketName,
+      Key: keyInAws,
+    });
+
+    const url = await getSignedUrl(s3Client, command, {
+      expiresIn: 60 * 15, // 15 minutes
+    });
+
+    return url;
+  } catch (error) {
+    throw error;
+  }
+};

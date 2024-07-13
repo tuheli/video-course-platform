@@ -1,4 +1,4 @@
-import { Box, Divider, Stack } from '@mui/material';
+import { Box, Divider, Stack, styled, Typography } from '@mui/material';
 import { ColumnOrderedGrid } from '../column-ordered-grid/ColumnOrderedGrid';
 import { getFooterLinks } from '../../../data/footerLinks';
 import { FooterLink } from './FooterLink';
@@ -6,13 +6,56 @@ import { FooterSelectLanguageButton } from './FooterSelectLanguageButton';
 import { CompanyLogo } from '../appbar/CompanyLogo';
 import { Copyright } from './Copyright';
 import { FooterTopExtension } from './FooterTopExtension';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+
+const EmptyStyledLink = styled(Link)({});
 
 export const Footer = () => {
   const footerLinks = getFooterLinks();
-  const footerLinkComponents = footerLinks.map(({ text }) => ({
-    RenderComponent: () => <FooterLink text={text} />,
-  }));
+  const components = footerLinks.map(({ text }) => {
+    const isDemovideo = text === 'About us';
+
+    if (isDemovideo) {
+      return {
+        RenderComponent: () => (
+          <EmptyStyledLink
+            to={'/topsecretdemovideo'}
+            sx={{
+              color: (theme) => theme.palette.primary.contrastText,
+              textDecoration: 'none',
+              '&:hover': {
+                cursor: 'pointer',
+              },
+            }}
+          >
+            <Box
+              sx={{
+                py: 0.1,
+                width: 180,
+                '&:hover': {
+                  cursor: 'pointer',
+                  animation: 'shake 1s ease-in-out infinite',
+                },
+              }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  fontWeight: 400,
+                }}
+              >
+                {text}
+              </Typography>
+            </Box>
+          </EmptyStyledLink>
+        ),
+      };
+    }
+
+    return {
+      RenderComponent: () => <FooterLink text={text} />,
+    };
+  });
 
   const location = useLocation();
   const showTopExtension =
@@ -48,11 +91,7 @@ export const Footer = () => {
           px: 4,
         }}
       >
-        <ColumnOrderedGrid
-          stackHeight={5}
-          items={footerLinkComponents}
-          gap={2}
-        />
+        <ColumnOrderedGrid stackHeight={5} items={components} gap={2} />
         <Box
           sx={{
             width: '100%',
