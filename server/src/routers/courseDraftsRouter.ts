@@ -8,7 +8,6 @@ import {
   createLearningObjective,
   createLesson,
   createPrerequisite,
-  createVideoUrlToken,
   deleteIntendedLearner,
   deleteLearningObjective,
   deleteLesson,
@@ -16,17 +15,9 @@ import {
   deleteSection,
   getCourseDraft,
   getCourseDrafts,
-  getCourseDraftsNew,
-  getVideoPath,
-  getVideoUrlToken,
   updateCourseDraftCourseGoals,
   updateCurriculumSections,
-  updateLessonVideo,
 } from '../queries/courseDraftQueries';
-import multer from 'multer';
-import { getAudioLength } from '../utils/utils';
-import fs from 'fs';
-import crypto from 'crypto';
 import {
   finishUpload,
   getPresignedUrlForUploadedVideo,
@@ -769,28 +760,6 @@ const toCreateLectureRequestBody = (
   return { title: body.title };
 };
 
-const megaByte = Math.pow(1024, 2);
-const maxFileBytes = 50 * megaByte;
-
-const videoMulter = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: maxFileBytes,
-  },
-}).fields([{ name: 'video', maxCount: 1 }]);
-
-const videoMulterDiskStorage = multer({
-  storage: multer.diskStorage({
-    destination: 'lesson-video-uploads/',
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  }),
-  limits: {
-    fileSize: maxFileBytes,
-  },
-}).fields([{ name: 'video', maxCount: 1 }]);
-
 const router = Router();
 
 router.get('/', userExtractor, async (req, res, next) => {
@@ -804,70 +773,9 @@ router.get('/', userExtractor, async (req, res, next) => {
         .json({ message: 'User was not found. Please sign in.' });
     }
 
-    const courseDraftFromDatabaseResult = await getCourseDraftsNew(req.user.id);
+    const courseDraftFromDatabaseResult = await getCourseDrafts(req.user.id);
 
     return res.status(200).json(courseDraftFromDatabaseResult);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get('/videostream/:lessonid', async (req, res, next) => {
-  try {
-    const lessonId = parseInt(req.params.lessonid);
-    if (isNaN(lessonId)) {
-      return res.status(400).json({ message: 'Invalid lesson id.' });
-    }
-
-    const token = req.query.token;
-    if (!token || typeof token !== 'string') {
-      return res.status(401).json({ message: 'Token is missing.' });
-    }
-
-    const tokenInformationInDatabase = await getVideoUrlToken({
-      token,
-    });
-
-    // NOTE: How to also check the user
-    // is the creator of the token in a
-    // good way?
-    // In client side the video takes
-    // url as a prop as sends token as
-    // query param.
-
-    const isValidRequest =
-      tokenInformationInDatabase !== null &&
-      tokenInformationInDatabase.token === token &&
-      tokenInformationInDatabase.lessonId === lessonId;
-
-    if (!isValidRequest) {
-      return res.status(401).json({ message: 'Invalid token.' });
-    }
-
-    const videoPath = await getVideoPath({ lessonId });
-
-    if (!videoPath) {
-      return res.status(404).json({ message: 'Video was not found.' });
-    }
-
-    // Streaming code is from
-    // https://www.geeksforgeeks.org/how-to-build-video-streaming-application-using-node-js/
-
-    const range = req.headers.range;
-    const videoSize = fs.statSync(videoPath).size;
-    const chunkSize = Math.pow(1024, 2);
-    const start = Number(range?.replace(/\D/g, ''));
-    const end = Math.min(start + chunkSize, videoSize - 1);
-    const contentLength = end - start + 1;
-    const headers = {
-      'Content-Range': `bytes ${start}-${end}/${videoSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': contentLength,
-      'Content-Type': 'video/mp4',
-    };
-    res.writeHead(206, headers);
-    const stream = fs.createReadStream(videoPath, { start, end });
-    stream.pipe(res);
   } catch (error) {
     next(error);
   }
@@ -906,43 +814,6 @@ router.get(
     }
   }
 );
-
-router.post('/upload', async (req, res, next) => {
-  const chunk: Uint8Array[] = [];
-  const uploadId = req.headers['x-upload-id'];
-  const chunkId = req.headers['x-chunk-id'];
-  const expectedChunkSize = Number(req.headers['x-chunk-size']);
-
-  console.log('starting to receive a chunk', {
-    uploadId,
-    chunkId,
-    expectedChunkSize,
-  });
-
-  if (isNaN(expectedChunkSize)) {
-    return res.status(400).json({ message: 'Invalid chunk size.' });
-  }
-
-  req
-    .on('data', (chunkPart) => {
-      console.log('received part of a chunk', chunkPart);
-      chunk.push(chunkPart);
-    })
-    .on('end', () => {
-      console.log('no more data for this chunk');
-      const completeChunk = Buffer.concat(chunk);
-
-      if (completeChunk.length !== expectedChunkSize) {
-        return res
-          .status(400)
-          .json({ message: 'Chunk was not of expected size.' });
-      } else {
-        console.log('chunk is of expected size');
-      }
-
-      res.end();
-    });
-});
 
 router.post(
   '/:coursedraftid/sections/:sectionid/lessons/:lessonid/initiatevideoupload',
@@ -1189,119 +1060,6 @@ router.post(
   }
 );
 
-// NOTE: Should be put router since
-// it updates the resource in database?
-// Altough this is basically creating
-// the video... hmm...
-router.post(
-  '/:coursedraftid/sections/:sectionid/lessons/:lessonid/video',
-  userExtractor,
-  async (req, res, next) => {
-    // NOTE: There is no validation to
-    // check if the client sent malicious
-    // data. Really the the files should be
-    // sent to some cloud provider and store
-    // urls in the database.
-
-    if (!req.user) {
-      return res
-        .status(401)
-        .json({ message: 'User was not found. Please sign in.' });
-    }
-
-    req.on('close', () => {
-      if (!req.complete) {
-        console.log('Video upload was aborted by client.');
-      }
-    });
-
-    videoMulterDiskStorage(req, res, async (error) => {
-      if (error instanceof multer.MulterError) {
-        if (error.code === 'LIMIT_FILE_SIZE') {
-          return res.status(413).json({
-            message: `File size exeeds the limit of ${maxFileBytes} bytes.`,
-          });
-        } else if (error.code === 'LIMIT_UNEXPECTED_FILE') {
-          return res.status(400).json({
-            message: 'Unexpected field in the request.',
-          });
-        } else {
-          next(error);
-        }
-      } else if (error) {
-        next(error);
-      }
-
-      try {
-        if (!req.user) {
-          return res
-            .status(401)
-            .json({ message: 'User was not found. Please sign in.' });
-        }
-
-        const files = req.files as {
-          [fieldname: string]: Express.Multer.File[];
-        };
-        const videoFile = files.video[0];
-        const audioLength = await getAudioLength(videoFile.path);
-
-        if (audioLength === undefined) {
-          return res.status(400).json({
-            message:
-              'Invalid video file. Could not read audio length. Is the file in mp4 file format?',
-          });
-        }
-
-        // TODO: Make some secret filename for the
-        // video file and store it in the database
-        // instead of using the filename.
-
-        const videoUploadResult = await updateLessonVideo({
-          lessonId: parseInt(req.params.lessonid),
-          userId: req.user.id,
-          videoLengthSeconds: audioLength,
-          videoUrl: videoFile.path,
-          videoSizeInBytes: videoFile.size,
-        });
-
-        return res.status(200).json(videoUploadResult);
-      } catch (error) {
-        next(error);
-      }
-    });
-  }
-);
-
-router.post('/videostream/signedurl', userExtractor, async (req, res, next) => {
-  try {
-    if (!req.user) {
-      return res
-        .status(401)
-        .json({ message: 'User was not found. Please sign in.' });
-    }
-
-    const randomString = crypto.randomBytes(16).toString('hex');
-    const lessonId = parseInt(req.body.lectureId);
-    const userId = req.user.id;
-
-    const queryResult = await createVideoUrlToken({
-      lessonId,
-      userId,
-      token: randomString,
-    });
-
-    if (!queryResult) {
-      return res
-        .status(500)
-        .json({ message: 'Failed to create video url token.' });
-    }
-
-    return res.status(200).json({ token: queryResult.token });
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.put('/:coursedraftid/goals', userExtractor, async (req, res, next) => {
   try {
     if (!req.user) {
@@ -1356,8 +1114,6 @@ router.put(
   }
 );
 
-// NOTE: Course draft id is not needed here
-// but it is added for consistent routing.
 router.delete(
   '/:coursedraftid/goals/learningobjectives/:learningobjectiveid',
   userExtractor,
