@@ -41,7 +41,7 @@ ikkunaan.
 
 ### Työaikakirjanpito
 
-Työtuntien yhteenlaskettu määrä on 307 tuntia.
+Työtuntien yhteenlaskettu määrä on (vähintään) 315 tuntia.
 
 | Päivä | Aika | Mitä tein                                                                            |
 | :---: | :--- | :----------------------------------------------------------------------------------- |
@@ -106,6 +106,8 @@ Työtuntien yhteenlaskettu määrä on 307 tuntia.
 | 7.7.  | 0    | -                                                                                    |
 | 8.7.  | 4    | Videoiden katsominen pilvestä                                                        |
 | 9.7.  | 8    | Sovelluksen docker kuvan teko, sovellus nettiin (fly io)                             |
+| 12.7. | 3    | Sekalaista, readmen tekoa                                                            |
+| 13.7. | 5    | Sekalaista, muutamia bugfixejä, repon siistiminen, vika nettiversio deployment       |
 
 ### Huomioita
 
@@ -124,11 +126,17 @@ irti UI:sta ja react komponenteista.
 
 Luennon osiota (section) ei voi vaihtaa. Mietin kyllä tämän tekoa alun alkaen drag and dropiin
 liittyen, koska se on tärkeä toiminnallisuus. Nykyisellä drag and drop systeemillä toiminnon
-toteuttamisen pitäisi onnistua kohtuullisin muutoksin. Tällöin olisi varmaan hyödyksi muuttaa myös tietokantaa siten, että luentojen järjestysnumerot ovat lukujärjestyskohtaisia, eivätkä osakohtaisia (section).
+toteuttamisen pitäisi onnistua kohtuullisin muutoksin. Tällöin olisi varmaan hyödyksi muuttaa myös tietokantaa siten,
+että luentojen järjestysnumerot ovat lukujärjestyskohtaisia, eivätkä osakohtaisia (section).
+
+Devauksen aikana sijoitin funktioita, tyyppejä ja parsereita lähelle niiden käyttöpaikkaa / alkuperää. Kun siistin repoa siirsin
+palvelimen puolella kaikki tyypit yhteen tiedostoon. Clientin puolella edelleen alkuperäinen järjestelytapa.
+En ole varma kummasta tavasta tykkään enemmän. Toisaalta kun tyypit ym. on lähellä niiden alkuperää, on helpompi nähdä
+välittömästi asiaan liittyvät tyypit, type-guardit ja parseritkin, mutta tiedostojen yleisilme on silloin vähän sekainen.
 
 ### Kuvia sovelluksesta
 
-![fullstack_sovellus_kurssin_editointi_lukujärjestys](https://github.com/tuheli/video-course-platform/assets/94482031/13b15651-a43a-435e-a312-6ae88ee45e27)
+![fullstack_sovellus_kurssin_editointi_lukujärjestys](https://drive.google.com/file/d/1LFwmKp_I3njWKpcJPVEAHQjIJuFPXWhZ/view?usp=drive_link)
 ![fullstack_sovellus_kurssin_esikatselu](https://github.com/tuheli/video-course-platform/assets/94482031/b4ba01f9-a937-4bcc-aab6-58b19800f8a6)
 ![fullstack_sovellus_kurssin_editointi_tavoitteet](https://github.com/tuheli/video-course-platform/assets/94482031/28df9069-1b27-4350-8185-ad644e7d92e3)
 ![fullstack_sovellus_käyttäjän_luontilomake](https://github.com/tuheli/video-course-platform/assets/94482031/8e396a82-23a4-43c6-8216-b75f09792389)
