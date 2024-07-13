@@ -19,6 +19,10 @@ kestää hieman niin voit siinä kohtaa skipatakkin vähän eteenpäin.
 Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
 ja klikkaamalla etusivun alhaalla footerista about us.
 
+Easter egiä ei löydy täältä repositorion koodista, vaikka se on deployattu sivustolle,
+koska se oli loppusilausten päähänpisto ja en ajatellut sitä nyt enää
+laittaa tänne. Toivottavasti sovellus ei räjähtänyt.
+
 ### Sovelluksen käyttöohje / toiminnot
 
 1. Voit luoda tilin sovellukseen 3 eri paikasta: etusivun yläpalkin sign up napista, /teaching sivun bannerin get started napista tai /teaching sivun alhaalta get started napista. Tilin luontisähköpostin ei tarvi olla aito sähköposti.
