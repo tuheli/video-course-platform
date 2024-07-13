@@ -326,6 +326,7 @@ export const apiSlice = createApi({
       query: ({ coursedraftId, sectionId, lectureId }) => {
         return {
           url: `coursedrafts/${coursedraftId}/sections/${sectionId}/lessons/${lectureId}/video/view`,
+          cache: 'no-cache',
         };
       },
     }),
