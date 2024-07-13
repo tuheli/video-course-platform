@@ -23,8 +23,8 @@ import { PaletteMode } from '@mui/material';
 // made components for a custom design would be and
 // is difficult whereas the base system (theme, sx,
 // and styled) is powerful and flexible. Material ui
-// is also quite complex even though it is advertised
-// as an easy solution for ui creation.
+// is also quite complex even though on the surface
+// it seems like an easy solution for ui creation.
 
 declare module '@mui/material/styles/createPalette' {
   interface ColorRange {
