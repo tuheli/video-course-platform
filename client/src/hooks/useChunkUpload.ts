@@ -4,12 +4,21 @@ import {
   useInitiateUploadMutation,
   useUploadPartMutation,
 } from '../features/apiSlice';
-import { isDataWithMessage, isObjectWithData } from '../utils/apiUtils';
 
 export interface UploadParts {
   uploadId: string;
   parts: Array<{ partNumber: number; ETag: string | undefined }>;
 }
+
+// Uploading can be really slow on lower bandwith
+// conections. The guide that the uploading is
+// based on also has info on how to apply multithreading
+// which could speed up the uploads in general.
+
+// For reference see:
+// https://medium.com/@pilovm/multithreaded-file-uploading-with-javascript-dafabce34ccd
+// https://github.com/pilovm/multithreaded-uploader/blob/master/frontend/uploader.js
+// https://blog.logrocket.com/multipart-uploads-s3-node-js-react/
 
 export const useChunkUpload = () => {
   const [uploadPart] = useUploadPartMutation();
@@ -35,27 +44,16 @@ export const useChunkUpload = () => {
         coursedraftId,
         sectionId,
         lectureId,
-      });
+      }).unwrap();
 
-      if (initiateResponse.error) {
-        if (
-          isObjectWithData(initiateResponse.error) &&
-          isDataWithMessage(initiateResponse.error.data)
-        ) {
-          throw new Error(initiateResponse.error.data.message);
-        } else {
-          throw new Error('Failed to initiate upload');
-        }
-      }
+      console.log('@upload initiation was successful');
 
       uploadedParts.current = {
-        uploadId: initiateResponse.data.uploadId,
+        uploadId: initiateResponse.uploadId,
         parts: [],
       };
 
-      const chunksQueue = [
-        ...initiateResponse.data.partsWithUploadUrls,
-      ].reverse();
+      const chunksQueue = [...initiateResponse.partsWithUploadUrls].reverse();
 
       onUploadStarted(chunksQueue.length);
       await sendNextChunk(
@@ -66,7 +64,7 @@ export const useChunkUpload = () => {
         onChunkUploaded
       );
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   };
 
@@ -77,58 +75,72 @@ export const useChunkUpload = () => {
     onUploadFinished: () => void,
     onChunkUploaded: (uploadedChunkCount: number) => void
   ) => {
-    if (chunksQueue.length === 0) {
-      console.log('All chunks uploaded');
+    try {
+      if (chunksQueue.length === 0) {
+        if (!uploadedParts.current) {
+          throw new Error('@sendnextchunk: uploadedParts ref current is null');
+        }
 
-      if (!uploadedParts.current) {
-        throw new Error('No uploaded parts');
+        await finishUpload({
+          uploadId: uploadedParts.current.uploadId,
+          parts: uploadedParts.current.parts,
+        }).unwrap();
+
+        onUploadFinished();
+        return;
       }
 
-      await finishUpload({
-        uploadId: uploadedParts.current.uploadId,
-        parts: uploadedParts.current.parts,
-      });
+      const part = chunksQueue.pop();
 
-      onUploadFinished();
-      return;
-    }
+      if (!part) {
+        throw new Error(
+          '@sendnextchunk: part to upload taken from chunksQueue is undefined'
+        );
+      }
 
-    const part = chunksQueue.pop();
+      const begin = (part.partNumber - 1) * chunkSize;
+      const end = begin + chunkSize;
+      const chunk = file.slice(begin, end);
 
-    if (!part) {
-      console.log('No part in queue');
-      return;
-    }
+      console.log(`@sendNextChunk: uploading part ${part.partNumber}`);
 
-    const begin = (part.partNumber - 1) * chunkSize;
-    const end = begin + chunkSize;
-    const chunk = file.slice(begin, end);
-
-    try {
       const uploadResponse = await uploadPart({
         part: chunk,
         uploadUrl: part.uploadUrl,
-      });
+      }).unwrap();
+
+      console.log(
+        `@sendNextChunk: part ${part.partNumber} uploaded successfully`
+      );
 
       uploadedParts.current?.parts.push({
         partNumber: part.partNumber,
-        ETag: uploadResponse.data?.ETag || undefined,
+        ETag: uploadResponse?.ETag || undefined,
       });
 
       onChunkUploaded(uploadedParts.current?.parts.length || 0);
-      sendNextChunk(
+
+      console.log(
+        `@sendNextChunk: part ${part.partNumber} left awaiting for next parts to finish`
+      );
+
+      await sendNextChunk(
         file,
         chunksQueue,
         chunkSize,
         onUploadFinished,
         onChunkUploaded
       );
+
+      console.log(`@sendNextChunk: part ${part.partNumber} exiting recursion`);
     } catch (error) {
-      console.log('Error uploading chunk', error);
-      // on error we probably
-      // want to push the part back
-      // for retrying
+      // On error its probably good to push the chunk back
+      // to the queue for retrying. In that case would need to
+      // think about how the ongoing recursion would affect the
+      // process. Also retry counter is needed to stop
+      // trying after a certain amount of retries.
       // chunksQueue.push(chunkId);
+      throw error;
     }
   };
 
