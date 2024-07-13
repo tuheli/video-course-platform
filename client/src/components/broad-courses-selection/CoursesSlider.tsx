@@ -9,13 +9,16 @@ import { CourseTopic } from '../../../data/courseData';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 // FIX: Noticed a slight bug when dropdown is open
-// If slick slider rezises the portaled item position can be off a bit.
-// This could happen if user is zooming while having a course card visible.
-// I think this is because slick slider resize is quite slow.
-// The position recalculation of portaled item should probably be delayed
-// in slider resizing cases until the slider resizing is completed.
+// If slick slider rezises the portaled item position
+// can be off a bit. This could happen if user is
+// zooming while having a course card visible.
+// I think this is because slick slider resize is
+// quite slow. The position recalculation of portaled
+// item should probably be delayed in slider resizing
+// cases until the slider resizing is completed.
 
-// NOTE ON FIX: Noticed the same thing happens for example on wikipedias on hover triggered popovers.
+// NOTE ON FIX: Noticed the same thing happens for
+// example on wikipedias on hover triggered popovers.
 // -> So fixing might not be that relevat.
 
 interface CoursesSliderProps {
@@ -33,7 +36,8 @@ export const CoursesSlider = forwardRef<
 >(({ topic, isSliderInfinite }, ref) => {
   const slickRef = useRef<Slider>(null);
 
-  // NOTE: Concatting arrays so there is enough mock data to test slider
+  // NOTE: Concatting arrays so there is enough
+  // mock data to test slider
   const courseItems = topic?.courses
     .concat(topic.courses)
     .concat(topic.courses)

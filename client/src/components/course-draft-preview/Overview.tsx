@@ -15,7 +15,7 @@ export const Overview = ({ courseDraft }: OverviewProps) => {
   const ratingAverage =
     ratings.length > 0 ? (ratingSum / ratings.length).toFixed(1) : '0.0';
   const studentCount = formatValue(courseDraft.enrollments.length);
-  const createdAt = formatDate(new Date(courseDraft.createdAt));
+  const createdAt = formatDate(new Date(courseDraft.createdAt)); // Just a mock date.
 
   return (
     <Stack
@@ -88,29 +88,6 @@ export const Overview = ({ courseDraft }: OverviewProps) => {
             <Typography variant="caption">Students</Typography>
           </Stack>
         </Stack>
-        {/** What total is this? */}
-        {/* <Stack>
-              <Stack
-                sx={{
-                  flexDirection: 'row',
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontWeight: 500,
-                  }}
-                >
-                  0
-                </Typography>
-              </Stack>
-              <Stack
-                sx={{
-                  flexDirection: 'row',
-                }}
-              >
-                <Typography variant="caption">Total</Typography>
-              </Stack>
-            </Stack> */}
       </Stack>
       <Stack
         sx={{

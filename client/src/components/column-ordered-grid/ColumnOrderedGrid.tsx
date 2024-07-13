@@ -47,6 +47,13 @@ function createStacks<T>(items: T[], stackHeight: number): T[][] {
   return groups.filter((group) => group.length > 0);
 }
 
+// NOTE: This component is used to make a grid in which
+// the items are ordered a column at a time. As far as
+// I know if done only with css the visual order of the items
+// won't be the same as the order in the dom. But im not
+// 100% sure about that. It is used in footer and select
+// language modal to order items.
+
 export const ColumnOrderedGrid = <T extends ColumnOrderedGridItem>({
   items,
   stackHeight,

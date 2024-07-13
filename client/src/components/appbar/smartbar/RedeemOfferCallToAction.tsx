@@ -21,7 +21,6 @@ export const RedeemOfferCallToAction = () => {
         gap: 2,
       }}
     >
-      {/** Text on left side */}
       <Stack
         sx={{
           flexDirection: 'column',
@@ -60,7 +59,6 @@ export const RedeemOfferCallToAction = () => {
           Ends in <SpecialOfferTimer />.
         </Typography>
       </Stack>
-      {/** Button on right side */}
       <Button variant="contained" color="secondary" onClick={onClickRedeem}>
         Click to redeem
       </Button>

@@ -22,6 +22,10 @@ import {
 
 // var _lsTotal=0,_xLen,_x;for(_x in localStorage){ if(!localStorage.hasOwnProperty(_x)){continue;} _xLen= ((localStorage[_x].length + _x.length)* 2);_lsTotal+=_xLen; console.log(_x.substr(0,50)+" = "+ (_xLen/1024).toFixed(2)+" KB")};console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
 
+// NOTE: Hmm TBH I don't remember why there
+// are no references to this function. Seems
+// kind of important.
+
 export const cleanupCurriculumLocalStorage = (
   courseDraftId: number,
   curriculum: ICurriculumSection[]
@@ -45,26 +49,4 @@ export const cleanupCurriculumLocalStorage = (
   keysToDelete.forEach((key) => {
     localStorage.removeItem(key);
   });
-};
-
-export const getAudioDuration = async (file: File) => {
-  const promise = new Promise<number>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (!reader.result || reader.result instanceof ArrayBuffer) {
-        return reject('Invalid file');
-      }
-
-      const audio = new Audio(reader.result);
-      audio.onloadedmetadata = () => {
-        const duration = audio.duration;
-        return resolve(duration);
-      };
-    };
-
-    reader.readAsDataURL(file);
-    reader.onerror = (error) => reject(error);
-  });
-
-  return promise;
 };

@@ -3,7 +3,8 @@ import { CustomerStory } from '../../../data/customerStoriesData';
 import { QuoteImage } from '../learner-positive-reviews/QuoteImage';
 import { StyledLink } from '../featured-topics-by-category/StyledLink';
 
-// NOTE: The card min height is for desktop view. Smaller screens will have different kind of card.
+// NOTE: The card min height is for desktop view.
+// Smaller screens will have different kind of card.
 
 interface CustomerStoryCardProps {
   customerStory: CustomerStory;
