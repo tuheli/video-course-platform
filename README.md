@@ -1,5 +1,5 @@
 ### Linkki osoitteeseen, jossa sovellus on käynnissä
-
+### Huom. sovellus ei ole käynnissä enää netissä
 https://server-dawn-night-7149-video-course-platform.fly.dev/
 
 ### Lyhyt kuvaus sovelluksesta
