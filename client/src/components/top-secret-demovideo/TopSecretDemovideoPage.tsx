@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react';
-import { VideoAreaLayout } from '../course-draft-preview/VideoAreaLayout';
-import { Divider, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 import { useGetTopSecretDemovideoQuery } from '../../features/apiSlice';
+import { useScrollToTop } from '../../hooks/useScrollToTop';
+import { useNavigate } from 'react-router-dom';
 
 export const TopSecretDemovideoPage = () => {
+  useScrollToTop();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { data } = useGetTopSecretDemovideoQuery();
+  const navigate = useNavigate();
   const videoUrl = data ? data.presignedUrl : '';
 
   useEffect(() => {
@@ -13,7 +16,9 @@ export const TopSecretDemovideoPage = () => {
     videoRef.current.load();
   }, [data]);
 
-  console.log('TopSecretDemovideoPage rendered', videoUrl);
+  const onClickBackButton = () => {
+    navigate('/');
+  };
 
   return (
     <>
@@ -28,28 +33,39 @@ export const TopSecretDemovideoPage = () => {
         <Typography>"This is a top secret demovideo.</Typography>
         <Typography>You are not allowed to watch this video."</Typography>
         <Typography>- GitHub Copilot</Typography>
+        <Button
+          onClick={onClickBackButton}
+          variant="contained"
+          sx={{
+            width: 90,
+            height: 36,
+            my: 2,
+          }}
+        >
+          Back
+        </Button>
         <Divider
-          sx={{ width: '100%', borderColor: 'pink', pb: 2, maxWidth: 300 }}
+          sx={{ width: '100%', borderColor: 'pink', pb: 0, maxWidth: 300 }}
         />
       </Stack>
-      <div>
-        <VideoAreaLayout>
-          <video
-            ref={videoRef}
-            controls
-            controlsList="nodownload"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'currentcolor',
-            }}
-          >
-            <source src={videoUrl} />
-          </video>
-        </VideoAreaLayout>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: 32,
+        }}
+      >
+        <video
+          ref={videoRef}
+          controls
+          controlsList="nodownload"
+          style={{
+            backgroundColor: 'currentcolor',
+            width: '100%',
+          }}
+        >
+          <source src={videoUrl} />
+        </video>
       </div>
     </>
   );
