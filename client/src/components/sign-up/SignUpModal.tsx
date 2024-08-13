@@ -32,7 +32,7 @@ export const SignUpFormModal = ({ isOpen, onClose }: SignUpFormModalProps) => {
         <Box
           sx={{
             position: 'absolute',
-            top: '30%',
+            top: 50,
             left: '50%',
             transform: 'translate(-50%, 0%)',
             border: '1px solid #000',
