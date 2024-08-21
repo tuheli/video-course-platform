@@ -77,7 +77,7 @@ const customerStoriesData: CustomerStory[] = [
       name: 'Lorem Hemsworth',
       jobTitle: 'Data Science & IT Certifications',
       companyName: 'Lorem Allen Hamilton',
-      imageUrl: '/customer-story-big-images/customer-story-big-image-1.jpg',
+      imageUrl: '/customer-story-big-images/customer-story-big-image-1.png',
     },
     shortText:
       '“I’m proud to wake up knowing my work is helping people around the world improve their careers and build great things. While being a full-time instructor is hard work, it lets you work when, where, and how you want.”',
