@@ -2,4 +2,4 @@ node_modules/
 .env
 dist/
 out/
-eu-north-1-bundle.pem
+# eu-north-1-bundle.pem // No reason to ignore, its a publicly available file
