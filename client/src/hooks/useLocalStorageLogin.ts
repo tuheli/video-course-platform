@@ -5,14 +5,12 @@ import {
 } from '../features/apiSlice';
 import { useAppDispatch } from '../app/hooks';
 import { signedIn } from '../features/userSlice';
-import { useNavigate } from 'react-router-dom';
 
 export const useLocalStorageLogin = () => {
   const [isLocalStorageLoginComplete, setIsLocalStorageLoginComplete] =
     useState(false);
   const [validateAuthorizationToken] = useValidateAuthorizationTokenMutation();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const loginFromLocalStorage = async (): Promise<boolean> => {
     const userFromLocalStorageString = localStorage.getItem('signedInUser');
@@ -43,12 +41,7 @@ export const useLocalStorageLogin = () => {
 
   const asyncLocalStorageLogin = async () => {
     const isLoginSuccessful = await loginFromLocalStorage();
-
-    if (!isLoginSuccessful) {
-      localStorage.removeItem('signedInUser');
-      navigate('/');
-    }
-
+    if (!isLoginSuccessful) localStorage.removeItem('signedInUser');
     setIsLocalStorageLoginComplete(true);
   };
 
