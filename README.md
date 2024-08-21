@@ -9,6 +9,14 @@ Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web s
 Linkki Udemyyn: https://www.udemy.com/. Sovelluksen UI soveltuu vähintään noin 1100px leveään
 ikkunaan.
 
+### Tilastotietoja
+
+- Kansioita 76, joista 3 palvelimella ja 73 clientillä.
+- Tiedostoja 302, joista 16 palvelimella ja 286 clientillä.
+- Rivejä tiedostoissa noin 20 500, joista 3 458 palvelimella ja 17 077 clientillä.
+
+Tilastossa on huomioitu client/src ja server/src kansioista löytyvät .ts ja .tsx päätteiset tiedostot.
+
 ### Sovelluksen demovideo
 
 Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
