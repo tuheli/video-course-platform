@@ -9,6 +9,8 @@ Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web s
 Linkki Udemyyn: https://www.udemy.com/. Sovelluksen UI soveltuu vähintään noin 1100px leveään
 ikkunaan.
 
+Voit katsoa myös sovelluksen arvioinnin, joka löytyy tämän repositorion issueista. Issue on tilassa closed.
+
 ### Tilastotietoja
 
 - Kansioita 76, joista 3 palvelimella ja 73 clientillä.
