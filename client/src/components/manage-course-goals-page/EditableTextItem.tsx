@@ -4,6 +4,7 @@ import {
   TextWithId,
   UpdateableCourseContentProperty,
   deletedTextItem,
+  minTextItemTextLength,
   updatedText,
 } from '../../features/courseDraftsSlice';
 import { useAppDispatch } from '../../app/hooks';
@@ -17,6 +18,7 @@ import {
   useDeletePrerequisiteMutation,
 } from '../../features/apiSlice';
 import { useSaveCourseDraftGoals } from '../../hooks/useSaveCourseDraftGoals';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 interface EditableTextItemProps {
   examplePlaceholderText: string;
@@ -44,7 +46,9 @@ export const EditableTextItem = ({
   const isAbleToDelete =
     isAbleToDeleteItem(courseDraft) && !isProcessingRequest;
 
-  const placeholder = item.text.length > 0 ? item.text : examplePlaceholderText;
+  const textLength = item.text.length;
+  const placeholder = textLength > 0 ? item.text : examplePlaceholderText;
+  const isAttentionMarksVisible = textLength < minTextItemTextLength;
 
   const onChangeInputField = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(
@@ -115,18 +119,42 @@ export const EditableTextItem = ({
       sx={{
         flexDirection: 'row',
         bgcolor: 'background.default',
+        position: 'relative',
       }}
     >
-      <InputFieldWithMaxCharacters
-        onChange={onChangeInputField}
-        maxInputLength={160}
-        placeholder={placeholder}
-        value={item.text}
+      {isAttentionMarksVisible && (
+        <PriorityHighIcon
+          sx={{
+            alignSelf: 'center',
+            color: 'secondary.light',
+            display: 'block',
+            position: 'absolute',
+            top: 16,
+            left: -28,
+            zIndex: 1,
+            borderRadius: '10%',
+          }}
+        />
+      )}
+      <Box
         sx={{
-          width: '90%',
-          height: 54,
+          flex: 1,
+          outlineWidth: isAttentionMarksVisible ? 1 : 0,
+          outlineOffset: 1,
+          outlineColor: 'secondary.light',
+          outlineStyle: 'solid',
         }}
-      />
+      >
+        <InputFieldWithMaxCharacters
+          onChange={onChangeInputField}
+          maxInputLength={160}
+          placeholder={placeholder}
+          value={item.text}
+          sx={{
+            height: 54,
+          }}
+        />
+      </Box>
       <Box
         sx={{
           display: 'flex',
