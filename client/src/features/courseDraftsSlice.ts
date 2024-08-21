@@ -107,9 +107,10 @@ interface ValidateTextWithIdArrayOptions {
   minTextLength: number;
 }
 
-const minLearningObjectivesCount = 0;
-const minPrerequisitesCount = 0;
-const minIntendedLearnersCount = 0;
+const minLearningObjectivesCount = 4;
+const minPrerequisitesCount = 1;
+const minIntendedLearnersCount = 1;
+export const minTextItemTextLength = 1;
 
 // NOTE: Use only in wrapper functions.
 const validateTextWithIdArray = ({
