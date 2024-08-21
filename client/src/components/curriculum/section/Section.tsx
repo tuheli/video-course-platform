@@ -126,7 +126,6 @@ const Section = ({ courseDraftId, curriculumSection, index }: SectionProps) => {
   return (
     <Stack
       sx={{
-        bgcolor: 'background.paperDarker',
         border: '1px solid',
         flexDirection: 'column',
         gap: 2,
