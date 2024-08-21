@@ -1,5 +1,5 @@
 ### Linkki osoitteeseen, jossa sovellus on käynnissä
-### Huom. sovellus ei ole käynnissä enää netissä
+
 https://server-dawn-night-7149-video-course-platform.fly.dev/
 
 ### Lyhyt kuvaus sovelluksesta
@@ -11,19 +11,12 @@ ikkunaan.
 
 ### Sovelluksen demovideo
 
-Demovideo löytyy inceptionmaisesti sovelluksesta itsestään "easter egg" linkistä.
-Etusivun footerissa linkki nimeltä About us navigoi demovideoon.
-Suosittelen katsomaan videon 2x nopeudella. Isomman videon uploadaus videossa
-kestää hieman niin voit siinä kohtaa skipatakkin vähän eteenpäin.
-
-Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
-ja klikkaamalla etusivun alhaalla footerista about us.
-
-Easter egiä ei löydy täältä repositorion koodista, vaikka se on deployattu sivustolle,
-koska se oli loppusilausten päähänpisto ja en ajatellut sitä nyt enää
-laittaa tänne. Toivottavasti sovellus ei räjähtänyt.
+Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
+ja klikkaamalla etusivun alhaalla footerista About us.
 
 ### Sovelluksen käyttöohje / toiminnot
+
+Sovelluksen käyttöliittymä on aika intuitiivinen, joten tuskin tarvitset näitä käyttöohjeita. Huomiona kuitenkin, että sovelluksessa on sellaisiakin linkkejä ja nappeja, joiden toimintoja ei ole implementoitu.
 
 1. Voit luoda tilin sovellukseen 3 eri paikasta: etusivun yläpalkin sign up napista, /teaching sivun bannerin get started napista tai /teaching sivun alhaalta get started napista. Tilin luontisähköpostin ei tarvi olla aito sähköposti.
 
