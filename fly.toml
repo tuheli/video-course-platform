@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for server-dawn-night-7149-video-course-platform on 2024-07-09T20:38:39+03:00
+# fly.toml app configuration file generated for server-dawn-night-7149-video-course-platform on 2024-08-21T15:43:12+03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -11,7 +11,7 @@ primary_region = 'arn'
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
