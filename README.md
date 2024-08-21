@@ -12,7 +12,7 @@ ikkunaan.
 ### Sovelluksen demovideo
 
 Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
-ja klikkaamalla etusivun alhaalla footerista About us.
+ja klikkaamalla etusivun alhaalla footerista About us tai suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform.fly.dev/topsecretdemovideo.
 
 ### Sovelluksen käyttöohje / toiminnot
 
