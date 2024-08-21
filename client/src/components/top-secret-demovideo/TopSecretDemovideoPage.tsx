@@ -1,19 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { useGetTopSecretDemovideoQuery } from '../../features/apiSlice';
 import { useScrollToTop } from '../../hooks/useScrollToTop';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Divider, Stack, Typography } from '@mui/material';
 
 export const TopSecretDemovideoPage = () => {
   useScrollToTop();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { data } = useGetTopSecretDemovideoQuery();
+  const location = useLocation();
   const navigate = useNavigate();
   const videoUrl = data ? data.presignedUrl : '';
   const isVideoVisible = Boolean(videoUrl);
 
   const onClickBackButton = () => {
-    navigate(-1);
+    const isPathHistoryEmpty = location.key !== 'default';
+    if (isPathHistoryEmpty) navigate('/');
+    else navigate(-1);
   };
 
   useEffect(() => {
