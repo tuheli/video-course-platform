@@ -58,7 +58,8 @@ export const WhatAreTheCoursePrerequisites = () => {
       <Typography>
         List the required skills, experience, tools or equipment learners should
         have prior to taking your course. If there are no requirements, use this
-        space as an opportunity to lower the barrier for beginners.
+        space as an opportunity to lower the barrier for beginners. You must
+        enter at least 1 prerequisite.
       </Typography>
       <DragAndDropContext.Provider
         value={{

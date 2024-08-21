@@ -59,10 +59,11 @@ export const WhoIsThisCourseFor = () => {
       <Typography>
         Write a clear description of the{' '}
         <LightColoredRouterLink to="/">
-          intended learneres
+          intended learners
         </LightColoredRouterLink>{' '}
         for your course who will find your course content valuable. This will
-        help you attract the right learners to your course.
+        help you attract the right learners to your course. You must enter at
+        least 1 intended learner.
       </Typography>
       <DragAndDropContext.Provider
         value={{
