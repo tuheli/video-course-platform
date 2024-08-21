@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { Button, Divider, Stack, Typography } from '@mui/material';
 import { useGetTopSecretDemovideoQuery } from '../../features/apiSlice';
 import { useScrollToTop } from '../../hooks/useScrollToTop';
 import { useNavigate } from 'react-router-dom';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 
 export const TopSecretDemovideoPage = () => {
   useScrollToTop();
@@ -10,15 +10,16 @@ export const TopSecretDemovideoPage = () => {
   const { data } = useGetTopSecretDemovideoQuery();
   const navigate = useNavigate();
   const videoUrl = data ? data.presignedUrl : '';
+  const isVideoVisible = Boolean(videoUrl);
+
+  const onClickBackButton = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     if (!videoRef.current) return;
     videoRef.current.load();
   }, [data]);
-
-  const onClickBackButton = () => {
-    navigate('/');
-  };
 
   return (
     <>
@@ -26,6 +27,7 @@ export const TopSecretDemovideoPage = () => {
         sx={{
           justifyContent: 'center',
           alignItems: 'center',
+          textAlign: 'center',
           display: 'flex',
           py: 4,
         }}
@@ -50,22 +52,38 @@ export const TopSecretDemovideoPage = () => {
       </Stack>
       <div
         style={{
+          position: 'relative',
+          height: '80vh',
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
-          padding: 32,
         }}
       >
-        <video
-          ref={videoRef}
-          controls
-          controlsList="nodownload"
+        <div
           style={{
-            backgroundColor: 'currentcolor',
-            width: '100%',
+            position: 'relative',
+            width: '80%',
+            height: '80%',
           }}
         >
-          <source src={videoUrl} />
-        </video>
+          {isVideoVisible && (
+            <video
+              ref={videoRef}
+              controls
+              controlsList="nodownload"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'currentcolor',
+              }}
+            >
+              <source src={videoUrl} />
+            </video>
+          )}
+        </div>
       </div>
     </>
   );
