@@ -1,11 +1,12 @@
 import { Box, Container, Divider, Stack, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { useCourseDraft } from '../../hooks/useCourseDraft';
 import { Overview } from './Overview';
 import { VideoPlayer } from './VideoPlayer';
 import { SidebarSection } from './SidebarSection';
 import { LectureWithoutVideo } from './LectureWithoutVideo';
+import { ICurriculumSection } from '../../features/courseDraftsSlice';
 
 export interface VideoPreviewSelection {
   coursedraftId: number;
@@ -17,18 +18,54 @@ export const Layout = () => {
   const [selectedState, setSelectedState] =
     useState<VideoPreviewSelection | null>(null);
   const courseDraft = useCourseDraft();
+
   const curriculum = !courseDraft
     ? []
     : [...courseDraft.courseContent.curriculum].sort(
         (a, b) => a.orderIndex - b.orderIndex
       );
 
+  const curriculumWithSortedLessons = curriculum.map((section) => {
+    const sortedLessons = [...section.lessons].sort(
+      (a, b) => a.orderIndex - b.orderIndex
+    );
+    const sectionToReturn: ICurriculumSection = {
+      ...section,
+      lessons: sortedLessons,
+    };
+    return sectionToReturn;
+  });
+
   const onClickSidebarLecture = (state: VideoPreviewSelection) => {
     setSelectedState(state);
   };
 
-  if (!courseDraft) return null;
+  const clearVideoPreviewState = () => {
+    setSelectedState(null);
+  };
 
+  useEffect(() => {
+    const isCourseDraftValid = courseDraft !== undefined;
+    if (!isCourseDraftValid) return;
+
+    const isAnySectionsInCurriculum = curriculumWithSortedLessons.length > 0;
+    if (!isAnySectionsInCurriculum) return;
+
+    const firstSection = curriculumWithSortedLessons[0];
+    const isAnyLecturesInSection = firstSection.lessons.length > 0;
+    if (!isAnyLecturesInSection) return;
+
+    const initialLesson = firstSection.lessons[0];
+    const initialSelection: VideoPreviewSelection = {
+      coursedraftId: courseDraft.id,
+      sectionId: firstSection.id,
+      lectureId: initialLesson.id,
+    };
+
+    setSelectedState(initialSelection);
+  }, []);
+
+  if (!courseDraft) return null;
   return (
     <Container maxWidth={false} disableGutters>
       <Stack
@@ -52,7 +89,10 @@ export const Layout = () => {
             }}
           >
             {selectedState ? (
-              <VideoPlayer {...selectedState} />
+              <VideoPlayer
+                {...selectedState}
+                clearVideoPreviewState={clearVideoPreviewState}
+              />
             ) : (
               <LectureWithoutVideo />
             )}
@@ -162,7 +202,7 @@ export const Layout = () => {
                 borderColor: 'grey.400',
               }}
             />
-            {curriculum.map((section, index) => {
+            {curriculumWithSortedLessons.map((section, index) => {
               return (
                 <Box key={section.id}>
                   <SidebarSection
