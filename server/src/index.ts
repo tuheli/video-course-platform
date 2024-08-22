@@ -7,7 +7,7 @@ import signinRouter from './routers/signinRouter';
 import courseDraftsRouter from './routers/courseDraftsRouter';
 import topSecretDemovideoRouter from './routers/topSecretDemovideoRouter';
 import validateAuthorizationTokenRouter from './routers/validateAuthorizationTokenRouter';
-import { errorHandler } from './middleware';
+import { errorHandler, requestLogger } from './middleware';
 import path from 'path';
 
 const relativeDistPath =
@@ -29,6 +29,7 @@ if (isCrossOriginAllowed) {
   );
 }
 app.use(express.json());
+app.use(requestLogger);
 app.use('/', express.static(absoluteDistPath));
 app.use('/api/signup', signupRouter);
 app.use('/api/signin', signinRouter);
