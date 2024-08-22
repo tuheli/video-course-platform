@@ -40,7 +40,8 @@ app.get('/*', (req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(404).json({ message: 'Unknown endpoint.' });
   } else {
-    return res.sendFile(absoluteDistPath + '/index.html');
+    const filepath = absoluteDistPath + 'index.html';
+    return res.sendFile(filepath);
   }
 });
 app.use(errorHandler);
