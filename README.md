@@ -1,6 +1,6 @@
 ### Linkki osoitteeseen, jossa sovellus on käynnissä
 
-https://server-dawn-night-7149-video-course-platform.fly.dev/
+https://server-dawn-night-7149-video-course-platform-main.fly.dev/
 
 ### Lyhyt kuvaus sovelluksesta
 
@@ -21,8 +21,8 @@ Tilastossa on huomioitu client/src ja server/src kansioista löytyvät .ts ja .t
 
 ### Sovelluksen demovideo
 
-Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform.fly.dev/
-ja klikkaamalla etusivun alhaalla footerista About us tai suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform.fly.dev/topsecretdemovideo.
+Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform-main.fly.dev/
+ja klikkaamalla etusivun alhaalla footerista About us tai suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform-main.fly.dev/topsecretdemovideo.
 
 ### Sovelluksen käyttöohje / toiminnot
 
