@@ -62,6 +62,7 @@ export const UserDetailsLink = ({ fullName, email }: UserDetailsLinkProps) => {
               fontWeight: 600,
               fontSize: 16,
               color: isHovered ? 'secondary.main' : 'text.primary',
+              wordBreak: 'break-all',
             }}
           >
             {fullName}
