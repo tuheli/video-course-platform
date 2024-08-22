@@ -2,13 +2,13 @@ import dotenv from 'dotenv';
 import { errorName } from './errorNames';
 dotenv.config();
 
-const databaseUrl = process.env.DATABASE_URL;
-const jwtSecret = process.env.JWT_SECRET;
-const port = process.env.PORT;
-const awsS3bucketName = process.env.AWS_S3_BUCKET_NAME;
-const awsS3bucketRegion = process.env.AWS_S3_BUCKET_REGION;
-const awsS3AccessKey = process.env.AWS_S3_ACCESS_KEY;
-const awsS3SecretAccessKey = process.env.AWS_S3_SECRET_ACCESS_KEY;
+export const databaseUrl = process.env.DATABASE_URL;
+export const jwtSecret = process.env.JWT_SECRET;
+export const port = process.env.PORT;
+export const awsS3bucketName = process.env.AWS_S3_BUCKET_NAME;
+export const awsS3bucketRegion = process.env.AWS_S3_BUCKET_REGION;
+export const awsS3AccessKey = process.env.AWS_S3_ACCESS_KEY;
+export const awsS3SecretAccessKey = process.env.AWS_S3_SECRET_ACCESS_KEY;
 
 if (!databaseUrl) {
   const error = new Error(
@@ -65,13 +65,3 @@ if (!awsS3SecretAccessKey) {
   error.name = errorName.missingEnvironmentVariable;
   throw error;
 }
-
-export {
-  databaseUrl,
-  jwtSecret,
-  port,
-  awsS3bucketName,
-  awsS3bucketRegion,
-  awsS3AccessKey,
-  awsS3SecretAccessKey,
-};
