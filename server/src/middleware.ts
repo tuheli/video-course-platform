@@ -10,7 +10,8 @@ interface RequestLogInfo {
   url: string;
   method?: string;
   body?: unknown;
-  ip?: string;
+  requestIp?: string;
+  clientIpNotReliable?: string | string[];
   user: UserInDatabaseSafe | null;
   authorization?: string;
 }
@@ -181,7 +182,8 @@ export const requestLogger = async (
     if (!isRequestToApiEndpoint) return next();
 
     const timestamp = new Date().toISOString();
-    const ip = req.ip;
+    const requestIp = req.ip;
+    const clientIpNotReliable = req.get('x-forwarded-for');
     const url = req.url;
     const method = req.method;
     const body = replaceSensitiveInformationInBody(req.body);
@@ -193,7 +195,8 @@ export const requestLogger = async (
       url,
       method,
       body,
-      ip,
+      requestIp,
+      clientIpNotReliable,
       user,
       authorization,
     };
