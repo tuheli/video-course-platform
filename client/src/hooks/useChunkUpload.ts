@@ -46,8 +46,6 @@ export const useChunkUpload = () => {
         lectureId,
       }).unwrap();
 
-      console.log('@upload initiation was successful');
-
       uploadedParts.current = {
         uploadId: initiateResponse.uploadId,
         parts: [],
@@ -102,16 +100,10 @@ export const useChunkUpload = () => {
       const end = begin + chunkSize;
       const chunk = file.slice(begin, end);
 
-      console.log(`@sendNextChunk: uploading part ${part.partNumber}`);
-
       const uploadResponse = await uploadPart({
         part: chunk,
         uploadUrl: part.uploadUrl,
       }).unwrap();
-
-      console.log(
-        `@sendNextChunk: part ${part.partNumber} uploaded successfully`
-      );
 
       uploadedParts.current?.parts.push({
         partNumber: part.partNumber,
@@ -119,11 +111,6 @@ export const useChunkUpload = () => {
       });
 
       onChunkUploaded(uploadedParts.current?.parts.length || 0);
-
-      console.log(
-        `@sendNextChunk: part ${part.partNumber} left awaiting for next parts to finish`
-      );
-
       await sendNextChunk(
         file,
         chunksQueue,
@@ -131,8 +118,6 @@ export const useChunkUpload = () => {
         onUploadFinished,
         onChunkUploaded
       );
-
-      console.log(`@sendNextChunk: part ${part.partNumber} exiting recursion`);
     } catch (error) {
       // On error its probably good to push the chunk back
       // to the queue for retrying. In that case would need to
