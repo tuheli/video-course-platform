@@ -6,7 +6,9 @@ https://server-dawn-night-7149-video-course-platform-main.fly.dev/
 
 Sovelluksen avulla kirjautunut käyttäjä voi luoda videomateriaaliin perustuvia kursseja.
 Ideana oli ns. reverse engineerata muutama keskeinen osa Udemy -nimisestä web sovelluksesta.
-Linkki Udemyyn: https://www.udemy.com/. Sovelluksen UI soveltuu vähintään noin 1100px leveään
+Linkki Udemyyn: https://www.udemy.com/.
+
+Sovelluksen UI soveltuu vähintään noin 1100px leveään
 ikkunaan.
 
 Voit katsoa myös sovelluksen arvioinnin, joka löytyy tämän repositorion issueista. Issue on tilassa closed.
@@ -19,10 +21,12 @@ Voit katsoa myös sovelluksen arvioinnin, joka löytyy tämän repositorion issu
 
 Tilastossa on huomioitu client/src ja server/src kansioista löytyvät .ts ja .tsx päätteiset tiedostot.
 
-### Sovelluksen demovideo
+### Sovelluksen esittelyvideo
+
+Suosittelen katsomaan esittelyvideon 2x nopeudella. Esittelyvideossa isomman videon uploadauksessa kestää jonkin aikaa ja siinä kohtaa on developer konsoli auki, mistä katson uploadauksen etenemistä.
 
 Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform-main.fly.dev/
-ja klikkaamalla etusivun alhaalla footerista About us tai suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform-main.fly.dev/topsecretdemovideo.
+ja klikkaamalla etusivun alhaalla footerista About us. Vaihtoehtoisesti voit mennä suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform-main.fly.dev/topsecretdemovideo.
 
 ### Sovelluksen käyttöohje / toiminnot
 
