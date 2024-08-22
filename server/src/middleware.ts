@@ -170,8 +170,6 @@ export const requestLogger = async (
       if (!decodedToken.id) return null;
 
       const userInDatabaseSafe = await getUserById(decodedToken.id);
-      if (!userInDatabaseSafe) undefined;
-
       return userInDatabaseSafe;
     } catch (error) {
       return null;
@@ -180,7 +178,7 @@ export const requestLogger = async (
 
   try {
     const isRequestToApiEndpoint = req.url.startsWith('/api/');
-    if (!isRequestToApiEndpoint) next();
+    if (!isRequestToApiEndpoint) return next();
 
     const timestamp = new Date().toISOString();
     const ip = req.ip;
@@ -231,8 +229,9 @@ export const requestLogger = async (
     }
 
     console.log(info);
-    next();
+    return next();
   } catch (error) {
-    next(error);
+    console.log('error at request logger', error);
+    return next(error);
   }
 };
