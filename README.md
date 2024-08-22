@@ -23,8 +23,6 @@ Tilastossa on huomioitu client/src ja server/src kansioista löytyvät .ts ja .t
 
 ### Sovelluksen esittelyvideo
 
-Suosittelen katsomaan esittelyvideon 2x nopeudella. Esittelyvideossa isomman videon uploadauksessa kestää jonkin aikaa ja siinä kohtaa on developer konsoli auki, mistä katson uploadauksen etenemistä.
-
 Jos haluat katsoa sovelluksen esittelyvideon, löydät sen sovelluksen alapalkista (footer) linkistä nimeltä "About us". Eli sivustolle: https://server-dawn-night-7149-video-course-platform-main.fly.dev/
 ja klikkaamalla etusivun alhaalla footerista About us. Vaihtoehtoisesti voit mennä suoraan osoitteeseen https://server-dawn-night-7149-video-course-platform-main.fly.dev/topsecretdemovideo.
 
