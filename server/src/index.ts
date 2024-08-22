@@ -24,7 +24,8 @@ if (isCrossOriginAllowed) {
 } else {
   app.use(
     cors({
-      origin: 'https://server-dawn-night-7149-video-course-platform.fly.dev',
+      origin:
+        'https://server-dawn-night-7149-video-course-platform-main.fly.dev',
       optionsSuccessStatus: 200,
     })
   );
