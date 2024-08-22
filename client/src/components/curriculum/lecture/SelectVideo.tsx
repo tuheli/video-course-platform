@@ -81,9 +81,6 @@ export const SelectVideo = ({
       setFile(file);
       setIsUploadSuccessful(false);
       setIsReplacingFile(false);
-      console.log(
-        '@selectvideo calling upload from select video because of file change'
-      );
       try {
         await upload(
           file,
@@ -94,7 +91,6 @@ export const SelectVideo = ({
           onUploadFinished,
           onChunkUploaded
         );
-        console.log('@selectvideo upload was finished at select video');
       } catch (error) {
         setIsUploadingFile(false);
         setIsUploadSuccessful(false);
@@ -106,7 +102,6 @@ export const SelectVideo = ({
             severity: 'error',
           })
         );
-        console.log('@selectvideo error while uploading video');
       }
     }
   };
