@@ -14,7 +14,7 @@ export const TopSecretDemovideoPage = () => {
   const isVideoVisible = Boolean(videoUrl);
 
   const onClickBackButton = () => {
-    const isPathHistoryEmpty = location.key !== 'default';
+    const isPathHistoryEmpty = location.key === 'default';
     if (isPathHistoryEmpty) navigate('/');
     else navigate(-1);
   };
