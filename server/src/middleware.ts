@@ -4,17 +4,29 @@ import { errorName } from './errorNames';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { getUserById } from './queries/usersQueries';
 import { UserInDatabaseSafe } from './types';
+import { sendMail } from './nodemailer';
 
 interface RequestLogInfo {
   timestamp: string;
+  timestampLocaleFI: string;
   url: string;
   method?: string;
   body?: unknown;
   requestIp?: string;
   clientIpNotReliable?: string | string[];
   user: UserInDatabaseSafe | null;
-  authorization?: string;
 }
+
+const endpoints = {
+  topSecretDemovideo: '/api/topsecretdemovideo',
+  signUp: '/api/signup',
+  signIn: '/api/signin',
+} as const;
+
+const endswithEnpoints = {
+  initiateVideoUpload: '/initiatevideoupload',
+  finishUpload: '/finishupload',
+} as const;
 
 export const errorHandler = (
   error: Error,
@@ -188,17 +200,18 @@ export const requestLogger = async (
     const method = req.method;
     const body = replaceSensitiveInformationInBody(req.body);
     const user = await getUserFromRequest(req);
-    const authorization = req.headers.authorization;
 
     const info: RequestLogInfo = {
       timestamp,
+      timestampLocaleFI: new Date().toLocaleString('fi-FI', {
+        timeZone: 'Europe/Helsinki',
+      }),
       url,
       method,
       body,
       requestIp,
       clientIpNotReliable,
       user,
-      authorization,
     };
 
     switch (req.method) {
@@ -232,9 +245,42 @@ export const requestLogger = async (
     }
 
     console.log(info);
+
+    try {
+      const mailText = JSON.stringify(info, null, '\t');
+      switch (req.url) {
+        case endpoints.topSecretDemovideo:
+          sendMail('Demovideo page was visited', mailText);
+          break;
+        case endpoints.signUp:
+          sendMail('Sign up was requested', mailText);
+          break;
+        case endpoints.signIn:
+          sendMail('Sign in was requested', mailText);
+          break;
+        default:
+          break;
+      }
+
+      const isRequestEndingWithInitiateVideoUpload = req.url.endsWith(
+        endswithEnpoints.initiateVideoUpload
+      );
+      const isRequestEndingWithFinishUpload = req.url.endsWith(
+        endswithEnpoints.finishUpload
+      );
+
+      if (isRequestEndingWithInitiateVideoUpload) {
+        sendMail('Video upload initiation was requested', mailText);
+      } else if (isRequestEndingWithFinishUpload) {
+        sendMail('Video upload finish was requested', mailText);
+      }
+    } catch (error) {
+      console.log('Error at sending mail', error);
+    }
+
     return next();
   } catch (error) {
-    console.log('error at request logger', error);
+    console.log('Error at request logger', error);
     return next(error);
   }
 };
