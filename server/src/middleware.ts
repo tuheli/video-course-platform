@@ -70,6 +70,12 @@ export const errorHandler = (
       break;
   }
 
+  try {
+    sendMail('UNHANDLED ERROR ON SERVER', error.message);
+  } catch (error) {
+    console.log('Error sending mail @errorHandler', error);
+  }
+
   return res.status(500).json({ message: 'Something went wrong.' });
 };
 
@@ -194,6 +200,9 @@ export const requestLogger = async (
     if (!isRequestToApiEndpoint) return next();
 
     const timestamp = new Date().toISOString();
+    const timestampLocaleFI = new Date().toLocaleString('fi-FI', {
+      timeZone: 'Europe/Helsinki',
+    });
     const requestIp = req.ip;
     const clientIpNotReliable = req.get('x-forwarded-for');
     const url = req.url;
@@ -203,9 +212,7 @@ export const requestLogger = async (
 
     const info: RequestLogInfo = {
       timestamp,
-      timestampLocaleFI: new Date().toLocaleString('fi-FI', {
-        timeZone: 'Europe/Helsinki',
-      }),
+      timestampLocaleFI,
       url,
       method,
       body,
