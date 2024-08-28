@@ -1,3 +1,6 @@
+Sovellus on Full Stack open -kurssin harjoitustyöni.\
+https://fullstackopen.com/
+
 ### Linkki osoitteeseen, jossa sovellus on käynnissä
 
 https://server-dawn-night-7149-video-course-platform-main.fly.dev/
