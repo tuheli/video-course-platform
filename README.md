@@ -2,7 +2,7 @@
 
 This is an application I made for a university course project during summer 2024.
 
-The idea was to build some core parts of a web application called Udemy which is a "videos-on-demand" web app made by a publicly traded company Udemy Inc. Udemy offers tools and help for creators to build video courses and sell them online.
+The idea was to build some core parts of a web application called Udemy which is a "courses-on-demand" web app made by a publicly traded company Udemy Inc. Udemy offers tools and help for creators to build video courses and sell them online.
 
 One motivation to develop this app was my interest in learning to create applications capable of uploading and streaming video content for users.
 
